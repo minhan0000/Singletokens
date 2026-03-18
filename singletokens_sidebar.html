@@ -1,0 +1,119 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--acc:#3B82F6;--acc2:#06B6D4;--dark:#09090B;--dark2:#111113;--dark3:#18181B;--dark4:#1F1F23;--text:#FAFAFA;--muted:#71717A;--muted2:#A1A1AA;--border:rgba(255,255,255,0.07)}
+body{background:var(--dark);display:flex;justify-content:center;align-items:flex-start;padding:20px;min-height:580px}
+.sidebar{width:240px;height:560px;background:var(--dark2);border:1px solid var(--border);border-radius:14px;display:flex;flex-direction:column;overflow:hidden;font-family:'Syne',sans-serif}
+
+/* NEW CHAT */
+.new-chat{margin:12px;flex-shrink:0}
+.new-chat-btn{width:100%;padding:10px 14px;background:var(--dark3);border:1px solid var(--border);border-radius:9px;color:var(--text);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .15s;font-family:'Syne',sans-serif}
+.new-chat-btn:hover{background:var(--dark4);border-color:rgba(255,255,255,.12)}
+.plus-icon{width:18px;height:18px;border-radius:5px;background:var(--acc);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.plus-icon svg{width:11px;height:11px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round}
+
+/* SECTIONS */
+.section-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;padding:16px 16px 6px}
+
+/* NAV ITEMS */
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 14px;margin:1px 8px;border-radius:8px;cursor:pointer;color:var(--muted2);font-size:13px;font-weight:600;transition:all .15s}
+.nav-item:hover{background:var(--dark3);color:var(--text)}
+.nav-item.active{background:var(--dark4);color:var(--text);border:1px solid var(--border)}
+.nav-item svg{width:15px;height:15px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nav-item.active svg{stroke:var(--acc)}
+
+/* DIVIDER */
+.divider{height:1px;background:var(--border);margin:8px 0}
+
+/* PURCHASE */
+.purchase-item{display:flex;align-items:center;gap:10px;padding:9px 14px;margin:1px 8px;border-radius:8px;cursor:pointer;color:var(--muted2);font-size:13px;font-weight:600;transition:all .15s}
+.purchase-item:hover{background:var(--dark3);color:var(--text)}
+.purchase-item svg{width:15px;height:15px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round}
+
+/* RECENT */
+.recent-section{flex:1;overflow-y:auto;min-height:0;padding-bottom:8px}
+.recent-section::-webkit-scrollbar{width:3px}
+.recent-section::-webkit-scrollbar-track{background:transparent}
+.recent-section::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.model-group{margin-bottom:4px}
+.model-group-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;padding:10px 16px 4px;display:flex;align-items:center;gap:6px}
+.model-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.chat-item{padding:7px 14px;margin:0 8px;border-radius:7px;cursor:pointer;color:var(--muted2);font-size:12px;font-weight:400;transition:all .15s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-item:hover{background:var(--dark3);color:var(--text)}
+
+/* FOOTER */
+.footer{flex-shrink:0;border-top:1px solid var(--border);padding:10px 12px}
+.account-btn{width:100%;padding:9px 12px;background:transparent;border:1px solid var(--border);border-radius:9px;color:var(--text);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .15s;font-family:'Syne',sans-serif}
+.account-btn:hover{background:var(--dark3)}
+.avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--acc),var(--acc2));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0}
+.account-name{flex:1;text-align:left;font-size:13px}
+.chevron{width:14px;height:14px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;flex-shrink:0}
+</style>
+
+<div class="sidebar">
+
+  <!-- New Chat -->
+  <div class="new-chat">
+    <button class="new-chat-btn">
+      <div class="plus-icon"><svg viewBox="0 0 12 12"><path d="M6 1v10M1 6h10"/></svg></div>
+      New chat
+    </button>
+  </div>
+
+  <!-- Explore -->
+  <div class="section-label">Explore</div>
+  <div class="nav-item active">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    Your models
+  </div>
+  <div class="nav-item">
+    <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+    Your GPTs
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Purchase -->
+  <div class="purchase-item">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+    Purchase tokens
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Recent -->
+  <div class="recent-section">
+    <div class="section-label">Recent</div>
+    <div class="model-group">
+      <div class="model-group-label"><div class="model-dot" style="background:#93C5FD"></div>Claude Sonnet 4.5</div>
+      <div class="chat-item">Product roadmap discussion</div>
+      <div class="chat-item">Code review feedback</div>
+      <div class="chat-item">Chemie Präsentation Säuren</div>
+    </div>
+    <div class="model-group">
+      <div class="model-group-label"><div class="model-dot" style="background:#86EFAC"></div>GPT-4o</div>
+      <div class="chat-item">Marketing strategy ideas</div>
+      <div class="chat-item">Business plan outline</div>
+    </div>
+    <div class="model-group">
+      <div class="model-group-label"><div class="model-dot" style="background:#67E8F9"></div>Gemini Flash</div>
+      <div class="chat-item">Mathe Erklärung Vektoren</div>
+    </div>
+    <div class="model-group">
+      <div class="model-group-label"><div class="model-dot" style="background:#93C5FD"></div>Claude Sonnet 4.5</div>
+      <div class="chat-item">Reselling Geschäftsideen</div>
+      <div class="chat-item">SingleTokens Webseite</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <button class="account-btn">
+      <div class="avatar">G</div>
+      <span class="account-name">Account</span>
+      <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+  </div>
+
+</div>
