@@ -1,0 +1,351 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--acc:#22D3EE;--dark:#0A0C10;--dark2:#0F1218;--dark3:#151A22;--dark4:#1B2130;--text:#FAFAFA;--muted:#4B5563;--muted2:#9CA3AF;--border:rgba(255,255,255,0.07)}
+body{background:var(--dark);display:flex;justify-content:center;padding:24px;font-family:'Syne',sans-serif}
+.wrap{width:100%;max-width:480px}
+.steps{display:flex;align-items:center;margin-bottom:28px}
+.step{display:flex;align-items:center;gap:8px}
+.step-num{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);flex-shrink:0;transition:all .3s}
+.step-num.active{border-color:var(--acc);color:var(--acc);box-shadow:0 0 12px rgba(34,211,238,.25)}
+.step-num.done{border-color:#4ADE80;background:#4ADE80;color:#0A0C10;font-size:13px}
+.step-lbl{font-size:12px;color:var(--muted2);font-weight:600;transition:color .3s;white-space:nowrap}
+.step-lbl.active{color:var(--text)}
+.step-line{flex:1;height:1px;background:var(--border);margin:0 10px;transition:background .3s}
+.step-line.done{background:rgba(74,222,128,.4)}
+.sec-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
+.view{display:none}.view.active{display:block}
+.amount-box{background:var(--dark3);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:flex-start}
+.amount-big{font-family:'DM Mono',monospace;font-size:40px;font-weight:500;color:var(--text);letter-spacing:-.02em;line-height:1}
+.amount-label{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted2);margin-top:4px}
+.amount-price{font-family:'DM Mono',monospace;font-size:26px;font-weight:500;line-height:1}
+.amount-rate{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);margin-top:4px;text-align:right}
+.preset-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px}
+.pbtn{background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:10px 0;font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:var(--text);cursor:pointer;text-align:center;transition:all .15s}
+.pbtn:hover{border-color:rgba(34,211,238,.35);color:var(--acc)}
+.pbtn.active{border-color:var(--acc);background:rgba(34,211,238,.08);color:var(--acc)}
+input[type=range]{width:100%;-webkit-appearance:none;height:3px;border-radius:2px;background:var(--dark4);outline:none;cursor:pointer;margin-bottom:20px;display:block}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--acc);border:2px solid var(--dark2);box-shadow:0 0 10px rgba(34,211,238,.5);cursor:pointer}
+.min-warn{display:none;align-items:center;gap:8px;background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.2);border-radius:8px;padding:9px 14px;margin-bottom:12px}
+.min-warn.show{display:flex}
+.min-warn-text{font-family:'DM Mono',monospace;font-size:11px;color:#FDE68A}
+.est-box{background:rgba(34,211,238,.05);border:1px solid rgba(34,211,238,.15);border-radius:10px;padding:14px 16px;margin-bottom:20px}
+.est-title{font-family:'DM Mono',monospace;font-size:10px;color:var(--acc);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+.est-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.est-row:last-child{border:none}
+.est-model{font-size:12px;color:var(--muted2);display:flex;align-items:center;gap:6px}
+.mult-badge{font-family:'DM Mono',monospace;font-size:10px;padding:1px 6px;border-radius:4px;background:rgba(255,255,255,.06);color:var(--muted2)}
+.est-val{font-family:'DM Mono',monospace;font-size:12px;color:var(--text);font-weight:500}
+.pay-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:20px}
+.pay-btn{background:var(--dark3);border:1px solid var(--border);border-radius:10px;padding:12px 4px;cursor:pointer;text-align:center;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:6px}
+.pay-btn:hover{border-color:rgba(34,211,238,.3)}
+.pay-btn.active{border-color:var(--acc);background:rgba(34,211,238,.07)}
+.pay-name{font-size:11px;font-weight:700;color:var(--text)}
+.pay-sub{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2)}
+.pay-btn.active .pay-name{color:var(--acc)}
+.co-summary{background:var(--dark3);border:1px solid var(--border);border-radius:12px;padding:4px 0;margin-bottom:16px}
+.co-row{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-bottom:1px solid var(--border)}
+.co-row:last-child{border:none}
+.co-k{font-size:13px;color:var(--muted2)}
+.co-v{font-family:'DM Mono',monospace;font-size:13px;color:var(--text)}
+.co-total-box{display:flex;justify-content:space-between;align-items:center;padding:16px 18px;background:rgba(34,211,238,.06);border:1px solid rgba(34,211,238,.2);border-radius:10px;margin-bottom:20px}
+.co-total-k{font-size:16px;font-weight:800}
+.co-total-v{font-family:'DM Mono',monospace;font-size:24px;font-weight:800;color:var(--acc);text-shadow:0 0 16px rgba(34,211,238,.4)}
+.co-est{background:var(--dark3);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:20px}
+.co-est-title{font-family:'DM Mono',monospace;font-size:10px;color:var(--acc);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+.card-section{background:var(--dark3);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:16px}
+.card-section-title{font-family:'DM Mono',monospace;font-size:10px;color:var(--acc);letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px}
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.field:last-child{margin-bottom:0}
+.field-row{display:flex;gap:10px}
+.field-row .field{flex:1}
+.flabel{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.05em;text-transform:uppercase}
+.finput{background:var(--dark4);border:1px solid var(--border);border-radius:7px;padding:10px 12px;font-family:'DM Mono',monospace;font-size:13px;color:var(--text);outline:none;width:100%;transition:border-color .15s}
+.finput:focus{border-color:rgba(34,211,238,.4)}
+.finput::placeholder{color:var(--muted)}
+.redir{background:var(--dark3);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:16px;font-size:13px;color:var(--muted2);text-align:center;font-family:'DM Mono',monospace;line-height:1.7;display:none}
+.redir.show{display:block}
+.psc-section{display:none;margin-bottom:16px}
+.psc-section.show{display:block}
+.success-wrap{text-align:center;padding:16px 0 24px}
+.suc-icon{width:64px;height:64px;border-radius:50%;background:rgba(74,222,128,.1);border:2px solid rgba(74,222,128,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
+.suc-icon svg{width:28px;height:28px;stroke:#4ADE80;fill:none;stroke-width:2.5;stroke-linecap:round}
+.suc-title{font-size:22px;font-weight:800;letter-spacing:-.03em;margin-bottom:8px}
+.suc-sub{font-size:13px;color:var(--muted2);line-height:1.6;margin-bottom:20px}
+.suc-tokens{font-family:'DM Mono',monospace;font-size:40px;font-weight:500;color:#4ADE80;line-height:1}
+.suc-label{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted2);margin-top:4px;margin-bottom:24px}
+.receipt{background:var(--dark3);border:1px solid var(--border);border-radius:12px;padding:4px 0;margin-bottom:20px;text-align:left}
+.primary-btn{width:100%;padding:14px;background:var(--acc);border:none;border-radius:10px;color:#0A0C10;font-size:14px;font-weight:800;cursor:pointer;font-family:'Syne',sans-serif;transition:all .2s;margin-bottom:10px}
+.primary-btn:hover{background:#67E8F9}
+.primary-btn:disabled{opacity:.4;cursor:not-allowed}
+.secondary-btn{width:100%;padding:13px;background:transparent;border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;transition:all .2s;margin-bottom:10px}
+.secondary-btn:hover{border-color:rgba(34,211,238,.4);color:var(--acc)}
+.lock-row{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:12px}
+.lock-row svg{width:12px;height:12px;stroke:var(--muted2);fill:none;stroke-width:2;stroke-linecap:round}
+.lock-row span{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2)}
+.hint{text-align:center;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.04em}
+.hint span{color:var(--muted2)}
+</style>
+
+<div class="wrap">
+  <div class="steps">
+    <div class="step"><div class="step-num active" id="sn1">1</div><div class="step-lbl active" id="sl1">Tokens</div></div>
+    <div class="step-line" id="line1"></div>
+    <div class="step"><div class="step-num" id="sn2">2</div><div class="step-lbl" id="sl2">Checkout</div></div>
+    <div class="step-line" id="line2"></div>
+    <div class="step"><div class="step-num" id="sn3">3</div><div class="step-lbl" id="sl3">Fertig</div></div>
+  </div>
+
+  <!-- VIEW 1 -->
+  <div class="view active" id="view-1">
+    <div class="sec-label">Token-Menge</div>
+    <div class="amount-box">
+      <div><div class="amount-big" id="amt-big">333K</div><div class="amount-label">Tokens</div></div>
+      <div><div class="amount-price" id="amt-price" style="color:var(--acc)">$1.00</div><div class="amount-rate">$3.00 / 1M Tokens</div></div>
+    </div>
+    <div class="preset-grid">
+      <div class="pbtn active" onclick="selPreset(333333,this)">333K</div>
+      <div class="pbtn" onclick="selPreset(500000,this)">500K</div>
+      <div class="pbtn" onclick="selPreset(1000000,this)">1M</div>
+      <div class="pbtn" onclick="selPreset(5000000,this)">5M</div>
+      <div class="pbtn" onclick="selPreset(10000000,this)">10M</div>
+      <div class="pbtn" onclick="selPreset(50000000,this)">50M</div>
+      <div class="pbtn" onclick="selPreset(100000000,this)">100M</div>
+      <div class="pbtn" id="custom-toggle" onclick="toggleCustom()">Custom</div>
+    </div>
+    <div style="display:none;margin-bottom:14px" id="custom-wrap">
+      <div style="display:flex;gap:8px;align-items:center">
+        <input style="flex:1;background:var(--dark3);border:1px solid rgba(34,211,238,.3);border-radius:8px;padding:10px 14px;font-family:'DM Mono',monospace;font-size:14px;color:var(--text);outline:none" type="number" id="custom-input" placeholder="z.B. 2500000" min="333000">
+        <span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--muted2)">Tokens</span>
+      </div>
+    </div>
+    <input type="range" id="slider" min="0" max="100" value="0" step="1">
+    <div class="min-warn" id="min-warn"><span class="min-warn-text">⚠ Mindestens $1.00 · 333K Tokens erforderlich</span></div>
+
+    <div class="est-box">
+      <div class="est-title">Geschätzte Nachrichtenmenge</div>
+      <div class="est-row"><span class="est-model">GPT-5 <span class="mult-badge">x70</span></span><span class="est-val" id="e-gpt5">–</span></div>
+      <div class="est-row"><span class="est-model">Claude Sonnet 4.5 <span class="mult-badge">x1</span></span><span class="est-val" id="e-sonnet">–</span></div>
+      <div class="est-row"><span class="est-model">Grok 2 <span class="mult-badge">x1.67</span></span><span class="est-val" id="e-grok">–</span></div>
+      <div class="est-row"><span class="est-model">Gemini Pro 2.0 <span class="mult-badge">x2.33</span></span><span class="est-val" id="e-gemini">–</span></div>
+    </div>
+
+    <div class="sec-label">Zahlungsmethode</div>
+    <div class="pay-grid">
+      <div class="pay-btn active" id="pm-card" onclick="selPay('card',this)">
+        <svg width="26" height="18" viewBox="0 0 26 18" fill="none"><rect x=".5" y=".5" width="25" height="17" rx="2.5" stroke="#4B5563"/><rect y="4" width="26" height="4" fill="#4B5563" opacity=".5"/><rect x="3" y="11" width="6" height="2" rx="1" fill="#9CA3AF"/></svg>
+        <div class="pay-name">Kreditkarte</div><div class="pay-sub">Visa · MC</div>
+      </div>
+      <div class="pay-btn" id="pm-paypal" onclick="selPay('paypal',this)">
+        <svg width="26" height="18" viewBox="0 0 26 18" fill="none"><text x="1" y="13" font-family="Arial" font-size="9" font-weight="900" fill="#9CA3AF">Pay</text><text x="13" y="13" font-family="Arial" font-size="9" font-weight="900" fill="#22D3EE">Pal</text></svg>
+        <div class="pay-name">PayPal</div><div class="pay-sub">Weiterleitung</div>
+      </div>
+      <div class="pay-btn" id="pm-gpay" onclick="selPay('gpay',this)">
+        <svg width="26" height="18" viewBox="0 0 26 18" fill="none"><text x="1" y="13" font-family="Arial" font-size="8" font-weight="700" fill="#9CA3AF">G Pay</text></svg>
+        <div class="pay-name">Google Pay</div><div class="pay-sub">Schnell</div>
+      </div>
+      <div class="pay-btn" id="pm-psc" onclick="selPay('paysafe',this)">
+        <svg width="26" height="18" viewBox="0 0 26 18" fill="none"><rect x=".5" y=".5" width="25" height="17" rx="2.5" stroke="#4B5563"/><text x="3" y="13" font-family="Arial" font-size="7.5" font-weight="800" fill="#9CA3AF">PSC</text></svg>
+        <div class="pay-name">Paysafecard</div><div class="pay-sub">PIN-Code</div>
+      </div>
+    </div>
+
+    <button class="primary-btn" id="btn-to-checkout" onclick="goToCheckout()">Weiter zum Checkout →</button>
+    <div class="hint"><span>Tokens verfallen nie</span> · <span>Alle Modelle</span> · <span>Sofort verfügbar</span></div>
+  </div>
+
+  <!-- VIEW 2 -->
+  <div class="view" id="view-2">
+    <div class="sec-label">Bestellübersicht</div>
+    <div class="co-summary">
+      <div class="co-row"><span class="co-k">Token-Menge</span><span class="co-v" id="co-tok">–</span></div>
+      <div class="co-row"><span class="co-k">Preis / 1M</span><span class="co-v">$3.00</span></div>
+      <div class="co-row"><span class="co-k">Zwischensumme</span><span class="co-v" id="co-sub">–</span></div>
+      <div class="co-row"><span class="co-k">MwSt. (19%)</span><span class="co-v" id="co-tax">–</span></div>
+    </div>
+    <div class="co-total-box">
+      <span class="co-total-k">Gesamt</span>
+      <span class="co-total-v" id="co-total">–</span>
+    </div>
+
+    <div class="co-est">
+      <div class="co-est-title">Geschätzte Nachrichtenmenge</div>
+      <div class="est-row"><span class="est-model">GPT-5 <span class="mult-badge">x70</span></span><span class="est-val" id="ce-gpt5">–</span></div>
+      <div class="est-row"><span class="est-model">Claude Sonnet 4.5 <span class="mult-badge">x1</span></span><span class="est-val" id="ce-sonnet">–</span></div>
+      <div class="est-row"><span class="est-model">Grok 2 <span class="mult-badge">x1.67</span></span><span class="est-val" id="ce-grok">–</span></div>
+      <div class="est-row"><span class="est-model">Gemini Pro 2.0 <span class="mult-badge">x2.33</span></span><span class="est-val" id="ce-gemini">–</span></div>
+    </div>
+
+    <div class="card-section" id="co-card">
+      <div class="card-section-title">Zahlungsdetails · Kreditkarte</div>
+      <div class="field"><div class="flabel">Karteninhaber</div><input class="finput" type="text" placeholder="Max Mustermann"></div>
+      <div class="field"><div class="flabel">Kartennummer</div><input class="finput" type="text" placeholder="1234 5678 9012 3456" maxlength="19" oninput="fmtCard(this)"></div>
+      <div class="field-row">
+        <div class="field"><div class="flabel">Gültig bis</div><input class="finput" type="text" placeholder="MM/JJ" maxlength="5" oninput="fmtExp(this)"></div>
+        <div class="field"><div class="flabel">CVV</div><input class="finput" type="text" placeholder="•••" maxlength="4"></div>
+      </div>
+    </div>
+    <div class="redir" id="co-redir"></div>
+    <div class="psc-section" id="co-psc">
+      <div class="card-section">
+        <div class="card-section-title">Paysafecard PIN eingeben</div>
+        <div class="field"><div class="flabel">PIN-Code</div><input class="finput" type="text" placeholder="xxxx-xxxx-xxxx-xxxx" maxlength="19"></div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);margin-top:4px">16-stelligen PIN eingeben.</div>
+      </div>
+    </div>
+
+    <div class="lock-row">
+      <svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
+      <span>256-bit SSL verschlüsselt · Sicher &amp; anonym</span>
+    </div>
+    <button class="primary-btn" id="btn-pay" onclick="doPayment()">Jetzt kaufen &amp; bezahlen →</button>
+    <button class="secondary-btn" onclick="goBack(1)">← Zurück</button>
+  </div>
+
+  <!-- VIEW 3 -->
+  <div class="view" id="view-3">
+    <div class="success-wrap">
+      <div class="suc-icon"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>
+      <div class="suc-title">Zahlung erfolgreich!</div>
+      <div class="suc-sub">Deine Tokens wurden sofort gutgeschrieben.</div>
+      <div class="suc-tokens" id="suc-tok">+333K</div>
+      <div class="suc-label">Tokens</div>
+    </div>
+    <div class="receipt">
+      <div class="co-row"><span class="co-k">Betrag</span><span class="co-v" id="suc-price">–</span></div>
+      <div class="co-row"><span class="co-k">Zahlungsmethode</span><span class="co-v" id="suc-method">–</span></div>
+      <div class="co-row"><span class="co-k">Datum</span><span class="co-v" id="suc-date">–</span></div>
+    </div>
+    <button class="primary-btn" onclick="resetAll()">Weitere Tokens kaufen</button>
+    <button class="secondary-btn" onclick="resetAll()">Zum Dashboard →</button>
+  </div>
+</div>
+
+<script>
+const BASE=3.0,MIN=333333,AVG=500;
+let tokens=MIN,curPay='card';
+const payNames={card:'Kreditkarte',paypal:'PayPal',gpay:'Google Pay',paysafe:'Paysafecard'};
+const MODELS=[
+  {id:'gpt5',mult:70},
+  {id:'sonnet',mult:1},
+  {id:'grok',mult:1.67},
+  {id:'gemini',mult:2.33},
+];
+
+function fmtTok(t){if(t>=1e9)return(t/1e9).toFixed(1).replace(/\.0$/,'')+'B';if(t>=1e6)return(t/1e6).toFixed(1).replace(/\.0$/,'')+'M';if(t>=1e3)return Math.round(t/1e3)+'K';return t.toLocaleString();}
+function fmtMsgs(n){if(n>=1e6)return(n/1e6).toFixed(1).replace(/\.0$/,'')+'M Nachrichten';if(n>=1e3)return Math.round(n/1e3)+'K Nachrichten';return Math.round(n)+' Nachrichten';}
+function fmtP(p){return'$'+p.toFixed(p<0.1?4:2);}
+function calcPrice(t){return(t/1e6)*BASE;}
+function sliderToTok(v){const mn=Math.log(MIN),mx=Math.log(1e8);return Math.max(MIN,Math.round(Math.exp(mn+(mx-mn)*v/100)/1000)*1000);}
+function tokToSlider(t){if(t<=MIN)return 0;const mn=Math.log(MIN),mx=Math.log(1e8);return Math.round((Math.log(Math.min(t,1e8))-mn)/(mx-mn)*100);}
+
+function updateEst(prefix){
+  MODELS.forEach(m=>{
+    const el=document.getElementById(prefix+'-'+m.id);
+    if(el)el.textContent=fmtMsgs(tokens/(AVG*m.mult));
+  });
+}
+
+function update(){
+  const price=calcPrice(tokens),valid=tokens>=MIN;
+  document.getElementById('amt-big').textContent=fmtTok(tokens);
+  document.getElementById('amt-price').textContent=fmtP(price);
+  document.getElementById('amt-price').style.color=valid?'var(--acc)':'#FDE68A';
+  document.getElementById('min-warn').classList.toggle('show',!valid);
+  document.getElementById('btn-to-checkout').disabled=!valid;
+  document.getElementById('btn-to-checkout').style.opacity=valid?'1':'0.4';
+  const sl=document.getElementById('slider');
+  sl.style.background=`linear-gradient(to right,${valid?'#22D3EE':'#F59E0B'} ${sl.value}%,#1B2130 ${sl.value}%)`;
+  updateEst('e');
+}
+
+function setStep(s){
+  [1,2,3].forEach(i=>{
+    const n=document.getElementById('sn'+i),l=document.getElementById('sl'+i);
+    if(i<s){n.className='step-num done';n.innerHTML='✓';}
+    else if(i===s){n.className='step-num active';n.textContent=i;l.className='step-lbl active';}
+    else{n.className='step-num';n.textContent=i;l.className='step-lbl';}
+  });
+  document.getElementById('line1').className='step-line'+(s>1?' done':'');
+  document.getElementById('line2').className='step-line'+(s>2?' done':'');
+}
+function showView(n){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById('view-'+n).classList.add('active');}
+
+function selPreset(t,el){
+  tokens=t;
+  document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('custom-wrap').style.display='none';
+  document.getElementById('custom-toggle').classList.remove('active');
+  document.getElementById('slider').value=tokToSlider(t);
+  update();
+}
+function toggleCustom(){
+  const w=document.getElementById('custom-wrap');
+  const open=w.style.display!=='flex';
+  w.style.display=open?'flex':'none';
+  document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('active'));
+  if(open)document.getElementById('custom-toggle').classList.add('active');
+}
+document.getElementById('custom-input').addEventListener('input',function(){
+  const v=parseInt(this.value);if(v>0){tokens=v;document.getElementById('slider').value=tokToSlider(v);update();}
+});
+document.getElementById('slider').addEventListener('input',function(){
+  tokens=sliderToTok(parseInt(this.value));
+  document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('active'));
+  update();
+});
+function selPay(type,el){
+  curPay=type;
+  document.querySelectorAll('.pay-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+}
+function goToCheckout(){
+  if(tokens<MIN)return;
+  const price=calcPrice(tokens),tax=price*0.19,total=price+tax;
+  document.getElementById('co-tok').textContent=fmtTok(tokens)+' ('+tokens.toLocaleString()+')';
+  document.getElementById('co-sub').textContent=fmtP(price);
+  document.getElementById('co-tax').textContent=fmtP(tax);
+  document.getElementById('co-total').textContent=fmtP(total);
+  updateEst('ce');
+  const isCard=curPay==='card',isPsc=curPay==='paysafe';
+  document.getElementById('co-card').style.display=isCard?'block':'none';
+  document.getElementById('co-psc').style.display=isPsc?'block':'none';
+  const redir=document.getElementById('co-redir');
+  if(!isCard&&!isPsc){
+    const msgs={paypal:'Du wirst sicher zu <strong>PayPal</strong> weitergeleitet.<br>Guthaben wird sofort gutgeschrieben.',gpay:'<strong>Google Pay</strong> öffnet sich nach dem Klick.<br>Zahle schnell mit deinem Google-Konto.'};
+    redir.innerHTML=msgs[curPay]||'';redir.classList.add('show');
+  } else {redir.classList.remove('show');}
+  const btnLabels={card:'Jetzt kaufen & bezahlen →',paypal:'Weiter zu PayPal →',gpay:'Mit Google Pay zahlen →',paysafe:'PIN einlösen & kaufen →'};
+  document.getElementById('btn-pay').textContent=btnLabels[curPay];
+  setStep(2);showView(2);
+}
+function doPayment(){
+  const btn=document.getElementById('btn-pay');
+  btn.textContent='Zahlung wird verarbeitet...';btn.disabled=true;
+  setTimeout(()=>{
+    const price=calcPrice(tokens),tax=price*0.19,total=price+tax;
+    document.getElementById('suc-tok').textContent='+'+fmtTok(tokens);
+    document.getElementById('suc-price').textContent=fmtP(total)+' (inkl. MwSt.)';
+    document.getElementById('suc-method').textContent=payNames[curPay];
+    document.getElementById('suc-date').textContent=new Date().toLocaleString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    btn.textContent='Jetzt kaufen & bezahlen →';btn.disabled=false;
+    setStep(3);showView(3);
+  },1800);
+}
+function goBack(to){setStep(to);showView(to);}
+function resetAll(){
+  tokens=MIN;curPay='card';
+  document.getElementById('slider').value=0;
+  document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('active'));
+  document.querySelector('.pbtn').classList.add('active');
+  document.querySelectorAll('.pay-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('pm-card').classList.add('active');
+  update();setStep(1);showView(1);
+}
+function fmtCard(el){let v=el.value.replace(/\D/g,'').slice(0,16);el.value=v.match(/.{1,4}/g)?.join(' ')||v;}
+function fmtExp(el){let v=el.value.replace(/\D/g,'');if(v.length>=2)v=v.slice(0,2)+'/'+v.slice(2,4);el.value=v;}
+document.getElementById('slider').value=0;
+update();setStep(1);
+</script>
