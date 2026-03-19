@@ -210,9 +210,13 @@ footer{border-top:1px solid var(--border);padding:40px;display:flex;align-items:
 </style>
 </head>
 <script>
+function goToApp() {
   if (/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) || window.innerWidth <= 768) {
-    window.location.replace("/app.html");
+    window.location.href = "/index-mobile.html";
+  } else {
+    window.location.href = "/app.html";
   }
+}
 </script>
 <body>
 
@@ -225,7 +229,7 @@ footer{border-top:1px solid var(--border);padding:40px;display:flex;align-items:
     <a class="nav-link" href="#models">Modelle</a>
     <a class="nav-link" href="#pricing">Preise</a>
   </div>
-  <a class="nav-cta" href="https://singletokensfrontend.onrender.com/">App öffnen →</a>
+  <a class="nav-cta" href="#" onclick="goToApp();return false;">App öffnen →</a>
 </nav>
 
 <!-- HERO -->
@@ -242,7 +246,7 @@ footer{border-top:1px solid var(--border);padding:40px;display:flex;align-items:
     </h1>
     <p class="hero-sub">Kauf Tokens einmal. Chat mit den besten KI-Modellen der Welt. Kein Monatsabo, kein Verschwendung – nur echte KI wenn du sie brauchst.</p>
     <div class="hero-btns">
-      <a class="btn-primary" href="/app.html"/>Kostenlos starten →</a>
+      <a class="btn-primary" href="#" onclick="goToApp();return false;">Kostenlos starten →</a>
       <a class="btn-secondary" href="#how">Wie es funktioniert</a>
     </div>
     <div class="hero-stats">
@@ -404,7 +408,7 @@ footer{border-top:1px solid var(--border);padding:40px;display:flex;align-items:
           <li>Alle 17 Modelle</li>
           <li>Verfällt nie</li>
         </ul>
-        <a class="plan-btn" href="https://singletokensfrontend.onrender.com/">Starten</a>
+        <a class="plan-btn" href="#" onclick="goToApp();return false;">Starten</a>
       </div>
       <div class="plan pop">
         <span class="plan-badge">★ BELIEBT</span>
@@ -417,7 +421,7 @@ footer{border-top:1px solid var(--border);padding:40px;display:flex;align-items:
           <li>API-Zugang</li>
           <li>Verfällt nie</li>
         </ul>
-        <a class="plan-btn" href="https://singletokensfrontend.onrender.com/">Kaufen</a>
+        <a class="plan-btn" href="#" onclick="goToApp();return false;">Kaufen</a>
       </div>
       <div class="plan">
         <div class="plan-name">Power</div>
@@ -429,7 +433,7 @@ footer{border-top:1px solid var(--border);padding:40px;display:flex;align-items:
           <li>Priorität-Support</li>
           <li>Verfällt nie</li>
         </ul>
-        <a class="plan-btn" href="https://singletokensfrontend.onrender.com/">Kaufen</a>
+        <a class="plan-btn" href="#" onclick="goToApp();return false;">Kaufen</a>
       </div>
     </div>
   </div>
@@ -441,7 +445,7 @@ footer{border-top:1px solid var(--border);padding:40px;display:flex;align-items:
   <div class="cta-inner reveal">
     <h2 class="cta-title">Bereit loszulegen?<br><span>Starte heute gratis.</span></h2>
     <p class="cta-sub">Kein Abo, kein Risiko. Einfach Tokens kaufen und mit den besten KI-Modellen der Welt chatten.</p>
-    <a class="btn-primary" href="https://singletokensfrontend.onrender.com/" style="font-size:16px;padding:16px 40px">App jetzt öffnen →</a>
+    <a class="btn-primary" href="#" onclick="goToApp();return false;" style="font-size:16px;padding:16px 40px">App jetzt öffnen →</a>
   </div>
 </section>
 
@@ -452,7 +456,7 @@ footer{border-top:1px solid var(--border);padding:40px;display:flex;align-items:
     <a href="#">Datenschutz</a>
     <a href="#">AGB</a>
     <a href="#">Kontakt</a>
-    <a href="https://singletokensfrontend.onrender.com/">App</a>
+    <a href="#" onclick="goToApp();return false;">App</a>
   </div>
   <div class="footer-copy">© 2026 SingleTokens</div>
 </footer>
