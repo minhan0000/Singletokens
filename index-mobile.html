@@ -220,7 +220,81 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 
 /* LIGHT MODE */
-.light-mode{--dark:#F0F2F5;--dark2:#FFFFFF;--dark3:#F0F2F5;--dark4:#E4E6EA;--text:#0A0C10;--muted2:#606770;--border:rgba(0,0,0,0.1)}
+.light-mode{--dark:#F0F2F5;--dark2:#FFFFFF;--dark3:#F0F2F5;--dark4:#E4E6EA;--text:#0A0C10;--muted:#B0B8C1;--muted2:#606770;--border:rgba(0,0,0,0.1)}
+.light-mode body{background:#F0F2F5}
+.light-mode .app{background:#F0F2F5}
+.light-mode .topbar{background:#FFFFFF;border-bottom-color:#E5E7EB}
+.light-mode .topbar-logo{color:#111827}
+.light-mode .topbar-logo span{color:var(--acc)}
+.light-mode .topbar-model{background:#F3F4F6;border:1.5px solid #E5E7EB;color:#374151;font-weight:600}
+.light-mode .topbar-tok{background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.3);color:#0891B2}
+.light-mode .view-chat,.light-mode #view-chat{background:#F9FAFB}
+.light-mode .chat-msgs{background:#F9FAFB}
+.light-mode .msg.ai .msg-bubble{background:#FFFFFF;border:1.5px solid #E5E7EB;color:#111827;box-shadow:0 1px 4px rgba(0,0,0,0.05)}
+.light-mode .msg.user .msg-bubble{background:var(--acc);color:#fff;box-shadow:0 2px 8px rgba(34,211,238,0.3)}
+.light-mode .msg-meta{color:#9CA3AF}
+.light-mode .chat-input-area{background:#FFFFFF;border-top:1.5px solid #E5E7EB}
+.light-mode .chat-input-wrap{background:#F3F4F6;border:1.5px solid #E5E7EB}
+.light-mode .chat-input-wrap:focus-within{border-color:var(--acc)}
+.light-mode .chat-input{color:#111827}
+.light-mode .chat-input::placeholder{color:#9CA3AF}
+.light-mode .typing-indicator{background:#FFFFFF;border:1.5px solid #E5E7EB;box-shadow:0 1px 4px rgba(0,0,0,0.05)}
+.light-mode .typing-dot{background:#D1D5DB}
+.light-mode .bottom-nav{background:#FFFFFF;border-top-color:rgba(0,0,0,0.1)}
+.light-mode .bn-item{color:#B0B8C1}
+.light-mode .bn-item.active{color:var(--acc)}
+.light-mode .purchase-scroll,.light-mode .explore-scroll,.light-mode .settings-scroll{background:#F0F2F5}
+.light-mode .amount-box,.light-mode .co-summary,.light-mode .receipt,.light-mode .co-est,.light-mode .card-section,.light-mode .acc-card,.light-mode .s-card,.light-mode .redir-info{background:#FFFFFF;border-color:rgba(0,0,0,0.1)}
+.light-mode .pbtn{background:#FFFFFF;border-color:rgba(0,0,0,0.12);color:#0A0C10}
+.light-mode .pbtn.active{background:rgba(34,211,238,.12);border-color:var(--acc);color:var(--acc)}
+.light-mode .est-box,.light-mode .co-total-box{background:rgba(34,211,238,.06);border-color:rgba(34,211,238,.2)}
+.light-mode .pay-btn{background:#FFFFFF;border-color:rgba(0,0,0,0.12)}
+.light-mode .pay-btn.active{background:rgba(34,211,238,.08);border-color:var(--acc)}
+.light-mode .co-row,.light-mode .s-row,.light-mode .mem-item,.light-mode .model-list-item{border-bottom-color:rgba(0,0,0,0.07)}
+.light-mode .finput,.light-mode .s-sel{background:#F0F2F5;border-color:rgba(0,0,0,0.12);color:#0A0C10}
+.light-mode .model-grid{gap:10px}
+.light-mode .mc{background:#FFFFFF;border:1.5px solid #E5E7EB;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+.light-mode .mc .mc-provider{color:#9CA3AF;font-weight:600}
+.light-mode .mc .mc-name{color:#111827;font-weight:700}
+.light-mode .mc .mc-mult{color:#111827}
+.light-mode .mc .mc-price{color:#9CA3AF}
+.light-mode .mc.cheap{background:linear-gradient(135deg,#ECFEFF 0%,#F0FDFF 100%);border-color:#A5F3FC;box-shadow:0 2px 8px rgba(6,182,212,0.12)}
+.light-mode .mc.cheap .mc-provider{color:#0891B2;font-weight:700}
+.light-mode .mc.cheap .mc-name{color:#164E63}
+.light-mode .mc.cheap .mc-mult{color:#0891B2}
+.light-mode .mc.cheap .mc-price{color:#0891B2;opacity:.7}
+.light-mode .mc.expensive{background:linear-gradient(135deg,#FFF5F5 0%,#FEF2F2 100%);border-color:#FECACA;box-shadow:0 2px 8px rgba(239,68,68,0.1)}
+.light-mode .mc.expensive .mc-provider{color:#DC2626;font-weight:700}
+.light-mode .mc.expensive .mc-name{color:#7F1D1D}
+.light-mode .mc.expensive .mc-mult{color:#DC2626}
+.light-mode .mc.expensive .mc-price{color:#DC2626;opacity:.7}
+.light-mode .mc.reference{background:linear-gradient(135deg,#EFF6FF 0%,#F0F9FF 100%);border-color:#BFDBFE;box-shadow:0 2px 8px rgba(59,130,246,0.1)}
+.light-mode .mc.reference .mc-provider{color:#2563EB;font-weight:700}
+.light-mode .mc.reference .mc-name{color:#1E3A8A}
+.light-mode .mc.reference .mc-mult{color:#2563EB}
+.light-mode .mc.reference .mc-price{color:#2563EB;opacity:.7}
+.light-mode .mc .mc-tag.tag-cyan{background:#CFFAFE;color:#0891B2;font-weight:600}
+.light-mode .mc .mc-tag.tag-blue{background:#DBEAFE;color:#1D4ED8;font-weight:600}
+.light-mode .mc .mc-tag.tag-red{background:#FEE2E2;color:#DC2626;font-weight:600}
+.light-mode .mc .mc-tag.tag-green{background:#DCFCE7;color:#16A34A;font-weight:600}
+.light-mode .mc .mc-tag.tag-muted{background:#F3F4F6;color:#4B5563;font-weight:600}
+.light-mode .model-filter .mfbtn{background:#FFFFFF;border:1.5px solid #E5E7EB;color:#6B7280;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+.light-mode .model-filter .mfbtn.active{background:var(--acc);color:#fff;border-color:var(--acc);box-shadow:0 2px 8px rgba(34,211,238,0.3)}
+.light-mode .explore-scroll h2{color:#111827}
+.light-mode .explore-scroll p{color:#6B7280}
+.light-mode .toggle{background:#D1D5DB;border-color:rgba(0,0,0,0.12)}
+.light-mode .toggle.on{background:var(--acc)}
+.light-mode .toggle::after{background:#fff}
+.light-mode .s-nbtn{background:#F0F2F5;border-color:rgba(0,0,0,0.12);color:#0A0C10}
+.light-mode .sheet{background:#FFFFFF}
+.light-mode .sheet-handle{background:rgba(0,0,0,0.15)}
+.light-mode .mli-icon{background:#F0F2F5}
+.light-mode .mli-check{border-color:rgba(0,0,0,0.2)}
+.light-mode .typing-indicator{background:#FFFFFF;border-color:rgba(0,0,0,0.1)}
+.light-mode .typing-dot{background:#B0B8C1}
+.light-mode .toast{background:#FFFFFF}
+.light-mode .model-filter .mfbtn{background:#FFFFFF;border-color:rgba(0,0,0,0.12);color:#606770}
+.light-mode .model-filter .mfbtn.active{background:var(--acc);color:#fff;border-color:var(--acc)}
 </style>
 </head>
 <body>
@@ -400,7 +474,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           <div class="av" id="s-av">G</div>
           <div style="flex:1">
             <div style="font-size:15px;font-weight:700;color:var(--text)" id="s-display-name">Guest User</div>
-            <div style="font-size:12px;color:var(--muted2);font-family:'DM Mono',monospace;margin-top:2px" id="s-display-email">guest@singletokens.com</div>
+            <div style="font-size:12px;color:var(--muted2);font-family:'DM Mono',monospace;margin-top:2px" id="s-display-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c4a3b1a1b7b084b7adaaa3a8a1b0abafa1aab7eaa7aba9">[email&#160;protected]</a></div>
           </div>
           <div class="tok-badge" id="s-tok-badge">716K</div>
         </div>
@@ -485,7 +559,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
   </div>
 </div>
 
-<!-- MODEL SHEET -->
+  <!-- MODEL SHEET -->
 <div class="sheet-overlay" id="model-sheet" onclick="closeSheet()">
   <div class="sheet" onclick="event.stopPropagation()">
     <div class="sheet-handle"></div>
