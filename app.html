@@ -33,7 +33,8 @@ html,body{height:100%;overflow:hidden;background:var(--dark);font-family:'Syne',
 .sec-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.1em;text-transform:uppercase;padding:14px 16px 6px}
 .nav-item{display:flex;align-items:center;gap:10px;padding:9px 14px;margin:1px 8px;border-radius:8px;cursor:pointer;color:var(--muted2);font-size:13px;font-weight:600;transition:all .15s}
 .nav-item:hover{background:var(--dark3);color:var(--text)}
-.nav-item.active{background:var(--dark3);color:var(--text);font-weight:700}
+.nav-item.active{background:var(--dark3);color:var(--text);font-weight:700;animation:navActive .2s ease both}
+@keyframes navActive{from{opacity:.6;transform:translateX(-4px)}to{opacity:1;transform:translateX(0)}}
 .nav-item.active svg{stroke:var(--acc)}
 .nav-item svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
 .sidebar-divider{height:1px;background:var(--border);margin:6px 0}
@@ -52,6 +53,12 @@ html,body{height:100%;overflow:hidden;background:var(--dark);font-family:'Syne',
 /* ── MAIN ── */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--dark)}
 .view{display:none;flex:1;overflow:hidden;flex-direction:column}
+.view.active{animation:viewIn .25s ease both}
+@keyframes viewIn{from{opacity:0;transform:translateX(8px)}to{opacity:1;transform:translateX(0)}}
+@keyframes settingsIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes cardIn{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 .view.active{display:flex}
 
 /* ── CHAT VIEW ── */
@@ -78,6 +85,9 @@ html,body{height:100%;overflow:hidden;background:var(--dark);font-family:'Syne',
 .chat-input::placeholder{color:var(--muted2)}
 .send-btn{width:32px;height:32px;border-radius:8px;background:var(--acc);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:-2px;transition:all .15s}
 .send-btn:hover{background:#67E8F9}
+.send-btn:active{transform:scale(.9)}
+.send-btn.sending{animation:sendPulse .3s ease}
+@keyframes sendPulse{0%{transform:scale(1)}50%{transform:scale(.85)}100%{transform:scale(1)}}
 .send-btn svg{width:14px;height:14px;stroke:#03060F;fill:none;stroke-width:2.5;stroke-linecap:round}
 .typing-indicator{display:flex;align-items:center;gap:4px;padding:10px 14px;background:var(--dark2);border:1px solid var(--border);border-radius:12px 12px 12px 2px;width:fit-content}
 .typing-dot{width:6px;height:6px;border-radius:50%;background:var(--muted2);animation:typingPulse 1.4s infinite}
@@ -226,7 +236,61 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .toast.show{transform:translateX(-50%) translateY(0)}
 
 /* ── LIGHT MODE ── */
-.light-mode{--dark:#F0F2F5;--dark2:#FFFFFF;--dark3:#F0F2F5;--dark4:#E4E6EA;--text:#0A0C10;--muted2:#606770;--border:rgba(0,0,0,0.1)}
+.light-mode{--dark:#F0F2F5;--dark2:#FFFFFF;--dark3:#F0F2F5;--dark4:#E4E6EA;--text:#0A0C10;--muted:#B0B8C1;--muted2:#606770;--border:rgba(0,0,0,0.1)}
+/* Logo */
+.light-mode .slogo{color:#111827 !important}
+.light-mode .slogo span{color:var(--acc) !important}
+/* Sidebar */
+.light-mode .sidebar{background:#F8F9FA;border-right-color:#E5E7EB}
+.light-mode .nav-item{color:#6B7280}
+.light-mode .nav-item:hover{background:#F0F2F5;color:#111827}
+.light-mode .nav-item.active{background:#EFF6FF;color:#1D4ED8;border-left-color:var(--acc)}
+.light-mode .sec-label{color:#9CA3AF}
+.light-mode .model-group-label{color:#9CA3AF}
+.light-mode .chat-item{color:#6B7280}
+.light-mode .chat-item:hover{background:#F0F2F5;color:#111827}
+.light-mode .sidebar-divider{background:#E5E7EB}
+.light-mode .new-chat-btn{background:#FFFFFF;border-color:#E5E7EB;color:#111827}
+.light-mode .account-btn{border-color:#E5E7EB;color:#111827}
+/* Main */
+.light-mode .main{background:#F9FAFB}
+/* Model cards */
+.light-mode .mc{background:#FFFFFF;border:1.5px solid #E5E7EB;box-shadow:0 1px 4px rgba(0,0,0,0.06)}
+.light-mode .mc:hover{background:#F9FAFB;border-color:#D1D5DB}
+.light-mode .mc .mc-provider{color:#9CA3AF;font-weight:600}
+.light-mode .mc .mc-name{color:#111827}
+.light-mode .mc .mc-mult{color:#111827}
+.light-mode .mc .mc-price{color:#9CA3AF}
+.light-mode .mc.cheap{background:linear-gradient(135deg,#ECFEFF,#F0FDFF);border-color:#A5F3FC;box-shadow:0 2px 8px rgba(6,182,212,0.1)}
+.light-mode .mc.cheap .mc-provider{color:#0891B2}
+.light-mode .mc.cheap .mc-name{color:#164E63}
+.light-mode .mc.cheap .mc-mult{color:#0891B2}
+.light-mode .mc.expensive{background:linear-gradient(135deg,#FFF5F5,#FEF2F2);border-color:#FECACA;box-shadow:0 2px 8px rgba(239,68,68,0.08)}
+.light-mode .mc.expensive .mc-provider{color:#DC2626}
+.light-mode .mc.expensive .mc-name{color:#7F1D1D}
+.light-mode .mc.expensive .mc-mult{color:#DC2626}
+.light-mode .mc.reference{background:linear-gradient(135deg,#EFF6FF,#F0F9FF);border-color:#BFDBFE;box-shadow:0 2px 8px rgba(59,130,246,0.08)}
+.light-mode .mc.reference .mc-provider{color:#2563EB}
+.light-mode .mc.reference .mc-name{color:#1E3A8A}
+.light-mode .mc.reference .mc-mult{color:#2563EB}
+.light-mode .mc .mc-tag.tag-cyan{background:#CFFAFE;color:#0891B2;font-weight:600}
+.light-mode .mc .mc-tag.tag-blue{background:#DBEAFE;color:#1D4ED8;font-weight:600}
+.light-mode .mc .mc-tag.tag-red{background:#FEE2E2;color:#DC2626;font-weight:600}
+.light-mode .mc .mc-tag.tag-green{background:#DCFCE7;color:#16A34A;font-weight:600}
+.light-mode .mc .mc-tag.tag-muted{background:#F3F4F6;color:#4B5563;font-weight:600}
+.light-mode .model-filter .mfbtn{background:#FFFFFF;border-color:#E5E7EB;color:#6B7280}
+.light-mode .model-filter .mfbtn.active{background:var(--acc);color:#fff;border-color:var(--acc)}
+.light-mode .models-view-inner h2{color:#111827}
+.light-mode .models-view-inner p{color:#6B7280}
+/* Chat */
+.light-mode .chat-header{background:#FFFFFF;border-bottom-color:#E5E7EB}
+.light-mode .chat-messages{background:#F9FAFB}
+.light-mode .msg.ai .msg-bubble{background:#FFFFFF;border-color:#E5E7EB;color:#111827;box-shadow:0 1px 3px rgba(0,0,0,0.05)}
+.light-mode .chat-input-area{background:#FFFFFF;border-top-color:#E5E7EB}
+.light-mode .chat-input-wrap{background:#F3F4F6;border-color:#E5E7EB}
+.light-mode .chat-input{color:#111827}
+/* Token counter */
+.light-mode .token-counter{background:rgba(34,211,238,.1);border-color:rgba(34,211,238,.3);color:#0891B2}
 .compact-mode .s-row{padding:8px 0}
 
 /* ── YOUR MODELS VIEW ── */
@@ -238,7 +302,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .mfbtn:hover{color:var(--text);border-color:rgba(255,255,255,.2)}
 .mfbtn.active{background:var(--acc);border-color:var(--acc);color:#03060F}
 .model-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
-.mc{border:1px solid var(--border);border-radius:10px;padding:14px;background:var(--dark2);transition:all .15s;cursor:pointer}
+.mc{border:1px solid var(--border);border-radius:10px;padding:14px;background:var(--dark2);transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease,background .2s ease;cursor:pointer;animation:cardIn .35s ease both}
+.mc:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.2)}
+.mc:active{transform:translateY(-1px) scale(.98)}
 .mc:hover{border-color:rgba(255,255,255,.18);background:var(--dark3)}
 .mc.cheap{border-color:rgba(6,182,212,.25);background:rgba(6,182,212,.05)}
 .mc.expensive{border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.05)}
@@ -280,7 +346,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
       <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
       Your models
     </div>
-    <div class="nav-item" onclick="openView('chat')">
+    <div class="nav-item" id="nav-gpts" onclick="openView('gpts')">
       <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
       Your GPTs
     </div>
@@ -311,7 +377,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
       <button class="account-btn" onclick="openView('settings')">
         <div class="avatar" id="sidebar-av">G</div>
         <span style="flex:1;text-align:left;font-size:13px" id="sidebar-name">Account</span>
-        <svg style="width:14px;height:14px;stroke:var(--muted2);fill:none;stroke-width:2;stroke-linecap:round" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        
       </button>
     </div>
   </div>
@@ -370,6 +436,72 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
       </div>
     </div>
 
+
+    <!-- ── YOUR GPTs ── -->
+    <div class="view" id="view-gpts" style="overflow-y:auto">
+      <div style="padding:28px;max-width:900px;width:100%">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <h2 style="font-size:20px;font-weight:800;letter-spacing:-.03em">Your GPTs</h2>
+          <button onclick="openGptModal()" style="padding:8px 16px;background:var(--acc);border:none;border-radius:8px;color:#0A0C10;font-size:13px;font-weight:800;cursor:pointer;font-family:'Syne',sans-serif;display:flex;align-items:center;gap:6px">
+            <span style="font-size:16px;line-height:1">+</span> Neuer GPT
+          </button>
+        </div>
+        <p style="font-size:13px;color:var(--muted2);margin-bottom:24px">Eigene KI-Assistenten mit individuellem System-Prompt erstellen.</p>
+        <div id="gpt-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px"></div>
+        <div id="gpt-empty" style="text-align:center;padding:60px 20px;color:var(--muted2)">
+          <div style="font-size:40px;margin-bottom:12px">🤖</div>
+          <div style="font-size:15px;font-weight:600;margin-bottom:6px">Noch keine GPTs</div>
+          <div style="font-size:13px">Erstelle deinen ersten eigenen KI-Assistenten.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GPT MODAL -->
+    <div id="gpt-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:center;justify-content:center">
+      <div style="background:var(--dark2);border:1px solid var(--border);border-radius:16px;padding:28px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto" onclick="event.stopPropagation()">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+          <div style="font-size:16px;font-weight:800;letter-spacing:-.02em" id="gpt-modal-title">Neuer GPT</div>
+          <button onclick="closeGptModal()" style="background:transparent;border:none;color:var(--muted2);cursor:pointer;font-size:20px;line-height:1;padding:4px">×</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div>
+            <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px">Name *</div>
+            <input id="gpt-name" type="text" placeholder="z.B. Coding-Assistent" style="width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Syne',sans-serif;font-size:13px;color:var(--text);outline:none">
+          </div>
+          <div>
+            <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px">Beschreibung</div>
+            <input id="gpt-desc" type="text" placeholder="Wofür ist dieser GPT?" style="width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Syne',sans-serif;font-size:13px;color:var(--text);outline:none">
+          </div>
+          <div>
+            <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px">Basismodell</div>
+            <select id="gpt-model" style="width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Syne',sans-serif;font-size:13px;color:var(--text);outline:none;-webkit-appearance:none">
+              <option>Claude Sonnet 4.5</option><option>Claude Haiku 4.5</option><option>GPT-4o</option>
+              <option>GPT-5</option><option>Gemini Pro 2.0</option><option>Grok 2</option>
+              <option>Llama 3.3 70B</option><option>Mistral Small</option>
+            </select>
+          </div>
+          <div>
+            <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px">System-Prompt *</div>
+            <textarea id="gpt-prompt" placeholder="Du bist ein hilfreicher Assistent der..." style="width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Syne',sans-serif;font-size:13px;color:var(--text);outline:none;resize:vertical;min-height:120px"></textarea>
+          </div>
+          <div style="display:flex;gap:8px">
+            <div style="flex:1">
+              <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px">Temperature</div>
+              <input id="gpt-temp" type="number" min="0" max="2" step="0.1" value="0.7" style="width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'DM Mono',monospace;font-size:13px;color:var(--text);outline:none">
+            </div>
+            <div style="flex:1">
+              <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px">Token Cap</div>
+              <input id="gpt-cap" type="number" min="100" max="8000" step="100" placeholder="2000" style="width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'DM Mono',monospace;font-size:13px;color:var(--text);outline:none">
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:6px">
+            <button onclick="closeGptModal()" style="flex:1;padding:12px;background:transparent;border:1px solid var(--border);border-radius:9px;color:var(--text);font-size:13px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif">Abbrechen</button>
+            <button onclick="saveGpt()" style="flex:2;padding:12px;background:var(--acc);border:none;border-radius:9px;color:#0A0C10;font-size:13px;font-weight:800;cursor:pointer;font-family:'Syne',sans-serif" id="gpt-save-btn">GPT erstellen</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- ── PURCHASE ── -->
     <div class="view" id="view-purchase">
       <div class="purchase-wrap">
@@ -421,7 +553,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
                 <div class="pay-name">Kreditkarte</div><div class="pay-sub">Visa · MC</div>
               </div>
               <div class="pay-btn" id="pm-paypal" onclick="selPay('paypal',this)">
-                <svg width="26" height="18" viewBox="0 0 26 18" fill="none"><text x="1" y="13" font-family="Arial" font-size="9" font-weight="900" fill="#9CA3AF">Pay</text><text x="13" y="13" font-family="Arial" font-size="9" font-weight="900" fill="#22D3EE">Pal</text></svg>
+                <svg width="44" height="16" viewBox="0 0 44 16" xmlns="http://www.w3.org/2000/svg">
+  <text x="0" y="13" font-family="Arial Black,Helvetica,sans-serif" font-size="13" font-weight="900" fill="#003087">Pay</text>
+  <text x="22" y="13" font-family="Arial Black,Helvetica,sans-serif" font-size="13" font-weight="900" fill="#009CDE">Pal</text>
+</svg>
                 <div class="pay-name">PayPal</div><div class="pay-sub">Weiterleitung</div>
               </div>
               <div class="pay-btn" id="pm-gpay" onclick="selPay('gpay',this)">
@@ -497,7 +632,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
     </div>
 
     <!-- ── SETTINGS ── -->
-    <div class="view" id="view-settings">
+    <div class="view" id="view-settings" style="animation:settingsIn .3s ease both">
       <div class="settings-wrap">
         <div class="settings-sidebar">
           <div class="settings-title" data-t="settings">Einstellungen</div>
@@ -584,12 +719,21 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /* ─── NAV ─── */
+let lastView='chat';
+let currentView='chat';
 function openView(id){
+  if(id==='settings' && currentView==='settings'){
+    id=lastView;
+  } else {
+    if(currentView!=='settings') lastView=currentView;
+  }
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById('view-'+id).classList.add('active');
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   if(id==='models')document.getElementById('nav-models').classList.add('active');
   if(id==='purchase')document.getElementById('nav-purchase').classList.add('active');
+  if(id==='gpts')document.getElementById('nav-gpts').classList.add('active');
+  currentView=id;
 }
 
 /* ─── CHAT ─── */
@@ -622,6 +766,9 @@ function updateBalance(used){
 }
 
 function sendMessage(){
+  const sb=document.querySelector('.send-btn');
+  sb.classList.add('sending');
+  setTimeout(()=>sb.classList.remove('sending'),300);
   const inp=document.getElementById('chat-input');
   const text=inp.value.trim();
   if(!text)return;
@@ -647,6 +794,7 @@ function addMsg(text,role,model){
   d.className='msg '+role;
   const m=document.getElementById('chat-model-sel').value;
   d.innerHTML=`<div class="msg-bubble">${text}</div><div class="msg-meta">${role==='user'?'Du':(model||m)}</div>`;
+  d.style.animation='msgIn .3s ease both';
   msgs.appendChild(d);
   msgs.scrollTop=msgs.scrollHeight;
   return d;
@@ -705,7 +853,7 @@ function getCardClass(m){if(m.mult>=10)return'expensive';if(m.mult<=0.5)return'c
 function renderModels(f){
   const g=document.getElementById('model-grid');
   let list=f==='all'?ALL_MODELS:f==='cheap'?ALL_MODELS.filter(m=>m.mult<=0.5):ALL_MODELS.filter(m=>m.cat===f);
-  g.innerHTML=list.map(m=>`<div class="mc ${getCardClass(m)}" onclick="useModel('${m.name}')"><div class="mc-provider">${m.provider}</div><div class="mc-name">${m.name}</div><div class="mc-mult">x${m.mult}</div><div class="mc-price">$${(3*m.mult).toFixed(2)} / 1M</div><span class="mc-tag ${m.tagClass}">${m.tag}</span></div>`).join('');
+  g.innerHTML=list.map((m,i)=>`<div class="mc ${getCardClass(m)}" onclick="useModel('${m.name}')" style="animation-delay:${i*0.04}s"><div class="mc-provider">${m.provider}</div><div class="mc-name">${m.name}</div><div class="mc-mult">x${m.mult}</div><div class="mc-price">$${(3*m.mult).toFixed(2)} / 1M</div><span class="mc-tag ${m.tagClass}">${m.tag}</span></div>`).join('');
 }
 function filterM(f,btn){
   document.querySelectorAll('.mfbtn').forEach(b=>b.classList.remove('active'));
@@ -871,6 +1019,119 @@ function clearMem(){document.querySelectorAll('#mem-list .mem-item').forEach(m=>
 /* ─── TOAST ─── */
 let toastTimer;
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2200);}
+
+
+/* ─── YOUR GPTs ─── */
+let gpts = [];
+let editingGptId = null;
+
+function renderGpts() {
+  const grid = document.getElementById('gpt-grid');
+  const empty = document.getElementById('gpt-empty');
+  if (gpts.length === 0) {
+    grid.style.display = 'none';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+  grid.style.display = 'grid';
+  grid.innerHTML = gpts.map((g,i) => `
+    <div style="background:var(--dark2);border:1px solid var(--border);border-radius:12px;padding:18px;transition:all .2s;animation:cardIn .3s ${i*0.05}s ease both;cursor:pointer" onmouseover="this.style.borderColor='rgba(34,211,238,.3)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''" >
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px">
+        <div style="width:38px;height:38px;border-radius:10px;background:rgba(34,211,238,.12);border:1px solid rgba(34,211,238,.2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🤖</div>
+        <div style="display:flex;gap:6px">
+          <button onclick="editGpt(${g.id})" style="padding:4px 10px;background:var(--dark3);border:1px solid var(--border);border-radius:6px;color:var(--muted2);font-size:11px;cursor:pointer;font-family:'Syne',sans-serif">Bearbeiten</button>
+          <button onclick="deleteGpt(${g.id})" style="padding:4px 10px;background:transparent;border:1px solid rgba(248,113,113,.3);border-radius:6px;color:#F87171;font-size:11px;cursor:pointer;font-family:'Syne',sans-serif">Löschen</button>
+        </div>
+      </div>
+      <div style="font-size:14px;font-weight:700;margin-bottom:4px">${g.name}</div>
+      <div style="font-size:12px;color:var(--muted2);margin-bottom:10px;line-height:1.5">${g.desc||'Kein Beschreibung'}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2)">${g.model}</span>
+        <button onclick="useGpt(${g.id})" style="padding:5px 12px;background:var(--acc);border:none;border-radius:6px;color:#0A0C10;font-size:11px;font-weight:800;cursor:pointer;font-family:'Syne',sans-serif">Chatten →</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openGptModal(id=null) {
+  editingGptId = id;
+  const modal = document.getElementById('gpt-modal');
+  if (id !== null) {
+    const g = gpts.find(x=>x.id===id);
+    document.getElementById('gpt-modal-title').textContent = 'GPT bearbeiten';
+    document.getElementById('gpt-name').value = g.name;
+    document.getElementById('gpt-desc').value = g.desc||'';
+    document.getElementById('gpt-model').value = g.model;
+    document.getElementById('gpt-prompt').value = g.prompt;
+    document.getElementById('gpt-temp').value = g.temp;
+    document.getElementById('gpt-cap').value = g.cap||'';
+    document.getElementById('gpt-save-btn').textContent = 'Speichern';
+  } else {
+    document.getElementById('gpt-modal-title').textContent = 'Neuer GPT';
+    document.getElementById('gpt-name').value = '';
+    document.getElementById('gpt-desc').value = '';
+    document.getElementById('gpt-model').value = 'Claude Sonnet 4.5';
+    document.getElementById('gpt-prompt').value = '';
+    document.getElementById('gpt-temp').value = '0.7';
+    document.getElementById('gpt-cap').value = '';
+    document.getElementById('gpt-save-btn').textContent = 'GPT erstellen';
+  }
+  modal.style.display = 'flex';
+  modal.style.animation = 'fadeIn .2s ease';
+}
+
+function closeGptModal() {
+  document.getElementById('gpt-modal').style.display = 'none';
+  editingGptId = null;
+}
+
+function saveGpt() {
+  const name = document.getElementById('gpt-name').value.trim();
+  const prompt = document.getElementById('gpt-prompt').value.trim();
+  if (!name) { showToast('Bitte einen Namen eingeben!'); return; }
+  if (!prompt) { showToast('Bitte einen System-Prompt eingeben!'); return; }
+  const gpt = {
+    id: editingGptId !== null ? editingGptId : Date.now(),
+    name,
+    desc: document.getElementById('gpt-desc').value.trim(),
+    model: document.getElementById('gpt-model').value,
+    prompt,
+    temp: parseFloat(document.getElementById('gpt-temp').value)||0.7,
+    cap: parseInt(document.getElementById('gpt-cap').value)||null,
+  };
+  if (editingGptId !== null) {
+    gpts = gpts.map(g => g.id === editingGptId ? gpt : g);
+    showToast('GPT gespeichert!');
+  } else {
+    gpts.push(gpt);
+    showToast('GPT erstellt!');
+  }
+  closeGptModal();
+  renderGpts();
+}
+
+function editGpt(id) { openGptModal(id); }
+
+function deleteGpt(id) {
+  gpts = gpts.filter(g => g.id !== id);
+  renderGpts();
+  showToast('GPT gelöscht.');
+}
+
+function useGpt(id) {
+  const g = gpts.find(x => x.id === id);
+  if (!g) return;
+  document.getElementById('chat-model-sel').value = g.model;
+  openView('chat');
+  newChat();
+  showToast('GPT "' + g.name + '" geladen!');
+}
+
+// Close modal on overlay click
+document.getElementById('gpt-modal').addEventListener('click', closeGptModal);
+
+renderGpts();
 
 applyLang();
 </script>
