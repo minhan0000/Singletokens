@@ -1,16 +1,10 @@
-const db = require('./db');
-const auth = require('./auth.middleware');
+require('dotenv').config();
+const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const fs = require('fs');
-const path = require('path');
-
-// Ensure data directory exists
-fs.mkdirSync(path.join(__dirname, '../data'), { recursive: true });
-
 const db = require('./db');
 const auth = require('./auth.middleware');
 
@@ -34,18 +28,18 @@ app.post('/api/auth/register', async (req, res) => {
   if (password.length < 6)
     return res.status(400).json({ error: 'Passwort muss mindestens 6 Zeichen haben' });
 
-  const existing = db.users.getByEmail.get(email);
+  const existing = await db.users.getByEmail(email);
   if (existing) return res.status(409).json({ error: 'E-Mail bereits registriert' });
 
   const hash = await bcrypt.hash(password, 12);
   const id = uuidv4();
-  db.users.create.run(id, email, hash, name);
+  await db.users.create(id, email, hash, name);
 
-  // Give new users 50,000 free tokens
-  db.users.updateBalance.run(50000, id);
+  // Give new users 500 free tokens
+  await db.users.updateBalance(500, id);
 
   const token = jwt.sign({ id, email }, process.env.JWT_SECRET, { expiresIn: '30d' });
-  const user = db.users.get.get(id);
+  const user = await db.users.get(id);
   res.status(201).json({ token, user: safeUser(user) });
 });
 
@@ -55,7 +49,7 @@ app.post('/api/auth/login', async (req, res) => {
   if (!email || !password)
     return res.status(400).json({ error: 'E-Mail und Passwort erforderlich' });
 
-  const user = db.users.getByEmail.get(email);
+  const user = await db.users.getByEmail(email);
   if (!user) return res.status(401).json({ error: 'E-Mail oder Passwort falsch' });
 
   const valid = await bcrypt.compare(password, user.password_hash);
@@ -67,7 +61,7 @@ app.post('/api/auth/login', async (req, res) => {
 
 // Get current user
 app.get('/api/auth/me', auth, (req, res) => {
-  const user = db.users.get.get(req.user.id);
+  const user = await db.users.get(req.user.id);
   if (!user) return res.status(404).json({ error: 'User nicht gefunden' });
   res.json({ user: safeUser(user) });
 });
@@ -76,8 +70,8 @@ app.get('/api/auth/me', auth, (req, res) => {
 app.patch('/api/auth/me', auth, (req, res) => {
   const { name } = req.body;
   if (!name) return res.status(400).json({ error: 'Name erforderlich' });
-  db.users.update.run(name, req.user.id);
-  const user = db.users.get.get(req.user.id);
+  await db.users.update(name, req.user.id);
+  const user = await db.users.get(req.user.id);
   res.json({ user: safeUser(user) });
 });
 
@@ -90,7 +84,7 @@ function safeUser(u) {
 // ════════════════════════════════════════
 
 app.get('/api/keys', auth, (req, res) => {
-  const keys = db.apiKeys.getAll.all(req.user.id);
+  const keys = await db.apiKeys.getAll(req.user.id);
   // Mask keys
   const masked = keys.map(k => ({ ...k, key: k.key.slice(0, 12) + '••••' + k.key.slice(-4) }));
   res.json({ keys: masked });
@@ -101,29 +95,29 @@ app.post('/api/keys', auth, (req, res) => {
   if (!name) return res.status(400).json({ error: 'Name erforderlich' });
   const key = 'sk-st-' + uuidv4().replace(/-/g, '');
   const id = uuidv4();
-  db.apiKeys.create.run(id, req.user.id, name, key);
+  await db.apiKeys.create(id, req.user.id, name, key);
   // Return full key once
   res.status(201).json({ id, name, key, active: true });
 });
 
 app.patch('/api/keys/:id/revoke', auth, (req, res) => {
-  const result = db.apiKeys.revoke.run(req.params.id, req.user.id);
-  if (!result.changes) return res.status(404).json({ error: 'Key nicht gefunden' });
+  const result = await db.apiKeys.revoke(req.params.id, req.user.id);
+  const result =  return res.status(404).json({ error: 'Key nicht gefunden' });
   res.json({ success: true });
 });
 
 app.delete('/api/keys/:id', auth, (req, res) => {
-  const result = db.apiKeys.delete.run(req.params.id, req.user.id);
-  if (!result.changes) return res.status(404).json({ error: 'Key nicht gefunden' });
+  const result = await db.apiKeys.delete(req.params.id, req.user.id);
+  const result =  return res.status(404).json({ error: 'Key nicht gefunden' });
   res.json({ success: true });
 });
 
 // Validate API key (for external use)
 app.post('/api/keys/validate', (req, res) => {
   const { key } = req.body;
-  const found = db.apiKeys.get.get(key);
+  const found = await db.apiKeys.getByKey(key);
   if (!found) return res.status(401).json({ valid: false });
-  const user = db.users.get.get(found.user_id);
+  const user = await db.users.get(found.user_id);
   res.json({ valid: true, userId: found.user_id, balance: user?.balance || 0 });
 });
 
@@ -132,12 +126,12 @@ app.post('/api/keys/validate', (req, res) => {
 // ════════════════════════════════════════
 
 app.get('/api/chats', auth, (req, res) => {
-  const chats = db.chats.getAll.all(req.user.id);
+  const chats = await db.chats.getAll(req.user.id);
   res.json({ chats });
 });
 
 app.get('/api/chats/:id', auth, (req, res) => {
-  const chat = db.chats.get.get(req.params.id, req.user.id);
+  const chat = await db.chats.get(req.params.id, req.user.id);
   if (!chat) return res.status(404).json({ error: 'Chat nicht gefunden' });
   res.json({ chat: { ...chat, messages: JSON.parse(chat.messages) } });
 });
@@ -146,15 +140,15 @@ app.post('/api/chats', auth, (req, res) => {
   const { title, model, messages } = req.body;
   if (!title || !model) return res.status(400).json({ error: 'Titel und Modell erforderlich' });
   const id = uuidv4();
-  db.chats.create.run(id, req.user.id, title, model, JSON.stringify(messages || []));
+  await db.chats.create(id, req.user.id, title, model, JSON.stringify(messages || []));
   res.status(201).json({ id, title, model });
 });
 
 app.patch('/api/chats/:id', auth, (req, res) => {
   const { title, messages, model } = req.body;
-  const chat = db.chats.get.get(req.params.id, req.user.id);
+  const chat = await db.chats.get(req.params.id, req.user.id);
   if (!chat) return res.status(404).json({ error: 'Chat nicht gefunden' });
-  db.chats.update.run(
+  await db.chats.update(
     title || chat.title,
     JSON.stringify(messages || JSON.parse(chat.messages)),
     model || chat.model,
@@ -165,13 +159,13 @@ app.patch('/api/chats/:id', auth, (req, res) => {
 });
 
 app.delete('/api/chats/:id', auth, (req, res) => {
-  const result = db.chats.delete.run(req.params.id, req.user.id);
-  if (!result.changes) return res.status(404).json({ error: 'Chat nicht gefunden' });
+  const result = await db.chats.delete(req.params.id, req.user.id);
+  const result =  return res.status(404).json({ error: 'Chat nicht gefunden' });
   res.json({ success: true });
 });
 
 app.delete('/api/chats', auth, (req, res) => {
-  db.chats.deleteAll.run(req.user.id);
+  await db.chats.deleteAll(req.user.id);
   res.json({ success: true });
 });
 
@@ -180,18 +174,18 @@ app.delete('/api/chats', auth, (req, res) => {
 // ════════════════════════════════════════
 
 app.get('/api/balance', auth, (req, res) => {
-  const user = db.users.get.get(req.user.id);
+  const user = await db.users.get(req.user.id);
   res.json({ balance: user?.balance || 0 });
 });
 
 app.post('/api/consume', auth, (req, res) => {
   const { amount } = req.body;
   if (!amount || amount <= 0) return res.status(400).json({ error: 'Ungültige Menge' });
-  const user = db.users.get.get(req.user.id);
+  const user = await db.users.get(req.user.id);
   if (!user || user.balance < amount)
     return res.status(402).json({ error: 'Kein Guthaben', balance: user?.balance || 0 });
-  db.users.updateBalance.run(-amount, req.user.id);
-  const updated = db.users.get.get(req.user.id);
+  await db.users.updateBalance(-amount, req.user.id);
+  const updated = await db.users.get(req.user.id);
   res.json({ success: true, balance: updated.balance });
 });
 
@@ -211,7 +205,7 @@ app.post('/api/payment/stripe/create-intent', auth, async (req, res) => {
       automatic_payment_methods: { enabled: true },
     });
 
-    db.transactions.create.run(txId, req.user.id, tokens, amount, 'card', intent.id, null);
+    await db.transactions.create(txId, req.user.id, tokens, amount, 'card', intent.id, null);
     res.json({ clientSecret: intent.client_secret, txId });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -228,10 +222,10 @@ app.post('/api/payment/stripe/webhook', express.raw({ type: 'application/json' }
 
   if (event.type === 'payment_intent.succeeded') {
     const intent = event.data.object;
-    const tx = db.transactions.getByStripe.get(intent.id);
+    const tx = await db.transactions.getByStripe(intent.id);
     if (tx && tx.status === 'pending') {
-      db.users.updateBalance.run(tx.tokens, tx.user_id);
-      db.transactions.update.run('completed', tx.id);
+      await db.users.updateBalance(tx.tokens, tx.user_id);
+      await db.transactions.update('completed', tx.id);
       console.log(`✓ Stripe: +${tx.tokens} Tokens für User ${tx.user_id}`);
     }
   }
@@ -283,7 +277,7 @@ app.post('/api/payment/paypal/create-order', auth, async (req, res) => {
       }),
     }).then(r => r.json());
 
-    db.transactions.create.run(txId, req.user.id, tokens, amount, 'paypal', null, order.id);
+    await db.transactions.create(txId, req.user.id, tokens, amount, 'paypal', null, order.id);
     res.json({ orderId: order.id, txId });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -303,10 +297,10 @@ app.post('/api/payment/paypal/capture-order', auth, async (req, res) => {
 
     if (capture.status === 'COMPLETED') {
       const customId = JSON.parse(capture.purchase_units[0].payments.captures[0].custom_id);
-      const tx = db.transactions.getByPaypal.get(orderId);
+      const tx = await db.transactions.getByPaypal(orderId);
       if (tx && tx.status === 'pending') {
-        db.users.updateBalance.run(customId.tokens, customId.userId);
-        db.transactions.update.run('completed', tx.id);
+        await db.users.updateBalance(customId.tokens, customId.userId);
+        await db.transactions.update('completed', tx.id);
         console.log(`✓ PayPal: +${customId.tokens} Tokens für User ${customId.userId}`);
       }
       res.json({ success: true, tokens: customId.tokens });
@@ -320,8 +314,105 @@ app.post('/api/payment/paypal/capture-order', auth, async (req, res) => {
 
 // Transactions history
 app.get('/api/transactions', auth, (req, res) => {
-  const txs = db.transactions.getAll.all(req.user.id);
+  const txs = await db.transactions.getAll(req.user.id);
   res.json({ transactions: txs });
+});
+
+// ════════════════════════════════════════
+//   GEMINI CHAT (Standard-KI)
+// ════════════════════════════════════════
+
+const DEFAULT_MODEL = 'gemini-2.0-flash';
+
+app.post('/api/chat', auth, async (req, res) => {
+  try {
+    const { message, model, history = [], systemPrompt } = req.body;
+    if (!message) return res.status(400).json({ error: 'Nachricht erforderlich' });
+
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) return res.status(500).json({ error: 'Kein Gemini API Key konfiguriert' });
+
+    // Token-Kosten berechnen (ca. 500 Tokens pro Nachricht)
+    const tokenCost = 500;
+    const user = await db.users.get(req.user.id);
+    if (!user || user.balance < tokenCost) {
+      return res.status(402).json({ error: 'Kein Guthaben', balance: user?.balance || 0 });
+    }
+
+    // Gemini API aufrufen
+    const modelName = model || DEFAULT_MODEL;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+
+    // Konvertiere Chat-History ins Gemini Format
+    const contents = [];
+
+    if (history.length > 0) {
+      for (const msg of history) {
+        contents.push({
+          role: msg.role === 'user' ? 'user' : 'model',
+          parts: [{ text: msg.content }]
+        });
+      }
+    }
+
+    // Aktuelle Nachricht hinzufügen
+    contents.push({ role: 'user', parts: [{ text: message }] });
+
+    const body = {
+      contents,
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 2048,
+      }
+    };
+
+    // System-Prompt falls vorhanden
+    if (systemPrompt) {
+      body.systemInstruction = { parts: [{ text: systemPrompt }] };
+    }
+
+    const geminiRes = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+
+    const data = await geminiRes.json();
+
+    if (!geminiRes.ok) {
+      console.error('Gemini Error:', data);
+      return res.status(500).json({ error: data.error?.message || 'Gemini Fehler' });
+    }
+
+    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+
+    // Tokens abziehen
+    await db.users.updateBalance(-tokenCost, req.user.id);
+    const updatedUser = await db.users.get(req.user.id);
+
+    res.json({
+      reply,
+      model: modelName,
+      tokensUsed: tokenCost,
+      balance: updatedUser.balance
+    });
+
+  } catch (err) {
+    console.error('Chat Error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Verfügbare Gemini Modelle
+app.get('/api/models', (req, res) => {
+  res.json({
+    default: DEFAULT_MODEL,
+    models: [
+      { id: 'gemini-2.0-flash', name: 'Gemini 2.0 Flash', mult: 0.5 },
+      { id: 'gemini-2.0-flash-lite', name: 'Gemini 2.0 Flash Lite', mult: 0.25 },
+      { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro', mult: 2.33 },
+    ]
+  });
 });
 
 // ════════════════════════════════════════
