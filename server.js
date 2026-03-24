@@ -422,4 +422,4 @@ app.get('/api/models', (req, res) => {
 app.get('/health', (_, res) => res.json({ status: 'ok', version: '2.0.0' }));
 
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`✓ SingleTokens Backend v2 läuft auf Port ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => console.log(`✓ SingleTokens Backend v2 läuft auf Port ${PORT}`));
