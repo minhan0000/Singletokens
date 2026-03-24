@@ -1,3 +1,8 @@
+process.on('uncaughtException', (err) => {
+  console.error('CRASH:', err.message);
+  console.error(err.stack);
+  process.exit(1);
+});
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
