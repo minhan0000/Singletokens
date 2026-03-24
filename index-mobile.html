@@ -846,6 +846,6 @@ function deleteGptM(id) { gptsM = gptsM.filter(g => g.id !== id); renderGptsM();
 function useGptM(id) { const g = gptsM.find(x=>x.id===id); if(g){curModel=g.model;document.getElementById('topbar-model').textContent=g.model;nav('chat');showToast('GPT "'+g.name+'" geladen!');} }
 renderGptsM();
 applyLang();
-</script>
+<script src="api.js"></script>
 </body>
 </html>
