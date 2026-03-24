@@ -1,3 +1,13 @@
+console.log('=== SERVER STARTING ===');
+process.on('uncaughtException', (err) => {
+  console.error('CRASH:', err.message, err.stack);
+  process.exit(1);
+});
+process.on('unhandledRejection', (err) => {
+  console.error('UNHANDLED REJECTION:', err);
+  process.exit(1);
+});
+console.log('=== HANDLERS SET ===');
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
