@@ -2,8 +2,7 @@ const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const fs = require('fs');
 
-fs.mkdirSync(path.join(__dirname, '../data'), { recursive: true });
-const db = new sqlite3.Database('./singletokens.db'); 
+const db = new sqlite3.Database('/tmp/singletokens.db');
 
 db.serialize(() => {
   db.run(`CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, email TEXT UNIQUE NOT NULL, password_hash TEXT NOT NULL, name TEXT NOT NULL, balance INTEGER DEFAULT 0, created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')))`);
