@@ -107,14 +107,36 @@ function switchTab(mode) {
 }
 
 async function submitAuth() {
-  const btn = document.getElementById('auth-submit-btn');
   const errorEl = document.getElementById('auth-error');
   const email = document.getElementById('auth-email').value.trim();
   const password = document.getElementById('auth-password').value;
-  btn.textContent = '...'; btn.disabled = true; errorEl.style.display = 'none';
-  const data = authMode === 'login' ? await login(email, password) : await register(email, password, document.getElementById('auth-name').value.trim());
-  if (data.error) { errorEl.textContent = data.error; errorEl.style.display = 'block'; }
-  btn.textContent = authMode === 'login' ? 'Anmelden' : 'Registrieren'; btn.disabled = false;
+  
+  let btn = document.getElementById('auth-submit-btn');
+  btn.textContent = '...'; btn.disabled = true;
+  errorEl.style.display = 'none';
+
+  try {
+    const data = authMode === 'login'
+      ? await login(email, password)
+      : await register(email, password, document.getElementById('auth-name').value.trim());
+
+    if (data.error) {
+      errorEl.textContent = data.error;
+      errorEl.style.display = 'block';
+    }
+    // Wenn data.token da ist, hat login() bereits closeAuthModal() aufgerufen ✓
+  } catch (e) {
+    console.error('Auth error:', e);
+    errorEl.textContent = 'Verbindungsfehler. Bitte erneut versuchen.';
+    errorEl.style.display = 'block';
+  }
+
+  // btn neu holen, falls Modal neu gerendert wurde
+  btn = document.getElementById('auth-submit-btn');
+  if (btn) {
+    btn.textContent = authMode === 'login' ? 'Anmelden' : 'Registrieren';
+    btn.disabled = false;
+  }
 }
 
 function closeAuthModal() { const m = document.getElementById('auth-modal'); if (m) m.style.display = 'none'; }
