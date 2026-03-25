@@ -204,15 +204,22 @@ app.post('/api/payment/paypal/capture-order', (_, res) => res.status(503).json({
 app.get('/api/transactions', auth, async (req, res) => res.json({ transactions: [] }));
 
 // ════════════════════════════════════════
-//   GEMINI CHAT ✅ kein Auth mehr
+//   GEMINI CHAT ✅ jetzt mit Auth gesichert
 // ════════════════════════════════════════
 
 const DEFAULT_MODEL = 'gemini-2.0-flash';
 
-app.post('/api/chat', async (req, res) => {
+// ✅ FIX: auth Middleware hinzugefügt — nur eingeloggte User können chatten
+app.post('/api/chat', auth, async (req, res) => {
   try {
     const { message, model, history = [], systemPrompt } = req.body;
     if (!message) return res.status(400).json({ error: 'Nachricht erforderlich' });
+
+    // ✅ Token-Guthaben prüfen bevor Anfrage rausgeht
+    const user = await db.users.get(req.user.id);
+    if (!user || user.balance <= 0) {
+      return res.status(402).json({ error: 'Kein Guthaben. Bitte Tokens kaufen.' });
+    }
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) return res.status(500).json({ error: 'Kein Gemini API Key konfiguriert' });
@@ -223,7 +230,6 @@ app.post('/api/chat', async (req, res) => {
     // Chat-History ins Gemini Format konvertieren
     const contents = [];
     for (const msg of history) {
-      // Letzte Nachricht nicht doppelt schicken
       if (msg.content === message && msg === history[history.length - 1]) continue;
       contents.push({
         role: msg.role === 'user' ? 'user' : 'model',
@@ -259,7 +265,12 @@ app.post('/api/chat', async (req, res) => {
 
     const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Keine Antwort erhalten.';
 
-    res.json({ reply, model: modelName });
+    // ✅ Tokens verbrauchen (grobe Schätzung: Input + Output Länge)
+    const tokensUsed = Math.ceil((message.length + reply.length) / 4);
+    await db.users.updateBalance(-tokensUsed, req.user.id);
+    const updatedUser = await db.users.get(req.user.id);
+
+    res.json({ reply, model: modelName, balance: updatedUser.balance });
 
   } catch (err) {
     console.error('Chat Error:', err);
