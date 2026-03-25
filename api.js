@@ -164,7 +164,6 @@ window.sendMessage = async function () {
 
   const model = document.getElementById('chat-model-sel')?.value || 'Gemini 2.0 Flash';
 
-  // Send-Button-Animation
   const sb = document.querySelector('.send-btn');
   if (sb) { sb.classList.add('sending'); setTimeout(() => sb.classList.remove('sending'), 300); }
 
@@ -173,10 +172,16 @@ window.sendMessage = async function () {
   inp.style.height = '22px';
 
   const typing = typeof addTyping === 'function' ? addTyping() : null;
-  const data   = await sendRealMessage(text, model);
-  if (typing) typing.remove();
 
-  const reply = data?.reply || ('Fehler: ' + (data?.error || 'Unbekannt'));
+  let reply;
+  try {
+    const data = await sendRealMessage(text, model);
+    reply = data?.reply || ('⚠️ Fehler vom Server: ' + (data?.error || 'Keine Antwort'));
+  } catch(e) {
+    reply = '⚠️ Verbindungsfehler: ' + e.message;
+  }
+
+  if (typing) typing.remove();
   if (typeof addMsg === 'function') addMsg(reply, 'ai', model);
 };
 
