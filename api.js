@@ -158,8 +158,6 @@ async function sendRealMessage(text, model) {
 // ─────────────────────────────────────────────────────────────
 
 window.sendMessage = async function () {
-  if (!authToken) { showAuthModal(); return; }
-
   const inp  = document.getElementById('chat-input');
   const text = inp?.value?.trim();
   if (!text) return;
@@ -183,8 +181,6 @@ window.sendMessage = async function () {
 };
 
 window.sendMsg = async function () {
-  if (!authToken) { showAuthModal(); return; }
-
   const inp  = document.getElementById('chat-input');
   const text = inp?.value?.trim();
   if (!text) return;
@@ -305,7 +301,5 @@ window.addEventListener('load', () => {
   if (authToken && currentUser) {
     updateUIForUser();
     fetchBalance();
-  } else {
-    showAuthModal();
   }
 });
