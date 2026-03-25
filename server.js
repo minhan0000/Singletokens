@@ -14,23 +14,25 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
-// const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY); // coming soon
 const db = require('./db');
 const auth = require('./auth.middleware');
 
 const app = express();
 
-app.use(cors({ origin: process.env.FRONTEND_URL || '*' }));
+// ✅ CORS fix — alle Origins erlaubt
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+app.options('*', cors());
 
-// Stripe webhook needs raw body
-// app.use('/api/payment/stripe/webhook', express.raw({ type: 'application/json' })); // coming soon
 app.use(express.json());
 
 // ════════════════════════════════════════
 //   AUTH
 // ════════════════════════════════════════
 
-// Register
 app.post('/api/auth/register', async (req, res) => {
   const { email, password, name } = req.body;
   if (!email || !password || !name)
@@ -44,8 +46,6 @@ app.post('/api/auth/register', async (req, res) => {
   const hash = await bcrypt.hash(password, 12);
   const id = uuidv4();
   await db.users.create(id, email, hash, name);
-
-  // Give new users 500 free tokens
   await db.users.updateBalance(500, id);
 
   const token = jwt.sign({ id, email }, process.env.JWT_SECRET, { expiresIn: '30d' });
@@ -53,7 +53,6 @@ app.post('/api/auth/register', async (req, res) => {
   res.status(201).json({ token, user: safeUser(user) });
 });
 
-// Login
 app.post('/api/auth/login', async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password)
@@ -69,14 +68,12 @@ app.post('/api/auth/login', async (req, res) => {
   res.json({ token, user: safeUser(user) });
 });
 
-// Get current user
 app.get('/api/auth/me', auth, async (req, res) => {
   const user = await db.users.get(req.user.id);
   if (!user) return res.status(404).json({ error: 'User nicht gefunden' });
   res.json({ user: safeUser(user) });
 });
 
-// Update profile
 app.patch('/api/auth/me', auth, async (req, res) => {
   const { name } = req.body;
   if (!name) return res.status(400).json({ error: 'Name erforderlich' });
@@ -95,7 +92,6 @@ function safeUser(u) {
 
 app.get('/api/keys', auth, async (req, res) => {
   const keys = await db.apiKeys.getAll(req.user.id);
-  // Mask keys
   const masked = keys.map(k => ({ ...k, key: k.key.slice(0, 12) + '••••' + k.key.slice(-4) }));
   res.json({ keys: masked });
 });
@@ -106,7 +102,6 @@ app.post('/api/keys', auth, async (req, res) => {
   const key = 'sk-st-' + uuidv4().replace(/-/g, '');
   const id = uuidv4();
   await db.apiKeys.create(id, req.user.id, name, key);
-  // Return full key once
   res.status(201).json({ id, name, key, active: true });
 });
 
@@ -122,7 +117,6 @@ app.delete('/api/keys/:id', auth, async (req, res) => {
   res.json({ success: true });
 });
 
-// Validate API key (for external use)
 app.post('/api/keys/validate', async (req, res) => {
   const { key } = req.body;
   const found = await db.apiKeys.getByKey(key);
@@ -210,12 +204,12 @@ app.post('/api/payment/paypal/capture-order', (_, res) => res.status(503).json({
 app.get('/api/transactions', auth, async (req, res) => res.json({ transactions: [] }));
 
 // ════════════════════════════════════════
-//   GEMINI CHAT (Standard-KI)
+//   GEMINI CHAT ✅ kein Auth mehr
 // ════════════════════════════════════════
 
 const DEFAULT_MODEL = 'gemini-2.0-flash';
 
-app.post('/api/chat', auth, async (req, res) => {
+app.post('/api/chat', async (req, res) => {
   try {
     const { message, model, history = [], systemPrompt } = req.body;
     if (!message) return res.status(400).json({ error: 'Nachricht erforderlich' });
@@ -223,30 +217,19 @@ app.post('/api/chat', auth, async (req, res) => {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) return res.status(500).json({ error: 'Kein Gemini API Key konfiguriert' });
 
-    // Token-Kosten berechnen (ca. 500 Tokens pro Nachricht)
-    const tokenCost = 500;
-    const user = await db.users.get(req.user.id);
-    if (!user || user.balance < tokenCost) {
-      return res.status(402).json({ error: 'Kein Guthaben', balance: user?.balance || 0 });
-    }
-
-    // Gemini API aufrufen
     const modelName = model || DEFAULT_MODEL;
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
 
-    // Konvertiere Chat-History ins Gemini Format
+    // Chat-History ins Gemini Format konvertieren
     const contents = [];
-
-    if (history.length > 0) {
-      for (const msg of history) {
-        contents.push({
-          role: msg.role === 'user' ? 'user' : 'model',
-          parts: [{ text: msg.content }]
-        });
-      }
+    for (const msg of history) {
+      // Letzte Nachricht nicht doppelt schicken
+      if (msg.content === message && msg === history[history.length - 1]) continue;
+      contents.push({
+        role: msg.role === 'user' ? 'user' : 'model',
+        parts: [{ text: msg.content }]
+      });
     }
-
-    // Aktuelle Nachricht hinzufügen
     contents.push({ role: 'user', parts: [{ text: message }] });
 
     const body = {
@@ -257,7 +240,6 @@ app.post('/api/chat', auth, async (req, res) => {
       }
     };
 
-    // System-Prompt falls vorhanden
     if (systemPrompt) {
       body.systemInstruction = { parts: [{ text: systemPrompt }] };
     }
@@ -275,18 +257,9 @@ app.post('/api/chat', auth, async (req, res) => {
       return res.status(500).json({ error: data.error?.message || 'Gemini Fehler' });
     }
 
-    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Keine Antwort erhalten.';
 
-    // Tokens abziehen
-    await db.users.updateBalance(-tokenCost, req.user.id);
-    const updatedUser = await db.users.get(req.user.id);
-
-    res.json({
-      reply,
-      model: modelName,
-      tokensUsed: tokenCost,
-      balance: updatedUser.balance
-    });
+    res.json({ reply, model: modelName });
 
   } catch (err) {
     console.error('Chat Error:', err);
@@ -294,14 +267,13 @@ app.post('/api/chat', auth, async (req, res) => {
   }
 });
 
-// Verfügbare Gemini Modelle
 app.get('/api/models', (req, res) => {
   res.json({
     default: DEFAULT_MODEL,
     models: [
-      { id: 'gemini-2.0-flash', name: 'Gemini 2.0 Flash', mult: 0.5 },
+      { id: 'gemini-2.0-flash',      name: 'Gemini 2.0 Flash',      mult: 0.5  },
       { id: 'gemini-2.0-flash-lite', name: 'Gemini 2.0 Flash Lite', mult: 0.25 },
-      { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro', mult: 2.33 },
+      { id: 'gemini-1.5-pro',        name: 'Gemini 1.5 Pro',        mult: 2.33 },
     ]
   });
 });
@@ -312,12 +284,18 @@ app.get('/api/models', (req, res) => {
 
 app.get('/health', (_, res) => res.json({ status: 'ok', version: '2.0.0' }));
 
+// ════════════════════════════════════════
+//   START
+// ════════════════════════════════════════
+
 const PORT = process.env.PORT || 3001;
 
 async function start() {
   await db.init();
   console.log('✓ Datenbank initialisiert');
-  app.listen(PORT, '0.0.0.0', () => console.log(`✓ SingleTokens Backend v2 läuft auf Port ${PORT}`));
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`✓ SingleTokens Backend v2 läuft auf Port ${PORT}`);
+  });
 }
 
 start().catch(err => {
