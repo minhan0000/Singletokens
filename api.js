@@ -100,11 +100,11 @@ function updateUIForUser() {
   if (!currentUser) return;
   const initial = currentUser.name.charAt(0).toUpperCase();
   const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-  set('sidebar-av',       initial);
-  set('sidebar-name',     currentUser.name);
-  set('s-av',             initial);
-  set('s-display-name',   currentUser.name);
-  set('s-display-email',  currentUser.email);
+  set('sidebar-av',      initial);
+  set('sidebar-name',    currentUser.name);
+  set('s-av',            initial);
+  set('s-display-name',  currentUser.name);
+  set('s-display-email', currentUser.email);
   balance = currentUser.balance ?? 0;
   updateBalanceUI();
 }
@@ -116,12 +116,10 @@ function resetChatHistory() {
   chatHistory = [];
 }
 
-// ─── KI-Nachricht senden ───────────────────
+// ─── Echte KI-Nachricht senden ─────────────
 async function sendRealMessage(text, model) {
   try {
     const geminiModel = getGeminiModel(model);
-
-    // Nutzer-Nachricht zur History hinzufügen
     chatHistory.push({ role: 'user', content: text });
 
     const data = await apiCall('/api/chat', 'POST', {
@@ -131,17 +129,14 @@ async function sendRealMessage(text, model) {
     });
 
     if (data.error) {
-      // Letzte Nachricht wieder entfernen, damit History nicht korrupt wird
       chatHistory.pop();
       return { error: data.error };
     }
 
     if (data.reply) {
-      // KI-Antwort zur History hinzufügen
       chatHistory.push({ role: 'assistant', content: data.reply });
     }
 
-    // Balance aus Response übernehmen, falls mitgeliefert
     if (data.balance !== undefined) {
       balance = data.balance;
       updateBalanceUI();
@@ -150,11 +145,65 @@ async function sendRealMessage(text, model) {
     return data;
   } catch (e) {
     console.error('sendRealMessage error:', e);
-    // Letzte Nutzer-Nachricht entfernen bei Netzwerkfehler
     chatHistory.pop();
     return { error: 'Verbindungsfehler. Bitte erneut versuchen.' };
   }
 }
+
+// ─────────────────────────────────────────────────────────────
+//  sendMessage SOFORT überschreiben — kein load-Event nötig.
+//  Da api.js am Ende von app.html eingebunden wird, ist der
+//  DOM bereits fertig. window.sendMessage wird hier direkt
+//  neu gesetzt und überschreibt die app.html-Version.
+// ─────────────────────────────────────────────────────────────
+
+window.sendMessage = async function () {
+  if (!authToken) { showAuthModal(); return; }
+
+  const inp  = document.getElementById('chat-input');
+  const text = inp?.value?.trim();
+  if (!text) return;
+
+  const model = document.getElementById('chat-model-sel')?.value || 'Gemini 2.0 Flash';
+
+  // Send-Button-Animation
+  const sb = document.querySelector('.send-btn');
+  if (sb) { sb.classList.add('sending'); setTimeout(() => sb.classList.remove('sending'), 300); }
+
+  if (typeof addMsg === 'function') addMsg(text, 'user');
+  inp.value = '';
+  inp.style.height = '22px';
+
+  const typing = typeof addTyping === 'function' ? addTyping() : null;
+  const data   = await sendRealMessage(text, model);
+  if (typing) typing.remove();
+
+  const reply = data?.reply || ('Fehler: ' + (data?.error || 'Unbekannt'));
+  if (typeof addMsg === 'function') addMsg(reply, 'ai', model);
+};
+
+window.sendMsg = async function () {
+  if (!authToken) { showAuthModal(); return; }
+
+  const inp  = document.getElementById('chat-input');
+  const text = inp?.value?.trim();
+  if (!text) return;
+
+  const model = (typeof curModel !== 'undefined' ? curModel : null)
+    || document.getElementById('chat-model-sel')?.value
+    || 'Gemini 2.0 Flash';
+
+  if (typeof addMsg === 'function') addMsg(text, 'user');
+  inp.value = '';
+  inp.style.height = 'auto';
+
+  const typing = typeof addTyping === 'function' ? addTyping() : null;
+  const data   = await sendRealMessage(text, model);
+  if (typing) typing.remove();
+
+  const reply = data?.reply || ('Fehler: ' + (data?.error || 'Unbekannt'));
+  if (typeof addMsg === 'function') addMsg(reply, 'ai', model);
+};
 
 // ─── Auth Modal ────────────────────────────
 function showAuthModal() {
@@ -201,7 +250,6 @@ function switchTab(mode) {
   const isLogin = mode === 'login';
   const activeStyle   = `flex:1;padding:8px;background:#22D3EE;border:none;border-radius:6px;color:#03060F;font-size:13px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif`;
   const inactiveStyle = `flex:1;padding:8px;background:transparent;border:none;color:#9CA3AF;font-size:13px;font-weight:600;cursor:pointer;font-family:'Syne',sans-serif`;
-
   document.getElementById('tab-login').style.cssText    = isLogin  ? activeStyle : inactiveStyle;
   document.getElementById('tab-register').style.cssText = !isLogin ? activeStyle : inactiveStyle;
   document.getElementById('register-name-wrap').style.display = isLogin ? 'none' : 'block';
@@ -225,8 +273,8 @@ async function submitAuth() {
       : await register(email, password, document.getElementById('auth-name').value.trim());
 
     if (data.error) {
-      errorEl.textContent    = data.error;
-      errorEl.style.display  = 'block';
+      errorEl.textContent   = data.error;
+      errorEl.style.display = 'block';
     }
   } catch (e) {
     console.error('Auth error:', e);
@@ -246,55 +294,14 @@ function closeAuthModal() {
   if (m) m.style.display = 'none';
 }
 
-// ─── sendMessage patchen ───────────────────
-function patchSendMessage() {
-  const _send = async (inputId, modelGetter) => {
-    if (!authToken) { showAuthModal(); return; }
-    const inp  = document.getElementById(inputId);
-    const text = inp?.value?.trim();
-    if (!text) return;
-
-    const model = typeof modelGetter === 'function' ? modelGetter() : 'Gemini 2.0 Flash';
-
-    if (typeof addMsg === 'function') addMsg(text, 'user');
-    inp.value = '';
-    if (inp.style) inp.style.height = 'auto';
-
-    const typing = typeof addTyping === 'function' ? addTyping() : null;
-    const data   = await sendRealMessage(text, model);
-    if (typing) typing.remove();
-
-    const reply = data?.reply || ('Fehler: ' + (data?.error || 'Unbekannt'));
-    if (typeof addMsg === 'function') addMsg(reply, 'ai', model);
-
-    // Send-Button-Animation
-    const sb = document.querySelector('.send-btn');
-    if (sb) { sb.classList.add('sending'); setTimeout(() => sb.classList.remove('sending'), 300); }
-  };
-
-  window.sendMessage = () => _send('chat-input', () =>
-    document.getElementById('chat-model-sel')?.value || 'Gemini 2.0 Flash'
-  );
-
-  window.sendMsg = () => _send('chat-input', () =>
-    typeof curModel !== 'undefined' ? curModel : 'Gemini 2.0 Flash'
-  );
-}
-
 // ─── Init ──────────────────────────────────
 window.addEventListener('load', () => {
-  // Standardmodell setzen
   const modelSel = document.getElementById('chat-model-sel');
   if (modelSel) modelSel.value = 'Gemini 2.0 Flash';
 
   const topbarModel = document.getElementById('topbar-model');
   if (topbarModel) topbarModel.textContent = 'Gemini 2.0 Flash';
 
-  if (typeof curModel !== 'undefined') window.curModel = 'Gemini 2.0 Flash';
-
-  patchSendMessage();
-
-  // Falls User bereits eingeloggt → UI initialisieren
   if (authToken && currentUser) {
     updateUIForUser();
     fetchBalance();
