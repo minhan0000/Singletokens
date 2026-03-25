@@ -5,7 +5,7 @@
 const API = 'https://singletokens.onrender.com';
 let authToken = localStorage.getItem('st_token');
 let currentUser = JSON.parse(localStorage.getItem('st_user') || 'null');
-let balance = 0;
+// balance wird in app.html deklariert — hier kein let nötig
 
 // ─── Modell-Mapping ───────────────────────
 const GEMINI_MODEL_MAP = {
