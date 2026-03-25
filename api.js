@@ -73,15 +73,6 @@ function updateUIForUser() {
 
 let chatHistory = [];
 
-async function sendRealMessage(message, modelName) {
-  if (!authToken) { showAuthModal(); return null; }
-  const data = await apiCall('/api/chat', 'POST', { message, model: getGeminiModel(modelName), history: chatHistory });
-  if (data.reply) {
-    chatHistory.push({ role: 'user', content: message });
-    chatHistory.push({ role: 'assistant', content: data.reply });
-    if (data.balance !== undefined) { balance = data.balance; updateBalanceUI(); }
-  }
-  return data;
 }
 
 function showAuthModal() {
@@ -181,5 +172,4 @@ window.addEventListener('load', () => {
 
   patchSendMessage();
 
-  if (!authToken) { showAuthModal(); } else { updateUIForUser(); fetchBalance(); }
 });
