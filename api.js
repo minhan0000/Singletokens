@@ -12,14 +12,32 @@ const MODEL_MAP = {
 
 let chatHistory = [];
 let activeGptPrompt = null;
+let backendReady = false;
 
 function resetChatHistory() {
   chatHistory = [];
   activeGptPrompt = null;
 }
 
-/* Backend aufwecken beim Laden der Seite */
-fetch(`${API_BASE}/health`).catch(() => {});
+/* ── Backend aufwecken & bereit melden ── */
+async function wakeBackend() {
+  try {
+    const res = await fetch(`${API_BASE}/health`);
+    if (res.ok) {
+      backendReady = true;
+      console.log('✓ Backend bereit');
+    }
+  } catch (e) {
+    // noch nicht wach, nochmal versuchen
+    setTimeout(wakeBackend, 5000);
+  }
+}
+wakeBackend();
+
+/* Alle 14 Minuten pingen damit Render nicht einschläft */
+setInterval(() => {
+  fetch(`${API_BASE}/health`).catch(() => {});
+}, 14 * 60 * 1000);
 
 /* ─── sendMessage ─── */
 sendMessage = async function () {
@@ -44,6 +62,13 @@ sendMessage = async function () {
     chatHistory.pop();
     addMsg(`⚠ "${modelName}" ist noch nicht live. Bitte wähle Llama, Gemma, Mixtral oder DeepSeek R1.`, 'ai', modelName);
     return;
+  }
+
+  /* Falls Backend noch aufwacht: kurz warten */
+  if (!backendReady) {
+    typingEl.querySelector('.typing-indicator') &&
+      (typingEl.querySelector('.typing-indicator').title = 'Backend wacht auf...');
+    await new Promise(r => setTimeout(r, 3000));
   }
 
   const messages = [];
@@ -72,12 +97,16 @@ sendMessage = async function () {
       updateBalance(Math.floor(reply.length * mult + 10));
 
     addMsg(reply, 'ai', modelName);
+    backendReady = true;
     if (typeof onMessageComplete === 'function') onMessageComplete();
 
   } catch (err) {
     typingEl.remove();
     chatHistory.pop();
-    addMsg('⚠ Backend nicht erreichbar – ist der Render-Dienst online?', 'ai', modelName);
+    backendReady = false;
+    addMsg('⚠ Backend nicht erreichbar – bitte kurz warten und nochmal versuchen.', 'ai', modelName);
     console.error('api.js Fehler:', err);
+    // Neu aufwecken
+    setTimeout(wakeBackend, 2000);
   }
 };
