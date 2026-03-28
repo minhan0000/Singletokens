@@ -12,7 +12,7 @@ const auth = require('./auth.middleware');
 
 const app = express();
 
-// ✅ CORS — allererste Middleware, vor allem anderen
+// ✅ CORS
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin',  '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE,OPTIONS');
@@ -140,7 +140,7 @@ app.post('/api/consume', auth, async (req, res) => {
 });
 app.get('/api/transactions', auth, async (req, res) => res.json({ transactions: [] }));
 
-// ── PAYMENTS (coming soon) ────────────────────────────────────────────────────
+// ── PAYMENTS ──────────────────────────────────────────────────────────────────
 
 app.post('/api/payment/stripe/create-intent', (_, res) => res.status(503).json({ error: 'Coming soon' }));
 app.post('/api/payment/stripe/webhook',       (_, res) => res.json({ received: true }));
@@ -157,14 +157,15 @@ const MODEL_MAP = {
   'DeepSeek R1 70B':  'deepseek-r1-distill-llama-70b',
 };
 
-// ✅ Standard-System-Prompt: immer Deutsch, außer User sagt explizit Englisch
-const DEFAULT_SYSTEM_PROMPT = `Du bist ein hilfreicher, konstruktiver Assistent namens SingleTokens AI.
+// ✅ Direkter, knapper System-Prompt
+const DEFAULT_SYSTEM_PROMPT = `Du bist SingleTokens AI. Antworte IMMER auf Deutsch.
 
-Antworte IMMER auf Deutsch, egal in welcher Sprache der User schreibt.
-Ausnahme: Wenn der User explizit schreibt "respond in English" oder "answer in English",
-dann antwortest du auf Englisch — bis er wieder auf Deutsch wechselt.
-
-Sei präzise, freundlich und hilfreich.`;
+Regeln:
+- Komm sofort zum Punkt. Kein Intro, kein "Natürlich!", kein "Gerne!", kein Fülltext.
+- Antworte so kurz wie möglich — nur so lang wie nötig.
+- Keine Wiederholung der Frage. Direkt die Antwort.
+- Kein übertriebenes Lob oder Bestätigung.
+- Ausnahme Sprache: Wenn der User explizit "respond in English" schreibt, antworte auf Englisch.`;
 
 app.post('/api/chat', async (req, res) => {
   try {
@@ -178,7 +179,7 @@ app.post('/api/chat', async (req, res) => {
 
     const messages = [];
 
-    // ✅ Custom GPT System-Prompt hat Vorrang, sonst Default (Deutsch)
+    // Custom GPT / Personalisierungs-Prompt hat Vorrang, sonst direkter Default
     messages.push({
       role: 'system',
       content: systemPrompt || DEFAULT_SYSTEM_PROMPT
@@ -189,7 +190,6 @@ app.post('/api/chat', async (req, res) => {
         messages.push({ role: msg.role === 'model' ? 'assistant' : msg.role, content: msg.content });
     }
 
-    // Letzten User-Eintrag nicht doppelt senden
     if (messages[messages.length - 1]?.content !== message)
       messages.push({ role: 'user', content: message });
 
@@ -217,7 +217,7 @@ app.get('/api/models', (_, res) => res.json({
 
 // ── HEALTH ────────────────────────────────────────────────────────────────────
 
-app.get('/health', (_, res) => res.json({ status: 'ok', version: '2.2.0' }));
+app.get('/health', (_, res) => res.json({ status: 'ok', version: '2.2.1' }));
 
 // ── START ─────────────────────────────────────────────────────────────────────
 
