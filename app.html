@@ -96,8 +96,6 @@ html,body{height:100%;overflow:hidden;background:var(--dark);font-family:'Syne',
 .send-btn{width:32px;height:32px;border-radius:8px;background:var(--acc);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:-2px;transition:all .15s}
 .send-btn:hover{background:#67E8F9}
 .send-btn:active{transform:scale(.9)}
-.send-btn.sending{animation:sendPulse .3s ease}
-@keyframes sendPulse{0%{transform:scale(1)}50%{transform:scale(.85)}100%{transform:scale(1)}}
 .send-btn svg{width:14px;height:14px;stroke:#03060F;fill:none;stroke-width:2.5;stroke-linecap:round}
 .typing-indicator{display:flex;align-items:center;gap:4px;padding:10px 14px;background:var(--dark2);border:1px solid var(--border);border-radius:12px 12px 12px 2px;width:fit-content}
 .typing-dot{width:6px;height:6px;border-radius:50%;background:var(--muted2);animation:typingPulse 1.4s infinite}
@@ -285,16 +283,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .tag-red{background:rgba(239,68,68,.15);color:#FCA5A5}
 .tag-green{background:rgba(34,197,94,.15);color:#86EFAC}
 .tag-muted{background:rgba(255,255,255,.07);color:var(--muted2)}
-.light-mode .mc{background:#FFFFFF;border:1.5px solid #E5E7EB}
-.light-mode .mc:hover{background:#F9FAFB;border-color:#D1D5DB}
-.light-mode .mc .mc-name{color:#111827}.light-mode .mc .mc-price{color:#9CA3AF}
-.light-mode .mc.cheap{background:linear-gradient(135deg,#ECFEFF,#F0FDFF);border-color:#A5F3FC}
-.light-mode .mc.expensive{background:linear-gradient(135deg,#FFF5F5,#FEF2F2);border-color:#FECACA}
-.light-mode .mc.reference{background:linear-gradient(135deg,#EFF6FF,#F0F9FF);border-color:#BFDBFE}
-.light-mode .mfbtn{background:#FFFFFF;border-color:#E5E7EB;color:#6B7280}
-.light-mode .mfbtn.active{background:var(--acc);color:#fff;border-color:var(--acc)}
-.light-mode .models-view-inner h2{color:#111827}
-.light-mode .models-view-inner p{color:#6B7280}
 </style>
 </head>
 <body>
@@ -345,7 +333,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 <!-- ── CHAT ── -->
 <div class="view active" id="view-chat">
   <div class="chat-header">
-    <!-- ✅ Geändert: Llama 3.3 70B als Default, Groq-Modelle oben -->
     <select class="chat-model-sel" id="chat-model-sel">
       <option value="Llama 3.3 70B" selected>Llama 3.3 70B</option>
       <option value="Llama 3.1 8B">Llama 3.1 8B</option>
@@ -365,7 +352,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
     <div class="token-counter" id="token-counter" onclick="openView('purchase')">716K Tokens</div>
   </div>
   <div class="chat-messages" id="chat-messages">
-    <!-- ✅ Geändert: Meta-Text auf Llama 3.3 70B -->
     <div class="msg ai">
       <div class="msg-bubble">Hallo! Ich bin SingleTokens AI. Wie kann ich dir heute helfen?</div>
       <div class="msg-meta">SingleTokens · Llama 3.3 70B</div>
@@ -426,7 +412,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
       <div><div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px">Name *</div><input id="gpt-name" type="text" placeholder="z.B. Coding-Assistent" style="width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Syne',sans-serif;font-size:13px;color:var(--text);outline:none"></div>
       <div><div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px">Beschreibung</div><input id="gpt-desc" type="text" placeholder="Wofür ist dieser GPT?" style="width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Syne',sans-serif;font-size:13px;color:var(--text);outline:none"></div>
       <div><div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px">Basismodell</div>
-        <!-- ✅ Geändert: Groq-Modelle als Standard im GPT-Modal -->
         <select id="gpt-model" style="width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Syne',sans-serif;font-size:13px;color:var(--text);outline:none;-webkit-appearance:none">
           <option value="Llama 3.3 70B">Llama 3.3 70B</option>
           <option value="Llama 3.1 8B">Llama 3.1 8B</option>
@@ -466,7 +451,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
         <div class="step-line" id="line2"></div>
         <div class="step"><div class="step-num" id="sn3">3</div><div class="step-lbl" id="sl3">Fertig</div></div>
       </div>
-      <!-- STEP 1 -->
       <div class="pg active" id="p-view-1">
         <div class="p-sec-label">Token-Menge</div>
         <div class="amount-box">
@@ -492,7 +476,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
         <input type="range" id="tok-slider" min="0" max="100" value="0" step="1">
         <div class="min-warn" id="min-warn"><span class="min-warn-text">⚠ Mindestens $1.00 · 333K Tokens erforderlich</span></div>
         <div class="est-box">
-          <!-- ✅ Geändert: Geschätzte Nachrichten mit Groq-Modellen als Referenz -->
           <div class="est-title">Geschätzte Nachrichtenmenge</div>
           <div class="est-row"><span class="est-model">GPT-5 <span class="mult-badge">x70</span></span><span class="est-val" id="e-gpt5">–</span></div>
           <div class="est-row"><span class="est-model">Llama 3.3 70B <span class="mult-badge">x0.3</span></span><span class="est-val" id="e-llama">–</span></div>
@@ -521,7 +504,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
         <button class="primary-btn" id="btn-to-checkout" onclick="goCheckout()">Weiter zum Checkout →</button>
         <div class="p-hint"><span>Tokens verfallen nie</span> · <span>Alle Modelle</span> · <span>Sofort verfügbar</span></div>
       </div>
-      <!-- STEP 2 -->
       <div class="pg" id="p-view-2">
         <div class="p-sec-label">Bestellübersicht</div>
         <div class="co-summary">
@@ -558,7 +540,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
         <button class="primary-btn" id="btn-pay" onclick="doPayment()">Jetzt kaufen &amp; bezahlen →</button>
         <button class="secondary-btn" onclick="pGoBack(1)">← Zurück</button>
       </div>
-      <!-- STEP 3 -->
       <div class="pg" id="p-view-3">
         <div class="suc-wrap">
           <div class="suc-icon"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>
@@ -596,7 +577,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
       <div class="s-pg active" id="s-general">
         <div class="s-title" data-t="general"></div>
         <div class="s-row"><div class="s-info"><div class="s-label" data-t="language"></div><div class="s-desc" data-t="language_desc"></div></div><select class="s-sel" id="lang-sel" onchange="setLang(this.value)"><option value="de">Deutsch</option><option value="en">English</option><option value="fr">Français</option><option value="es">Español</option><option value="tr">Türkçe</option><option value="ja">日本語</option></select></div>
-        <!-- ✅ Geändert: Llama 3.3 70B als Standard im Settings-Dropdown -->
         <div class="s-row"><div class="s-info"><div class="s-label" data-t="default_model"></div><div class="s-desc" data-t="default_model_desc"></div></div><select class="s-sel" onchange="showToast(T('saved'))"><option value="Llama 3.3 70B" selected>Llama 3.3 70B</option><option value="Llama 3.1 8B">Llama 3.1 8B</option><option value="Claude Sonnet 4.5">Claude Sonnet 4.5</option><option value="GPT-4o">GPT-4o</option><option value="Gemini 2.0 Flash">Gemini 2.0 Flash</option><option value="Grok 2">Grok 2</option></select></div>
         <div class="s-row"><div class="s-info"><div class="s-label" data-t="chat_history"></div><div class="s-desc" data-t="chat_history_desc"></div></div><div class="toggle on" onclick="sTog(this,'history')"></div></div>
         <div class="s-row"><div class="s-info"><div class="s-label" data-t="compact"></div><div class="s-desc" data-t="compact_desc"></div></div><div class="toggle" onclick="sTog(this,'compact')"></div></div>
@@ -604,7 +584,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
       </div>
       <div class="s-pg" id="s-account">
         <div class="s-title" data-t="account"></div>
-        <div class="acc-card"><div class="big-av" id="s-av">G</div><div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--text)" id="s-display-name">Guest User</div><div style="font-size:12px;color:var(--muted2);font-family:'DM Mono',monospace;margin-top:2px" id="s-display-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a3c4d6c6d0d7e3d0cacdc4cfc6d7ccc8c6cdd08dc0ccce">[email&#160;protected]</a></div></div><div class="tok-badge" id="s-tok-badge">716K Tokens</div></div>
+        <div class="acc-card"><div class="big-av" id="s-av">G</div><div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--text)" id="s-display-name">Guest User</div><div style="font-size:12px;color:var(--muted2);font-family:'DM Mono',monospace;margin-top:2px" id="s-display-email">guest@singletokens.com</div></div><div class="tok-badge" id="s-tok-badge">716K Tokens</div></div>
         <div class="s-row"><div class="s-info"><div class="s-label" data-t="display_name"></div></div><input class="s-finput" style="width:160px" type="text" value="Guest User" onchange="saveName(this.value)"></div>
         <div class="s-row"><div class="s-info"><div class="s-label" data-t="email"></div></div><input class="s-finput" style="width:200px" type="email" value="guest@singletokens.com" onchange="saveEmail(this.value)"></div>
         <div class="s-row"><div class="s-info"><div class="s-label" data-t="password"></div><div class="s-desc" data-t="password_desc"></div></div><button class="s-nbtn" data-t="change" onclick="showToast(T('pw_sent'))"></button></div>
@@ -665,7 +645,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 </div><!-- end app -->
 <div class="toast" id="toast"></div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 /* ─── SIDEBAR ─── */
 function toggleSidebar(){
   const sb=document.getElementById('sidebar');
@@ -691,7 +671,6 @@ function openView(id){
 /* ─── CHAT ─── */
 let balance=716000;
 
-// ✅ Geändert: Groq-Modelle als primäre Modelle mit niedrigen Multiplikatoren
 const MODELS_MULT={
   'Llama 3.3 70B':   0.3,
   'Llama 3.1 8B':    0.1,
@@ -709,9 +688,6 @@ const MODELS_MULT={
   'DeepSeek V3':     0.9
 };
 
-const AI_RESPONSES=['Natürlich! Ich helfe dir gerne dabei.','Das ist eine interessante Frage. Lass mich das für dich erklären.','Hier ist meine Antwort darauf:','Sehr gute Frage! Die Antwort ist...','Ich verstehe was du meinst. Hier sind meine Gedanken dazu:','Klar! Das machen wir so:'];
-let msgCount=0;
-
 function fmtBalance(){
   if(balance>=1000000)return(balance/1000000).toFixed(1).replace(/\.0$/,'')+'M';
   if(balance>=1000)return Math.round(balance/1000)+'K';
@@ -727,7 +703,6 @@ function updateBalance(used){
   if(badge)badge.textContent=fmtBalance()+' Tokens';
 }
 
-// wird von api.js überschrieben
 var sendMessage = function(){ console.warn('api.js noch nicht geladen'); };
 
 function addMsg(text,role,model){
@@ -755,7 +730,7 @@ function addTyping(){
 function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}}
 function autoResize(el){el.style.height='22px';el.style.height=Math.min(el.scrollHeight,120)+'px';}
 
-/* ─── CHAT HISTORY (localStorage) ─── */
+/* ─── CHAT HISTORY ─── */
 let savedChats = JSON.parse(localStorage.getItem('st_chats') || '[]');
 let activeChatId = null;
 
@@ -779,14 +754,14 @@ function saveCurrentChat() {
     text: m.querySelector('.msg-bubble')?.textContent || '',
     meta: m.querySelector('.msg-meta')?.textContent || ''
   }));
-  if (bubbles.length <= 1) return; // nur Begrüßung — nicht speichern
+  if (bubbles.length <= 1) return;
   const model = document.getElementById('chat-model-sel')?.value || 'Llama 3.3 70B';
   const title = bubbles.find(b => b.role === 'user')?.text?.slice(0,40) || 'Neuer Chat';
   const idx = savedChats.findIndex(c => c.id === activeChatId);
   const chat = { id: activeChatId, title, model, messages: bubbles, ts: Date.now() };
   if (idx >= 0) savedChats[idx] = chat;
   else savedChats.unshift(chat);
-  localStorage.setItem('st_chats', JSON.stringify(savedChats.slice(0,50))); // max 50
+  localStorage.setItem('st_chats', JSON.stringify(savedChats.slice(0,50)));
   renderChatHistory();
 }
 
@@ -836,25 +811,20 @@ function deleteChat(id) {
   renderChatHistory();
 }
 
-// Wird von api.js nach jeder AI-Antwort getriggert
 function onMessageComplete() {
   if (!activeChatId) activeChatId = genId();
   saveCurrentChat();
 }
 
-function loadChat(el, title) { /* Stub — ersetzt durch loadSavedChat */ }
-
 renderChatHistory();
 
 /* ─── YOUR MODELS ─── */
 const ALL_MODELS=[
-  // ✅ Groq-Modelle (direkt verfügbar via API)
   {name:'Llama 3.3 70B',   provider:'Meta · Groq',  cat:'open',      mult:0.3,  tag:'Standard',    tagClass:'tag-cyan'},
   {name:'Llama 3.1 8B',    provider:'Meta · Groq',  cat:'open',      mult:0.1,  tag:'Ultraschnell', tagClass:'tag-cyan'},
   {name:'Gemma 2 9B',      provider:'Google · Groq',cat:'open',      mult:0.15, tag:'Effizient',   tagClass:'tag-green'},
   {name:'Mixtral 8x7B',    provider:'Mistral · Groq',cat:'open',     mult:0.2,  tag:'Mixtral',     tagClass:'tag-muted'},
   {name:'DeepSeek R1 70B', provider:'DeepSeek · Groq',cat:'open',    mult:0.35, tag:'Reasoning',   tagClass:'tag-blue'},
-  // Weitere Modelle
   {name:'Claude Sonnet 4.5',provider:'Anthropic',   cat:'anthropic', mult:1,    tag:'Empfohlen',   tagClass:'tag-blue'},
   {name:'Claude Opus 4.5', provider:'Anthropic',    cat:'anthropic', mult:5,    tag:'Leistungsstark',tagClass:'tag-blue'},
   {name:'Claude Haiku 4.5',provider:'Anthropic',    cat:'anthropic', mult:0.27, tag:'Schnell',     tagClass:'tag-cyan'},
@@ -893,21 +863,10 @@ function fmtP(p){return'$'+p.toFixed(p<0.1?4:2);}
 function calcPrice(t){return(t/1e6)*BASE;}
 function sliderToTok(v){const mn=Math.log(MIN),mx=Math.log(1e8);return Math.max(MIN,Math.round(Math.exp(mn+(mx-mn)*v/100)/1000)*1000);}
 function tokToSlider(t){if(t<=MIN)return 0;const mn=Math.log(MIN),mx=Math.log(1e8);return Math.round((Math.log(Math.min(t,1e8))-mn)/(mx-mn)*100);}
-
-// ✅ Geändert: Schätzungen mit Groq-Modellen
 function updateEst(prefix){
-  const rows=[
-    {id:'gpt5',   mult:70},
-    {id:'llama',  mult:0.3},
-    {id:'sonnet', mult:1},
-    {id:'llama8b',mult:0.1}
-  ];
-  rows.forEach(m=>{
-    const el=document.getElementById(prefix+'-'+m.id);
-    if(el)el.textContent=fmtMsgs(tokAmt/(AVG*m.mult));
-  });
+  const rows=[{id:'gpt5',mult:70},{id:'llama',mult:0.3},{id:'sonnet',mult:1},{id:'llama8b',mult:0.1}];
+  rows.forEach(m=>{const el=document.getElementById(prefix+'-'+m.id);if(el)el.textContent=fmtMsgs(tokAmt/(AVG*m.mult));});
 }
-
 function updatePurchase(){
   const price=calcPrice(tokAmt),valid=tokAmt>=MIN;
   document.getElementById('amt-big').textContent=fmtTok(tokAmt);
@@ -920,77 +879,17 @@ function updatePurchase(){
   sl.style.background=`linear-gradient(to right,${valid?'#22D3EE':'#F59E0B'} ${sl.value}%,#1B2130 ${sl.value}%)`;
   updateEst('e');
 }
-function selPreset(t,el){
-  tokAmt=t;document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');document.getElementById('custom-wrap').style.display='none';
-  document.getElementById('custom-toggle').classList.remove('active');
-  document.getElementById('tok-slider').value=tokToSlider(t);updatePurchase();
-}
-function toggleCustom(){
-  const w=document.getElementById('custom-wrap');
-  const open=w.style.display!=='flex';w.style.display=open?'flex':'none';
-  document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('active'));
-  if(open)document.getElementById('custom-toggle').classList.add('active');
-}
-document.getElementById('custom-input').addEventListener('input',function(){
-  const v=parseInt(this.value);if(v>0){tokAmt=v;document.getElementById('tok-slider').value=tokToSlider(v);updatePurchase();}
-});
-document.getElementById('tok-slider').addEventListener('input',function(){
-  tokAmt=sliderToTok(parseInt(this.value));document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('active'));updatePurchase();
-});
+function selPreset(t,el){tokAmt=t;document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('active'));el.classList.add('active');document.getElementById('custom-wrap').style.display='none';document.getElementById('custom-toggle').classList.remove('active');document.getElementById('tok-slider').value=tokToSlider(t);updatePurchase();}
+function toggleCustom(){const w=document.getElementById('custom-wrap');const open=w.style.display!=='flex';w.style.display=open?'flex':'none';document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('active'));if(open)document.getElementById('custom-toggle').classList.add('active');}
+document.getElementById('custom-input').addEventListener('input',function(){const v=parseInt(this.value);if(v>0){tokAmt=v;document.getElementById('tok-slider').value=tokToSlider(v);updatePurchase();}});
+document.getElementById('tok-slider').addEventListener('input',function(){tokAmt=sliderToTok(parseInt(this.value));document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('active'));updatePurchase();});
 function selPay(type,el){curPay=type;document.querySelectorAll('.pay-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');}
-function setStep(s){
-  [1,2,3].forEach(i=>{
-    const n=document.getElementById('sn'+i),l=document.getElementById('sl'+i);
-    if(i<s){n.className='step-num done';n.innerHTML='✓';}
-    else if(i===s){n.className='step-num active';n.textContent=i;l.className='step-lbl active';}
-    else{n.className='step-num';n.textContent=i;l.className='step-lbl';}
-  });
-  document.getElementById('line1').className='step-line'+(s>1?' done':'');
-  document.getElementById('line2').className='step-line'+(s>2?' done':'');
-}
+function setStep(s){[1,2,3].forEach(i=>{const n=document.getElementById('sn'+i),l=document.getElementById('sl'+i);if(i<s){n.className='step-num done';n.innerHTML='✓';}else if(i===s){n.className='step-num active';n.textContent=i;l.className='step-lbl active';}else{n.className='step-num';n.textContent=i;l.className='step-lbl';}});document.getElementById('line1').className='step-line'+(s>1?' done':'');document.getElementById('line2').className='step-line'+(s>2?' done':'');}
 function showPg(n){document.querySelectorAll('.pg').forEach(p=>p.classList.remove('active'));document.getElementById('p-view-'+n).classList.add('active');}
-function goCheckout(){
-  if(tokAmt<MIN)return;
-  const price=calcPrice(tokAmt),tax=price*0.19,total=price+tax;
-  document.getElementById('co-tok').textContent=fmtTok(tokAmt)+' ('+tokAmt.toLocaleString()+')';
-  document.getElementById('co-sub').textContent=fmtP(price);
-  document.getElementById('co-tax').textContent=fmtP(tax);
-  document.getElementById('co-total').textContent=fmtP(total);
-  updateEst('ce');
-  const isCard=curPay==='card',isPsc=curPay==='paysafe';
-  document.getElementById('co-card').style.display=isCard?'block':'none';
-  document.getElementById('co-psc').style.display=isPsc?'block':'none';
-  const redir=document.getElementById('co-redir');
-  if(!isCard&&!isPsc){const msgs={paypal:'Du wirst sicher zu PayPal weitergeleitet.',gpay:'Google Pay öffnet sich nach dem Klick.'};redir.innerHTML=msgs[curPay]||'';redir.classList.add('show');}
-  else redir.classList.remove('show');
-  const btnLabels={card:'Jetzt kaufen & bezahlen →',paypal:'Weiter zu PayPal →',gpay:'Mit Google Pay zahlen →',paysafe:'PIN einlösen & kaufen →'};
-  document.getElementById('btn-pay').textContent=btnLabels[curPay];
-  setStep(2);showPg(2);
-}
-function doPayment(){
-  const btn=document.getElementById('btn-pay');
-  btn.textContent='Zahlung wird verarbeitet...';btn.disabled=true;
-  setTimeout(()=>{
-    const price=calcPrice(tokAmt),tax=price*0.19,total=price+tax;
-    document.getElementById('suc-tok').textContent='+'+fmtTok(tokAmt);
-    document.getElementById('suc-price').textContent=fmtP(total)+' (inkl. MwSt.)';
-    document.getElementById('suc-method').textContent=payNames[curPay];
-    document.getElementById('suc-date').textContent=new Date().toLocaleString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
-    balance+=tokAmt;updateBalance(0);
-    btn.textContent='Jetzt kaufen & bezahlen →';btn.disabled=false;
-    setStep(3);showPg(3);
-  },1800);
-}
+function goCheckout(){if(tokAmt<MIN)return;const price=calcPrice(tokAmt),tax=price*0.19,total=price+tax;document.getElementById('co-tok').textContent=fmtTok(tokAmt)+' ('+tokAmt.toLocaleString()+')';document.getElementById('co-sub').textContent=fmtP(price);document.getElementById('co-tax').textContent=fmtP(tax);document.getElementById('co-total').textContent=fmtP(total);updateEst('ce');const isCard=curPay==='card',isPsc=curPay==='paysafe';document.getElementById('co-card').style.display=isCard?'block':'none';document.getElementById('co-psc').style.display=isPsc?'block':'none';const redir=document.getElementById('co-redir');if(!isCard&&!isPsc){const msgs={paypal:'Du wirst sicher zu PayPal weitergeleitet.',gpay:'Google Pay öffnet sich nach dem Klick.'};redir.innerHTML=msgs[curPay]||'';redir.classList.add('show');}else redir.classList.remove('show');const btnLabels={card:'Jetzt kaufen & bezahlen →',paypal:'Weiter zu PayPal →',gpay:'Mit Google Pay zahlen →',paysafe:'PIN einlösen & kaufen →'};document.getElementById('btn-pay').textContent=btnLabels[curPay];setStep(2);showPg(2);}
+function doPayment(){const btn=document.getElementById('btn-pay');btn.textContent='Zahlung wird verarbeitet...';btn.disabled=true;setTimeout(()=>{const price=calcPrice(tokAmt),tax=price*0.19,total=price+tax;document.getElementById('suc-tok').textContent='+'+fmtTok(tokAmt);document.getElementById('suc-price').textContent=fmtP(total)+' (inkl. MwSt.)';document.getElementById('suc-method').textContent=payNames[curPay];document.getElementById('suc-date').textContent=new Date().toLocaleString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});balance+=tokAmt;updateBalance(0);btn.textContent='Jetzt kaufen & bezahlen →';btn.disabled=false;setStep(3);showPg(3);},1800);}
 function pGoBack(to){setStep(to);showPg(to);}
-function resetPurchase(){
-  tokAmt=MIN;curPay='card';document.getElementById('tok-slider').value=0;
-  document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('active'));
-  document.querySelector('.pbtn').classList.add('active');
-  document.querySelectorAll('.pay-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('pm-card').classList.add('active');
-  updatePurchase();setStep(1);showPg(1);
-}
+function resetPurchase(){tokAmt=MIN;curPay='card';document.getElementById('tok-slider').value=0;document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('active'));document.querySelector('.pbtn').classList.add('active');document.querySelectorAll('.pay-btn').forEach(b=>b.classList.remove('active'));document.getElementById('pm-card').classList.add('active');updatePurchase();setStep(1);showPg(1);}
 function fmtCard(el){let v=el.value.replace(/\D/g,'').slice(0,16);el.value=v.match(/.{1,4}/g)?.join(' ')||v;}
 function fmtExp(el){let v=el.value.replace(/\D/g,'');if(v.length>=2)v=v.slice(0,2)+'/'+v.slice(2,4);el.value=v;}
 document.getElementById('tok-slider').value=0;
@@ -1007,37 +906,17 @@ function applyLang(){document.querySelectorAll('[data-t]').forEach(el=>{const v=
 function setLang(l){lang=l;applyLang();showToast(T('saved'));}
 
 /* ─── SETTINGS ACTIONS ─── */
-function sGo(id,el){
-  document.querySelectorAll('.s-pg').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.s-nav').forEach(n=>n.classList.remove('active'));
-  document.getElementById('s-'+id).classList.add('active');el.classList.add('active');
-}
-function sTog(el,key){
-  el.classList.toggle('on');const on=el.classList.contains('on');
-  if(key==='compact'){document.getElementById('app').classList.toggle('compact-mode',on);showToast(on?T('compact_on'):T('compact_off'));}
-  else showToast(T('saved'));
-}
+function sGo(id,el){document.querySelectorAll('.s-pg').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.s-nav').forEach(n=>n.classList.remove('active'));document.getElementById('s-'+id).classList.add('active');el.classList.add('active');}
+function sTog(el,key){el.classList.toggle('on');const on=el.classList.contains('on');if(key==='compact'){document.getElementById('app').classList.toggle('compact-mode',on);showToast(on?T('compact_on'):T('compact_off'));}else showToast(T('saved'));}
 function setTheme(v){document.getElementById('app').classList.toggle('light-mode',v==='light');showToast(T('saved'));}
 function setAccent(c,el){document.querySelectorAll('.sw').forEach(s=>s.classList.remove('active'));el.classList.add('active');document.documentElement.style.setProperty('--acc',c);showToast(T('saved'));}
 function setFontSize(s){document.documentElement.style.setProperty('--font-size',s);document.getElementById('s-preview').style.fontSize=s;showToast(T('saved'));}
-function saveName(v){
-  document.getElementById('s-display-name').textContent=v;
-  document.getElementById('s-av').textContent=v.charAt(0).toUpperCase();
-  document.getElementById('sidebar-av').textContent=v.charAt(0).toUpperCase();
-  document.getElementById('sidebar-name').textContent=v;
-  showToast(T('saved'));
-}
+function saveName(v){document.getElementById('s-display-name').textContent=v;document.getElementById('s-av').textContent=v.charAt(0).toUpperCase();document.getElementById('sidebar-av').textContent=v.charAt(0).toUpperCase();document.getElementById('sidebar-name').textContent=v;showToast(T('saved'));}
 function saveEmail(v){document.getElementById('s-display-email').textContent=v;showToast(T('saved'));}
 function confirmDel(){if(confirm(T('delete_account_desc')))showToast(T('deleted'));}
 function toggleTwoFA(el){el.classList.toggle('on');const on=el.classList.contains('on');document.getElementById('twofa-desc').textContent=on?T('two_fa_on'):T('two_fa_off');showToast(on?T('twofa_on'):T('twofa_off'));}
 function revokeKey(btn,name){const i=btn.closest('.mem-item');i.style.opacity='0';i.style.transition='opacity .2s';setTimeout(()=>i.remove(),200);showToast(T('key_revoked'));}
-function addKey(){
-  const chars='ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqr23456789';
-  let k='sk-aizz-';for(let i=0;i<10;i++)k+=chars[Math.floor(Math.random()*chars.length)];
-  const d=document.createElement('div');d.className='mem-item';
-  d.innerHTML=`<div style="flex:1"><div style="font-size:12px;color:var(--text);font-weight:600">New Key</div><div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);margin-top:2px">${k}••••</div></div><button class="s-dbtn" style="font-size:11px" onclick="revokeKey(this,'New Key')">${T('revoke')}</button>`;
-  document.getElementById('api-keys').appendChild(d);showToast(T('key_added'));
-}
+function addKey(){const chars='ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqr23456789';let k='sk-aizz-';for(let i=0;i<10;i++)k+=chars[Math.floor(Math.random()*chars.length)];const d=document.createElement('div');d.className='mem-item';d.innerHTML=`<div style="flex:1"><div style="font-size:12px;color:var(--text);font-weight:600">New Key</div><div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);margin-top:2px">${k}••••</div></div><button class="s-dbtn" style="font-size:11px" onclick="revokeKey(this,'New Key')">${T('revoke')}</button>`;document.getElementById('api-keys').appendChild(d);showToast(T('key_added'));}
 function delMem(btn){const i=btn.closest('.mem-item');i.style.opacity='0';i.style.transition='opacity .2s';setTimeout(()=>i.remove(),200);showToast(T('mem_deleted'));}
 function clearMem(){document.querySelectorAll('#mem-list .mem-item').forEach(m=>{m.style.opacity='0';m.style.transition='opacity .2s';setTimeout(()=>m.remove(),200);});showToast(T('all_mem_deleted'));}
 
@@ -1091,9 +970,12 @@ function saveGpt(){
 }
 function editGpt(id){openGptModal(id);}
 function deleteGpt(id){gpts=gpts.filter(g=>g.id!==id);renderGpts();showToast('GPT gelöscht.');}
+
+// ✅ FIX: setGptPrompt wird jetzt korrekt aufgerufen
 function useGpt(id){
   const g=gpts.find(x=>x.id===id);if(!g)return;
   const sel=document.getElementById('chat-model-sel');if(sel)sel.value=g.model;
+  if(typeof setGptPrompt==='function') setGptPrompt(g.prompt);
   openView('chat');newChat();
   showToast('GPT "'+g.name+'" geladen!');
 }
