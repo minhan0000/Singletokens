@@ -10,12 +10,15 @@ const MODEL_MAP = {
   'DeepSeek R1 70B':  'deepseek-r1-distill-llama-70b',
 };
 
-let chatHistory     = [];
-let activeGptPrompt = null;
+// api.js — resetChatHistory so ändern:
+function resetChatHistory() {
+  chatHistory = [];
+  // activeGptPrompt NICHT hier nullen!
+}
 
 function setGptPrompt(prompt) {
   activeGptPrompt = prompt ? prompt.trim() : null;
-  resetChatHistory();
+  chatHistory = []; // nur chatHistory leeren
 }
 /* ─── Hilfsfunktionen: funktionieren auf Desktop UND Mobile ─── */
 
