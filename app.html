@@ -329,7 +329,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
   <div class="sidebar-divider"></div>
   <div class="recent-area">
     <div class="sec-label">Recent</div>
-    <div class="model-group-label"><div class="mdot" style="background:#67E8F9"></div>Gemini 2.0 Flash</div>
+    <!-- ✅ Geändert: Groq / Llama als Standard-Modell in der Sidebar -->
+    <div class="model-group-label"><div class="mdot" style="background:#67E8F9"></div>Llama 3.3 70B</div>
     <div class="chat-item" onclick="loadChat(this,'Product roadmap discussion')">Product roadmap discussion</div>
     <div class="chat-item" onclick="loadChat(this,'Code review feedback')">Code review feedback</div>
     <div class="chat-item" onclick="loadChat(this,'SingleTokens Webseite')">SingleTokens Webseite</div>
@@ -353,25 +354,30 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 <!-- ── CHAT ── -->
 <div class="view active" id="view-chat">
   <div class="chat-header">
+    <!-- ✅ Geändert: Llama 3.3 70B als Default, Groq-Modelle oben -->
     <select class="chat-model-sel" id="chat-model-sel">
-      <option value="Gemini 2.0 Flash" selected>Gemini 2.0 Flash</option>
+      <option value="Llama 3.3 70B" selected>Llama 3.3 70B</option>
+      <option value="Llama 3.1 8B">Llama 3.1 8B</option>
+      <option value="Gemma 2 9B">Gemma 2 9B</option>
+      <option value="Mixtral 8x7B">Mixtral 8x7B</option>
+      <option value="DeepSeek R1 70B">DeepSeek R1 70B</option>
       <option value="Claude Sonnet 4.5">Claude Sonnet 4.5</option>
       <option value="GPT-4o">GPT-4o</option>
       <option value="GPT-5">GPT-5</option>
       <option value="Claude Opus 4.5">Claude Opus 4.5</option>
       <option value="Claude Haiku 4.5">Claude Haiku 4.5</option>
-      <option value="Gemini Pro 2.0">Gemini Pro 2.0</option>
+      <option value="Gemini 2.0 Flash">Gemini 2.0 Flash</option>
       <option value="Grok 2">Grok 2</option>
-      <option value="Llama 3.3 70B">Llama 3.3 70B</option>
       <option value="Mistral Large 2">Mistral Large 2</option>
       <option value="DeepSeek V3">DeepSeek V3</option>
     </select>
     <div class="token-counter" id="token-counter" onclick="openView('purchase')">716K Tokens</div>
   </div>
   <div class="chat-messages" id="chat-messages">
+    <!-- ✅ Geändert: Meta-Text auf Llama 3.3 70B -->
     <div class="msg ai">
       <div class="msg-bubble">Hallo! Ich bin SingleTokens AI. Wie kann ich dir heute helfen?</div>
-      <div class="msg-meta">SingleTokens · Gemini 2.0 Flash</div>
+      <div class="msg-meta">SingleTokens · Llama 3.3 70B</div>
     </div>
   </div>
   <div class="chat-input-area">
@@ -429,15 +435,19 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
       <div><div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px">Name *</div><input id="gpt-name" type="text" placeholder="z.B. Coding-Assistent" style="width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Syne',sans-serif;font-size:13px;color:var(--text);outline:none"></div>
       <div><div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px">Beschreibung</div><input id="gpt-desc" type="text" placeholder="Wofür ist dieser GPT?" style="width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Syne',sans-serif;font-size:13px;color:var(--text);outline:none"></div>
       <div><div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px">Basismodell</div>
+        <!-- ✅ Geändert: Groq-Modelle als Standard im GPT-Modal -->
         <select id="gpt-model" style="width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Syne',sans-serif;font-size:13px;color:var(--text);outline:none;-webkit-appearance:none">
-          <option value="Gemini 2.0 Flash">Gemini 2.0 Flash</option>
+          <option value="Llama 3.3 70B">Llama 3.3 70B</option>
+          <option value="Llama 3.1 8B">Llama 3.1 8B</option>
+          <option value="Gemma 2 9B">Gemma 2 9B</option>
+          <option value="Mixtral 8x7B">Mixtral 8x7B</option>
+          <option value="DeepSeek R1 70B">DeepSeek R1 70B</option>
           <option value="Claude Sonnet 4.5">Claude Sonnet 4.5</option>
           <option value="Claude Haiku 4.5">Claude Haiku 4.5</option>
           <option value="GPT-4o">GPT-4o</option>
           <option value="GPT-5">GPT-5</option>
-          <option value="Gemini Pro 2.0">Gemini Pro 2.0</option>
+          <option value="Gemini 2.0 Flash">Gemini 2.0 Flash</option>
           <option value="Grok 2">Grok 2</option>
-          <option value="Llama 3.3 70B">Llama 3.3 70B</option>
           <option value="Mistral Small">Mistral Small</option>
         </select>
       </div>
@@ -453,6 +463,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
     </div>
   </div>
 </div>
+
 <!-- ── PURCHASE ── -->
 <div class="view" id="view-purchase">
   <div class="purchase-wrap">
@@ -490,11 +501,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
         <input type="range" id="tok-slider" min="0" max="100" value="0" step="1">
         <div class="min-warn" id="min-warn"><span class="min-warn-text">⚠ Mindestens $1.00 · 333K Tokens erforderlich</span></div>
         <div class="est-box">
+          <!-- ✅ Geändert: Geschätzte Nachrichten mit Groq-Modellen als Referenz -->
           <div class="est-title">Geschätzte Nachrichtenmenge</div>
           <div class="est-row"><span class="est-model">GPT-5 <span class="mult-badge">x70</span></span><span class="est-val" id="e-gpt5">–</span></div>
+          <div class="est-row"><span class="est-model">Llama 3.3 70B <span class="mult-badge">x0.3</span></span><span class="est-val" id="e-llama">–</span></div>
           <div class="est-row"><span class="est-model">Claude Sonnet 4.5 <span class="mult-badge">x1</span></span><span class="est-val" id="e-sonnet">–</span></div>
-          <div class="est-row"><span class="est-model">Grok 2 <span class="mult-badge">x1.67</span></span><span class="est-val" id="e-grok">–</span></div>
-          <div class="est-row"><span class="est-model">Gemini 2.0 Flash <span class="mult-badge">x0.5</span></span><span class="est-val" id="e-gemini">–</span></div>
+          <div class="est-row"><span class="est-model">Llama 3.1 8B <span class="mult-badge">x0.1</span></span><span class="est-val" id="e-llama8b">–</span></div>
         </div>
         <div class="p-sec-label">Zahlungsmethode</div>
         <div class="pay-grid">
@@ -531,9 +543,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
         <div class="co-est">
           <div class="co-est-title">Geschätzte Nachrichtenmenge</div>
           <div class="est-row"><span class="est-model">GPT-5 <span class="mult-badge">x70</span></span><span class="est-val" id="ce-gpt5">–</span></div>
+          <div class="est-row"><span class="est-model">Llama 3.3 70B <span class="mult-badge">x0.3</span></span><span class="est-val" id="ce-llama">–</span></div>
           <div class="est-row"><span class="est-model">Claude Sonnet 4.5 <span class="mult-badge">x1</span></span><span class="est-val" id="ce-sonnet">–</span></div>
-          <div class="est-row"><span class="est-model">Grok 2 <span class="mult-badge">x1.67</span></span><span class="est-val" id="ce-grok">–</span></div>
-          <div class="est-row"><span class="est-model">Gemini 2.0 Flash <span class="mult-badge">x0.5</span></span><span class="est-val" id="ce-gemini">–</span></div>
+          <div class="est-row"><span class="est-model">Llama 3.1 8B <span class="mult-badge">x0.1</span></span><span class="est-val" id="ce-llama8b">–</span></div>
         </div>
         <div class="card-section" id="co-card">
           <div class="card-section-title">Zahlungsdetails · Kreditkarte</div>
@@ -593,14 +605,15 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
       <div class="s-pg active" id="s-general">
         <div class="s-title" data-t="general"></div>
         <div class="s-row"><div class="s-info"><div class="s-label" data-t="language"></div><div class="s-desc" data-t="language_desc"></div></div><select class="s-sel" id="lang-sel" onchange="setLang(this.value)"><option value="de">Deutsch</option><option value="en">English</option><option value="fr">Français</option><option value="es">Español</option><option value="tr">Türkçe</option><option value="ja">日本語</option></select></div>
-        <div class="s-row"><div class="s-info"><div class="s-label" data-t="default_model"></div><div class="s-desc" data-t="default_model_desc"></div></div><select class="s-sel" onchange="showToast(T('saved'))"><option value="Gemini 2.0 Flash" selected>Gemini 2.0 Flash</option><option value="Claude Sonnet 4.5">Claude Sonnet 4.5</option><option value="GPT-4o">GPT-4o</option><option value="Gemini Pro 2.0">Gemini Pro 2.0</option><option value="Grok 2">Grok 2</option></select></div>
+        <!-- ✅ Geändert: Llama 3.3 70B als Standard im Settings-Dropdown -->
+        <div class="s-row"><div class="s-info"><div class="s-label" data-t="default_model"></div><div class="s-desc" data-t="default_model_desc"></div></div><select class="s-sel" onchange="showToast(T('saved'))"><option value="Llama 3.3 70B" selected>Llama 3.3 70B</option><option value="Llama 3.1 8B">Llama 3.1 8B</option><option value="Claude Sonnet 4.5">Claude Sonnet 4.5</option><option value="GPT-4o">GPT-4o</option><option value="Gemini 2.0 Flash">Gemini 2.0 Flash</option><option value="Grok 2">Grok 2</option></select></div>
         <div class="s-row"><div class="s-info"><div class="s-label" data-t="chat_history"></div><div class="s-desc" data-t="chat_history_desc"></div></div><div class="toggle on" onclick="sTog(this,'history')"></div></div>
         <div class="s-row"><div class="s-info"><div class="s-label" data-t="compact"></div><div class="s-desc" data-t="compact_desc"></div></div><div class="toggle" onclick="sTog(this,'compact')"></div></div>
         <div class="s-row"><div class="s-info"><div class="s-label" data-t="animations"></div><div class="s-desc" data-t="animations_desc"></div></div><div class="toggle on" onclick="sTog(this,'anim')"></div></div>
       </div>
       <div class="s-pg" id="s-account">
         <div class="s-title" data-t="account"></div>
-        <div class="acc-card"><div class="big-av" id="s-av">G</div><div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--text)" id="s-display-name">Guest User</div><div style="font-size:12px;color:var(--muted2);font-family:'DM Mono',monospace;margin-top:2px" id="s-display-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="ff988a9a8c8bbf8c969198939a8b90949a918cd19c9092">[email&#160;protected]</a></div></div><div class="tok-badge" id="s-tok-badge">716K Tokens</div></div>
+        <div class="acc-card"><div class="big-av" id="s-av">G</div><div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--text)" id="s-display-name">Guest User</div><div style="font-size:12px;color:var(--muted2);font-family:'DM Mono',monospace;margin-top:2px" id="s-display-email">guest@singletokens.com</div></div><div class="tok-badge" id="s-tok-badge">716K Tokens</div></div>
         <div class="s-row"><div class="s-info"><div class="s-label" data-t="display_name"></div></div><input class="s-finput" style="width:160px" type="text" value="Guest User" onchange="saveName(this.value)"></div>
         <div class="s-row"><div class="s-info"><div class="s-label" data-t="email"></div></div><input class="s-finput" style="width:200px" type="email" value="guest@singletokens.com" onchange="saveEmail(this.value)"></div>
         <div class="s-row"><div class="s-info"><div class="s-label" data-t="password"></div><div class="s-desc" data-t="password_desc"></div></div><button class="s-nbtn" data-t="change" onclick="showToast(T('pw_sent'))"></button></div>
@@ -661,7 +674,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 </div><!-- end app -->
 <div class="toast" id="toast"></div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 /* ─── SIDEBAR ─── */
 function toggleSidebar(){
   const sb=document.getElementById('sidebar');
@@ -687,20 +700,24 @@ function openView(id){
 /* ─── CHAT ─── */
 let balance=716000;
 
-// ✅ Gemini 2.0 Flash als Key + korrekte Multiplier
+// ✅ Geändert: Groq-Modelle als primäre Modelle mit niedrigen Multiplikatoren
 const MODELS_MULT={
-  'Gemini 2.0 Flash':0.5,
+  'Llama 3.3 70B':   0.3,
+  'Llama 3.1 8B':    0.1,
+  'Gemma 2 9B':      0.15,
+  'Mixtral 8x7B':    0.2,
+  'DeepSeek R1 70B': 0.35,
   'Claude Sonnet 4.5':1,
-  'GPT-4o':0.85,
-  'GPT-5':70,
-  'Claude Opus 4.5':5,
+  'GPT-4o':          0.85,
+  'GPT-5':           70,
+  'Claude Opus 4.5': 5,
   'Claude Haiku 4.5':0.27,
-  'Gemini Pro 2.0':2.33,
-  'Grok 2':1.67,
-  'Llama 3.3 70B':0.3,
-  'Mistral Large 2':2.67,
-  'DeepSeek V3':0.9
+  'Gemini 2.0 Flash':0.5,
+  'Grok 2':          1.67,
+  'Mistral Large 2': 2.67,
+  'DeepSeek V3':     0.9
 };
+
 const AI_RESPONSES=['Natürlich! Ich helfe dir gerne dabei.','Das ist eine interessante Frage. Lass mich das für dich erklären.','Hier ist meine Antwort darauf:','Sehr gute Frage! Die Antwort ist...','Ich verstehe was du meinst. Hier sind meine Gedanken dazu:','Klar! Das machen wir so:'];
 let msgCount=0;
 
@@ -709,7 +726,6 @@ function fmtBalance(){
   if(balance>=1000)return Math.round(balance/1000)+'K';
   return balance.toString();
 }
-// Alias für api.js
 const fmtBal=fmtBalance;
 
 function updateBalance(used){
@@ -720,7 +736,6 @@ function updateBalance(used){
   if(badge)badge.textContent=fmtBalance()+' Tokens';
 }
 
-// sendMessage wird von api.js überschrieben — dieser Stub ist nur ein Fallback
 function sendMessage(){
   console.warn('api.js noch nicht geladen');
 }
@@ -750,8 +765,9 @@ function addTyping(){
 function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}}
 function autoResize(el){el.style.height='22px';el.style.height=Math.min(el.scrollHeight,120)+'px';}
 
+// ✅ Geändert: newChat zeigt Llama 3.3 70B als Standard
 function newChat(){
-  document.getElementById('chat-messages').innerHTML='<div class="msg ai"><div class="msg-bubble">Hallo! Ich bin SingleTokens AI. Wie kann ich dir heute helfen?</div><div class="msg-meta">SingleTokens · Gemini 2.0 Flash</div></div>';
+  document.getElementById('chat-messages').innerHTML='<div class="msg ai"><div class="msg-bubble">Hallo! Ich bin SingleTokens AI. Wie kann ich dir heute helfen?</div><div class="msg-meta">SingleTokens · Llama 3.3 70B</div></div>';
   if(typeof resetChatHistory==='function')resetChatHistory();
 }
 
@@ -770,23 +786,25 @@ function loadChat(el,title){
 
 /* ─── YOUR MODELS ─── */
 const ALL_MODELS=[
-  {name:'Claude Sonnet 4.5',provider:'Anthropic',cat:'anthropic',mult:1,tag:'Empfohlen',tagClass:'tag-blue'},
-  {name:'Claude Opus 4.5',provider:'Anthropic',cat:'anthropic',mult:5,tag:'Leistungsstark',tagClass:'tag-blue'},
-  {name:'Claude Haiku 4.5',provider:'Anthropic',cat:'anthropic',mult:0.27,tag:'Ultraschnell',tagClass:'tag-cyan'},
-  {name:'GPT-4o',provider:'OpenAI',cat:'openai',mult:0.85,tag:'Vielseitig',tagClass:'tag-green'},
-  {name:'GPT-5',provider:'OpenAI',cat:'openai',mult:70,tag:'Neuestes',tagClass:'tag-red'},
-  {name:'GPT-4 Turbo',provider:'OpenAI',cat:'openai',mult:3.33,tag:'Präzise',tagClass:'tag-muted'},
-  {name:'OpenAI o1',provider:'OpenAI',cat:'openai',mult:20,tag:'Reasoning',tagClass:'tag-red'},
-  {name:'OpenAI o1 Mini',provider:'OpenAI',cat:'openai',mult:4,tag:'Reasoning',tagClass:'tag-muted'},
-  {name:'Gemini Pro 2.0',provider:'Google',cat:'google',mult:2.33,tag:'Multimodal',tagClass:'tag-blue'},
-  {name:'Gemini 2.0 Flash',provider:'Google',cat:'google',mult:0.5,tag:'Standard',tagClass:'tag-cyan'},
-  {name:'Llama 3.3 70B',provider:'Meta',cat:'open',mult:0.3,tag:'Open Source',tagClass:'tag-cyan'},
-  {name:'Llama 11B',provider:'Meta',cat:'open',mult:0.13,tag:'Kleinst',tagClass:'tag-cyan'},
-  {name:'Mistral Large 2',provider:'Mistral',cat:'open',mult:2.67,tag:'Europäisch',tagClass:'tag-muted'},
-  {name:'Mistral Small',provider:'Mistral',cat:'open',mult:0.67,tag:'Effizient',tagClass:'tag-green'},
-  {name:'DeepSeek V3',provider:'DeepSeek',cat:'open',mult:0.9,tag:'Open Source',tagClass:'tag-green'},
-  {name:'Qwen 2.5 72B',provider:'Alibaba',cat:'open',mult:0.3,tag:'Open Source',tagClass:'tag-cyan'},
-  {name:'Grok 2',provider:'xAI',cat:'open',mult:1.67,tag:'Von xAI',tagClass:'tag-muted'},
+  // ✅ Groq-Modelle (direkt verfügbar via API)
+  {name:'Llama 3.3 70B',   provider:'Meta · Groq',  cat:'open',      mult:0.3,  tag:'Standard',    tagClass:'tag-cyan'},
+  {name:'Llama 3.1 8B',    provider:'Meta · Groq',  cat:'open',      mult:0.1,  tag:'Ultraschnell', tagClass:'tag-cyan'},
+  {name:'Gemma 2 9B',      provider:'Google · Groq',cat:'open',      mult:0.15, tag:'Effizient',   tagClass:'tag-green'},
+  {name:'Mixtral 8x7B',    provider:'Mistral · Groq',cat:'open',     mult:0.2,  tag:'Mixtral',     tagClass:'tag-muted'},
+  {name:'DeepSeek R1 70B', provider:'DeepSeek · Groq',cat:'open',    mult:0.35, tag:'Reasoning',   tagClass:'tag-blue'},
+  // Weitere Modelle
+  {name:'Claude Sonnet 4.5',provider:'Anthropic',   cat:'anthropic', mult:1,    tag:'Empfohlen',   tagClass:'tag-blue'},
+  {name:'Claude Opus 4.5', provider:'Anthropic',    cat:'anthropic', mult:5,    tag:'Leistungsstark',tagClass:'tag-blue'},
+  {name:'Claude Haiku 4.5',provider:'Anthropic',    cat:'anthropic', mult:0.27, tag:'Schnell',     tagClass:'tag-cyan'},
+  {name:'GPT-4o',          provider:'OpenAI',       cat:'openai',    mult:0.85, tag:'Vielseitig',  tagClass:'tag-green'},
+  {name:'GPT-5',           provider:'OpenAI',       cat:'openai',    mult:70,   tag:'Neuestes',    tagClass:'tag-red'},
+  {name:'GPT-4 Turbo',     provider:'OpenAI',       cat:'openai',    mult:3.33, tag:'Präzise',     tagClass:'tag-muted'},
+  {name:'OpenAI o1',       provider:'OpenAI',       cat:'openai',    mult:20,   tag:'Reasoning',   tagClass:'tag-red'},
+  {name:'OpenAI o1 Mini',  provider:'OpenAI',       cat:'openai',    mult:4,    tag:'Reasoning',   tagClass:'tag-muted'},
+  {name:'Gemini Pro 2.0',  provider:'Google',       cat:'google',    mult:2.33, tag:'Multimodal',  tagClass:'tag-blue'},
+  {name:'Gemini 2.0 Flash',provider:'Google',       cat:'google',    mult:0.5,  tag:'Flash',       tagClass:'tag-cyan'},
+  {name:'Mistral Large 2', provider:'Mistral',      cat:'open',      mult:2.67, tag:'Europäisch',  tagClass:'tag-muted'},
+  {name:'Grok 2',          provider:'xAI',          cat:'open',      mult:1.67, tag:'Von xAI',     tagClass:'tag-muted'},
 ];
 function getCardClass(m){if(m.mult>=10)return'expensive';if(m.mult<=0.5)return'cheap';if(m.mult===1)return'reference';return'';}
 function renderModels(f){
@@ -813,11 +831,21 @@ function fmtP(p){return'$'+p.toFixed(p<0.1?4:2);}
 function calcPrice(t){return(t/1e6)*BASE;}
 function sliderToTok(v){const mn=Math.log(MIN),mx=Math.log(1e8);return Math.max(MIN,Math.round(Math.exp(mn+(mx-mn)*v/100)/1000)*1000);}
 function tokToSlider(t){if(t<=MIN)return 0;const mn=Math.log(MIN),mx=Math.log(1e8);return Math.round((Math.log(Math.min(t,1e8))-mn)/(mx-mn)*100);}
+
+// ✅ Geändert: Schätzungen mit Groq-Modellen
 function updateEst(prefix){
-  [{id:'gpt5',mult:70},{id:'sonnet',mult:1},{id:'grok',mult:1.67},{id:'gemini',mult:0.5}].forEach(m=>{
-    const el=document.getElementById(prefix+'-'+m.id);if(el)el.textContent=fmtMsgs(tokAmt/(AVG*m.mult));
+  const rows=[
+    {id:'gpt5',   mult:70},
+    {id:'llama',  mult:0.3},
+    {id:'sonnet', mult:1},
+    {id:'llama8b',mult:0.1}
+  ];
+  rows.forEach(m=>{
+    const el=document.getElementById(prefix+'-'+m.id);
+    if(el)el.textContent=fmtMsgs(tokAmt/(AVG*m.mult));
   });
 }
+
 function updatePurchase(){
   const price=calcPrice(tokAmt),valid=tokAmt>=MIN;
   document.getElementById('amt-big').textContent=fmtTok(tokAmt);
@@ -980,7 +1008,7 @@ function openGptModal(id=null){
     document.getElementById('gpt-modal-title').textContent='Neuer GPT';
     document.getElementById('gpt-name').value='';
     document.getElementById('gpt-desc').value='';
-    document.getElementById('gpt-model').value='Gemini 2.0 Flash';
+    document.getElementById('gpt-model').value='Llama 3.3 70B';
     document.getElementById('gpt-prompt').value='';
     document.getElementById('gpt-temp').value='0.7';
     document.getElementById('gpt-cap').value='';
