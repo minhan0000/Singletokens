@@ -1,3 +1,4 @@
+
 console.log('=== SERVER STARTING ===');
 process.on('uncaughtException', (err) => {
   console.error('CRASH:', err.message, err.stack);
@@ -205,62 +206,73 @@ app.post('/api/payment/paypal/capture-order', (_, res) => res.status(503).json({
 app.get('/api/transactions', auth, async (req, res) => res.json({ transactions: [] }));
 
 // ════════════════════════════════════════
-//   GEMINI CHAT ✅ jetzt mit Auth gesichert
+//   GROQ CHAT ✅ Groq als Standard-KI
 // ════════════════════════════════════════
 
-const DEFAULT_MODEL = 'gemini-2.0-flash';
+const DEFAULT_MODEL = 'llama-3.3-70b-versatile';
 
-// Auth optional — funktioniert auch ohne Login
+// Mapping: Frontend-Anzeigename → Groq Modell-ID
+const MODEL_MAP = {
+  'Llama 3.3 70B':        'llama-3.3-70b-versatile',
+  'Llama 3.1 8B':         'llama-3.1-8b-instant',
+  'Gemma 2 9B':           'gemma2-9b-it',
+  'Mixtral 8x7B':         'mixtral-8x7b-32768',
+  'DeepSeek R1 70B':      'deepseek-r1-distill-llama-70b',
+  // Weitere Modelle mit Fallback auf Default
+};
+
 app.post('/api/chat', async (req, res) => {
   try {
     const { message, model, history = [], systemPrompt } = req.body;
     if (!message) return res.status(400).json({ error: 'Nachricht erforderlich' });
 
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) return res.status(500).json({ error: 'Kein Gemini API Key konfiguriert' });
+    const apiKey = process.env.GROQ_API_KEY;
+    if (!apiKey) return res.status(500).json({ error: 'Kein Groq API Key konfiguriert' });
 
-    const modelName = model || DEFAULT_MODEL;
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+    // Modell-ID aus Mapping auflösen, oder direkt verwenden falls schon eine ID
+    const modelId = MODEL_MAP[model] || model || DEFAULT_MODEL;
 
-    // Chat-History ins Gemini Format konvertieren
-    const contents = [];
-    for (const msg of history) {
-      if (msg.content === message && msg === history[history.length - 1]) continue;
-      contents.push({
-        role: msg.role === 'user' ? 'user' : 'model',
-        parts: [{ text: msg.content }]
-      });
-    }
-    contents.push({ role: 'user', parts: [{ text: message }] });
-
-    const body = {
-      contents,
-      generationConfig: {
-        temperature: 0.7,
-        maxOutputTokens: 2048,
-      }
-    };
+    // Chat-History ins OpenAI-Format konvertieren (Groq ist OpenAI-kompatibel)
+    const messages = [];
 
     if (systemPrompt) {
-      body.systemInstruction = { parts: [{ text: systemPrompt }] };
+      messages.push({ role: 'system', content: systemPrompt });
     }
 
-    const geminiRes = await fetch(url, {
+    for (const msg of history) {
+      // Letzten User-Eintrag überspringen falls er der aktuelle message-Wert ist
+      if (msg.role === 'user' && msg.content === message && msg === history[history.length - 1]) continue;
+      messages.push({
+        role: msg.role === 'model' ? 'assistant' : msg.role, // Gemini-Kompatibilität
+        content: msg.content
+      });
+    }
+
+    messages.push({ role: 'user', content: message });
+
+    const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: modelId,
+        messages,
+        temperature: 0.7,
+        max_tokens: 2048,
+      })
     });
 
-    const data = await geminiRes.json();
+    const data = await groqRes.json();
 
-    if (!geminiRes.ok) {
-      console.error('Gemini Error:', data);
-      return res.status(500).json({ error: data.error?.message || 'Gemini Fehler' });
+    if (!groqRes.ok) {
+      console.error('Groq Error:', data);
+      return res.status(500).json({ error: data.error?.message || 'Groq Fehler' });
     }
 
-    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Keine Antwort erhalten.';
-
-    res.json({ reply, model: modelName });
+    const reply = data.choices?.[0]?.message?.content || 'Keine Antwort erhalten.';
+    res.json({ reply, model: modelId });
 
   } catch (err) {
     console.error('Chat Error:', err);
@@ -272,9 +284,11 @@ app.get('/api/models', (req, res) => {
   res.json({
     default: DEFAULT_MODEL,
     models: [
-      { id: 'gemini-2.0-flash',      name: 'Gemini 2.0 Flash',      mult: 0.5  },
-      { id: 'gemini-2.0-flash-lite', name: 'Gemini 2.0 Flash Lite', mult: 0.25 },
-      { id: 'gemini-1.5-pro',        name: 'Gemini 1.5 Pro',        mult: 2.33 },
+      { id: 'llama-3.3-70b-versatile',      name: 'Llama 3.3 70B',   mult: 0.30 },
+      { id: 'llama-3.1-8b-instant',          name: 'Llama 3.1 8B',    mult: 0.10 },
+      { id: 'gemma2-9b-it',                  name: 'Gemma 2 9B',      mult: 0.15 },
+      { id: 'mixtral-8x7b-32768',            name: 'Mixtral 8x7B',    mult: 0.20 },
+      { id: 'deepseek-r1-distill-llama-70b', name: 'DeepSeek R1 70B', mult: 0.35 },
     ]
   });
 });
@@ -283,7 +297,7 @@ app.get('/api/models', (req, res) => {
 //   HEALTH CHECK
 // ════════════════════════════════════════
 
-app.get('/health', (_, res) => res.json({ status: 'ok', version: '2.0.0' }));
+app.get('/health', (_, res) => res.json({ status: 'ok', version: '2.1.0' }));
 
 // ════════════════════════════════════════
 //   START
@@ -295,7 +309,7 @@ async function start() {
   await db.init();
   console.log('✓ Datenbank initialisiert');
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`✓ SingleTokens Backend v2 läuft auf Port ${PORT}`);
+    console.log(`✓ SingleTokens Backend v2.1 läuft auf Port ${PORT} — Groq powered`);
   });
 }
 
