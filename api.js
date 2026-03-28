@@ -10,16 +10,20 @@ const MODEL_MAP = {
   'DeepSeek R1 70B':  'deepseek-r1-distill-llama-70b',
 };
 
-// api.js — resetChatHistory so ändern:
+let chatHistory     = [];
+let activeGptPrompt = null; // ✅ muss hier deklariert sein
+
+// ✅ FIX: resetChatHistory löscht NUR den Chat-Verlauf, NICHT den Prompt
 function resetChatHistory() {
   chatHistory = [];
-  // activeGptPrompt NICHT hier nullen!
 }
 
+// ✅ FIX: setGptPrompt setzt den Prompt und leert nur den Verlauf
 function setGptPrompt(prompt) {
   activeGptPrompt = prompt ? prompt.trim() : null;
-  chatHistory = []; // nur chatHistory leeren
+  chatHistory = [];
 }
+
 /* ─── Hilfsfunktionen: funktionieren auf Desktop UND Mobile ─── */
 
 function _getInputEl() {
@@ -45,7 +49,6 @@ function _addMsg(text, role, model) {
   if (typeof addMsg === 'function') {
     return addMsg(text, role, model);
   }
-  // Fallback (sollte nicht aufgerufen werden)
   const msgs = _getMsgContainer();
   const d = document.createElement('div');
   d.className = 'msg ' + role;
@@ -69,12 +72,10 @@ function _addTyping() {
 }
 
 function _updateBalance(used) {
-  // Desktop
   if (typeof updateBalance === 'function') {
     updateBalance(used);
     return;
   }
-  // Mobile: updateBal
   if (typeof updateBal === 'function') {
     updateBal(used);
   }
@@ -113,8 +114,6 @@ async function _doSend() {
   }
 
   const messages = [];
-  // ✅ activeGptPrompt NICHT mehr hier in messages packen —
-  // wird direkt als systemPrompt ans Backend geschickt
   messages.push(...chatHistory.slice(-20));
 
   try {
@@ -125,7 +124,7 @@ async function _doSend() {
         message: text,
         model: modelName,
         history: messages,
-        systemPrompt: activeGptPrompt || null  // ✅ Custom GPT Prompt oder null → Backend nutzt Deutsch-Default
+        systemPrompt: activeGptPrompt || null
       })
     });
 
@@ -157,5 +156,4 @@ async function _doSend() {
 sendMessage = function () { _doSend(); };
 
 /* ─── Mobile: überschreibt sendMsg ─── */
-var _origSendMsg = (typeof sendMsg === 'function') ? sendMsg : null;
 sendMsg = function () { _doSend(); };
