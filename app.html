@@ -327,18 +327,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
     <span class="sidebar-text">Purchase tokens</span>
   </div>
   <div class="sidebar-divider"></div>
-  <div class="recent-area">
+  <div class="recent-area" id="recent-area">
     <div class="sec-label">Recent</div>
-    <!-- ✅ Geändert: Groq / Llama als Standard-Modell in der Sidebar -->
-    <div class="model-group-label"><div class="mdot" style="background:#67E8F9"></div>Llama 3.3 70B</div>
-    <div class="chat-item" onclick="loadChat(this,'Product roadmap discussion')">Product roadmap discussion</div>
-    <div class="chat-item" onclick="loadChat(this,'Code review feedback')">Code review feedback</div>
-    <div class="chat-item" onclick="loadChat(this,'SingleTokens Webseite')">SingleTokens Webseite</div>
-    <div class="model-group-label"><div class="mdot" style="background:#86EFAC"></div>GPT-4o</div>
-    <div class="chat-item" onclick="loadChat(this,'Marketing strategy ideas')">Marketing strategy ideas</div>
-    <div class="chat-item" onclick="loadChat(this,'Business plan outline')">Business plan outline</div>
-    <div class="model-group-label"><div class="mdot" style="background:#93C5FD"></div>Claude Sonnet 4.5</div>
-    <div class="chat-item" onclick="loadChat(this,'Mathe Erklärung Vektoren')">Mathe Erklärung Vektoren</div>
+    <div id="chat-history-list"></div>
   </div>
   <div class="sidebar-footer">
     <button class="account-btn" onclick="openView('settings')">
@@ -613,7 +604,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
       </div>
       <div class="s-pg" id="s-account">
         <div class="s-title" data-t="account"></div>
-        <div class="acc-card"><div class="big-av" id="s-av">G</div><div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--text)" id="s-display-name">Guest User</div><div style="font-size:12px;color:var(--muted2);font-family:'DM Mono',monospace;margin-top:2px" id="s-display-email">guest@singletokens.com</div></div><div class="tok-badge" id="s-tok-badge">716K Tokens</div></div>
+        <div class="acc-card"><div class="big-av" id="s-av">G</div><div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--text)" id="s-display-name">Guest User</div><div style="font-size:12px;color:var(--muted2);font-family:'DM Mono',monospace;margin-top:2px" id="s-display-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a3c4d6c6d0d7e3d0cacdc4cfc6d7ccc8c6cdd08dc0ccce">[email&#160;protected]</a></div></div><div class="tok-badge" id="s-tok-badge">716K Tokens</div></div>
         <div class="s-row"><div class="s-info"><div class="s-label" data-t="display_name"></div></div><input class="s-finput" style="width:160px" type="text" value="Guest User" onchange="saveName(this.value)"></div>
         <div class="s-row"><div class="s-info"><div class="s-label" data-t="email"></div></div><input class="s-finput" style="width:200px" type="email" value="guest@singletokens.com" onchange="saveEmail(this.value)"></div>
         <div class="s-row"><div class="s-info"><div class="s-label" data-t="password"></div><div class="s-desc" data-t="password_desc"></div></div><button class="s-nbtn" data-t="change" onclick="showToast(T('pw_sent'))"></button></div>
@@ -674,7 +665,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 </div><!-- end app -->
 <div class="toast" id="toast"></div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /* ─── SIDEBAR ─── */
 function toggleSidebar(){
   const sb=document.getElementById('sidebar');
@@ -765,24 +756,96 @@ function addTyping(){
 function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}}
 function autoResize(el){el.style.height='22px';el.style.height=Math.min(el.scrollHeight,120)+'px';}
 
-// ✅ Geändert: newChat zeigt Llama 3.3 70B als Standard
 function newChat(){
+  saveCurrentChat();
+  activeChatId = null;
   document.getElementById('chat-messages').innerHTML='<div class="msg ai"><div class="msg-bubble">Hallo! Ich bin SingleTokens AI. Wie kann ich dir heute helfen?</div><div class="msg-meta">SingleTokens · Llama 3.3 70B</div></div>';
   if(typeof resetChatHistory==='function')resetChatHistory();
+  renderChatHistory();
 }
 
-function loadChat(el,title){
-  openView('chat');
-  document.querySelectorAll('.chat-item').forEach(c=>{c.style.fontWeight='';c.style.color='';});
-  el.style.fontWeight='700';el.style.color='var(--text)';
-  newChat();
-  const d=document.createElement('div');
-  d.className='msg user';
-  d.innerHTML=`<div class="msg-bubble">${title}</div><div class="msg-meta">Du</div>`;
-  document.getElementById('chat-messages').appendChild(d);
-  const typing=addTyping();
-  setTimeout(()=>{typing.remove();addMsg('Hier sind meine Gedanken zu diesem Thema...','ai');},900);
+/* ─── CHAT HISTORY (localStorage) ─── */
+let savedChats = JSON.parse(localStorage.getItem('st_chats') || '[]');
+let activeChatId = null;
+
+function genId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2,6);
 }
+
+function saveCurrentChat() {
+  if (!activeChatId) return;
+  const msgs = document.getElementById('chat-messages');
+  const bubbles = [...msgs.querySelectorAll('.msg')].map(m => ({
+    role: m.classList.contains('user') ? 'user' : 'ai',
+    text: m.querySelector('.msg-bubble')?.textContent || '',
+    meta: m.querySelector('.msg-meta')?.textContent || ''
+  }));
+  if (bubbles.length <= 1) return; // nur Begrüßung — nicht speichern
+  const model = document.getElementById('chat-model-sel')?.value || 'Llama 3.3 70B';
+  const title = bubbles.find(b => b.role === 'user')?.text?.slice(0,40) || 'Neuer Chat';
+  const idx = savedChats.findIndex(c => c.id === activeChatId);
+  const chat = { id: activeChatId, title, model, messages: bubbles, ts: Date.now() };
+  if (idx >= 0) savedChats[idx] = chat;
+  else savedChats.unshift(chat);
+  localStorage.setItem('st_chats', JSON.stringify(savedChats.slice(0,50))); // max 50
+  renderChatHistory();
+}
+
+function renderChatHistory() {
+  const list = document.getElementById('chat-history-list');
+  if (!list) return;
+  if (savedChats.length === 0) {
+    list.innerHTML = '<div style="padding:10px 16px;font-size:11px;color:var(--muted)">Noch keine Chats</div>';
+    return;
+  }
+  list.innerHTML = savedChats.map(c => `
+    <div class="chat-item ${c.id === activeChatId ? 'active-chat' : ''}"
+         onclick="loadSavedChat('${c.id}')"
+         style="display:flex;align-items:center;justify-content:space-between;gap:6px">
+      <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1">${c.title}</span>
+      <span onclick="event.stopPropagation();deleteChat('${c.id}')"
+            style="flex-shrink:0;opacity:0;font-size:14px;color:var(--muted2);cursor:pointer;padding:0 2px;transition:opacity .15s"
+            onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0'">&times;</span>
+    </div>`).join('');
+}
+
+function loadSavedChat(id) {
+  const chat = savedChats.find(c => c.id === id);
+  if (!chat) return;
+  saveCurrentChat();
+  activeChatId = id;
+  openView('chat');
+  const msgs = document.getElementById('chat-messages');
+  msgs.innerHTML = '';
+  chat.messages.forEach(m => {
+    const d = document.createElement('div');
+    d.className = 'msg ' + m.role;
+    d.innerHTML = `<div class="msg-bubble">${m.text}</div><div class="msg-meta">${m.meta}</div>`;
+    msgs.appendChild(d);
+  });
+  msgs.scrollTop = msgs.scrollHeight;
+  const sel = document.getElementById('chat-model-sel');
+  if (sel && chat.model) sel.value = chat.model;
+  if (typeof resetChatHistory === 'function') resetChatHistory();
+  renderChatHistory();
+}
+
+function deleteChat(id) {
+  savedChats = savedChats.filter(c => c.id !== id);
+  localStorage.setItem('st_chats', JSON.stringify(savedChats));
+  if (activeChatId === id) { activeChatId = null; newChat(); }
+  renderChatHistory();
+}
+
+// Wird von api.js nach jeder AI-Antwort getriggert
+function onMessageComplete() {
+  if (!activeChatId) activeChatId = genId();
+  saveCurrentChat();
+}
+
+function loadChat(el, title) { /* Stub — ersetzt durch loadSavedChat */ }
+
+renderChatHistory();
 
 /* ─── YOUR MODELS ─── */
 const ALL_MODELS=[
@@ -1032,15 +1095,4 @@ function deleteGpt(id){gpts=gpts.filter(g=>g.id!==id);renderGpts();showToast('GP
 function useGpt(id){
   const g=gpts.find(x=>x.id===id);if(!g)return;
   const sel=document.getElementById('chat-model-sel');if(sel)sel.value=g.model;
-  openView('chat');newChat();
-  showToast('GPT "'+g.name+'" geladen!');
-}
-
-document.getElementById('gpt-modal').addEventListener('click',closeGptModal);
-
-renderGpts();
-applyLang();
-</script>
-<script src="api.js"></script>
-</body>
-</html>
+  ope
