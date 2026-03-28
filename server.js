@@ -169,7 +169,6 @@ ABSOLUT VERBOTEN — niemals brechen:
 - Keine Einleitungen, keine Zusammenfassungen am Ende.
 - Direkt antworten. Fertig. Nichts mehr.
 - Sprache: Deutsch. Ausnahme: User schreibt "respond in English".`;
-
 app.post('/api/chat', async (req, res) => {
   try {
     const { message, model, history = [], systemPrompt } = req.body;
