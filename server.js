@@ -1,4 +1,3 @@
-
 console.log('=== SERVER STARTING ===');
 process.on('uncaughtException', (err) => {
   console.error('CRASH:', err.message, err.stack);
@@ -20,13 +19,16 @@ const auth = require('./auth.middleware');
 
 const app = express();
 
-// ✅ CORS fix — alle Origins erlaubt
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
-app.options('*', cors());
+// ✅ CORS FIX — manuelle Header als allererste Middleware
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+  next();
+});
 
 app.use(express.json());
 app.use(express.static(__dirname));
@@ -206,19 +208,17 @@ app.post('/api/payment/paypal/capture-order', (_, res) => res.status(503).json({
 app.get('/api/transactions', auth, async (req, res) => res.json({ transactions: [] }));
 
 // ════════════════════════════════════════
-//   GROQ CHAT ✅ Groq als Standard-KI
+//   GROQ CHAT
 // ════════════════════════════════════════
 
 const DEFAULT_MODEL = 'llama-3.3-70b-versatile';
 
-// Mapping: Frontend-Anzeigename → Groq Modell-ID
 const MODEL_MAP = {
   'Llama 3.3 70B':        'llama-3.3-70b-versatile',
   'Llama 3.1 8B':         'llama-3.1-8b-instant',
   'Gemma 2 9B':           'gemma2-9b-it',
   'Mixtral 8x7B':         'mixtral-8x7b-32768',
   'DeepSeek R1 70B':      'deepseek-r1-distill-llama-70b',
-  // Weitere Modelle mit Fallback auf Default
 };
 
 app.post('/api/chat', async (req, res) => {
@@ -229,25 +229,18 @@ app.post('/api/chat', async (req, res) => {
     const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) return res.status(500).json({ error: 'Kein Groq API Key konfiguriert' });
 
-    // Modell-ID aus Mapping auflösen, oder direkt verwenden falls schon eine ID
-    const modelId = MODEL_MAP[model] || model || DEFAULT_MODEL;
+    const modelId = MODEL_MAP[model] || DEFAULT_MODEL;
 
-    // Chat-History ins OpenAI-Format konvertieren (Groq ist OpenAI-kompatibel)
     const messages = [];
-
-    if (systemPrompt) {
-      messages.push({ role: 'system', content: systemPrompt });
-    }
+    if (systemPrompt) messages.push({ role: 'system', content: systemPrompt });
 
     for (const msg of history) {
-      // Letzten User-Eintrag überspringen falls er der aktuelle message-Wert ist
       if (msg.role === 'user' && msg.content === message && msg === history[history.length - 1]) continue;
       messages.push({
-        role: msg.role === 'model' ? 'assistant' : msg.role, // Gemini-Kompatibilität
+        role: msg.role === 'model' ? 'assistant' : msg.role,
         content: msg.content
       });
     }
-
     messages.push({ role: 'user', content: message });
 
     const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -297,7 +290,7 @@ app.get('/api/models', (req, res) => {
 //   HEALTH CHECK
 // ════════════════════════════════════════
 
-app.get('/health', (_, res) => res.json({ status: 'ok', version: '2.1.0' }));
+app.get('/health', (_, res) => res.json({ status: 'ok', version: '2.2.0' }));
 
 // ════════════════════════════════════════
 //   START
@@ -309,7 +302,7 @@ async function start() {
   await db.init();
   console.log('✓ Datenbank initialisiert');
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`✓ SingleTokens Backend v2.1 läuft auf Port ${PORT} — Groq powered`);
+    console.log(`✓ SingleTokens Backend v2.2 läuft auf Port ${PORT}`);
   });
 }
 
