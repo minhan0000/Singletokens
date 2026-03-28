@@ -1,78 +1,83 @@
 /* ─── SingleTokens api.js ─── */
 
-const API_BASE = 'https://singletokens-backend.onrender.com'; // ← deine Backend-URL
+const API_BASE = 'https://singletokens-backend.onrender.com';
 
-let chatHistory = [];   // OpenAI-Format: [{role:'user',content:'...'}, ...]
+const MODEL_MAP = {
+  'Llama 3.3 70B':    'llama-3.3-70b-versatile',
+  'Llama 3.1 8B':     'llama-3.1-8b-instant',
+  'Gemma 2 9B':       'gemma2-9b-it',
+  'Mixtral 8x7B':     'mixtral-8x7b-32768',
+  'DeepSeek R1 70B':  'deepseek-r1-distill-llama-70b',
+};
+
+let chatHistory = [];
 let activeGptPrompt = null;
 
-/* ─── Chat-History Reset ─── */
 function resetChatHistory() {
   chatHistory = [];
   activeGptPrompt = null;
 }
 
-/* ─── sendMessage (überschreibt den Stub in app.html) ─── */
+/* Backend aufwecken beim Laden der Seite */
+fetch(`${API_BASE}/health`).catch(() => {});
+
+/* ─── sendMessage ─── */
 sendMessage = async function () {
-  const input  = document.getElementById('chat-input');
-  const model  = document.getElementById('chat-model-sel')?.value || 'Llama 3.3 70B';
-  const text   = input?.value?.trim();
+  const input     = document.getElementById('chat-input');
+  const modelName = document.getElementById('chat-model-sel')?.value || 'Llama 3.3 70B';
+  const text      = input?.value?.trim();
   if (!text) return;
 
-  // UI: Nachricht des Users anzeigen
   addMsg(text, 'user');
   input.value = '';
-  if (input) { input.style.height = '22px'; }
+  if (input) input.style.height = '22px';
 
-  // Token-Schätzung abziehen (grobe Schätzung vor Antwort)
-  const mult = (typeof MODELS_MULT !== 'undefined' && MODELS_MULT[model]) || 1;
-  const estimatedCost = Math.floor(text.length * mult * 1.5 + 20);
-  if (typeof updateBalance === 'function') updateBalance(estimatedCost);
+  const mult = (typeof MODELS_MULT !== 'undefined' && MODELS_MULT[modelName]) || 1;
+  if (typeof updateBalance === 'function')
+    updateBalance(Math.floor(text.length * mult * 1.5 + 20));
 
-  // Typing-Indikator
   const typingEl = addTyping();
-
-  // History updaten
   chatHistory.push({ role: 'user', content: text });
+
+  if (!MODEL_MAP[modelName]) {
+    typingEl.remove();
+    chatHistory.pop();
+    addMsg(`⚠ "${modelName}" ist noch nicht live. Bitte wähle Llama, Gemma, Mixtral oder DeepSeek R1.`, 'ai', modelName);
+    return;
+  }
+
+  const messages = [];
+  if (activeGptPrompt) messages.push({ role: 'system', content: activeGptPrompt });
+  messages.push(...chatHistory.slice(-20));
 
   try {
     const res = await fetch(`${API_BASE}/api/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message: text,
-        model: model,
-        history: chatHistory.slice(-20), // max 20 Nachrichten Kontext
-        systemPrompt: activeGptPrompt || undefined
-      })
+      body: JSON.stringify({ message: text, model: modelName, history: messages })
     });
 
     const data = await res.json();
     typingEl.remove();
 
     if (!res.ok || data.error) {
-      const errMsg = data.error || 'Backend-Fehler – bitte erneut versuchen.';
-      addMsg('⚠ ' + errMsg, 'ai', model);
-      // History-Push rückgängig machen
       chatHistory.pop();
+      addMsg('⚠ ' + (data.error || 'Backend-Fehler'), 'ai', modelName);
       return;
     }
 
     const reply = data.reply || 'Keine Antwort erhalten.';
     chatHistory.push({ role: 'assistant', content: reply });
+    if (typeof updateBalance === 'function')
+      updateBalance(Math.floor(reply.length * mult + 10));
 
-    // Antwort-Kosten abziehen
-    const replyCost = Math.floor(reply.length * mult + 10);
-    if (typeof updateBalance === 'function') updateBalance(replyCost);
-
-    addMsg(reply, 'ai', model);
-
-    // Chat speichern
+    addMsg(reply, 'ai', modelName);
     if (typeof onMessageComplete === 'function') onMessageComplete();
 
   } catch (err) {
     typingEl.remove();
     chatHistory.pop();
-    addMsg('⚠ Verbindung fehlgeschlagen – ist das Backend erreichbar?', 'ai', model);
-    console.error('api.js Fetch-Fehler:', err);
+    addMsg('⚠ Backend nicht erreichbar – ist der Render-Dienst online?', 'ai', modelName);
+    console.error('api.js Fehler:', err);
   }
 };
