@@ -1094,4 +1094,15 @@ function deleteGpt(id){gpts=gpts.filter(g=>g.id!==id);renderGpts();showToast('GP
 function useGpt(id){
   const g=gpts.find(x=>x.id===id);if(!g)return;
   const sel=document.getElementById('chat-model-sel');if(sel)sel.value=g.model;
-  ope
+  openView('chat');newChat();
+  showToast('GPT "'+g.name+'" geladen!');
+}
+
+document.getElementById('gpt-modal').addEventListener('click',closeGptModal);
+
+renderGpts();
+applyLang();
+</script>
+<script src="api.js"></script>
+</body>
+</html>
