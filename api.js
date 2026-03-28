@@ -111,14 +111,20 @@ async function _doSend() {
   }
 
   const messages = [];
-  if (activeGptPrompt) messages.push({ role: 'system', content: activeGptPrompt });
+  // ✅ activeGptPrompt NICHT mehr hier in messages packen —
+  // wird direkt als systemPrompt ans Backend geschickt
   messages.push(...chatHistory.slice(-20));
 
   try {
     const res = await fetch(`${API_BASE}/api/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: text, model: modelName, history: messages })
+      body: JSON.stringify({
+        message: text,
+        model: modelName,
+        history: messages,
+        systemPrompt: activeGptPrompt || null  // ✅ Custom GPT Prompt oder null → Backend nutzt Deutsch-Default
+      })
     });
 
     const data = await res.json();
@@ -149,6 +155,5 @@ async function _doSend() {
 sendMessage = function () { _doSend(); };
 
 /* ─── Mobile: überschreibt sendMsg ─── */
-// index-mobile.html ruft sendMsg() auf → hier überschreiben
 var _origSendMsg = (typeof sendMsg === 'function') ? sendMsg : null;
 sendMsg = function () { _doSend(); };
