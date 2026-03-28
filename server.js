@@ -158,7 +158,6 @@ const MODEL_MAP = {
 };
 
 // ✅ Maximally direct system prompt
-const DEFAULT_SYSTEM_PROMPT = `Du bist SingleTokens AI. Antworte auf Deutsch.
 
 const DEFAULT_SYSTEM_PROMPT = `Du bist SingleTokens AI.
 
