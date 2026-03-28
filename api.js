@@ -1,6 +1,8 @@
 /* ─── SingleTokens api.js ─── */
+// Kein externer API_BASE nötig — läuft auf derselben Origin wie der Server
+// → kein CORS-Problem möglich
 
-const API_BASE = 'https://singletokens-backend.onrender.com';
+const API_BASE = ''; // leer = gleiche Origin
 
 const MODEL_MAP = {
   'Llama 3.3 70B':    'llama-3.3-70b-versatile',
@@ -10,34 +12,13 @@ const MODEL_MAP = {
   'DeepSeek R1 70B':  'deepseek-r1-distill-llama-70b',
 };
 
-let chatHistory = [];
+let chatHistory    = [];
 let activeGptPrompt = null;
-let backendReady = false;
 
 function resetChatHistory() {
-  chatHistory = [];
+  chatHistory     = [];
   activeGptPrompt = null;
 }
-
-/* ── Backend aufwecken & bereit melden ── */
-async function wakeBackend() {
-  try {
-    const res = await fetch(`${API_BASE}/health`);
-    if (res.ok) {
-      backendReady = true;
-      console.log('✓ Backend bereit');
-    }
-  } catch (e) {
-    // noch nicht wach, nochmal versuchen
-    setTimeout(wakeBackend, 5000);
-  }
-}
-wakeBackend();
-
-/* Alle 14 Minuten pingen damit Render nicht einschläft */
-setInterval(() => {
-  fetch(`${API_BASE}/health`).catch(() => {});
-}, 14 * 60 * 1000);
 
 /* ─── sendMessage ─── */
 sendMessage = async function () {
@@ -64,13 +45,6 @@ sendMessage = async function () {
     return;
   }
 
-  /* Falls Backend noch aufwacht: kurz warten */
-  if (!backendReady) {
-    typingEl.querySelector('.typing-indicator') &&
-      (typingEl.querySelector('.typing-indicator').title = 'Backend wacht auf...');
-    await new Promise(r => setTimeout(r, 3000));
-  }
-
   const messages = [];
   if (activeGptPrompt) messages.push({ role: 'system', content: activeGptPrompt });
   messages.push(...chatHistory.slice(-20));
@@ -87,7 +61,7 @@ sendMessage = async function () {
 
     if (!res.ok || data.error) {
       chatHistory.pop();
-      addMsg('⚠ ' + (data.error || 'Backend-Fehler'), 'ai', modelName);
+      addMsg('⚠ ' + (data.error || 'Fehler'), 'ai', modelName);
       return;
     }
 
@@ -97,16 +71,12 @@ sendMessage = async function () {
       updateBalance(Math.floor(reply.length * mult + 10));
 
     addMsg(reply, 'ai', modelName);
-    backendReady = true;
     if (typeof onMessageComplete === 'function') onMessageComplete();
 
   } catch (err) {
     typingEl.remove();
     chatHistory.pop();
-    backendReady = false;
-    addMsg('⚠ Backend nicht erreichbar – bitte kurz warten und nochmal versuchen.', 'ai', modelName);
+    addMsg('⚠ Server nicht erreichbar: ' + err.message, 'ai', modelName);
     console.error('api.js Fehler:', err);
-    // Neu aufwecken
-    setTimeout(wakeBackend, 2000);
   }
 };
