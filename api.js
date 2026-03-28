@@ -13,11 +13,10 @@ const MODEL_MAP = {
 let chatHistory     = [];
 let activeGptPrompt = null;
 
-function resetChatHistory() {
-  chatHistory     = [];
-  activeGptPrompt = null;
+function setGptPrompt(prompt) {
+  activeGptPrompt = prompt ? prompt.trim() : null;
+  resetChatHistory();
 }
-
 /* ─── Hilfsfunktionen: funktionieren auf Desktop UND Mobile ─── */
 
 function _getInputEl() {
