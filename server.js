@@ -148,7 +148,6 @@ app.post('/api/payment/paypal/create-order',  (_, res) => res.status(503).json({
 app.post('/api/payment/paypal/capture-order', (_, res) => res.status(503).json({ error: 'Coming soon' }));
 
 // ── GROQ CHAT PROXY ───────────────────────────────────────────────────────────
-// API-Key bleibt sicher in .env / Render Environment Variables — nie in GitHub!
 
 const MODEL_MAP = {
   'Llama 3.3 70B':    'llama-3.3-70b-versatile',
@@ -157,6 +156,15 @@ const MODEL_MAP = {
   'Mixtral 8x7B':     'mixtral-8x7b-32768',
   'DeepSeek R1 70B':  'deepseek-r1-distill-llama-70b',
 };
+
+// ✅ Standard-System-Prompt: immer Deutsch, außer User sagt explizit Englisch
+const DEFAULT_SYSTEM_PROMPT = `Du bist ein hilfreicher, konstruktiver Assistent namens SingleTokens AI.
+
+Antworte IMMER auf Deutsch, egal in welcher Sprache der User schreibt.
+Ausnahme: Wenn der User explizit schreibt "respond in English" oder "answer in English",
+dann antwortest du auf Englisch — bis er wieder auf Deutsch wechselt.
+
+Sei präzise, freundlich und hilfreich.`;
 
 app.post('/api/chat', async (req, res) => {
   try {
@@ -169,11 +177,18 @@ app.post('/api/chat', async (req, res) => {
     const modelId = MODEL_MAP[model] || 'llama-3.3-70b-versatile';
 
     const messages = [];
-    if (systemPrompt) messages.push({ role: 'system', content: systemPrompt });
+
+    // ✅ Custom GPT System-Prompt hat Vorrang, sonst Default (Deutsch)
+    messages.push({
+      role: 'system',
+      content: systemPrompt || DEFAULT_SYSTEM_PROMPT
+    });
+
     for (const msg of history) {
       if (msg.role && msg.content)
         messages.push({ role: msg.role === 'model' ? 'assistant' : msg.role, content: msg.content });
     }
+
     // Letzten User-Eintrag nicht doppelt senden
     if (messages[messages.length - 1]?.content !== message)
       messages.push({ role: 'user', content: message });
