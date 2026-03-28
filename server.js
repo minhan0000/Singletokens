@@ -190,7 +190,7 @@ app.post('/api/chat', async (req, res) => {
     const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: modelId, messages, temperature: 0.7, max_tokens: 2048 })
+      body: JSON.stringify({ model: modelId, messages, temperature: 0.7, max_tokens: 250 })
     });
 
     const data = await groqRes.json();
