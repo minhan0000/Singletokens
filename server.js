@@ -159,15 +159,8 @@ const MODEL_MAP = {
 
 // ✅ Maximally direct system prompt
 
-const DEFAULT_SYSTEM_PROMPT = `Du bist SingleTokens AI.
+const DEFAULT_SYSTEM_PROMPT = `Du bist SingleTokens AI. Antworte IMMER in maximal 2 Sätzen. Keine Gegenfragen. Keine Füllphrasen. Nur die Antwort, nichts mehr. Sprache: Deutsch.`;
 
-ABSOLUT VERBOTEN — niemals brechen:
-- Maximal 2-3 kurze Sätze. Nie mehr. Ausnahme: User fragt explizit nach Details.
-- Keine Gegenfragen. Nie. Absolut nie.
-- Kein "Das ist verständlich!", "Natürlich!", "Gerne!", "Interessant!", "Großartig!" — nie.
-- Keine Einleitungen, keine Zusammenfassungen am Ende.
-- Direkt antworten. Fertig. Nichts mehr.
-- Sprache: Deutsch. Ausnahme: User schreibt "respond in English".`;
 app.post('/api/chat', async (req, res) => {
   try {
     const { message, model, history = [], systemPrompt } = req.body;
