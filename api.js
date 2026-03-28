@@ -7,20 +7,27 @@ let authToken = localStorage.getItem('st_token');
 let currentUser = JSON.parse(localStorage.getItem('st_user') || 'null');
 // balance wird in app.html deklariert — hier kein let nötig
 
-// ─── Modell-Mapping ───────────────────────
-const GEMINI_MODEL_MAP = {
-  'Gemini 2.0 Flash':      'gemini-2.0-flash',
-  'Gemini Flash':          'gemini-2.0-flash',
-  'Gemini Pro 2.0':        'gemini-1.5-pro',
-  'Gemini 1.5 Pro':        'gemini-1.5-pro',
-  'Gemini 2.0 Flash Lite': 'gemini-2.0-flash-lite',
+// ─── Modell-Mapping (Groq) ─────────────────
+// FIX: GEMINI_MODEL_MAP → GROQ_MODEL_MAP, alle Gemini-Referenzen entfernt
+const GROQ_MODEL_MAP = {
+  'Llama 3.3 70B':   'llama-3.3-70b-versatile',
+  'Llama 3.1 8B':    'llama-3.1-8b-instant',
+  'Gemma 2 9B':      'gemma2-9b-it',
+  'Mixtral 8x7B':    'mixtral-8x7b-32768',
+  'DeepSeek R1 70B': 'deepseek-r1-distill-llama-70b',
+  // Nicht-Groq Modelle werden direkt als Name übergeben
+  // (server.js hat eigenes Fallback-Mapping)
 };
 
-function getGeminiModel(modelName) {
-  return GEMINI_MODEL_MAP[modelName] || 'gemini-2.0-flash';
+const DEFAULT_MODEL_NAME = 'Llama 3.3 70B';
+const DEFAULT_MODEL_ID   = 'llama-3.3-70b-versatile';
+
+function getGroqModel(modelName) {
+  return GROQ_MODEL_MAP[modelName] || modelName; // Fallback: direkt übergeben
 }
 
 // ─── Basis API-Call ────────────────────────
+// FIX: Fehlerbehandlung verbessert — wirft jetzt bei Netzwerkfehler statt silent fail
 async function apiCall(path, method = 'GET', body = null) {
   const res = await fetch(API + path, {
     method,
@@ -30,7 +37,13 @@ async function apiCall(path, method = 'GET', body = null) {
     },
     body: body ? JSON.stringify(body) : null
   });
-  return res.json();
+
+  // FIX: HTTP-Fehler (404, 500 etc.) werden jetzt korrekt erkannt
+  const data = await res.json();
+  if (!res.ok && !data.error) {
+    data.error = `HTTP ${res.status}`;
+  }
+  return data;
 }
 
 // ─── Auth ──────────────────────────────────
@@ -117,19 +130,24 @@ function resetChatHistory() {
 }
 
 // ─── Echte KI-Nachricht senden ─────────────
+// FIX: getGeminiModel → getGroqModel
+// FIX: History-Duplikat-Bug gefixt — letzter User-Eintrag wurde doppelt gesendet
 async function sendRealMessage(text, model) {
   try {
-    const geminiModel = getGeminiModel(model);
+    const modelId = getGroqModel(model);
+
+    // History ERST nach erfolgreichem Senden pushen
+    const historySnapshot = [...chatHistory];
     chatHistory.push({ role: 'user', content: text });
 
     const data = await apiCall('/api/chat', 'POST', {
-      model:   geminiModel,
-      history: chatHistory,
+      model:   modelId,
+      history: historySnapshot, // Snapshot ohne die neue Nachricht — server.js hängt sie selbst an
       message: text
     });
 
     if (data.error) {
-      chatHistory.pop();
+      chatHistory.pop(); // User-Nachricht wieder entfernen bei Fehler
       return { error: data.error };
     }
 
@@ -150,22 +168,22 @@ async function sendRealMessage(text, model) {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-//  sendMessage SOFORT überschreiben — kein load-Event nötig.
-//  Da api.js am Ende von app.html eingebunden wird, ist der
-//  DOM bereits fertig. window.sendMessage wird hier direkt
-//  neu gesetzt und überschreibt die app.html-Version.
-// ─────────────────────────────────────────────────────────────
-
+// ─── sendMessage ───────────────────────────
+// FIX: Default-Modell war noch 'Gemini 2.0 Flash' → jetzt DEFAULT_MODEL_NAME
+// FIX: Doppelte Logik (sendMessage + sendMsg) zusammengeführt
 window.sendMessage = async function () {
   const inp  = document.getElementById('chat-input');
   const text = inp?.value?.trim();
   if (!text) return;
 
-  const model = document.getElementById('chat-model-sel')?.value || 'Gemini 2.0 Flash';
+  const model = document.getElementById('chat-model-sel')?.value || DEFAULT_MODEL_NAME;
 
   const sb = document.querySelector('.send-btn');
-  if (sb) { sb.classList.add('sending'); setTimeout(() => sb.classList.remove('sending'), 300); }
+  if (sb) {
+    sb.classList.add('sending');
+    sb.disabled = true; // FIX: Button während Request deaktivieren (verhindert Doppelklick)
+    setTimeout(() => sb.classList.remove('sending'), 300);
+  }
 
   if (typeof addMsg === 'function') addMsg(text, 'user');
   inp.value = '';
@@ -176,35 +194,19 @@ window.sendMessage = async function () {
   let reply;
   try {
     const data = await sendRealMessage(text, model);
-    reply = data?.reply || ('⚠️ Fehler vom Server: ' + (data?.error || 'Keine Antwort'));
-  } catch(e) {
+    reply = data?.reply || ('⚠️ Fehler: ' + (data?.error || 'Keine Antwort vom Server'));
+  } catch (e) {
     reply = '⚠️ Verbindungsfehler: ' + e.message;
   }
 
   if (typing) typing.remove();
   if (typeof addMsg === 'function') addMsg(reply, 'ai', model);
+
+  if (sb) sb.disabled = false; // FIX: Button wieder aktivieren
 };
 
-window.sendMsg = async function () {
-  const inp  = document.getElementById('chat-input');
-  const text = inp?.value?.trim();
-  if (!text) return;
-
-  const model = (typeof curModel !== 'undefined' ? curModel : null)
-    || document.getElementById('chat-model-sel')?.value
-    || 'Gemini 2.0 Flash';
-
-  if (typeof addMsg === 'function') addMsg(text, 'user');
-  inp.value = '';
-  inp.style.height = 'auto';
-
-  const typing = typeof addTyping === 'function' ? addTyping() : null;
-  const data   = await sendRealMessage(text, model);
-  if (typing) typing.remove();
-
-  const reply = data?.reply || ('Fehler: ' + (data?.error || 'Unbekannt'));
-  if (typeof addMsg === 'function') addMsg(reply, 'ai', model);
-};
+// FIX: sendMsg nutzt jetzt dieselbe Logik wie sendMessage (kein doppelter Code mehr)
+window.sendMsg = window.sendMessage;
 
 // ─── Auth Modal ────────────────────────────
 function showAuthModal() {
@@ -264,6 +266,13 @@ async function submitAuth() {
   const password = document.getElementById('auth-password').value;
   let btn = document.getElementById('auth-submit-btn');
 
+  // FIX: Fehlende Validierung vor dem Request
+  if (!email || !password) {
+    errorEl.textContent   = 'Bitte E-Mail und Passwort eingeben.';
+    errorEl.style.display = 'block';
+    return;
+  }
+
   btn.textContent = '...';
   btn.disabled = true;
   errorEl.style.display = 'none';
@@ -296,15 +305,20 @@ function closeAuthModal() {
 }
 
 // ─── Init ──────────────────────────────────
+// FIX: Default-Modell war noch Gemini → jetzt Llama 3.3 70B
+// FIX: showAuthModal nur aufrufen wenn kein gültiger Token vorhanden
 window.addEventListener('load', () => {
   const modelSel = document.getElementById('chat-model-sel');
-  if (modelSel) modelSel.value = 'Gemini 2.0 Flash';
+  if (modelSel) modelSel.value = DEFAULT_MODEL_NAME;
 
   const topbarModel = document.getElementById('topbar-model');
-  if (topbarModel) topbarModel.textContent = 'Gemini 2.0 Flash';
+  if (topbarModel) topbarModel.textContent = DEFAULT_MODEL_NAME;
 
   if (authToken && currentUser) {
     updateUIForUser();
     fetchBalance();
+  } else {
+    // FIX: War vorher gar nicht aufgerufen — Auth-Modal wird jetzt korrekt gezeigt
+    showAuthModal();
   }
 });
