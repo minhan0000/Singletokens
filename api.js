@@ -10,18 +10,54 @@ const MODEL_MAP = {
   'DeepSeek R1 70B':  'deepseek-r1-distill-llama-70b',
 };
 
-let chatHistory     = [];
-let activeGptPrompt = null; // ✅ muss hier deklariert sein
+// ─── apiChatHistory: NUR der laufende Gesprächskontext für den Groq-API-Call ───
+// Umbenannt von "chatHistory" → kein Konflikt mit dem gleichnamigen
+// localStorage-Array in index-mobile.html
+let apiChatHistory  = [];
+let activeGptPrompt = null;
 
-// ✅ FIX: resetChatHistory löscht NUR den Chat-Verlauf, NICHT den Prompt
-function resetChatHistory() {
-  chatHistory = [];
+// ─── Hooks: werden von newChat() / loadChat() im mobilen Frontend aufgerufen ───
+
+function apiResetConversation() {
+  apiChatHistory = [];
 }
 
-// ✅ FIX: setGptPrompt setzt den Prompt und leert nur den Verlauf
+function apiLoadConversation(messages) {
+  apiChatHistory = (messages || []).map(m => ({
+    role:    m.role === 'user' ? 'user' : 'assistant',
+    content: m.text || m.content || ''
+  }));
+}
+
+// ─── deleteAllHistory: löscht localStorage + Server (beide Versionen) ─────────
+// Mobile: wird von clearAllHistory() aufgerufen
+// Desktop: einfach deleteAllHistory() aufrufen (z.B. per Button onclick)
+async function deleteAllHistory() {
+  // 1) localStorage leeren (Mobile)
+  try { localStorage.removeItem('st_chat_history'); } catch(e) {}
+
+  // 2) Server-seitig löschen (falls eingeloggt)
+  try {
+    const token = localStorage.getItem('st_token');
+    if (token) {
+      await fetch(`${API_BASE}/api/chats`, {
+        method:  'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+    }
+  } catch(e) {
+    console.warn('Server-Verlauf konnte nicht gelöscht werden:', e.message);
+  }
+
+  // 3) Laufenden Kontext zurücksetzen
+  apiResetConversation();
+}
+
+function resetChatHistory() { apiChatHistory = []; }
+
 function setGptPrompt(prompt) {
   activeGptPrompt = prompt ? prompt.trim() : null;
-  chatHistory = [];
+  apiChatHistory  = [];
 }
 
 /* ─── Hilfsfunktionen: funktionieren auf Desktop UND Mobile ─── */
@@ -31,24 +67,18 @@ function _getInputEl() {
 }
 
 function _getModelName() {
-  // Desktop: <select id="chat-model-sel">
   const sel = document.getElementById('chat-model-sel');
   if (sel) return sel.value;
-  // Mobile: globale Variable curModel
   if (typeof curModel !== 'undefined') return curModel;
   return 'Llama 3.3 70B';
 }
 
 function _getMsgContainer() {
-  // Desktop: chat-messages / Mobile: chat-msgs
   return document.getElementById('chat-messages') || document.getElementById('chat-msgs');
 }
 
 function _addMsg(text, role, model) {
-  // Desktop hat eigene addMsg-Funktion → nutzen falls vorhanden
-  if (typeof addMsg === 'function') {
-    return addMsg(text, role, model);
-  }
+  if (typeof addMsg === 'function') return addMsg(text, role, model);
   const msgs = _getMsgContainer();
   const d = document.createElement('div');
   d.className = 'msg ' + role;
@@ -59,9 +89,7 @@ function _addMsg(text, role, model) {
 }
 
 function _addTyping() {
-  if (typeof addTyping === 'function') {
-    return addTyping();
-  }
+  if (typeof addTyping === 'function') return addTyping();
   const msgs = _getMsgContainer();
   const d = document.createElement('div');
   d.className = 'msg ai';
@@ -72,23 +100,16 @@ function _addTyping() {
 }
 
 function _updateBalance(used) {
-  if (typeof updateBalance === 'function') {
-    updateBalance(used);
-    return;
-  }
-  if (typeof updateBal === 'function') {
-    updateBal(used);
-  }
+  if (typeof updateBalance === 'function') { updateBalance(used); return; }
+  if (typeof updateBal     === 'function') { updateBal(used); }
 }
 
 function _getMultiplier(modelName) {
-  if (typeof MODELS_MULT !== 'undefined' && MODELS_MULT[modelName]) {
-    return MODELS_MULT[modelName];
-  }
+  if (typeof MODELS_MULT !== 'undefined' && MODELS_MULT[modelName]) return MODELS_MULT[modelName];
   return 1;
 }
 
-/* ─── Kern-Logik: shared für Desktop + Mobile ─── */
+/* ─── Kern-Logik ─── */
 
 async function _doSend() {
   const input     = _getInputEl();
@@ -104,26 +125,25 @@ async function _doSend() {
   _updateBalance(Math.floor(text.length * mult * 1.5 + 20));
 
   const typingEl = _addTyping();
-  chatHistory.push({ role: 'user', content: text });
+  apiChatHistory.push({ role: 'user', content: text });
 
   if (!MODEL_MAP[modelName]) {
     typingEl.remove();
-    chatHistory.pop();
+    apiChatHistory.pop();
     _addMsg(`⚠ "${modelName}" ist noch nicht live. Bitte wähle Llama, Gemma, Mixtral oder DeepSeek R1.`, 'ai', modelName);
     return;
   }
 
-  const messages = [];
-  messages.push(...chatHistory.slice(-20));
+  const messages = [...apiChatHistory.slice(-20)];
 
   try {
     const res = await fetch(`${API_BASE}/api/chat`, {
-      method: 'POST',
+      method:  'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        message: text,
-        model: modelName,
-        history: messages,
+        message:      text,
+        model:        modelName,
+        history:      messages,
         systemPrompt: activeGptPrompt || null
       })
     });
@@ -132,13 +152,13 @@ async function _doSend() {
     typingEl.remove();
 
     if (!res.ok || data.error) {
-      chatHistory.pop();
+      apiChatHistory.pop();
       _addMsg('⚠ ' + (data.error || 'Server-Fehler'), 'ai', modelName);
       return;
     }
 
     const reply = data.reply || 'Keine Antwort erhalten.';
-    chatHistory.push({ role: 'assistant', content: reply });
+    apiChatHistory.push({ role: 'assistant', content: reply });
     _updateBalance(Math.floor(reply.length * mult + 10));
     _addMsg(reply, 'ai', modelName);
 
@@ -146,14 +166,16 @@ async function _doSend() {
 
   } catch (err) {
     typingEl.remove();
-    chatHistory.pop();
+    apiChatHistory.pop();
     _addMsg('⚠ Server nicht erreichbar: ' + err.message, 'ai', modelName);
     console.error('api.js Fehler:', err);
   }
 }
 
-/* ─── Desktop: überschreibt sendMessage-Stub ─── */
-sendMessage = function () { _doSend(); };
+/* ─── Desktop ─── */
+if (typeof sendMessage !== 'undefined') {
+  sendMessage = function () { _doSend(); };
+}
 
-/* ─── Mobile: überschreibt sendMsg ─── */
+/* ─── Mobile ─── */
 sendMsg = function () { _doSend(); };
