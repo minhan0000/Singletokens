@@ -1,69 +1,78 @@
 /* ─── SingleTokens api.js — Desktop + Mobile ─── */
 
-const API_BASE = ''; // gleiche Origin wie der Server
+const API_BASE = '';
 
 const MODEL_MAP = {
-  'Llama 3.3 70B':    'llama-3.3-70b-versatile',
-  'Llama 3.1 8B':     'llama-3.1-8b-instant',
-  'Gemma 2 9B':       'gemma2-9b-it',
-  'Mixtral 8x7B':     'mixtral-8x7b-32768',
-  'DeepSeek R1 70B':  'deepseek-r1-distill-llama-70b',
+  'Llama 3.3 70B':   'llama-3.3-70b-versatile',
+  'Llama 3.1 8B':    'llama-3.1-8b-instant',
+  'Gemma 2 9B':      'gemma2-9b-it',
+  'Mixtral 8x7B':    'mixtral-8x7b-32768',
+  'DeepSeek R1 70B': 'deepseek-r1-distill-llama-70b',
 };
 
-// ─── apiChatHistory: NUR der laufende Gesprächskontext für den Groq-API-Call ───
-// Umbenannt von "chatHistory" → kein Konflikt mit dem gleichnamigen
-// localStorage-Array in index-mobile.html
-let apiChatHistory  = [];
+// ✅ _api-Prefix verhindert Kollision mit chatHistory aus index-mobile.html
+let _apiConvHistory = [];
 let activeGptPrompt = null;
 
-// ─── Hooks: werden von newChat() / loadChat() im mobilen Frontend aufgerufen ───
+/* ── Auth ── */
+function _getToken() {
+  try { return localStorage.getItem('st_token') || null; } catch(e) { return null; }
+}
+function _authHeaders() {
+  const t = _getToken();
+  return t
+    ? { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + t }
+    : { 'Content-Type': 'application/json' };
+}
+
+/* ── Hooks für Verlauf-Drawer (index-mobile.html) ── */
 
 function apiResetConversation() {
-  apiChatHistory = [];
+  _apiConvHistory = [];
+  activeGptPrompt = null;
 }
 
 function apiLoadConversation(messages) {
-  apiChatHistory = (messages || []).map(m => ({
-    role:    m.role === 'user' ? 'user' : 'assistant',
-    content: m.text || m.content || ''
-  }));
+  _apiConvHistory = (messages || [])
+    .filter(m => m.role === 'user' || m.role === 'ai')
+    .map(m => ({
+      role:    m.role === 'user' ? 'user' : 'assistant',
+      content: m.text || ''
+    }));
 }
 
-// ─── deleteAllHistory: löscht localStorage + Server (beide Versionen) ─────────
-// Mobile: wird von clearAllHistory() aufgerufen
-// Desktop: einfach deleteAllHistory() aufrufen (z.B. per Button onclick)
-async function deleteAllHistory() {
-  // 1) localStorage leeren (Mobile)
-  try { localStorage.removeItem('st_chat_history'); } catch(e) {}
+/* ── Server: Verlauf löschen (aufrufbar aus index-mobile.html) ── */
 
-  // 2) Server-seitig löschen (falls eingeloggt)
+async function serverDeleteAllChats() {
+  if (!_getToken()) return;
   try {
-    const token = localStorage.getItem('st_token');
-    if (token) {
-      await fetch(`${API_BASE}/api/chats`, {
-        method:  'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-    }
+    await fetch(`${API_BASE}/api/chats`, {
+      method:  'DELETE',
+      headers: _authHeaders()
+    });
   } catch(e) {
     console.warn('Server-Verlauf konnte nicht gelöscht werden:', e.message);
   }
-
-  // 3) Laufenden Kontext zurücksetzen
-  apiResetConversation();
 }
 
-function resetChatHistory() { apiChatHistory = []; }
-
-function setGptPrompt(prompt) {
-  activeGptPrompt = prompt ? prompt.trim() : null;
-  apiChatHistory  = [];
+async function serverDeleteChat(serverId) {
+  if (!serverId || !_getToken()) return;
+  try {
+    await fetch(`${API_BASE}/api/chats/${serverId}`, {
+      method:  'DELETE',
+      headers: _authHeaders()
+    });
+  } catch(e) {
+    console.warn('Chat konnte nicht vom Server gelöscht werden:', e.message);
+  }
 }
 
-/* ─── Hilfsfunktionen: funktionieren auf Desktop UND Mobile ─── */
+/* ─── Hilfsfunktionen ─── */
 
-function _getInputEl() {
-  return document.getElementById('chat-input');
+function _getInputEl() { return document.getElementById('chat-input'); }
+
+function _getMsgContainer() {
+  return document.getElementById('chat-messages') || document.getElementById('chat-msgs');
 }
 
 function _getModelName() {
@@ -71,10 +80,6 @@ function _getModelName() {
   if (sel) return sel.value;
   if (typeof curModel !== 'undefined') return curModel;
   return 'Llama 3.3 70B';
-}
-
-function _getMsgContainer() {
-  return document.getElementById('chat-messages') || document.getElementById('chat-msgs');
 }
 
 function _addMsg(text, role, model) {
@@ -101,7 +106,7 @@ function _addTyping() {
 
 function _updateBalance(used) {
   if (typeof updateBalance === 'function') { updateBalance(used); return; }
-  if (typeof updateBal     === 'function') { updateBal(used); }
+  if (typeof updateBal    === 'function') { updateBal(used); }
 }
 
 function _getMultiplier(modelName) {
@@ -125,16 +130,14 @@ async function _doSend() {
   _updateBalance(Math.floor(text.length * mult * 1.5 + 20));
 
   const typingEl = _addTyping();
-  apiChatHistory.push({ role: 'user', content: text });
+  _apiConvHistory.push({ role: 'user', content: text });
 
   if (!MODEL_MAP[modelName]) {
     typingEl.remove();
-    apiChatHistory.pop();
+    _apiConvHistory.pop();
     _addMsg(`⚠ "${modelName}" ist noch nicht live. Bitte wähle Llama, Gemma, Mixtral oder DeepSeek R1.`, 'ai', modelName);
     return;
   }
-
-  const messages = [...apiChatHistory.slice(-20)];
 
   try {
     const res = await fetch(`${API_BASE}/api/chat`, {
@@ -143,7 +146,7 @@ async function _doSend() {
       body: JSON.stringify({
         message:      text,
         model:        modelName,
-        history:      messages,
+        history:      _apiConvHistory.slice(-20),
         systemPrompt: activeGptPrompt || null
       })
     });
@@ -152,13 +155,13 @@ async function _doSend() {
     typingEl.remove();
 
     if (!res.ok || data.error) {
-      apiChatHistory.pop();
+      _apiConvHistory.pop();
       _addMsg('⚠ ' + (data.error || 'Server-Fehler'), 'ai', modelName);
       return;
     }
 
     const reply = data.reply || 'Keine Antwort erhalten.';
-    apiChatHistory.push({ role: 'assistant', content: reply });
+    _apiConvHistory.push({ role: 'assistant', content: reply });
     _updateBalance(Math.floor(reply.length * mult + 10));
     _addMsg(reply, 'ai', modelName);
 
@@ -166,16 +169,22 @@ async function _doSend() {
 
   } catch (err) {
     typingEl.remove();
-    apiChatHistory.pop();
+    _apiConvHistory.pop();
     _addMsg('⚠ Server nicht erreichbar: ' + err.message, 'ai', modelName);
     console.error('api.js Fehler:', err);
   }
 }
 
-/* ─── Desktop ─── */
-if (typeof sendMessage !== 'undefined') {
-  sendMessage = function () { _doSend(); };
+/* ─── setGptPrompt ─── */
+function setGptPrompt(prompt) {
+  activeGptPrompt = prompt ? prompt.trim() : null;
+  _apiConvHistory = [];
 }
 
-/* ─── Mobile ─── */
-sendMsg = function () { _doSend(); };
+function resetChatHistory() {
+  _apiConvHistory = [];
+}
+
+/* ─── Stubs überschreiben ─── */
+sendMessage = function() { _doSend(); };
+sendMsg     = function() { _doSend(); };
