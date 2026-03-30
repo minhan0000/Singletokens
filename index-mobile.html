@@ -7,19 +7,19 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-:root{--acc:#22D3EE;--acc2:#3B82F6;--dark:#09090B;--dark2:#0F1218;--dark3:#151A22;--dark4:#1B2130;--text:#FAFAFA;--muted:#4B5563;--muted2:#9CA3AF;--border:rgba(255,255,255,0.07);--font-size:14px;--bottom-bar:60px}
+:root{--acc:#22D3EE;--dark:#09090B;--dark2:#0F1218;--dark3:#151A22;--dark4:#1B2130;--text:#FAFAFA;--muted:#4B5563;--muted2:#9CA3AF;--border:rgba(255,255,255,0.07);--fs:14px;--nav-h:60px}
 html,body{height:100%;background:var(--dark);font-family:'Syne',sans-serif;color:var(--text);overflow:hidden}
 .app{display:flex;flex-direction:column;height:100vh;height:100dvh}
 
 /* TOP BAR */
 .topbar{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--dark2);border-bottom:1px solid var(--border);flex-shrink:0;min-height:52px}
-.topbar-hist{width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer;border-radius:8px;flex-shrink:0;color:var(--muted2)}
-.topbar-hist:active{background:var(--dark3)}
-.topbar-hist svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
-.topbar-logo{font-size:15px;font-weight:800;letter-spacing:-.02em;flex:1;min-width:0}
-.topbar-logo span{color:var(--acc)}
-.topbar-model{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);background:var(--dark3);border:1px solid var(--border);padding:4px 9px;border-radius:6px;cursor:pointer;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex-shrink:0}
-.topbar-tok{font-family:'DM Mono',monospace;font-size:11px;color:var(--acc);background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.2);padding:4px 9px;border-radius:6px;cursor:pointer;flex-shrink:0}
+.tb-btn{width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer;border-radius:8px;color:var(--muted2);flex-shrink:0}
+.tb-btn:active{background:var(--dark3)}
+.tb-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.tb-logo{font-size:15px;font-weight:800;letter-spacing:-.02em;flex:1}
+.tb-logo span{color:var(--acc)}
+.tb-model{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);background:var(--dark3);border:1px solid var(--border);padding:4px 9px;border-radius:6px;cursor:pointer;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex-shrink:0}
+.tb-tok{font-family:'DM Mono',monospace;font-size:11px;color:var(--acc);background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.2);padding:4px 9px;border-radius:6px;cursor:pointer;flex-shrink:0}
 
 /* VIEWS */
 .view{display:none;flex:1;overflow:hidden;flex-direction:column}
@@ -28,100 +28,93 @@ html,body{height:100%;background:var(--dark);font-family:'Syne',sans-serif;color
 /* CHAT */
 .chat-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
 .chat-msgs::-webkit-scrollbar{display:none}
-.msg{max-width:80%;display:flex;flex-direction:column;gap:3px}
+.msg{max-width:82%;display:flex;flex-direction:column;gap:3px}
 .msg.user{align-self:flex-end}
 .msg.ai{align-self:flex-start}
-.msg-bubble{padding:10px 13px;border-radius:14px;font-size:var(--font-size);line-height:1.55}
+.msg-bubble{padding:10px 13px;border-radius:14px;font-size:var(--fs);line-height:1.55;word-break:break-word}
 .msg.user .msg-bubble{background:var(--acc);color:#03060F;border-radius:14px 14px 2px 14px}
-.msg.ai .msg-bubble{background:var(--dark2);border:1px solid var(--border);border-radius:14px 14px 14px 2px}
+.msg.ai  .msg-bubble{background:var(--dark2);border:1px solid var(--border);border-radius:14px 14px 14px 2px}
 .msg-meta{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2)}
 .msg.user .msg-meta{text-align:right}
 .chat-input-area{padding:8px 12px;padding-bottom:calc(8px + env(safe-area-inset-bottom));border-top:1px solid var(--border);background:var(--dark2);flex-shrink:0}
-.chat-input-wrap{display:flex;gap:8px;background:var(--dark3);border:1px solid var(--border);border-radius:20px;padding:8px 12px;align-items:flex-end}
-.chat-input{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:var(--font-size);font-family:'Syne',sans-serif;resize:none;max-height:100px;line-height:1.4}
+.chat-input-wrap{display:flex;gap:8px;background:var(--dark3);border:1px solid var(--border);border-radius:20px;padding:8px 12px;align-items:flex-end;transition:border-color .2s}
+.chat-input-wrap:focus-within{border-color:rgba(34,211,238,.35)}
+.chat-input{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:var(--fs);font-family:'Syne',sans-serif;resize:none;max-height:100px;line-height:1.4}
 .chat-input::placeholder{color:var(--muted2)}
-.send-btn{width:32px;height:32px;border-radius:50%;background:var(--acc);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.send-btn{width:32px;height:32px;border-radius:50%;background:var(--acc);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;-webkit-appearance:none}
+.send-btn:active{opacity:.8}
 .send-btn svg{width:13px;height:13px;stroke:#03060F;fill:none;stroke-width:2.5;stroke-linecap:round}
-.typing-indicator{display:flex;align-items:center;gap:3px;padding:10px 13px;background:var(--dark2);border:1px solid var(--border);border-radius:14px 14px 14px 2px;width:fit-content}
-.typing-dot{width:6px;height:6px;border-radius:50%;background:var(--muted2);animation:typingPulse 1.4s infinite}
+.typing-wrap{display:flex;align-items:center;gap:3px;padding:10px 13px;background:var(--dark2);border:1px solid var(--border);border-radius:14px 14px 14px 2px;width:fit-content}
+.typing-dot{width:6px;height:6px;border-radius:50%;background:var(--muted2);animation:tp 1.4s infinite}
 .typing-dot:nth-child(2){animation-delay:.2s}
 .typing-dot:nth-child(3){animation-delay:.4s}
-@keyframes typingPulse{0%,60%,100%{opacity:.3;transform:scale(.8)}30%{opacity:1;transform:scale(1)}}
+@keyframes tp{0%,60%,100%{opacity:.3;transform:scale(.8)}30%{opacity:1;transform:scale(1)}}
 
-/* HISTORY DRAWER */
-.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:150;display:none;opacity:0;transition:opacity .25s}
-.drawer-overlay.show{display:block;opacity:1}
+/* DRAWER */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:150;opacity:0;pointer-events:none;transition:opacity .25s}
+.overlay.show{opacity:1;pointer-events:auto}
 .drawer{position:fixed;top:0;left:0;height:100%;width:285px;background:var(--dark2);border-right:1px solid var(--border);z-index:151;transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom)}
-.drawer.show{transform:translateX(0)}
+.drawer.open{transform:translateX(0)}
 .drawer-top{display:flex;align-items:center;justify-content:space-between;padding:14px 14px 10px;border-bottom:1px solid var(--border);flex-shrink:0}
 .drawer-logo{font-size:15px;font-weight:800;letter-spacing:-.02em}
 .drawer-logo span{color:var(--acc)}
-.drawer-close{width:30px;height:30px;display:flex;align-items:center;justify-content:center;background:var(--dark3);border:1px solid var(--border);border-radius:8px;cursor:pointer;color:var(--muted2)}
-.drawer-close svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round}
-.drawer-new{display:flex;align-items:center;gap:8px;margin:10px 12px 8px;padding:11px 14px;background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.25);border-radius:10px;cursor:pointer;color:var(--acc);font-size:13px;font-weight:700;transition:background .15s;flex-shrink:0}
+.icon-btn{width:30px;height:30px;display:flex;align-items:center;justify-content:center;background:var(--dark3);border:1px solid var(--border);border-radius:8px;cursor:pointer;color:var(--muted2)}
+.icon-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round}
+.drawer-new{display:flex;align-items:center;gap:8px;margin:10px 12px 8px;padding:11px 14px;background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.25);border-radius:10px;cursor:pointer;color:var(--acc);font-size:13px;font-weight:700}
 .drawer-new:active{background:rgba(34,211,238,.15)}
 .drawer-new svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;flex-shrink:0}
-.drawer-section-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;padding:2px 14px 6px;flex-shrink:0}
+.drawer-lbl{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;padding:2px 14px 6px;flex-shrink:0}
 .drawer-list{flex:1;overflow-y:auto;padding:0 8px 12px}
 .drawer-list::-webkit-scrollbar{display:none}
-.hist-item{display:flex;align-items:flex-start;gap:0;padding:10px 8px;border-radius:9px;cursor:pointer;position:relative;transition:background .12s;margin-bottom:2px}
-.hist-item:active,.hist-item.active{background:var(--dark3)}
-.hist-item.active{background:rgba(34,211,238,.07);border:1px solid rgba(34,211,238,.15)}
-.hist-item-body{flex:1;min-width:0}
-.hist-item-title{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:28px;line-height:1.35}
-.hist-item.active .hist-item-title{color:var(--acc)}
-.hist-item-meta{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hist-item-del{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:24px;height:24px;display:flex;align-items:center;justify-content:center;background:transparent;border:none;color:var(--muted);cursor:pointer;border-radius:6px;opacity:0;transition:opacity .15s,background .15s}
-.hist-item:hover .hist-item-del,.hist-item:active .hist-item-del{opacity:1}
-.hist-item-del:active{background:rgba(248,113,113,.15);color:#F87171}
-.hist-item-del svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round}
-.hist-empty{text-align:center;padding:40px 20px;color:var(--muted2)}
-.hist-empty-icon{font-size:36px;margin-bottom:10px}
-.hist-empty-txt{font-size:13px;line-height:1.5}
-.drawer-footer{padding:10px 12px;border-top:1px solid var(--border);flex-shrink:0}
-.drawer-footer-info{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-align:center}
+.hi{display:flex;align-items:flex-start;padding:10px 8px;border-radius:9px;cursor:pointer;position:relative;margin-bottom:2px}
+.hi.active{background:rgba(34,211,238,.07);border:1px solid rgba(34,211,238,.15)}
+.hi:not(.active):active{background:var(--dark3)}
+.hi-body{flex:1;min-width:0}
+.hi-title{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:28px}
+.hi.active .hi-title{color:var(--acc)}
+.hi-meta{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hi-del{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:24px;height:24px;display:flex;align-items:center;justify-content:center;background:transparent;border:none;color:var(--muted);cursor:pointer;border-radius:6px;opacity:0}
+.hi:hover .hi-del,.hi:active .hi-del{opacity:1}
+.hi-del:active{background:rgba(248,113,113,.15);color:#F87171}
+.hi-del svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round}
+.drawer-footer{padding:10px 12px;border-top:1px solid var(--border);flex-shrink:0;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-align:center}
+.hist-empty{text-align:center;padding:40px 20px;color:var(--muted2);font-size:13px;line-height:1.5}
 
 /* MODEL SHEET */
-.sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;display:none;align-items:flex-end}
-.sheet-overlay.show{display:flex}
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;display:none;align-items:flex-end}
+.sheet-bg.show{display:flex}
 .sheet{background:var(--dark2);border-radius:20px 20px 0 0;width:100%;max-height:80vh;overflow-y:auto;padding:20px 16px;padding-bottom:calc(20px + env(safe-area-inset-bottom))}
 .sheet-handle{width:36px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 20px}
-.sheet-title{font-size:16px;font-weight:800;letter-spacing:-.02em;margin-bottom:16px}
-.model-list-item{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--border);cursor:pointer}
-.model-list-item:last-child{border:none}
-.model-list-item:active{opacity:.7}
-.mli-icon{width:36px;height:36px;border-radius:8px;background:var(--dark3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'DM Mono',monospace;font-size:10px;font-weight:700;color:var(--acc)}
-.mli-info{flex:1}
+.sheet-title{font-size:16px;font-weight:800;margin-bottom:16px}
+.mli{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--border);cursor:pointer}
+.mli:last-child{border:none}
+.mli:active{opacity:.7}
+.mli-icon{width:36px;height:36px;border-radius:8px;background:var(--dark3);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:10px;font-weight:700;color:var(--acc);flex-shrink:0}
 .mli-name{font-size:14px;font-weight:600}
 .mli-sub{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);margin-top:2px}
-.mli-check{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border);flex-shrink:0}
-.mli-check.on{background:var(--acc);border-color:var(--acc);display:flex;align-items:center;justify-content:center}
+.mli-check{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.mli-check.on{background:var(--acc);border-color:var(--acc)}
 .mli-check.on::after{content:'✓';font-size:11px;color:#03060F;font-weight:800}
 
-/* EXPLORE / MODELS */
-.explore-scroll{flex:1;overflow-y:auto;padding:16px}
-.explore-scroll::-webkit-scrollbar{display:none}
-.explore-scroll h2{font-size:18px;font-weight:800;letter-spacing:-.03em;margin-bottom:4px}
-.explore-scroll p{font-size:13px;color:var(--muted2);margin-bottom:16px}
-.model-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;overflow-x:auto;padding-bottom:4px}
-.model-filter::-webkit-scrollbar{display:none}
-.mfbtn{padding:6px 14px;font-size:12px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted2);cursor:pointer;font-family:'Syne',sans-serif;font-weight:500;white-space:nowrap;flex-shrink:0}
-.mfbtn.active{background:var(--acc);border-color:var(--acc);color:#03060F}
+/* EXPLORE */
+.scroll-view{flex:1;overflow-y:auto;padding:16px}
+.scroll-view::-webkit-scrollbar{display:none}
+.page-title{font-size:18px;font-weight:800;letter-spacing:-.03em;margin-bottom:4px}
+.page-sub{font-size:13px;color:var(--muted2);margin-bottom:16px}
+.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.fbtn{padding:6px 14px;font-size:12px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted2);cursor:pointer;font-family:'Syne',sans-serif;font-weight:600;white-space:nowrap}
+.fbtn.active{background:var(--acc);border-color:var(--acc);color:#03060F}
 .model-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
 .mc{border:1px solid var(--border);border-radius:10px;padding:12px;background:var(--dark2);cursor:pointer}
 .mc:active{opacity:.7}
 .mc.cheap{border-color:rgba(6,182,212,.25);background:rgba(6,182,212,.05)}
 .mc.expensive{border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.05)}
 .mc.reference{border-color:rgba(59,130,246,.35);background:rgba(59,130,246,.07)}
-.mc-provider{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);margin-bottom:4px;letter-spacing:.04em;text-transform:uppercase}
-.mc.cheap .mc-provider{color:#22D3EE}
-.mc.expensive .mc-provider{color:#F87171}
-.mc.reference .mc-provider{color:#93C5FD}
+.mc-prov{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);margin-bottom:4px;letter-spacing:.04em;text-transform:uppercase}
+.mc.cheap .mc-prov{color:#22D3EE}.mc.expensive .mc-prov{color:#F87171}.mc.reference .mc-prov{color:#93C5FD}
 .mc-name{font-size:12px;font-weight:700;margin-bottom:6px;line-height:1.3}
 .mc-mult{font-size:18px;font-weight:800;letter-spacing:-.03em}
-.mc.cheap .mc-mult{color:#22D3EE}
-.mc.expensive .mc-mult{color:#F87171}
-.mc.reference .mc-mult{color:#93C5FD}
+.mc.cheap .mc-mult{color:#22D3EE}.mc.expensive .mc-mult{color:#F87171}.mc.reference .mc-mult{color:#93C5FD}
 .mc-price{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);margin-top:1px}
 .mc-tag{display:inline-block;font-size:9px;padding:2px 6px;border-radius:3px;margin-top:6px;font-family:'DM Mono',monospace}
 .tag-blue{background:rgba(59,130,246,.15);color:#93C5FD}
@@ -130,46 +123,65 @@ html,body{height:100%;background:var(--dark);font-family:'Syne',sans-serif;color
 .tag-green{background:rgba(34,197,94,.15);color:#86EFAC}
 .tag-muted{background:rgba(255,255,255,.07);color:var(--muted2)}
 
-/* GPTs VIEW */
-.gpts-scroll{flex:1;overflow-y:auto;padding:16px}
-.gpts-scroll::-webkit-scrollbar{display:none}
+/* GPTs */
+.gpt-card{background:var(--dark2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px}
+.gpt-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.gpt-card-name{font-size:14px;font-weight:700}
+.gpt-card-desc{font-size:12px;color:var(--muted2);margin-bottom:12px}
+.gpt-card-bot{display:flex;justify-content:space-between;align-items:center}
+.gpt-model-tag{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2)}
+
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;display:none;align-items:flex-end}
+.modal-bg.show{display:flex}
+.modal{background:var(--dark2);border-radius:20px 20px 0 0;width:100%;max-height:92vh;overflow-y:auto;padding:20px 16px;padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+.modal-handle{width:36px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 20px}
+.modal-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.modal-title{font-size:16px;font-weight:800}
+.modal-close{background:transparent;border:none;color:var(--muted2);font-size:24px;cursor:pointer;line-height:1;padding:0 4px}
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.field-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);text-transform:uppercase;letter-spacing:.05em}
+.inp{width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:11px 12px;font-size:14px;color:var(--text);outline:none;font-family:'Syne',sans-serif;-webkit-appearance:none;transition:border-color .2s}
+.inp:focus{border-color:rgba(34,211,238,.4)}
+.inp::placeholder{color:var(--muted2)}
+.inp-area{width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:11px 12px;font-size:14px;color:var(--text);outline:none;font-family:'Syne',sans-serif;resize:none;min-height:100px;transition:border-color .2s}
+.inp-area:focus{border-color:rgba(34,211,238,.4)}
+.inp-area::placeholder{color:var(--muted2)}
+.inp-sel{width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:11px 12px;font-size:14px;color:var(--text);outline:none;-webkit-appearance:none;font-family:'Syne',sans-serif}
 
 /* PURCHASE */
-.purchase-scroll{flex:1;overflow-y:auto;padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom))}
-.purchase-scroll::-webkit-scrollbar{display:none}
 .p-steps{display:flex;align-items:center;margin-bottom:20px}
 .p-step{display:flex;align-items:center;gap:6px}
-.p-step-num{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);flex-shrink:0;transition:all .3s}
-.p-step-num.active{border-color:var(--acc);color:var(--acc)}
-.p-step-num.done{border-color:#4ADE80;background:#4ADE80;color:#0A0C10;font-size:11px}
-.p-step-lbl{font-size:11px;color:var(--muted2);font-weight:600}
-.p-step-lbl.active{color:var(--text)}
-.p-step-line{flex:1;height:1px;background:var(--border);margin:0 8px}
-.p-step-line.done{background:rgba(74,222,128,.4)}
-.p-sec-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.p-num{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);flex-shrink:0;transition:all .3s}
+.p-num.active{border-color:var(--acc);color:var(--acc)}
+.p-num.done{border-color:#4ADE80;background:#4ADE80;color:#0A0C10;font-size:11px}
+.p-lbl{font-size:11px;color:var(--muted2);font-weight:600}
+.p-lbl.active{color:var(--text)}
+.p-line{flex:1;height:1px;background:var(--border);margin:0 8px}
+.p-line.done{background:rgba(74,222,128,.4)}
+.sec-lbl{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
 .pg{display:none}.pg.active{display:block}
 .amount-box{background:var(--dark3);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:flex-start}
-.amount-big{font-family:'DM Mono',monospace;font-size:36px;font-weight:500;color:var(--text);letter-spacing:-.02em;line-height:1}
-.amount-label{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);margin-top:3px}
-.amount-price{font-family:'DM Mono',monospace;font-size:22px;font-weight:500;line-height:1}
+.amount-big{font-family:'DM Mono',monospace;font-size:36px;font-weight:500;letter-spacing:-.02em;line-height:1}
+.amount-lbl{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);margin-top:3px}
+.amount-price{font-family:'DM Mono',monospace;font-size:22px;font-weight:500;line-height:1;color:var(--acc)}
 .amount-rate{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);margin-top:3px;text-align:right}
 .preset-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:12px}
-.pbtn{background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:10px 0;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:var(--text);cursor:pointer;text-align:center;transition:all .15s}
+.pbtn{background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:10px 0;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:var(--text);cursor:pointer;text-align:center;-webkit-appearance:none}
 .pbtn.active{border-color:var(--acc);background:rgba(34,211,238,.08);color:var(--acc)}
 input[type=range]{width:100%;-webkit-appearance:none;height:3px;border-radius:2px;background:var(--dark4);outline:none;cursor:pointer;margin-bottom:16px;display:block;touch-action:none}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--acc);border:2px solid var(--dark2);box-shadow:0 0 10px rgba(34,211,238,.5);cursor:pointer}
-.min-warn{display:none;align-items:center;gap:8px;background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.2);border-radius:8px;padding:8px 12px;margin-bottom:10px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--acc);border:2px solid var(--dark2);box-shadow:0 0 10px rgba(34,211,238,.5)}
+.min-warn{display:none;align-items:center;gap:8px;background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.2);border-radius:8px;padding:8px 12px;margin-bottom:10px;font-family:'DM Mono',monospace;font-size:11px;color:#FDE68A}
 .min-warn.show{display:flex}
-.min-warn-text{font-family:'DM Mono',monospace;font-size:11px;color:#FDE68A}
 .est-box{background:rgba(34,211,238,.05);border:1px solid rgba(34,211,238,.15);border-radius:10px;padding:12px 14px;margin-bottom:16px}
 .est-title{font-family:'DM Mono',monospace;font-size:10px;color:var(--acc);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
 .est-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)}
 .est-row:last-child{border:none}
 .est-model{font-size:12px;color:var(--muted2);display:flex;align-items:center;gap:5px}
-.mult-badge{font-family:'DM Mono',monospace;font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(255,255,255,.06);color:var(--muted2)}
+.mbadge{font-family:'DM Mono',monospace;font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(255,255,255,.06);color:var(--muted2)}
 .est-val{font-family:'DM Mono',monospace;font-size:12px;color:var(--text);font-weight:500}
 .pay-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:16px}
-.pay-btn{background:var(--dark3);border:1px solid var(--border);border-radius:10px;padding:14px 8px;cursor:pointer;text-align:center;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:6px}
+.pay-btn{background:var(--dark3);border:1px solid var(--border);border-radius:10px;padding:14px 8px;cursor:pointer;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;-webkit-appearance:none}
 .pay-btn.active{border-color:var(--acc);background:rgba(34,211,238,.07)}
 .pay-name{font-size:12px;font-weight:700;color:var(--text)}
 .pay-sub{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2)}
@@ -179,24 +191,20 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 .co-row:last-child{border:none}
 .co-k{font-size:13px;color:var(--muted2)}
 .co-v{font-family:'DM Mono',monospace;font-size:13px;color:var(--text)}
-.co-total-box{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:rgba(34,211,238,.06);border:1px solid rgba(34,211,238,.2);border-radius:10px;margin-bottom:16px}
+.co-total{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:rgba(34,211,238,.06);border:1px solid rgba(34,211,238,.2);border-radius:10px;margin-bottom:16px}
 .co-total-k{font-size:15px;font-weight:800}
 .co-total-v{font-family:'DM Mono',monospace;font-size:22px;font-weight:800;color:var(--acc)}
-.co-est{background:var(--dark3);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:16px}
-.co-est-title{font-family:'DM Mono',monospace;font-size:10px;color:var(--acc);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
 .card-section{background:var(--dark3);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:14px}
 .card-section-title{font-family:'DM Mono',monospace;font-size:10px;color:var(--acc);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px}
-.field{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}
-.field:last-child{margin-bottom:0}
 .field-row{display:flex;gap:10px}
 .field-row .field{flex:1}
-.flabel{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.05em;text-transform:uppercase}
-.finput{background:var(--dark4);border:1px solid var(--border);border-radius:8px;padding:11px 12px;font-family:'DM Mono',monospace;font-size:14px;color:var(--text);outline:none;width:100%;-webkit-appearance:none}
+.finput{background:var(--dark4);border:1px solid var(--border);border-radius:8px;padding:11px 12px;font-family:'DM Mono',monospace;font-size:14px;color:var(--text);outline:none;width:100%;-webkit-appearance:none;transition:border-color .2s}
 .finput:focus{border-color:rgba(34,211,238,.4)}
 .finput::placeholder{color:var(--muted)}
 .redir-info{display:none;background:var(--dark3);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px;font-size:13px;color:var(--muted2);text-align:center;font-family:'DM Mono',monospace;line-height:1.7}
 .redir-info.show{display:block}
-.psc-sec{display:none;margin-bottom:14px}.psc-sec.show{display:block}
+.psc-wrap{display:none;margin-bottom:14px}
+.psc-wrap.show{display:block}
 .suc-wrap{text-align:center;padding:24px 0 16px}
 .suc-icon{width:64px;height:64px;border-radius:50%;background:rgba(74,222,128,.1);border:2px solid rgba(74,222,128,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
 .suc-icon svg{width:28px;height:28px;stroke:#4ADE80;fill:none;stroke-width:2.5;stroke-linecap:round}
@@ -204,58 +212,51 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 .suc-sub{font-size:13px;color:var(--muted2);margin-bottom:16px}
 .suc-tokens{font-family:'DM Mono',monospace;font-size:36px;font-weight:500;color:#4ADE80}
 .suc-lbl{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted2);margin-top:4px;margin-bottom:20px}
-.receipt{background:var(--dark3);border:1px solid var(--border);border-radius:12px;padding:4px 0;margin-bottom:16px;text-align:left}
+.receipt{background:var(--dark3);border:1px solid var(--border);border-radius:12px;padding:4px 0;margin-bottom:16px}
 .primary-btn{width:100%;padding:14px;background:var(--acc);border:none;border-radius:12px;color:#0A0C10;font-size:15px;font-weight:800;cursor:pointer;font-family:'Syne',sans-serif;margin-bottom:10px;-webkit-appearance:none}
 .primary-btn:active{opacity:.85}
-.primary-btn:disabled{opacity:.4}
+.primary-btn:disabled{opacity:.4;cursor:not-allowed}
 .secondary-btn{width:100%;padding:13px;background:transparent;border:1px solid var(--border);border-radius:12px;color:var(--text);font-size:14px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;margin-bottom:10px;-webkit-appearance:none}
-.lock-row{display:flex;align-items:center;justify-content:center;gap:5px;margin-bottom:10px}
+.secondary-btn:active{opacity:.7}
+.lock-row{display:flex;align-items:center;justify-content:center;gap:5px;margin-bottom:10px;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2)}
 .lock-row svg{width:11px;height:11px;stroke:var(--muted2);fill:none;stroke-width:2;stroke-linecap:round}
-.lock-row span{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2)}
 
 /* SETTINGS */
-.settings-scroll{flex:1;overflow-y:auto;padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom))}
-.settings-scroll::-webkit-scrollbar{display:none}
 .s-section{margin-bottom:24px}
-.s-section-title{font-size:11px;font-family:'DM Mono',monospace;color:var(--muted2);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;padding-left:4px}
+.s-sec-title{font-size:11px;font-family:'DM Mono',monospace;color:var(--muted2);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;padding-left:4px}
 .s-card{background:var(--dark2);border:1px solid var(--border);border-radius:12px;overflow:hidden}
 .s-row{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border)}
 .s-row:last-child{border:none}
 .s-info{flex:1;padding-right:12px}
-.s-label{font-size:14px;font-weight:600;color:var(--text)}
-.s-desc{font-size:12px;color:var(--muted2);margin-top:2px;line-height:1.4}
+.s-label{font-size:14px;font-weight:600}
+.s-desc{font-size:12px;color:var(--muted2);margin-top:2px}
 .toggle{width:44px;height:24px;border-radius:12px;background:var(--dark4);border:1px solid var(--border);cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
 .toggle.on{background:var(--acc)}
 .toggle::after{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:2px;left:2px;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
 .toggle.on::after{left:22px}
 .s-sel{background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-family:'Syne',sans-serif;font-size:12px;color:var(--text);cursor:pointer;outline:none;-webkit-appearance:none}
-.s-sel option{background:#151A22}
 .swatches{display:flex;gap:8px}
-.sw{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .15s}
+.sw{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent}
 .sw.active{border-color:#fff;transform:scale(1.15)}
 .s-dbtn{padding:7px 14px;background:transparent;border:1px solid rgba(248,113,113,.3);border-radius:8px;color:#F87171;font-size:12px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;flex-shrink:0}
 .s-abtn{padding:7px 14px;background:transparent;border:1px solid rgba(34,211,238,.3);border-radius:8px;color:var(--acc);font-size:12px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;flex-shrink:0}
-.mem-item{display:flex;align-items:flex-start;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border)}
-.mem-item:last-child{border:none}
-.mem-x{width:22px;height:22px;border-radius:50%;background:transparent;border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
-.mem-x svg{width:10px;height:10px;stroke:var(--muted2)}
 .acc-card{background:var(--dark3);border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;margin-bottom:16px}
 .av{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#22D3EE,#3B82F6);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#0A0C10;flex-shrink:0}
 .tok-badge{font-family:'DM Mono',monospace;font-size:11px;background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.2);color:var(--acc);padding:3px 10px;border-radius:6px;flex-shrink:0}
 
 /* BOTTOM NAV */
-.bottom-nav{height:var(--bottom-bar);padding-bottom:env(safe-area-inset-bottom);background:var(--dark2);border-top:1px solid var(--border);display:flex;flex-shrink:0}
-.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;color:var(--muted2);transition:color .15s;padding-bottom:2px}
-.bn-item.active{color:var(--acc)}
-.bn-item svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.bn-item span{font-size:10px;font-weight:600}
+.bottom-nav{height:var(--nav-h);padding-bottom:env(safe-area-inset-bottom);background:var(--dark2);border-top:1px solid var(--border);display:flex;flex-shrink:0}
+.bn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;color:var(--muted2);padding-bottom:2px;border:none;background:transparent;font-family:'Syne',sans-serif}
+.bn.active{color:var(--acc)}
+.bn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.bn span{font-size:10px;font-weight:600}
 
 /* TOAST */
-.toast{position:fixed;bottom:calc(var(--bottom-bar) + 12px);left:50%;transform:translateX(-50%) translateY(30px);background:var(--dark3);border:1px solid rgba(34,211,238,.3);color:var(--acc);font-family:'DM Mono',monospace;font-size:12px;padding:10px 20px;border-radius:10px;transition:transform .3s,opacity .3s;z-index:200;white-space:nowrap;pointer-events:none;opacity:0}
+.toast{position:fixed;bottom:calc(var(--nav-h) + 12px);left:50%;transform:translateX(-50%) translateY(30px);background:var(--dark3);border:1px solid rgba(34,211,238,.3);color:var(--acc);font-family:'DM Mono',monospace;font-size:12px;padding:10px 20px;border-radius:10px;transition:transform .3s,opacity .3s;z-index:400;white-space:nowrap;pointer-events:none;opacity:0}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 
 /* LIGHT MODE */
-.light-mode{--dark:#F0F2F5;--dark2:#FFFFFF;--dark3:#F0F2F5;--dark4:#E4E6EA;--text:#0A0C10;--muted:#B0B8C1;--muted2:#606770;--border:rgba(0,0,0,0.1)}
+.light-mode{--dark:#F0F2F5;--dark2:#FFFFFF;--dark3:#F0F2F5;--dark4:#E4E6EA;--text:#0A0C10;--muted:#B0B8C1;--muted2:#606770;--border:rgba(0,0,0,.1)}
 </style>
 </head>
 <body>
@@ -263,12 +264,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 
   <!-- TOP BAR -->
   <div class="topbar">
-    <button class="topbar-hist" onclick="openDrawer()" aria-label="Verlauf">
+    <button class="tb-btn" id="btn-drawer" aria-label="Verlauf">
       <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
-    <div class="topbar-logo">Single<span>Tokens</span></div>
-    <div class="topbar-model" id="topbar-model" onclick="openSheet('model')">Llama 3.3 70B</div>
-    <div class="topbar-tok" id="topbar-tok" onclick="nav('purchase')">716K</div>
+    <div class="tb-logo">Single<span>Tokens</span></div>
+    <div class="tb-model" id="tb-model">Llama 3.3 70B</div>
+    <div class="tb-tok" id="tb-tok">716K</div>
   </div>
 
   <!-- CHAT -->
@@ -281,41 +282,41 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
     </div>
     <div class="chat-input-area">
       <div class="chat-input-wrap">
-        <textarea class="chat-input" id="chat-input" placeholder="Nachricht..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-        <button class="send-btn" onclick="sendMsg()">
+        <textarea class="chat-input" id="chat-input" placeholder="Nachricht..." rows="1"></textarea>
+        <button class="send-btn" id="send-btn" aria-label="Senden">
           <svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
         </button>
       </div>
     </div>
   </div>
 
-  <!-- EXPLORE / MODELLE -->
+  <!-- MODELLE -->
   <div class="view" id="view-explore">
-    <div class="explore-scroll">
-      <h2>Modelle</h2>
-      <p>Wähle ein Modell um damit zu chatten.</p>
-      <div class="model-filter">
-        <button class="mfbtn active" onclick="filterM('all',this)">Alle</button>
-        <button class="mfbtn" onclick="filterM('anthropic',this)">Anthropic</button>
-        <button class="mfbtn" onclick="filterM('openai',this)">OpenAI</button>
-        <button class="mfbtn" onclick="filterM('google',this)">Google</button>
-        <button class="mfbtn" onclick="filterM('open',this)">Open Source</button>
-        <button class="mfbtn" onclick="filterM('cheap',this)">Günstigste</button>
+    <div class="scroll-view">
+      <div class="page-title">Modelle</div>
+      <div class="page-sub">Wähle ein Modell um damit zu chatten.</div>
+      <div class="filter-row" id="filter-row">
+        <button class="fbtn active" data-f="all">Alle</button>
+        <button class="fbtn" data-f="anthropic">Anthropic</button>
+        <button class="fbtn" data-f="openai">OpenAI</button>
+        <button class="fbtn" data-f="google">Google</button>
+        <button class="fbtn" data-f="open">Open Source</button>
+        <button class="fbtn" data-f="cheap">Günstigste</button>
       </div>
       <div class="model-grid" id="model-grid"></div>
     </div>
   </div>
 
-  <!-- YOUR GPTs -->
+  <!-- GPTs -->
   <div class="view" id="view-gpts">
-    <div class="gpts-scroll">
+    <div class="scroll-view">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-        <h2 style="font-size:18px;font-weight:800;letter-spacing:-.03em">Your GPTs</h2>
-        <button onclick="openGptModal()" style="padding:8px 14px;background:var(--acc);border:none;border-radius:8px;color:#0A0C10;font-size:12px;font-weight:800;cursor:pointer;font-family:'Syne',sans-serif">+ Neuer GPT</button>
+        <div class="page-title" style="margin-bottom:0">Your GPTs</div>
+        <button id="btn-new-gpt" style="padding:8px 14px;background:var(--acc);border:none;border-radius:8px;color:#0A0C10;font-size:12px;font-weight:800;cursor:pointer;font-family:'Syne',sans-serif">+ Neuer GPT</button>
       </div>
-      <p style="font-size:12px;color:var(--muted2);margin-bottom:20px">Eigene KI-Assistenten erstellen.</p>
-      <div id="gpt-grid-m" style="display:flex;flex-direction:column;gap:10px"></div>
-      <div id="gpt-empty-m" style="text-align:center;padding:60px 20px;color:var(--muted2)">
+      <div class="page-sub">Eigene KI-Assistenten erstellen.</div>
+      <div id="gpt-list"></div>
+      <div id="gpt-empty" style="text-align:center;padding:60px 20px;color:var(--muted2)">
         <div style="font-size:48px;margin-bottom:12px">🤖</div>
         <div style="font-size:15px;font-weight:700;margin-bottom:6px;color:var(--text)">Noch keine GPTs</div>
         <div style="font-size:13px">Tippe auf "+ Neuer GPT" um zu starten.</div>
@@ -323,73 +324,73 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
     </div>
   </div>
 
-  <!-- GPT MODAL MOBILE -->
-  <div id="gpt-modal-m" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;align-items:flex-end" onclick="closeGptModalM()">
-    <div style="background:var(--dark2);border-radius:20px 20px 0 0;width:100%;max-height:90vh;overflow-y:auto;padding:20px 16px;padding-bottom:calc(20px + env(safe-area-inset-bottom))" onclick="event.stopPropagation()">
-      <div style="width:36px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 20px"></div>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
-        <div style="font-size:16px;font-weight:800" id="gpt-modal-title-m">Neuer GPT</div>
-        <button onclick="closeGptModalM()" style="background:transparent;border:none;color:var(--muted2);font-size:22px;cursor:pointer">×</button>
+  <!-- GPT MODAL -->
+  <div class="modal-bg" id="gpt-modal-bg">
+    <div class="modal" id="gpt-modal">
+      <div class="modal-handle"></div>
+      <div class="modal-top">
+        <div class="modal-title" id="gpt-modal-title">Neuer GPT</div>
+        <button class="modal-close" id="btn-close-gpt">×</button>
       </div>
-      <div style="display:flex;flex-direction:column;gap:12px">
-        <div>
-          <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">Name *</div>
-          <input id="gpt-name-m" type="text" placeholder="z.B. Coding-Assistent" style="width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:11px 12px;font-size:14px;color:var(--text);outline:none;font-family:'Syne',sans-serif">
-        </div>
-        <div>
-          <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">Beschreibung</div>
-          <input id="gpt-desc-m" type="text" placeholder="Wofür ist dieser GPT?" style="width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:11px 12px;font-size:14px;color:var(--text);outline:none;font-family:'Syne',sans-serif">
-        </div>
-        <div>
-          <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">Basismodell</div>
-          <select id="gpt-model-m" style="width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:11px 12px;font-size:14px;color:var(--text);outline:none;-webkit-appearance:none;font-family:'Syne',sans-serif">
-            <option value="Llama 3.3 70B">Llama 3.3 70B</option>
-            <option value="Llama 3.1 8B">Llama 3.1 8B</option>
-            <option value="Gemma 2 9B">Gemma 2 9B</option>
-            <option value="Mixtral 8x7B">Mixtral 8x7B</option>
-            <option value="DeepSeek R1 70B">DeepSeek R1 70B</option>
-            <option value="Claude Sonnet 4.5">Claude Sonnet 4.5</option>
-            <option value="Claude Haiku 4.5">Claude Haiku 4.5</option>
-            <option value="GPT-4o">GPT-4o</option>
-            <option value="GPT-5">GPT-5</option>
-            <option value="Gemini 2.0 Flash">Gemini 2.0 Flash</option>
-            <option value="Grok 2">Grok 2</option>
-          </select>
-        </div>
-        <div>
-          <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">System-Prompt *</div>
-          <textarea id="gpt-prompt-m" placeholder="Du bist ein hilfreicher Assistent der..." style="width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:11px 12px;font-size:14px;color:var(--text);outline:none;resize:none;min-height:100px;font-family:'Syne',sans-serif"></textarea>
-        </div>
-        <button onclick="saveGptM()" style="width:100%;padding:14px;background:var(--acc);border:none;border-radius:12px;color:#0A0C10;font-size:15px;font-weight:800;cursor:pointer;font-family:'Syne',sans-serif" id="gpt-save-btn-m">GPT erstellen</button>
+      <div class="field">
+        <div class="field-label">Name *</div>
+        <input class="inp" id="gpt-name" type="text" placeholder="z.B. Coding-Assistent">
       </div>
+      <div class="field">
+        <div class="field-label">Beschreibung</div>
+        <input class="inp" id="gpt-desc" type="text" placeholder="Wofür ist dieser GPT?">
+      </div>
+      <div class="field">
+        <div class="field-label">Basismodell</div>
+        <select class="inp-sel" id="gpt-model-sel">
+          <option>Llama 3.3 70B</option>
+          <option>Llama 3.1 8B</option>
+          <option>Gemma 2 9B</option>
+          <option>Mixtral 8x7B</option>
+          <option>DeepSeek R1 70B</option>
+          <option>Claude Sonnet 4.5</option>
+          <option>Claude Haiku 4.5</option>
+          <option>GPT-4o</option>
+          <option>GPT-5</option>
+          <option>Gemini 2.0 Flash</option>
+          <option>Grok 2</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="field-label">System-Prompt *</div>
+        <textarea class="inp-area" id="gpt-sys-prompt" placeholder="Du bist ein hilfreicher Assistent der..."></textarea>
+      </div>
+      <button class="primary-btn" id="btn-save-gpt">GPT erstellen</button>
     </div>
   </div>
 
   <!-- PURCHASE -->
   <div class="view" id="view-purchase">
-    <div class="purchase-scroll">
+    <div class="scroll-view">
       <div class="p-steps">
-        <div class="p-step"><div class="p-step-num active" id="psn1">1</div><div class="p-step-lbl active" id="psl1">Tokens</div></div>
-        <div class="p-step-line" id="pline1"></div>
-        <div class="p-step"><div class="p-step-num" id="psn2">2</div><div class="p-step-lbl" id="psl2">Checkout</div></div>
-        <div class="p-step-line" id="pline2"></div>
-        <div class="p-step"><div class="p-step-num" id="psn3">3</div><div class="p-step-lbl" id="psl3">Fertig</div></div>
+        <div class="p-step"><div class="p-num active" id="pn1">1</div><div class="p-lbl active" id="pl1">Tokens</div></div>
+        <div class="p-line" id="pline1"></div>
+        <div class="p-step"><div class="p-num" id="pn2">2</div><div class="p-lbl" id="pl2">Checkout</div></div>
+        <div class="p-line" id="pline2"></div>
+        <div class="p-step"><div class="p-num" id="pn3">3</div><div class="p-lbl" id="pl3">Fertig</div></div>
       </div>
+
+      <!-- PAGE 1 -->
       <div class="pg active" id="pv1">
-        <div class="p-sec-label">Token-Menge</div>
+        <div class="sec-lbl">Token-Menge</div>
         <div class="amount-box">
-          <div><div class="amount-big" id="amt-big">333K</div><div class="amount-label">Tokens</div></div>
-          <div><div class="amount-price" id="amt-price" style="color:var(--acc)">$1.00</div><div class="amount-rate">$3.00 / 1M</div></div>
+          <div><div class="amount-big" id="amt-big">333K</div><div class="amount-lbl">Tokens</div></div>
+          <div><div class="amount-price" id="amt-price">$1.00</div><div class="amount-rate">$3.00 / 1M</div></div>
         </div>
         <div class="preset-grid">
-          <div class="pbtn active" onclick="selPreset(333333,this)">333K</div>
-          <div class="pbtn" onclick="selPreset(500000,this)">500K</div>
-          <div class="pbtn" onclick="selPreset(1000000,this)">1M</div>
-          <div class="pbtn" onclick="selPreset(5000000,this)">5M</div>
-          <div class="pbtn" onclick="selPreset(10000000,this)">10M</div>
-          <div class="pbtn" onclick="selPreset(50000000,this)">50M</div>
-          <div class="pbtn" onclick="selPreset(100000000,this)">100M</div>
-          <div class="pbtn" id="custom-toggle" onclick="toggleCustom()">Custom</div>
+          <button class="pbtn active" data-tok="333333">333K</button>
+          <button class="pbtn" data-tok="500000">500K</button>
+          <button class="pbtn" data-tok="1000000">1M</button>
+          <button class="pbtn" data-tok="5000000">5M</button>
+          <button class="pbtn" data-tok="10000000">10M</button>
+          <button class="pbtn" data-tok="50000000">50M</button>
+          <button class="pbtn" data-tok="100000000">100M</button>
+          <button class="pbtn" id="btn-custom-toggle">Custom</button>
         </div>
         <div style="display:none;margin-bottom:12px" id="custom-wrap">
           <div style="display:flex;gap:8px;align-items:center">
@@ -397,71 +398,75 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
             <span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--muted2)">Tok</span>
           </div>
         </div>
-        <input type="range" id="tok-slider" min="0" max="100" value="0" step="1">
-        <div class="min-warn" id="min-warn"><span class="min-warn-text">⚠ Min. $1.00 · 333K Tokens</span></div>
+        <input type="range" id="tok-slider" min="0" max="100" value="0">
+        <div class="min-warn" id="min-warn">⚠ Min. $1.00 · 333K Tokens</div>
         <div class="est-box">
           <div class="est-title">Geschätzte Nachrichten</div>
-          <div class="est-row"><span class="est-model">GPT-5 <span class="mult-badge">x70</span></span><span class="est-val" id="e-gpt5">–</span></div>
-          <div class="est-row"><span class="est-model">Llama 3.3 70B <span class="mult-badge">x0.3</span></span><span class="est-val" id="e-llama">–</span></div>
-          <div class="est-row"><span class="est-model">Claude Sonnet <span class="mult-badge">x1</span></span><span class="est-val" id="e-sonnet">–</span></div>
-          <div class="est-row"><span class="est-model">Llama 3.1 8B <span class="mult-badge">x0.1</span></span><span class="est-val" id="e-llama8b">–</span></div>
+          <div class="est-row"><span class="est-model">GPT-5 <span class="mbadge">x70</span></span><span class="est-val" id="e-gpt5">–</span></div>
+          <div class="est-row"><span class="est-model">Llama 3.3 70B <span class="mbadge">x0.3</span></span><span class="est-val" id="e-llama">–</span></div>
+          <div class="est-row"><span class="est-model">Claude Sonnet <span class="mbadge">x1</span></span><span class="est-val" id="e-sonnet">–</span></div>
+          <div class="est-row"><span class="est-model">Llama 3.1 8B <span class="mbadge">x0.1</span></span><span class="est-val" id="e-llama8b">–</span></div>
         </div>
-        <div class="p-sec-label">Zahlungsmethode</div>
+        <div class="sec-lbl">Zahlungsmethode</div>
         <div class="pay-grid">
-          <div class="pay-btn active" id="pm-card" onclick="selPay('card',this)">
+          <button class="pay-btn active" data-pay="card">
             <svg width="26" height="18" viewBox="0 0 26 18" fill="none"><rect x=".5" y=".5" width="25" height="17" rx="2.5" stroke="#4B5563"/><rect y="4" width="26" height="4" fill="#4B5563" opacity=".5"/><rect x="3" y="11" width="6" height="2" rx="1" fill="#9CA3AF"/></svg>
             <div class="pay-name">Kreditkarte</div><div class="pay-sub">Visa · MC</div>
-          </div>
-          <div class="pay-btn" id="pm-paypal" onclick="selPay('paypal',this)">
+          </button>
+          <button class="pay-btn" data-pay="paypal">
             <svg width="52" height="16" viewBox="0 0 52 16"><text x="0" y="12" font-family="Verdana" font-size="11" font-weight="900" fill="#003087">Pay</text><text x="26" y="12" font-family="Verdana" font-size="11" font-weight="900" fill="#009CDE">Pal</text></svg>
             <div class="pay-name">PayPal</div><div class="pay-sub">Weiterleitung</div>
-          </div>
-          <div class="pay-btn" id="pm-gpay" onclick="selPay('gpay',this)">
+          </button>
+          <button class="pay-btn" data-pay="gpay">
             <svg width="26" height="18" viewBox="0 0 26 18" fill="none"><text x="1" y="13" font-family="Arial" font-size="8" font-weight="700" fill="#9CA3AF">G Pay</text></svg>
             <div class="pay-name">Google Pay</div><div class="pay-sub">Schnell</div>
-          </div>
-          <div class="pay-btn" id="pm-psc" onclick="selPay('paysafe',this)">
+          </button>
+          <button class="pay-btn" data-pay="paysafe">
             <svg width="26" height="18" viewBox="0 0 26 18" fill="none"><rect x=".5" y=".5" width="25" height="17" rx="2.5" stroke="#4B5563"/><text x="3" y="13" font-family="Arial" font-size="7.5" font-weight="800" fill="#9CA3AF">PSC</text></svg>
             <div class="pay-name">Paysafecard</div><div class="pay-sub">PIN-Code</div>
-          </div>
+          </button>
         </div>
-        <button class="primary-btn" id="btn-to-checkout" onclick="goCheckout()">Weiter zum Checkout →</button>
+        <button class="primary-btn" id="btn-to-checkout">Weiter zum Checkout →</button>
       </div>
+
+      <!-- PAGE 2 -->
       <div class="pg" id="pv2">
-        <div class="p-sec-label">Bestellübersicht</div>
+        <div class="sec-lbl">Bestellübersicht</div>
         <div class="co-summary">
           <div class="co-row"><span class="co-k">Tokens</span><span class="co-v" id="co-tok">–</span></div>
           <div class="co-row"><span class="co-k">Zwischensumme</span><span class="co-v" id="co-sub">–</span></div>
           <div class="co-row"><span class="co-k">MwSt. (19%)</span><span class="co-v" id="co-tax">–</span></div>
         </div>
-        <div class="co-total-box"><span class="co-total-k">Gesamt</span><span class="co-total-v" id="co-total">–</span></div>
-        <div class="co-est">
-          <div class="co-est-title">Geschätzte Nachrichten</div>
-          <div class="est-row"><span class="est-model">GPT-5 <span class="mult-badge">x70</span></span><span class="est-val" id="ce-gpt5">–</span></div>
-          <div class="est-row"><span class="est-model">Llama 3.3 70B <span class="mult-badge">x0.3</span></span><span class="est-val" id="ce-llama">–</span></div>
-          <div class="est-row"><span class="est-model">Claude Sonnet <span class="mult-badge">x1</span></span><span class="est-val" id="ce-sonnet">–</span></div>
-          <div class="est-row"><span class="est-model">Llama 3.1 8B <span class="mult-badge">x0.1</span></span><span class="est-val" id="ce-llama8b">–</span></div>
+        <div class="co-total"><span class="co-total-k">Gesamt</span><span class="co-total-v" id="co-total-v">–</span></div>
+        <div class="est-box">
+          <div class="est-title">Geschätzte Nachrichten</div>
+          <div class="est-row"><span class="est-model">GPT-5 <span class="mbadge">x70</span></span><span class="est-val" id="ce-gpt5">–</span></div>
+          <div class="est-row"><span class="est-model">Llama 3.3 70B <span class="mbadge">x0.3</span></span><span class="est-val" id="ce-llama">–</span></div>
+          <div class="est-row"><span class="est-model">Claude Sonnet <span class="mbadge">x1</span></span><span class="est-val" id="ce-sonnet">–</span></div>
+          <div class="est-row"><span class="est-model">Llama 3.1 8B <span class="mbadge">x0.1</span></span><span class="est-val" id="ce-llama8b">–</span></div>
         </div>
-        <div class="card-section" id="co-card">
+        <div class="card-section" id="co-card-section">
           <div class="card-section-title">Kreditkarte</div>
-          <div class="field"><div class="flabel">Karteninhaber</div><input class="finput" type="text" placeholder="Max Mustermann"></div>
-          <div class="field"><div class="flabel">Kartennummer</div><input class="finput" type="tel" inputmode="numeric" placeholder="1234 5678 9012 3456" maxlength="19" oninput="fmtCard(this)"></div>
+          <div class="field"><div class="field-label">Karteninhaber</div><input class="finput" type="text" placeholder="Max Mustermann"></div>
+          <div class="field"><div class="field-label">Kartennummer</div><input class="finput" type="tel" inputmode="numeric" id="inp-cardnum" placeholder="1234 5678 9012 3456" maxlength="19"></div>
           <div class="field-row">
-            <div class="field"><div class="flabel">Gültig bis</div><input class="finput" type="tel" inputmode="numeric" placeholder="MM/JJ" maxlength="5" oninput="fmtExp(this)"></div>
-            <div class="field"><div class="flabel">CVV</div><input class="finput" type="tel" inputmode="numeric" placeholder="•••" maxlength="4"></div>
+            <div class="field"><div class="field-label">Gültig bis</div><input class="finput" type="tel" inputmode="numeric" id="inp-exp" placeholder="MM/JJ" maxlength="5"></div>
+            <div class="field"><div class="field-label">CVV</div><input class="finput" type="tel" inputmode="numeric" placeholder="•••" maxlength="4"></div>
           </div>
         </div>
         <div class="redir-info" id="co-redir"></div>
-        <div class="psc-sec" id="co-psc">
+        <div class="psc-wrap" id="co-psc">
           <div class="card-section">
             <div class="card-section-title">Paysafecard PIN</div>
             <div class="field"><input class="finput" type="tel" inputmode="numeric" placeholder="xxxx-xxxx-xxxx-xxxx" maxlength="19"></div>
           </div>
         </div>
         <div class="lock-row"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg><span>256-bit SSL verschlüsselt</span></div>
-        <button class="primary-btn" id="btn-pay" onclick="doPayment()">Jetzt kaufen →</button>
-        <button class="secondary-btn" onclick="pGoBack()">← Zurück</button>
+        <button class="primary-btn" id="btn-pay">Jetzt kaufen →</button>
+        <button class="secondary-btn" id="btn-back">← Zurück</button>
       </div>
+
+      <!-- PAGE 3 -->
       <div class="pg" id="pv3">
         <div class="suc-wrap">
           <div class="suc-icon"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>
@@ -475,62 +480,70 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           <div class="co-row"><span class="co-k">Methode</span><span class="co-v" id="suc-method">–</span></div>
           <div class="co-row"><span class="co-k">Datum</span><span class="co-v" id="suc-date">–</span></div>
         </div>
-        <button class="primary-btn" onclick="resetPurchase()">Weitere Tokens kaufen</button>
-        <button class="secondary-btn" onclick="nav('chat')">Zum Chat →</button>
+        <button class="primary-btn" id="btn-buy-more">Weitere Tokens kaufen</button>
+        <button class="secondary-btn" id="btn-to-chat">Zum Chat →</button>
       </div>
     </div>
   </div>
 
   <!-- SETTINGS -->
   <div class="view" id="view-settings">
-    <div class="settings-scroll">
+    <div class="scroll-view">
       <div class="s-section">
         <div class="acc-card">
           <div class="av" id="s-av">G</div>
           <div style="flex:1">
-            <div style="font-size:15px;font-weight:700;color:var(--text)" id="s-display-name">Guest User</div>
-            <div style="font-size:12px;color:var(--muted2);font-family:'DM Mono',monospace;margin-top:2px"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e98e9c8c9a9da99a80878e858c9d86828c879ac78880">[email&#160;protected]</a></div>
+            <div style="font-size:15px;font-weight:700" id="s-name">Guest User</div>
+            <div style="font-size:12px;color:var(--muted2);font-family:'DM Mono',monospace;margin-top:2px">guest@singletokens.ai</div>
           </div>
           <div class="tok-badge" id="s-tok-badge">716K</div>
         </div>
       </div>
       <div class="s-section">
-        <div class="s-section-title">Allgemein</div>
+        <div class="s-sec-title">Allgemein</div>
         <div class="s-card">
-          <div class="s-row"><div class="s-info"><div class="s-label">Sprache</div></div><select class="s-sel" onchange="setLang(this.value)"><option value="de">Deutsch</option><option value="en">English</option><option value="fr">Français</option><option value="es">Español</option></select></div>
-          <div class="s-row"><div class="s-info"><div class="s-label">Chat-Verlauf</div></div><div class="toggle on" onclick="this.classList.toggle('on');showToast('Gespeichert')"></div></div>
-          <div class="s-row"><div class="s-info"><div class="s-label">Kompakter Modus</div></div><div class="toggle" onclick="this.classList.toggle('on');showToast('Gespeichert')"></div></div>
+          <div class="s-row"><div class="s-info"><div class="s-label">Sprache</div></div><select class="s-sel" id="sel-lang"><option value="de">Deutsch</option><option value="en">English</option><option value="fr">Français</option><option value="es">Español</option></select></div>
+          <div class="s-row"><div class="s-info"><div class="s-label">Chat-Verlauf</div></div><div class="toggle on" id="tog-history"></div></div>
+          <div class="s-row"><div class="s-info"><div class="s-label">Kompakter Modus</div></div><div class="toggle" id="tog-compact"></div></div>
         </div>
       </div>
       <div class="s-section">
-        <div class="s-section-title">Darstellung</div>
+        <div class="s-sec-title">Darstellung</div>
         <div class="s-card">
-          <div class="s-row"><div class="s-info"><div class="s-label">Theme</div></div><select class="s-sel" onchange="setTheme(this.value)"><option value="dark">Dunkel</option><option value="light">Hell</option></select></div>
-          <div class="s-row"><div class="s-info"><div class="s-label">Akzentfarbe</div></div><div class="swatches"><div class="sw active" style="background:#22D3EE" onclick="setAccent('#22D3EE',this)"></div><div class="sw" style="background:#3B82F6" onclick="setAccent('#3B82F6',this)"></div><div class="sw" style="background:#8B5CF6" onclick="setAccent('#8B5CF6',this)"></div><div class="sw" style="background:#EC4899" onclick="setAccent('#EC4899',this)"></div><div class="sw" style="background:#10B981" onclick="setAccent('#10B981',this)"></div></div></div>
-          <div class="s-row"><div class="s-info"><div class="s-label">Schriftgröße</div></div><select class="s-sel" onchange="setFontSize(this.value)"><option value="13px">Klein</option><option value="14px" selected>Mittel</option><option value="16px">Groß</option></select></div>
+          <div class="s-row"><div class="s-info"><div class="s-label">Theme</div></div><select class="s-sel" id="sel-theme"><option value="dark">Dunkel</option><option value="light">Hell</option></select></div>
+          <div class="s-row"><div class="s-info"><div class="s-label">Akzentfarbe</div></div>
+            <div class="swatches">
+              <div class="sw active" style="background:#22D3EE" data-c="#22D3EE"></div>
+              <div class="sw" style="background:#3B82F6" data-c="#3B82F6"></div>
+              <div class="sw" style="background:#8B5CF6" data-c="#8B5CF6"></div>
+              <div class="sw" style="background:#EC4899" data-c="#EC4899"></div>
+              <div class="sw" style="background:#10B981" data-c="#10B981"></div>
+            </div>
+          </div>
+          <div class="s-row"><div class="s-info"><div class="s-label">Schriftgröße</div></div><select class="s-sel" id="sel-fs"><option value="13px">Klein</option><option value="14px" selected>Mittel</option><option value="16px">Groß</option></select></div>
         </div>
       </div>
       <div class="s-section">
-        <div class="s-section-title">Konto</div>
+        <div class="s-sec-title">Konto</div>
         <div class="s-card">
-          <div class="s-row"><div class="s-info"><div class="s-label">Anzeigename</div></div><input class="s-sel" style="width:130px;padding:6px 10px;font-size:13px" type="text" value="Guest User" onchange="saveName(this.value)"></div>
-          <div class="s-row"><div class="s-info"><div class="s-label">Tokens kaufen</div><div class="s-desc">716K Tokens verfügbar</div></div><button class="s-abtn" onclick="nav('purchase')">Kaufen →</button></div>
-          <div class="s-row"><div class="s-info"><div class="s-label" style="color:#F87171">Konto löschen</div></div><button class="s-dbtn" onclick="showToast('Konto gelöscht')">Löschen</button></div>
+          <div class="s-row"><div class="s-info"><div class="s-label">Anzeigename</div></div><input class="s-sel" id="inp-dname" style="width:130px;padding:6px 10px;font-size:13px" type="text" value="Guest User"></div>
+          <div class="s-row"><div class="s-info"><div class="s-label">Tokens kaufen</div><div class="s-desc" id="s-tok-desc">716K verfügbar</div></div><button class="s-abtn" id="btn-s-buy">Kaufen →</button></div>
+          <div class="s-row"><div class="s-info"><div class="s-label" style="color:#F87171">Konto löschen</div></div><button class="s-dbtn" id="btn-del-acc">Löschen</button></div>
         </div>
       </div>
       <div class="s-section">
-        <div class="s-section-title">Datenschutz</div>
+        <div class="s-sec-title">Datenschutz</div>
         <div class="s-card">
-          <div class="s-row"><div class="s-info"><div class="s-label">Trainingsdaten</div></div><div class="toggle" onclick="this.classList.toggle('on');showToast('Gespeichert')"></div></div>
-          <div class="s-row"><div class="s-info"><div class="s-label">Analyse-Daten</div></div><div class="toggle on" onclick="this.classList.toggle('on');showToast('Gespeichert')"></div></div>
-          <div class="s-row"><div class="s-info"><div class="s-label">Verlauf löschen</div></div><button class="s-dbtn" onclick="clearAllHistory()">Löschen</button></div>
+          <div class="s-row"><div class="s-info"><div class="s-label">Trainingsdaten</div></div><div class="toggle" id="tog-training"></div></div>
+          <div class="s-row"><div class="s-info"><div class="s-label">Analyse-Daten</div></div><div class="toggle on" id="tog-analytics"></div></div>
+          <div class="s-row"><div class="s-info"><div class="s-label">Verlauf löschen</div></div><button class="s-dbtn" id="btn-clear-hist">Löschen</button></div>
         </div>
       </div>
       <div class="s-section">
-        <div class="s-section-title">Sicherheit</div>
+        <div class="s-sec-title">Sicherheit</div>
         <div class="s-card">
-          <div class="s-row"><div class="s-info"><div class="s-label">2FA</div><div class="s-desc" id="twofa-desc">Nicht aktiviert</div></div><div class="toggle" onclick="toggleTwoFA(this)"></div></div>
-          <div class="s-row"><div class="s-info"><div class="s-label">Abmelden</div></div><button class="s-dbtn" onclick="showToast('Abgemeldet')">Abmelden</button></div>
+          <div class="s-row"><div class="s-info"><div class="s-label">2FA</div><div class="s-desc" id="twofa-desc">Nicht aktiviert</div></div><div class="toggle" id="tog-2fa"></div></div>
+          <div class="s-row"><div class="s-info"><div class="s-label">Abmelden</div></div><button class="s-dbtn" id="btn-logout">Abmelden</button></div>
         </div>
       </div>
       <div style="height:16px"></div>
@@ -539,52 +552,50 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 
   <!-- BOTTOM NAV -->
   <div class="bottom-nav">
-    <div class="bn-item active" id="bn-chat" onclick="nav('chat')">
+    <button class="bn active" data-nav="chat">
       <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
       <span>Chat</span>
-    </div>
-    <div class="bn-item" id="bn-explore" onclick="nav('explore')">
+    </button>
+    <button class="bn" data-nav="explore">
       <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
       <span>Modelle</span>
-    </div>
-    <div class="bn-item" id="bn-gpts" onclick="nav('gpts')">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v2m0 16v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M2 12h2m16 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    </button>
+    <button class="bn" data-nav="gpts">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0112 0v2"/></svg>
       <span>GPTs</span>
-    </div>
-    <div class="bn-item" id="bn-purchase" onclick="nav('purchase')">
+    </button>
+    <button class="bn" data-nav="purchase">
       <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H5a2 2 0 00-2 2v2"/><path d="M22 12h-4a2 2 0 000 4h4"/></svg>
       <span>Tokens</span>
-    </div>
-    <div class="bn-item" id="bn-settings" onclick="nav('settings')">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v2m0 16v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M2 12h2m16 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    </button>
+    <button class="bn" data-nav="settings">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
       <span>Einstellungen</span>
-    </div>
+    </button>
   </div>
 </div>
 
-<!-- HISTORY DRAWER -->
-<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
-<div class="drawer" id="history-drawer">
+<!-- DRAWER -->
+<div class="overlay" id="drawer-overlay"></div>
+<div class="drawer" id="drawer">
   <div class="drawer-top">
     <div class="drawer-logo">Single<span>Tokens</span></div>
-    <div class="drawer-close" onclick="closeDrawer()">
+    <div class="icon-btn" id="btn-close-drawer">
       <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </div>
   </div>
-  <div class="drawer-new" onclick="newChat()">
+  <div class="drawer-new" id="btn-new-chat">
     <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
     Neuer Chat
   </div>
-  <div class="drawer-section-label" id="drawer-section-lbl">Zuletzt</div>
+  <div class="drawer-lbl" id="drawer-lbl">Zuletzt</div>
   <div class="drawer-list" id="drawer-list"></div>
-  <div class="drawer-footer">
-    <div class="drawer-footer-info" id="drawer-footer-count">0 Unterhaltungen</div>
-  </div>
+  <div class="drawer-footer" id="drawer-footer">0 Unterhaltungen</div>
 </div>
 
 <!-- MODEL SHEET -->
-<div class="sheet-overlay" id="model-sheet" onclick="closeSheet()">
-  <div class="sheet" onclick="event.stopPropagation()">
+<div class="sheet-bg" id="model-sheet-bg">
+  <div class="sheet" id="model-sheet-inner">
     <div class="sheet-handle"></div>
     <div class="sheet-title">Modell wählen</div>
     <div id="model-sheet-list"></div>
@@ -593,404 +604,491 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 
 <div class="toast" id="toast"></div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-/* ── NAV ── */
-function nav(id){
-  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-  document.querySelectorAll('.bn-item').forEach(b=>b.classList.remove('active'));
-  document.getElementById('view-'+id).classList.add('active');
-  const bn=document.getElementById('bn-'+id);
-  if(bn)bn.classList.add('active');
-}
+<script>
+'use strict';
 
-/* ── HISTORY DRAWER ── */
-let chatHistory = [];
-let currentChatId = null;
-let currentMessages = [];
-
-function loadHistoryFromStorage(){
-  try { chatHistory = JSON.parse(localStorage.getItem('st_chat_history') || '[]'); }
-  catch(e){ chatHistory = []; }
-}
-
-function saveHistoryToStorage(){
-  try { localStorage.setItem('st_chat_history', JSON.stringify(chatHistory)); }
-  catch(e){}
-}
-
-function fmtRelTime(ts){
-  const diff = Date.now() - ts;
-  const min = Math.floor(diff/60000);
-  const h = Math.floor(diff/3600000);
-  const d = Math.floor(diff/86400000);
-  if(min < 1) return 'Gerade eben';
-  if(min < 60) return `Vor ${min} Min.`;
-  if(h < 24) return `Vor ${h} Std.`;
-  if(d === 1) return 'Gestern';
-  if(d < 7) return `Vor ${d} Tagen`;
+/* ──────────────── HELPERS ──────────────── */
+function $(id){ return document.getElementById(id); }
+function escH(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function fmtK(n){ if(n>=1e9) return (n/1e9).toFixed(1).replace(/\.0$/,'')+'B'; if(n>=1e6) return (n/1e6).toFixed(1).replace(/\.0$/,'')+'M'; if(n>=1e3) return Math.round(n/1e3)+'K'; return String(n); }
+function fmtRel(ts){
+  const d=Date.now()-ts, m=Math.floor(d/60000), h=Math.floor(d/3600000), day=Math.floor(d/86400000);
+  if(m<1) return 'Gerade eben'; if(m<60) return `Vor ${m} Min.`; if(h<24) return `Vor ${h} Std.`;
+  if(day===1) return 'Gestern'; if(day<7) return `Vor ${day} Tagen`;
   return new Date(ts).toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'2-digit'});
 }
+let toastTm;
+function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastTm); toastTm=setTimeout(()=>t.classList.remove('show'),2200); }
 
-function renderHistoryList(){
-  const list = document.getElementById('drawer-list');
-  const lbl = document.getElementById('drawer-section-lbl');
-  const footer = document.getElementById('drawer-footer-count');
-  footer.textContent = chatHistory.length + ' Unterhaltung' + (chatHistory.length !== 1 ? 'en' : '');
-  if(chatHistory.length === 0){
-    lbl.style.display = 'none';
-    list.innerHTML = `<div class="hist-empty"><div class="hist-empty-icon">💬</div><div class="hist-empty-txt">Noch keine Chats.<br>Starte eine neue Unterhaltung!</div></div>`;
-    return;
-  }
-  lbl.style.display = 'block';
-  // Sort newest first
-  const sorted = [...chatHistory].sort((a,b) => b.updatedAt - a.updatedAt);
-  list.innerHTML = sorted.map(c => {
-    const isActive = c.id === currentChatId;
-    const title = c.title || 'Neue Unterhaltung';
-    const meta = `${c.model} · ${fmtRelTime(c.updatedAt)}`;
-    return `<div class="hist-item${isActive?' active':''}" onclick="loadChat(${c.id})">
-      <div class="hist-item-body">
-        <div class="hist-item-title">${escHtml(title)}</div>
-        <div class="hist-item-meta">${escHtml(meta)}</div>
-      </div>
-      <button class="hist-item-del" onclick="event.stopPropagation();deleteChatEntry(${c.id})" title="Löschen">
-        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>`;
-  }).join('');
-}
+/* ──────────────── STATE ──────────────── */
+let balance = 716000;
+let curModel = 'Llama 3.3 70B';
+let curGptPrompt = null;
+let chatHistory = [];
+let currentChatId = Date.now();
+let currentMessages = [];
+let gptsList = [];
+let editingGptId = null;
 
-function escHtml(s){
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-function openDrawer(){
-  renderHistoryList();
-  document.getElementById('drawer-overlay').classList.add('show');
-  document.getElementById('history-drawer').classList.add('show');
-}
-
-function closeDrawer(){
-  document.getElementById('drawer-overlay').classList.remove('show');
-  document.getElementById('history-drawer').classList.remove('show');
-}
-
-function newChat(){
-  // Reset state
-  currentChatId = Date.now();
-  currentMessages = [];
-  // Reset UI
-  const msgs = document.getElementById('chat-msgs');
-  msgs.innerHTML = `<div class="msg ai"><div class="msg-bubble">Hallo! Ich bin SingleTokens AI. Wie kann ich dir helfen? 👋</div><div class="msg-meta">SingleTokens · ${curModel}</div></div>`;
-  // Notify api.js if it has a reset hook
-  if(typeof apiResetConversation === 'function') apiResetConversation();
-  closeDrawer();
-  nav('chat');
-  renderHistoryList();
-}
-
-function loadChat(id){
-  const chat = chatHistory.find(c => c.id === id);
-  if(!chat) return;
-  currentChatId = chat.id;
-  currentMessages = [...chat.messages];
-  curModel = chat.model;
-  document.getElementById('topbar-model').textContent = chat.model;
-  // Re-render messages
-  const msgs = document.getElementById('chat-msgs');
-  msgs.innerHTML = chat.messages.map(m =>
-    `<div class="msg ${m.role}">
-      <div class="msg-bubble">${m.text}</div>
-      <div class="msg-meta">${m.role === 'user' ? 'Du' : escHtml(chat.model)}</div>
-    </div>`
-  ).join('');
-  msgs.scrollTop = msgs.scrollHeight;
-  // Notify api.js to restore conversation context
-  if(typeof apiLoadConversation === 'function') apiLoadConversation(chat.messages);
-  closeDrawer();
-  nav('chat');
-  showToast('Chat geladen');
-}
-
-function deleteChatEntry(id){
-  chatHistory = chatHistory.filter(c => c.id !== id);
-  saveHistoryToStorage();
-  // If we deleted the active chat, start new
-  if(id === currentChatId) newChat();
-  renderHistoryList();
-  showToast('Gelöscht');
-}
-
-async function clearAllHistory(){
-  if(!confirm('Wirklich den gesamten Verlauf löschen?')) return;
-  if(typeof serverDeleteAllChats === 'function') await serverDeleteAllChats();
-  chatHistory = [];
-  saveHistoryToStorage();
-  if(typeof apiResetConversation === 'function') apiResetConversation();
-  currentChatId = Date.now();
-  currentMessages = [];
-  const msgs = document.getElementById('chat-msgs');
-  msgs.innerHTML = `<div class="msg ai"><div class="msg-bubble">Hallo! Ich bin SingleTokens AI. Wie kann ich dir helfen? 👋</div><div class="msg-meta">SingleTokens · ${curModel}</div></div>`;
-  renderHistoryList();
-  showToast('Verlauf gelöscht');
-}
-
-function saveCurrentChat(){
-  if(currentMessages.length === 0) return;
-  const firstUserMsg = currentMessages.find(m => m.role === 'user');
-  const title = firstUserMsg ? firstUserMsg.text.slice(0, 45) + (firstUserMsg.text.length > 45 ? '…' : '') : 'Neue Unterhaltung';
-  const idx = chatHistory.findIndex(c => c.id === currentChatId);
-  const chatObj = {
-    id: currentChatId,
-    title,
-    model: curModel,
-    messages: currentMessages,
-    updatedAt: Date.now()
-  };
-  if(idx >= 0){ chatHistory[idx] = chatObj; }
-  else { chatHistory.unshift(chatObj); }
-  saveHistoryToStorage();
-}
-
-/* ── CHAT ── */
-let balance=716000;
-let curModel='Llama 3.3 70B';
-const MODELS_MULT={
+const MULT = {
   'Llama 3.3 70B':0.3,'Llama 3.1 8B':0.1,'Gemma 2 9B':0.15,'Mixtral 8x7B':0.2,
-  'DeepSeek R1 70B':0.35,'Claude Sonnet 4.5':1,'GPT-4o':0.85,'GPT-5':70,
-  'Claude Opus 4.5':5,'Claude Haiku 4.5':0.27,'Gemini 2.0 Flash':0.5,
+  'DeepSeek R1 70B':0.35,'Claude Sonnet 4.5':1,'Claude Opus 4.5':5,'Claude Haiku 4.5':0.27,
+  'GPT-4o':0.85,'GPT-5':70,'Gemini 2.0 Flash':0.5,'Gemini Pro 2.0':2.33,
   'Grok 2':1.67,'Mistral Large 2':2.67,'DeepSeek V3':0.9
 };
 
-function fmtBal(){if(balance>=1000000)return(balance/1000000).toFixed(1).replace(/\.0$/,'')+'M';if(balance>=1000)return Math.round(balance/1000)+'K';return balance.toString();}
-function updateBal(used){balance=Math.max(0,balance-used);document.getElementById('topbar-tok').textContent=fmtBal();document.getElementById('s-tok-badge').textContent=fmtBal();}
+const ALL_MODELS = [
+  {name:'Llama 3.3 70B',  provider:'Meta · Groq',    cat:'open',      mult:0.3,  tag:'Standard',      tc:'tag-cyan'},
+  {name:'Llama 3.1 8B',   provider:'Meta · Groq',    cat:'open',      mult:0.1,  tag:'Ultraschnell',  tc:'tag-cyan'},
+  {name:'Gemma 2 9B',     provider:'Google · Groq',  cat:'open',      mult:0.15, tag:'Effizient',     tc:'tag-green'},
+  {name:'Mixtral 8x7B',   provider:'Mistral · Groq', cat:'open',      mult:0.2,  tag:'Mixtral',       tc:'tag-muted'},
+  {name:'DeepSeek R1 70B',provider:'DeepSeek · Groq',cat:'open',      mult:0.35, tag:'Reasoning',     tc:'tag-blue'},
+  {name:'Claude Sonnet 4.5',provider:'Anthropic',    cat:'anthropic', mult:1,    tag:'Empfohlen',     tc:'tag-blue'},
+  {name:'Claude Opus 4.5',provider:'Anthropic',      cat:'anthropic', mult:5,    tag:'Leistungsstark',tc:'tag-blue'},
+  {name:'Claude Haiku 4.5',provider:'Anthropic',     cat:'anthropic', mult:0.27, tag:'Schnell',       tc:'tag-cyan'},
+  {name:'GPT-4o',         provider:'OpenAI',         cat:'openai',    mult:0.85, tag:'Vielseitig',    tc:'tag-green'},
+  {name:'GPT-5',          provider:'OpenAI',         cat:'openai',    mult:70,   tag:'Neuestes',      tc:'tag-red'},
+  {name:'Gemini 2.0 Flash',provider:'Google',        cat:'google',    mult:0.5,  tag:'Flash',         tc:'tag-cyan'},
+  {name:'Gemini Pro 2.0', provider:'Google',         cat:'google',    mult:2.33, tag:'Multimodal',    tc:'tag-blue'},
+  {name:'Grok 2',         provider:'xAI',            cat:'open',      mult:1.67, tag:'Von xAI',       tc:'tag-muted'},
+  {name:'Mistral Large 2',provider:'Mistral',        cat:'open',      mult:2.67, tag:'Europäisch',    tc:'tag-muted'},
+  {name:'DeepSeek V3',    provider:'DeepSeek',       cat:'open',      mult:0.9,  tag:'Open Source',   tc:'tag-green'},
+];
 
-// wird von api.js überschrieben
-var sendMsg = function(){
-  const inp=document.getElementById('chat-input');
-  const text=inp.value.trim();if(!text)return;
-  const mult=MODELS_MULT[curModel]||1;
-  addMsg(text,'user');inp.value='';inp.style.height='auto';
-  updateBal(Math.floor(text.length*mult*1.5+15));
-  const typing=addTyping();
-  setTimeout(()=>{typing.remove();addMsg('⚠ api.js nicht geladen.','ai');},600);
-};
+/* ──────────────── NAV ──────────────── */
+function nav(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.bn').forEach(b=>b.classList.remove('active'));
+  const v=$('view-'+id); if(v) v.classList.add('active');
+  const b=document.querySelector(`.bn[data-nav="${id}"]`); if(b) b.classList.add('active');
+}
+document.querySelectorAll('.bn').forEach(b=>b.addEventListener('click',()=>nav(b.dataset.nav)));
+$('tb-tok').addEventListener('click',()=>nav('purchase'));
 
+/* ──────────────── BALANCE ──────────────── */
+function updateBal(){
+  const s=fmtK(balance);
+  $('tb-tok').textContent=s;
+  $('s-tok-badge').textContent=s;
+  $('s-tok-desc').textContent=s+' verfügbar';
+}
+
+/* ──────────────── HISTORY ──────────────── */
+function loadHistory(){ try{ chatHistory=JSON.parse(localStorage.getItem('st_hist')||'[]'); }catch(e){ chatHistory=[]; } }
+function saveHistory(){ try{ localStorage.setItem('st_hist',JSON.stringify(chatHistory)); }catch(e){} }
+
+function saveChat(){
+  if(!currentMessages.length) return;
+  const first=currentMessages.find(m=>m.role==='user');
+  const title=first ? first.text.slice(0,45)+(first.text.length>45?'…':'') : 'Neue Unterhaltung';
+  const obj={id:currentChatId,title,model:curModel,messages:currentMessages,updatedAt:Date.now()};
+  const i=chatHistory.findIndex(c=>c.id===currentChatId);
+  if(i>=0) chatHistory[i]=obj; else chatHistory.unshift(obj);
+  saveHistory();
+}
+
+function renderHistory(){
+  const list=$('drawer-list'), lbl=$('drawer-lbl'), footer=$('drawer-footer');
+  footer.textContent=chatHistory.length+' Unterhaltung'+(chatHistory.length!==1?'en':'');
+  if(!chatHistory.length){
+    lbl.style.display='none';
+    list.innerHTML='<div class="hist-empty">💬<br><br>Noch keine Chats.<br>Starte eine neue Unterhaltung!</div>';
+    return;
+  }
+  lbl.style.display='block';
+  const sorted=[...chatHistory].sort((a,b)=>b.updatedAt-a.updatedAt);
+  list.innerHTML=sorted.map(c=>`
+    <div class="hi${c.id===currentChatId?' active':''}" data-id="${c.id}">
+      <div class="hi-body">
+        <div class="hi-title">${escH(c.title||'Neue Unterhaltung')}</div>
+        <div class="hi-meta">${escH(c.model)} · ${fmtRel(c.updatedAt)}</div>
+      </div>
+      <button class="hi-del" data-del="${c.id}">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>`).join('');
+  list.querySelectorAll('.hi').forEach(el=>{
+    el.addEventListener('click',e=>{ if(e.target.closest('.hi-del')) return; loadChat(Number(el.dataset.id)); });
+  });
+  list.querySelectorAll('.hi-del').forEach(btn=>{
+    btn.addEventListener('click',e=>{ e.stopPropagation(); deleteChat(Number(btn.dataset.del)); });
+  });
+}
+
+function openDrawer(){ renderHistory(); $('drawer-overlay').classList.add('show'); $('drawer').classList.add('open'); }
+function closeDrawer(){ $('drawer-overlay').classList.remove('show'); $('drawer').classList.remove('open'); }
+$('btn-drawer').addEventListener('click', openDrawer);
+$('btn-close-drawer').addEventListener('click', closeDrawer);
+$('drawer-overlay').addEventListener('click', closeDrawer);
+
+function newChat(){
+  currentChatId=Date.now(); currentMessages=[]; curGptPrompt=null;
+  $('chat-msgs').innerHTML=`<div class="msg ai"><div class="msg-bubble">Hallo! Ich bin SingleTokens AI. Wie kann ich dir helfen? 👋</div><div class="msg-meta">SingleTokens · ${escH(curModel)}</div></div>`;
+  if(typeof apiResetConversation==='function') apiResetConversation();
+  closeDrawer(); nav('chat');
+}
+$('btn-new-chat').addEventListener('click', newChat);
+
+function loadChat(id){
+  const c=chatHistory.find(x=>x.id===id); if(!c) return;
+  currentChatId=c.id; currentMessages=[...c.messages]; curModel=c.model;
+  $('tb-model').textContent=c.model;
+  const msgs=$('chat-msgs');
+  msgs.innerHTML=c.messages.map(m=>`<div class="msg ${m.role}"><div class="msg-bubble">${escH(m.text)}</div><div class="msg-meta">${m.role==='user'?'Du':escH(c.model)}</div></div>`).join('');
+  msgs.scrollTop=msgs.scrollHeight;
+  if(typeof apiLoadConversation==='function') apiLoadConversation(c.messages);
+  closeDrawer(); nav('chat'); toast('Chat geladen');
+}
+
+function deleteChat(id){
+  chatHistory=chatHistory.filter(c=>c.id!==id); saveHistory();
+  if(id===currentChatId) newChat();
+  renderHistory(); toast('Gelöscht');
+}
+
+/* ──────────────── CHAT ──────────────── */
 function addMsg(text, role){
-  const msgs=document.getElementById('chat-msgs');
-  const d=document.createElement('div');d.className='msg '+role;
-  d.innerHTML=`<div class="msg-bubble">${text}</div><div class="msg-meta">${role==='user'?'Du':curModel}</div>`;
-  msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;
-  // ── Save to history ──
-  currentMessages.push({role, text, time: Date.now()});
-  saveCurrentChat();
+  const msgs=$('chat-msgs');
+  const d=document.createElement('div'); d.className='msg '+role;
+  d.innerHTML=`<div class="msg-bubble">${escH(text)}</div><div class="msg-meta">${role==='user'?'Du':escH(curModel)}</div>`;
+  msgs.appendChild(d); msgs.scrollTop=msgs.scrollHeight;
+  currentMessages.push({role,text,time:Date.now()});
+  saveChat();
   return d;
 }
 
 function addTyping(){
-  const msgs=document.getElementById('chat-msgs');
-  const d=document.createElement('div');d.className='msg ai';
-  d.innerHTML='<div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>';
-  msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;return d;
+  const msgs=$('chat-msgs');
+  const d=document.createElement('div'); d.className='msg ai';
+  d.innerHTML='<div class="typing-wrap"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>';
+  msgs.appendChild(d); msgs.scrollTop=msgs.scrollHeight;
+  return d;
 }
-function handleKey(e){
-  if(e.key==='Enter' && !e.shiftKey){
-    e.preventDefault();
-    sendMsg();
-  }
-}
-function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,100)+'px';}
 
-/* ── MODEL SHEET ── */
-const ALL_MODELS=[
-  {name:'Llama 3.3 70B',provider:'Meta · Groq',cat:'open',mult:0.3,tag:'Standard',tagClass:'tag-cyan'},
-  {name:'Llama 3.1 8B',provider:'Meta · Groq',cat:'open',mult:0.1,tag:'Ultraschnell',tagClass:'tag-cyan'},
-  {name:'Gemma 2 9B',provider:'Google · Groq',cat:'open',mult:0.15,tag:'Effizient',tagClass:'tag-green'},
-  {name:'Mixtral 8x7B',provider:'Mistral · Groq',cat:'open',mult:0.2,tag:'Mixtral',tagClass:'tag-muted'},
-  {name:'DeepSeek R1 70B',provider:'DeepSeek · Groq',cat:'open',mult:0.35,tag:'Reasoning',tagClass:'tag-blue'},
-  {name:'Claude Sonnet 4.5',provider:'Anthropic',cat:'anthropic',mult:1,tag:'Empfohlen',tagClass:'tag-blue'},
-  {name:'Claude Opus 4.5',provider:'Anthropic',cat:'anthropic',mult:5,tag:'Leistungsstark',tagClass:'tag-blue'},
-  {name:'Claude Haiku 4.5',provider:'Anthropic',cat:'anthropic',mult:0.27,tag:'Schnell',tagClass:'tag-cyan'},
-  {name:'GPT-4o',provider:'OpenAI',cat:'openai',mult:0.85,tag:'Vielseitig',tagClass:'tag-green'},
-  {name:'GPT-5',provider:'OpenAI',cat:'openai',mult:70,tag:'Neuestes',tagClass:'tag-red'},
-  {name:'Gemini 2.0 Flash',provider:'Google',cat:'google',mult:0.5,tag:'Flash',tagClass:'tag-cyan'},
-  {name:'Gemini Pro 2.0',provider:'Google',cat:'google',mult:2.33,tag:'Multimodal',tagClass:'tag-blue'},
-  {name:'Grok 2',provider:'xAI',cat:'open',mult:1.67,tag:'Von xAI',tagClass:'tag-muted'},
-  {name:'Mistral Large 2',provider:'Mistral',cat:'open',mult:2.67,tag:'Europäisch',tagClass:'tag-muted'},
-  {name:'DeepSeek V3',provider:'DeepSeek',cat:'open',mult:0.9,tag:'Open Source',tagClass:'tag-green'},
-];
+function autoResize(el){ el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,100)+'px'; }
 
-function openSheet(type){
-  if(type==='model'){
-    const list=document.getElementById('model-sheet-list');
-    list.innerHTML=ALL_MODELS.map(m=>`<div class="model-list-item" onclick="selectModel('${m.name}')"><div class="mli-icon">${m.provider.slice(0,2)}</div><div class="mli-info"><div class="mli-name">${m.name}</div><div class="mli-sub">${m.provider} · x${m.mult}</div></div><div class="mli-check${m.name===curModel?' on':''}"></div></div>`).join('');
-    document.getElementById('model-sheet').classList.add('show');
-  }
+// Default fallback sendMsg – wird von api.js überschrieben
+window.sendMsg = function(){
+  const inp=$('chat-input');
+  const text=inp.value.trim(); if(!text) return;
+  addMsg(text,'user'); inp.value=''; inp.style.height='auto';
+  balance=Math.max(0,balance-Math.floor(text.length*(MULT[curModel]||1)*1.5+15));
+  updateBal();
+  const typing=addTyping();
+  setTimeout(()=>{ typing.remove(); addMsg('⚠ api.js nicht geladen.','ai'); },600);
+};
+
+// ── Textarea events ──
+const chatInp=$('chat-input');
+chatInp.addEventListener('input',function(){ autoResize(this); });
+chatInp.addEventListener('keydown',function(e){
+  if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); window.sendMsg(); }
+});
+$('send-btn').addEventListener('click', ()=>window.sendMsg());
+
+/* ──────────────── MODEL SHEET ──────────────── */
+$('tb-model').addEventListener('click', openModelSheet);
+
+function openModelSheet(){
+  const list=$('model-sheet-list');
+  list.innerHTML=ALL_MODELS.map(m=>`
+    <div class="mli" data-model="${escH(m.name)}">
+      <div class="mli-icon">${escH(m.provider.slice(0,2))}</div>
+      <div style="flex:1"><div class="mli-name">${escH(m.name)}</div><div class="mli-sub">${escH(m.provider)} · x${m.mult}</div></div>
+      <div class="mli-check${m.name===curModel?' on':''}"></div>
+    </div>`).join('');
+  list.querySelectorAll('.mli').forEach(el=>{
+    el.addEventListener('click',()=>{ selectModel(el.dataset.model); closeModelSheet(); });
+  });
+  $('model-sheet-bg').classList.add('show');
 }
-function closeSheet(){document.getElementById('model-sheet').classList.remove('show');}
+function closeModelSheet(){ $('model-sheet-bg').classList.remove('show'); }
+$('model-sheet-bg').addEventListener('click',e=>{ if(e.target===$('model-sheet-bg')) closeModelSheet(); });
+
 function selectModel(name){
-  curModel=name;
-  document.getElementById('topbar-model').textContent=name;
-  closeSheet();showToast('Modell: '+name);
+  curModel=name; $('tb-model').textContent=name; toast('Modell: '+name);
 }
 
-/* ── MODELS VIEW ── */
-function getCardClass(m){if(m.mult>=10)return'expensive';if(m.mult<=0.5)return'cheap';if(m.mult===1)return'reference';return'';}
+/* ──────────────── EXPLORE ──────────────── */
+function mcClass(m){ if(m.mult>=10) return 'expensive'; if(m.mult<=0.5) return 'cheap'; if(m.mult===1) return 'reference'; return ''; }
+
 function renderModels(f){
-  const g=document.getElementById('model-grid');
-  let list=f==='all'?ALL_MODELS:f==='cheap'?ALL_MODELS.filter(m=>m.mult<=0.5):ALL_MODELS.filter(m=>m.cat===f);
-  g.innerHTML=list.map(m=>`<div class="mc ${getCardClass(m)}" onclick="useModel('${m.name}')"><div class="mc-provider">${m.provider}</div><div class="mc-name">${m.name}</div><div class="mc-mult">x${m.mult}</div><div class="mc-price">$${(3*m.mult).toFixed(2)}/1M</div><span class="mc-tag ${m.tagClass}">${m.tag}</span></div>`).join('');
-}
-function filterM(f,btn){document.querySelectorAll('.mfbtn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderModels(f);}
-function useModel(name){selectModel(name);nav('chat');}
-renderModels('all');
-
-/* ── PURCHASE ── */
-const BASE=3.0,MIN=333333,AVG=500;
-let tokAmt=MIN,curPay='card';
-const payNames={card:'Kreditkarte',paypal:'PayPal',gpay:'Google Pay',paysafe:'Paysafecard'};
-function fmtTok(t){if(t>=1e9)return(t/1e9).toFixed(1).replace(/\.0$/,'')+'B';if(t>=1e6)return(t/1e6).toFixed(1).replace(/\.0$/,'')+'M';if(t>=1e3)return Math.round(t/1e3)+'K';return t.toLocaleString();}
-function fmtMsgs(n){if(n>=1e6)return(n/1e6).toFixed(1).replace(/\.0$/,'')+'M';if(n>=1e3)return Math.round(n/1e3)+'K';return Math.round(n)+'';}
-function fmtP(p){return'$'+p.toFixed(p<0.1?4:2);}
-function calcPrice(t){return(t/1e6)*BASE;}
-function sliderToTok(v){const mn=Math.log(MIN),mx=Math.log(1e8);return Math.max(MIN,Math.round(Math.exp(mn+(mx-mn)*v/100)/1000)*1000);}
-function tokToSlider(t){if(t<=MIN)return 0;const mn=Math.log(MIN),mx=Math.log(1e8);return Math.round((Math.log(Math.min(t,1e8))-mn)/(mx-mn)*100);}
-function updateEst(p){
-  [{id:'gpt5',mult:70},{id:'llama',mult:0.3},{id:'sonnet',mult:1},{id:'llama8b',mult:0.1}].forEach(m=>{
-    const el=document.getElementById(p+'-'+m.id);if(el)el.textContent=fmtMsgs(tokAmt/(AVG*m.mult))+'x';
+  const list=f==='all'?ALL_MODELS:f==='cheap'?ALL_MODELS.filter(m=>m.mult<=0.5):ALL_MODELS.filter(m=>m.cat===f);
+  $('model-grid').innerHTML=list.map(m=>`
+    <div class="mc ${mcClass(m)}" data-model="${escH(m.name)}">
+      <div class="mc-prov">${escH(m.provider)}</div>
+      <div class="mc-name">${escH(m.name)}</div>
+      <div class="mc-mult">x${m.mult}</div>
+      <div class="mc-price">$${(3*m.mult).toFixed(2)}/1M</div>
+      <span class="mc-tag ${m.tc}">${m.tag}</span>
+    </div>`).join('');
+  $('model-grid').querySelectorAll('.mc').forEach(el=>{
+    el.addEventListener('click',()=>{ selectModel(el.dataset.model); nav('chat'); });
   });
 }
+
+$('filter-row').querySelectorAll('.fbtn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    renderModels(btn.dataset.f);
+  });
+});
+renderModels('all');
+
+/* ──────────────── GPTs ──────────────── */
+function renderGpts(){
+  const grid=$('gpt-list'), empty=$('gpt-empty');
+  if(!gptsList.length){ grid.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display='none';
+  grid.innerHTML=gptsList.map(g=>`
+    <div class="gpt-card">
+      <div class="gpt-card-top">
+        <div class="gpt-card-name">${escH(g.name)}</div>
+        <button style="background:transparent;border:none;color:#F87171;font-size:20px;cursor:pointer;line-height:1;padding:0 4px" data-del-gpt="${g.id}">×</button>
+      </div>
+      <div class="gpt-card-desc">${escH(g.desc||'')}</div>
+      <div class="gpt-card-bot">
+        <span class="gpt-model-tag">${escH(g.model)}</span>
+        <button style="padding:6px 14px;background:var(--acc);border:none;border-radius:6px;color:#0A0C10;font-size:12px;font-weight:800;cursor:pointer;font-family:'Syne',sans-serif" data-use-gpt="${g.id}">Chatten →</button>
+      </div>
+    </div>`).join('');
+  grid.querySelectorAll('[data-del-gpt]').forEach(btn=>{
+    btn.addEventListener('click',()=>deleteGpt(Number(btn.dataset.delGpt)));
+  });
+  grid.querySelectorAll('[data-use-gpt]').forEach(btn=>{
+    btn.addEventListener('click',()=>useGpt(Number(btn.dataset.useGpt)));
+  });
+}
+
+function openGptModal(id){
+  editingGptId = id || null;
+  const gpt = id ? gptsList.find(g=>g.id===id) : null;
+  $('gpt-modal-title').textContent = gpt ? 'GPT bearbeiten' : 'Neuer GPT';
+  $('gpt-name').value = gpt ? gpt.name : '';
+  $('gpt-desc').value = gpt ? gpt.desc : '';
+  $('gpt-model-sel').value = gpt ? gpt.model : 'Llama 3.3 70B';
+  $('gpt-sys-prompt').value = gpt ? gpt.prompt : '';
+  $('btn-save-gpt').textContent = gpt ? 'Speichern' : 'GPT erstellen';
+  $('gpt-modal-bg').classList.add('show');
+}
+function closeGptModal(){ $('gpt-modal-bg').classList.remove('show'); }
+
+$('btn-new-gpt').addEventListener('click',()=>openGptModal());
+$('btn-close-gpt').addEventListener('click', closeGptModal);
+$('gpt-modal-bg').addEventListener('click',e=>{ if(e.target===$('gpt-modal-bg')) closeGptModal(); });
+
+$('btn-save-gpt').addEventListener('click',()=>{
+  const name=$('gpt-name').value.trim();
+  const prompt=$('gpt-sys-prompt').value.trim();
+  if(!name){ toast('Bitte Namen eingeben!'); return; }
+  if(!prompt){ toast('Bitte System-Prompt eingeben!'); return; }
+  const gpt={id:editingGptId||Date.now(), name, desc:$('gpt-desc').value.trim(), model:$('gpt-model-sel').value, prompt};
+  if(editingGptId) gptsList=gptsList.map(g=>g.id===editingGptId?gpt:g);
+  else gptsList.push(gpt);
+  closeGptModal(); renderGpts(); toast(editingGptId?'GPT aktualisiert!':'GPT erstellt!');
+});
+
+function deleteGpt(id){
+  const g=gptsList.find(x=>x.id===id); if(!g) return;
+  if(!confirm(`GPT "${g.name}" wirklich löschen?`)) return;
+  gptsList=gptsList.filter(x=>x.id!==id); renderGpts(); toast('Gelöscht.');
+}
+
+function useGpt(id){
+  const g=gptsList.find(x=>x.id===id); if(!g) return;
+  curModel=g.model; curGptPrompt=g.prompt;
+  $('tb-model').textContent=g.model;
+  if(typeof setGptPrompt==='function') setGptPrompt(g.prompt);
+  newChat(); toast('GPT: '+g.name);
+}
+
+/* ──────────────── PURCHASE ──────────────── */
+const BASE=3, MIN_TOK=333333, AVG_TOKENS=500;
+let tokAmt=MIN_TOK, curPay='card';
+const PAY_NAMES={card:'Kreditkarte',paypal:'PayPal',gpay:'Google Pay',paysafe:'Paysafecard'};
+
+function fmtTok(t){ if(t>=1e9)return(t/1e9).toFixed(1).replace(/\.0$/,'')+'B'; if(t>=1e6)return(t/1e6).toFixed(1).replace(/\.0$/,'')+'M'; if(t>=1e3)return Math.round(t/1e3)+'K'; return t.toLocaleString(); }
+function fmtMsgs(n){ if(n>=1e6)return(n/1e6).toFixed(1).replace(/\.0$/,'')+'M'; if(n>=1e3)return Math.round(n/1e3)+'K'; return Math.round(n)+''; }
+function fmtP(p){ return '$'+p.toFixed(p<0.1?4:2); }
+function calcPrice(t){ return(t/1e6)*BASE; }
+function sliderToTok(v){ const lo=Math.log(MIN_TOK),hi=Math.log(1e8); return Math.max(MIN_TOK,Math.round(Math.exp(lo+(hi-lo)*v/100)/1000)*1000); }
+function tokToSlider(t){ if(t<=MIN_TOK) return 0; const lo=Math.log(MIN_TOK),hi=Math.log(1e8); return Math.round((Math.log(Math.min(t,1e8))-lo)/(hi-lo)*100); }
+
+function updateEsts(pfx){
+  [{id:'gpt5',m:70},{id:'llama',m:0.3},{id:'sonnet',m:1},{id:'llama8b',m:0.1}].forEach(e=>{
+    const el=$(pfx+'-'+e.id); if(el) el.textContent=fmtMsgs(tokAmt/(AVG_TOKENS*e.m))+'x';
+  });
+}
+
 function updatePurchase(){
-  const price=calcPrice(tokAmt),valid=tokAmt>=MIN;
-  document.getElementById('amt-big').textContent=fmtTok(tokAmt);
-  document.getElementById('amt-price').textContent=fmtP(price);
-  document.getElementById('amt-price').style.color=valid?'var(--acc)':'#FDE68A';
-  document.getElementById('min-warn').classList.toggle('show',!valid);
-  document.getElementById('btn-to-checkout').disabled=!valid;
-  document.getElementById('btn-to-checkout').style.opacity=valid?'1':'0.4';
-  const sl=document.getElementById('tok-slider');
-  sl.style.background=`linear-gradient(to right,${valid?'#22D3EE':'#F59E0B'} ${sl.value}%,#1B2130 ${sl.value}%)`;
-  updateEst('e');
+  const price=calcPrice(tokAmt), ok=tokAmt>=MIN_TOK;
+  $('amt-big').textContent=fmtTok(tokAmt);
+  $('amt-price').textContent=fmtP(price);
+  $('amt-price').style.color=ok?'var(--acc)':'#FDE68A';
+  $('min-warn').classList.toggle('show',!ok);
+  $('btn-to-checkout').disabled=!ok;
+  const sl=$('tok-slider');
+  sl.style.background=`linear-gradient(to right,${ok?'#22D3EE':'#F59E0B'} ${sl.value}%,var(--dark4) ${sl.value}%)`;
+  updateEsts('e');
 }
-function selPreset(t,el){tokAmt=t;document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('active'));el.classList.add('active');document.getElementById('custom-wrap').style.display='none';document.getElementById('custom-toggle').classList.remove('active');document.getElementById('tok-slider').value=tokToSlider(t);updatePurchase();}
-function toggleCustom(){const w=document.getElementById('custom-wrap');const open=w.style.display!=='flex';w.style.display=open?'flex':'none';document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('active'));if(open)document.getElementById('custom-toggle').classList.add('active');}
-document.getElementById('custom-input').addEventListener('input',function(){const v=parseInt(this.value);if(v>0){tokAmt=v;document.getElementById('tok-slider').value=tokToSlider(v);updatePurchase();}});
-document.getElementById('tok-slider').addEventListener('input',function(){tokAmt=sliderToTok(parseInt(this.value));document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('active'));updatePurchase();});
-function selPay(type,el){curPay=type;document.querySelectorAll('.pay-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');}
-function setStep(s){[1,2,3].forEach(i=>{const n=document.getElementById('psn'+i),l=document.getElementById('psl'+i);if(i<s){n.className='p-step-num done';n.innerHTML='✓';}else if(i===s){n.className='p-step-num active';n.textContent=i;l.className='p-step-lbl active';}else{n.className='p-step-num';n.textContent=i;l.className='p-step-lbl';}});document.getElementById('pline1').className='p-step-line'+(s>1?' done':'');document.getElementById('pline2').className='p-step-line'+(s>2?' done':'');}
-function showPg(n){document.querySelectorAll('.pg').forEach(p=>p.classList.remove('active'));document.getElementById('pv'+n).classList.add('active');}
-function goCheckout(){
-  if(tokAmt<MIN)return;
-  const price=calcPrice(tokAmt),tax=price*0.19,total=price+tax;
-  document.getElementById('co-tok').textContent=fmtTok(tokAmt);
-  document.getElementById('co-sub').textContent=fmtP(price);
-  document.getElementById('co-tax').textContent=fmtP(tax);
-  document.getElementById('co-total').textContent=fmtP(total);
-  updateEst('ce');
-  const isCard=curPay==='card',isPsc=curPay==='paysafe';
-  document.getElementById('co-card').style.display=isCard?'block':'none';
-  document.getElementById('co-psc').style.display=isPsc?'block':'none';
-  const redir=document.getElementById('co-redir');
-  if(!isCard&&!isPsc){const msgs={paypal:'Du wirst zu PayPal weitergeleitet.',gpay:'Google Pay öffnet sich.'};redir.innerHTML=msgs[curPay]||'';redir.classList.add('show');}
+
+// Presets
+document.querySelectorAll('.pbtn[data-tok]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    $('custom-wrap').style.display='none';
+    tokAmt=Number(btn.dataset.tok);
+    $('tok-slider').value=tokToSlider(tokAmt);
+    updatePurchase();
+  });
+});
+
+$('btn-custom-toggle').addEventListener('click',()=>{
+  const wrap=$('custom-wrap'), open=wrap.style.display!=='flex';
+  wrap.style.display=open?'flex':'none';
+  document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('active'));
+  if(open) $('btn-custom-toggle').classList.add('active');
+});
+
+$('custom-input').addEventListener('input',function(){
+  const v=parseInt(this.value); if(v>0){ tokAmt=v; $('tok-slider').value=tokToSlider(v); updatePurchase(); }
+});
+
+$('tok-slider').addEventListener('input',function(){
+  tokAmt=sliderToTok(parseInt(this.value));
+  document.querySelectorAll('.pbtn[data-tok]').forEach(b=>b.classList.remove('active'));
+  updatePurchase();
+});
+
+// Payment buttons
+document.querySelectorAll('.pay-btn[data-pay]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.pay-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    curPay=btn.dataset.pay;
+  });
+});
+
+function setStep(s){
+  [1,2,3].forEach(i=>{
+    const n=$(  'pn'+i), l=$('pl'+i);
+    if(i<s){ n.className='p-num done'; n.textContent='✓'; }
+    else if(i===s){ n.className='p-num active'; n.textContent=i; l.className='p-lbl active'; }
+    else{ n.className='p-num'; n.textContent=i; l.className='p-lbl'; }
+  });
+  $('pline1').className='p-line'+(s>1?' done':'');
+  $('pline2').className='p-line'+(s>2?' done':'');
+}
+
+function showPage(n){ document.querySelectorAll('.pg').forEach(p=>p.classList.remove('active')); $('pv'+n).classList.add('active'); }
+
+$('btn-to-checkout').addEventListener('click',()=>{
+  if(tokAmt<MIN_TOK) return;
+  const price=calcPrice(tokAmt), tax=price*.19, total=price+tax;
+  $('co-tok').textContent=fmtTok(tokAmt);
+  $('co-sub').textContent=fmtP(price);
+  $('co-tax').textContent=fmtP(tax);
+  $('co-total-v').textContent=fmtP(total);
+  updateEsts('ce');
+  const isCard=curPay==='card', isPsc=curPay==='paysafe';
+  $('co-card-section').style.display=isCard?'block':'none';
+  $('co-psc').classList.toggle('show',isPsc);
+  const redir=$('co-redir');
+  if(!isCard&&!isPsc){ const m={paypal:'Du wirst zu PayPal weitergeleitet.',gpay:'Google Pay öffnet sich.'}; redir.innerHTML=m[curPay]||''; redir.classList.add('show'); }
   else redir.classList.remove('show');
-  document.getElementById('btn-pay').textContent={card:'Jetzt kaufen →',paypal:'Weiter zu PayPal →',gpay:'Mit Google Pay →',paysafe:'PIN einlösen →'}[curPay];
-  setStep(2);showPg(2);
-}
-function doPayment(){
-  const btn=document.getElementById('btn-pay');btn.textContent='Wird verarbeitet...';btn.disabled=true;
+  $('btn-pay').textContent={card:'Jetzt kaufen →',paypal:'Weiter zu PayPal →',gpay:'Mit Google Pay →',paysafe:'PIN einlösen →'}[curPay];
+  setStep(2); showPage(2);
+});
+
+$('btn-pay').addEventListener('click',()=>{
+  const btn=$('btn-pay'); btn.textContent='Wird verarbeitet...'; btn.disabled=true;
   setTimeout(()=>{
-    const price=calcPrice(tokAmt),tax=price*0.19,total=price+tax;
-    document.getElementById('suc-tok').textContent='+'+fmtTok(tokAmt);
-    document.getElementById('suc-price').textContent=fmtP(total);
-    document.getElementById('suc-method').textContent=payNames[curPay];
-    document.getElementById('suc-date').textContent=new Date().toLocaleString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
-    balance+=tokAmt;updateBal(0);
-    btn.textContent='Jetzt kaufen →';btn.disabled=false;
-    setStep(3);showPg(3);
+    const price=calcPrice(tokAmt), tax=price*.19, total=price+tax;
+    $('suc-tok').textContent='+'+fmtTok(tokAmt);
+    $('suc-price').textContent=fmtP(total);
+    $('suc-method').textContent=PAY_NAMES[curPay];
+    $('suc-date').textContent=new Date().toLocaleString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    balance+=tokAmt; updateBal();
+    btn.textContent='Jetzt kaufen →'; btn.disabled=false;
+    setStep(3); showPage(3);
   },1500);
-}
-function pGoBack(){setStep(1);showPg(1);}
-function resetPurchase(){tokAmt=MIN;curPay='card';document.getElementById('tok-slider').value=0;document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('active'));document.querySelector('.pbtn').classList.add('active');document.querySelectorAll('.pay-btn').forEach(b=>b.classList.remove('active'));document.getElementById('pm-card').classList.add('active');updatePurchase();setStep(1);showPg(1);}
-function fmtCard(el){let v=el.value.replace(/\D/g,'').slice(0,16);el.value=v.match(/.{1,4}/g)?.join(' ')||v;}
-function fmtExp(el){let v=el.value.replace(/\D/g,'');if(v.length>=2)v=v.slice(0,2)+'/'+v.slice(2,4);el.value=v;}
-document.getElementById('tok-slider').value=0;
-updatePurchase();setStep(1);
+});
 
-/* ── SETTINGS ── */
-function setLang(l){showToast('Gespeichert');}
-function setTheme(v){document.getElementById('app').classList.toggle('light-mode',v==='light');showToast('Gespeichert');}
-function setAccent(c,el){document.querySelectorAll('.sw').forEach(s=>s.classList.remove('active'));el.classList.add('active');document.documentElement.style.setProperty('--acc',c);}
-function setFontSize(s){document.documentElement.style.setProperty('--font-size',s);showToast('Gespeichert');}
-function saveName(v){document.getElementById('s-display-name').textContent=v;document.getElementById('s-av').textContent=v.charAt(0).toUpperCase();showToast('Gespeichert');}
-function toggleTwoFA(el){el.classList.toggle('on');const on=el.classList.contains('on');document.getElementById('twofa-desc').textContent=on?'Aktiviert':'Nicht aktiviert';showToast(on?'2FA aktiviert':'2FA deaktiviert');}
+$('btn-back').addEventListener('click',()=>{ setStep(1); showPage(1); });
+$('btn-buy-more').addEventListener('click',()=>{
+  tokAmt=MIN_TOK; curPay='card';
+  $('tok-slider').value=0;
+  document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('active'));
+  document.querySelector('.pbtn[data-tok="333333"]').classList.add('active');
+  document.querySelectorAll('.pay-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector('.pay-btn[data-pay="card"]').classList.add('active');
+  updatePurchase(); setStep(1); showPage(1);
+});
+$('btn-to-chat').addEventListener('click',()=>nav('chat'));
 
-/* ── TOAST ── */
-let tt;
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2000);}
+// Card formatting
+$('inp-cardnum').addEventListener('input',function(){ let v=this.value.replace(/\D/g,'').slice(0,16); this.value=v.match(/.{1,4}/g)?.join(' ')||v; });
+$('inp-exp').addEventListener('input',function(){ let v=this.value.replace(/\D/g,''); if(v.length>=2) v=v.slice(0,2)+'/'+v.slice(2,4); this.value=v; });
 
-/* ── GPTs MOBILE ── */
-let gptsM=[];
-let editingGptIdM=null;
+// Init purchase
+$('tok-slider').value=0;
+updatePurchase(); setStep(1);
 
-function renderGptsM(){
-  const grid=document.getElementById('gpt-grid-m');
-  const empty=document.getElementById('gpt-empty-m');
-  if(!grid)return;
-  if(gptsM.length===0){grid.style.display='none';empty.style.display='block';return;}
-  empty.style.display='none';grid.style.display='flex';
-  grid.innerHTML=gptsM.map(g=>`
-    <div style="background:var(--dark2);border:1px solid var(--border);border-radius:12px;padding:16px">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
-        <div style="font-size:14px;font-weight:700">${g.name}</div>
-        <button onclick="deleteGptM(${g.id})" style="background:transparent;border:none;color:#F87171;font-size:18px;cursor:pointer;line-height:1;padding:0 4px">×</button>
-      </div>
-      <div style="font-size:12px;color:var(--muted2);margin-bottom:10px">${g.desc||''}</div>
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2)">${g.model}</span>
-        <button onclick="useGptM(${g.id})" style="padding:6px 14px;background:var(--acc);border:none;border-radius:6px;color:#0A0C10;font-size:12px;font-weight:800;cursor:pointer;font-family:'Syne',sans-serif">Chatten →</button>
-      </div>
-    </div>
-  `).join('');
-}
+/* ──────────────── SETTINGS ──────────────── */
+$('sel-theme').addEventListener('change',function(){ document.getElementById('app').classList.toggle('light-mode',this.value==='light'); toast('Gespeichert'); });
+$('sel-lang').addEventListener('change',()=>toast('Gespeichert'));
+$('sel-fs').addEventListener('change',function(){ document.documentElement.style.setProperty('--fs',this.value); toast('Gespeichert'); });
 
-function openGptModal(){
-  editingGptIdM=null;
-  document.getElementById('gpt-modal-title-m').textContent='Neuer GPT';
-  document.getElementById('gpt-name-m').value='';
-  document.getElementById('gpt-desc-m').value='';
-  document.getElementById('gpt-prompt-m').value='';
-  document.getElementById('gpt-save-btn-m').textContent='GPT erstellen';
-  document.getElementById('gpt-modal-m').style.display='flex';
-}
-function closeGptModalM(){document.getElementById('gpt-modal-m').style.display='none';}
-function saveGptM(){
-  const name=document.getElementById('gpt-name-m').value.trim();
-  const prompt=document.getElementById('gpt-prompt-m').value.trim();
-  if(!name){showToast('Bitte Namen eingeben!');return;}
-  if(!prompt){showToast('Bitte System-Prompt eingeben!');return;}
-  const gpt={
-    id:editingGptIdM!==null?editingGptIdM:Date.now(),
-    name,
-    desc:document.getElementById('gpt-desc-m').value.trim(),
-    model:document.getElementById('gpt-model-m').value,
-    prompt
-  };
-  if(editingGptIdM!==null){gptsM=gptsM.map(g=>g.id===editingGptIdM?gpt:g);}
-  else{gptsM.push(gpt);}
-  closeGptModalM();
-  renderGptsM();
-  showToast('GPT erstellt!');
-}
-function deleteGptM(id){
-  const g=gptsM.find(x=>x.id===id);if(!g)return;
-  if(!confirm('GPT "'+g.name+'" wirklich löschen?'))return;
-  gptsM=gptsM.filter(x=>x.id!==id);renderGptsM();showToast('Gelöscht.');
-}
+document.querySelectorAll('.sw[data-c]').forEach(sw=>{
+  sw.addEventListener('click',()=>{
+    document.querySelectorAll('.sw').forEach(s=>s.classList.remove('active'));
+    sw.classList.add('active');
+    document.documentElement.style.setProperty('--acc',sw.dataset.c);
+  });
+});
 
-function useGptM(id){
-  const g=gptsM.find(x=>x.id===id);
-  if(!g)return;
-  curModel=g.model;
-  document.getElementById('topbar-model').textContent=g.model;
-  nav('chat');
-  if(typeof setGptPrompt===
+[$('tog-history'),$('tog-compact'),$('tog-training'),$('tog-analytics')].forEach(t=>{
+  t.addEventListener('click',()=>{ t.classList.toggle('on'); toast('Gespeichert'); });
+});
+
+$('tog-2fa').addEventListener('click',function(){
+  this.classList.toggle('on');
+  $('twofa-desc').textContent=this.classList.contains('on')?'Aktiviert':'Nicht aktiviert';
+  toast(this.classList.contains('on')?'2FA aktiviert':'2FA deaktiviert');
+});
+
+$('inp-dname').addEventListener('change',function(){
+  $('s-name').textContent=this.value;
+  $('s-av').textContent=this.value.charAt(0).toUpperCase();
+  toast('Gespeichert');
+});
+
+$('btn-s-buy').addEventListener('click',()=>nav('purchase'));
+$('btn-del-acc').addEventListener('click',()=>toast('Konto gelöscht'));
+$('btn-logout').addEventListener('click',()=>toast('Abgemeldet'));
+
+$('btn-clear-hist').addEventListener('click',()=>{
+  if(!confirm('Wirklich den gesamten Verlauf löschen?')) return;
+  chatHistory=[]; saveHistory();
+  if(typeof apiResetConversation==='function') apiResetConversation();
+  currentChatId=Date.now(); currentMessages=[];
+  $('chat-msgs').innerHTML=`<div class="msg ai"><div class="msg-bubble">Hallo! Ich bin SingleTokens AI. Wie kann ich dir helfen? 👋</div><div class="msg-meta">SingleTokens · ${escH(curModel)}</div></div>`;
+  toast('Verlauf gelöscht');
+});
+
+/* ──────────────── INIT ──────────────── */
+loadHistory();
+updateBal();
+renderGpts();
+
+// Expose hooks for api.js
+window.addMsg      = addMsg;
+window.addTyping   = addTyping;
+window.curModel    = ()=>curModel;
+window.curGptPrompt = ()=>curGptPrompt;
+window.deductBalance = (n)=>{ balance=Math.max(0,balance-n); updateBal(); };
+</script>
+</body>
+</html>
