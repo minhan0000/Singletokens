@@ -489,7 +489,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           <div class="av" id="s-av">G</div>
           <div style="flex:1">
             <div style="font-size:15px;font-weight:700;color:var(--text)" id="s-display-name">Guest User</div>
-            <div style="font-size:12px;color:var(--muted2);font-family:'DM Mono',monospace;margin-top:2px">guest@singletokens.ai</div>
+            <div style="font-size:12px;color:var(--muted2);font-family:'DM Mono',monospace;margin-top:2px"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e98e9c8c9a9da99a80878e858c9d86828c879ac78880">[email&#160;protected]</a></div>
           </div>
           <div class="tok-badge" id="s-tok-badge">716K</div>
         </div>
@@ -593,7 +593,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 
 <div class="toast" id="toast"></div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /* ── NAV ── */
 function nav(id){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
@@ -721,10 +721,11 @@ function deleteChatEntry(id){
   showToast('Gelöscht');
 }
 
-function clearAllHistory(){
+async function clearAllHistory(){
   if(!confirm('Wirklich den gesamten Verlauf löschen?')) return;
+  // api.js übernimmt: localStorage + Server + apiChatHistory
+  if(typeof deleteAllHistory === 'function') await deleteAllHistory();
   chatHistory = [];
-  saveHistoryToStorage();
   newChat();
   showToast('Verlauf gelöscht');
 }
@@ -982,15 +983,4 @@ function useGptM(id){
   curModel=g.model;
   document.getElementById('topbar-model').textContent=g.model;
   nav('chat');
-  if(typeof setGptPrompt==='function') setGptPrompt(g.prompt);
-  showToast('GPT "'+g.name+'" geladen!');
-}
-
-/* ── INIT ── */
-loadHistoryFromStorage();
-currentChatId = Date.now();
-renderGptsM();
-</script>
-<script src="api.js"></script>
-</body>
-</html>
+  if(typeof setGptPrompt===
