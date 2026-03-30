@@ -78,7 +78,9 @@ function _getMsgContainer() {
 function _getModelName() {
   const sel = document.getElementById('chat-model-sel');
   if (sel) return sel.value;
-  if (typeof curModel !== 'undefined') return curModel;
+  if (typeof curModel !== 'undefined') {
+    return typeof curModel === 'function' ? curModel() : curModel;
+  }
   return 'Llama 3.3 70B';
 }
 
