@@ -12,11 +12,14 @@ html,body{height:100%;background:var(--dark);font-family:'Syne',sans-serif;color
 .app{display:flex;flex-direction:column;height:100vh;height:100dvh}
 
 /* TOP BAR */
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--dark2);border-bottom:1px solid var(--border);flex-shrink:0;min-height:52px}
-.topbar-logo{font-size:16px;font-weight:800;letter-spacing:-.02em;cursor:pointer}
+.topbar{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--dark2);border-bottom:1px solid var(--border);flex-shrink:0;min-height:52px}
+.topbar-hist{width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer;border-radius:8px;flex-shrink:0;color:var(--muted2)}
+.topbar-hist:active{background:var(--dark3)}
+.topbar-hist svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+.topbar-logo{font-size:15px;font-weight:800;letter-spacing:-.02em;flex:1;min-width:0}
 .topbar-logo span{color:var(--acc)}
-.topbar-model{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);background:var(--dark3);border:1px solid var(--border);padding:4px 10px;border-radius:6px;cursor:pointer;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.topbar-tok{font-family:'DM Mono',monospace;font-size:11px;color:var(--acc);background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.2);padding:4px 10px;border-radius:6px;cursor:pointer}
+.topbar-model{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);background:var(--dark3);border:1px solid var(--border);padding:4px 9px;border-radius:6px;cursor:pointer;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex-shrink:0}
+.topbar-tok{font-family:'DM Mono',monospace;font-size:11px;color:var(--acc);background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.2);padding:4px 9px;border-radius:6px;cursor:pointer;flex-shrink:0}
 
 /* VIEWS */
 .view{display:none;flex:1;overflow:hidden;flex-direction:column}
@@ -44,6 +47,39 @@ html,body{height:100%;background:var(--dark);font-family:'Syne',sans-serif;color
 .typing-dot:nth-child(2){animation-delay:.2s}
 .typing-dot:nth-child(3){animation-delay:.4s}
 @keyframes typingPulse{0%,60%,100%{opacity:.3;transform:scale(.8)}30%{opacity:1;transform:scale(1)}}
+
+/* HISTORY DRAWER */
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:150;display:none;opacity:0;transition:opacity .25s}
+.drawer-overlay.show{display:block;opacity:1}
+.drawer{position:fixed;top:0;left:0;height:100%;width:285px;background:var(--dark2);border-right:1px solid var(--border);z-index:151;transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom)}
+.drawer.show{transform:translateX(0)}
+.drawer-top{display:flex;align-items:center;justify-content:space-between;padding:14px 14px 10px;border-bottom:1px solid var(--border);flex-shrink:0}
+.drawer-logo{font-size:15px;font-weight:800;letter-spacing:-.02em}
+.drawer-logo span{color:var(--acc)}
+.drawer-close{width:30px;height:30px;display:flex;align-items:center;justify-content:center;background:var(--dark3);border:1px solid var(--border);border-radius:8px;cursor:pointer;color:var(--muted2)}
+.drawer-close svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round}
+.drawer-new{display:flex;align-items:center;gap:8px;margin:10px 12px 8px;padding:11px 14px;background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.25);border-radius:10px;cursor:pointer;color:var(--acc);font-size:13px;font-weight:700;transition:background .15s;flex-shrink:0}
+.drawer-new:active{background:rgba(34,211,238,.15)}
+.drawer-new svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;flex-shrink:0}
+.drawer-section-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;padding:2px 14px 6px;flex-shrink:0}
+.drawer-list{flex:1;overflow-y:auto;padding:0 8px 12px}
+.drawer-list::-webkit-scrollbar{display:none}
+.hist-item{display:flex;align-items:flex-start;gap:0;padding:10px 8px;border-radius:9px;cursor:pointer;position:relative;transition:background .12s;margin-bottom:2px}
+.hist-item:active,.hist-item.active{background:var(--dark3)}
+.hist-item.active{background:rgba(34,211,238,.07);border:1px solid rgba(34,211,238,.15)}
+.hist-item-body{flex:1;min-width:0}
+.hist-item-title{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:28px;line-height:1.35}
+.hist-item.active .hist-item-title{color:var(--acc)}
+.hist-item-meta{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hist-item-del{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:24px;height:24px;display:flex;align-items:center;justify-content:center;background:transparent;border:none;color:var(--muted);cursor:pointer;border-radius:6px;opacity:0;transition:opacity .15s,background .15s}
+.hist-item:hover .hist-item-del,.hist-item:active .hist-item-del{opacity:1}
+.hist-item-del:active{background:rgba(248,113,113,.15);color:#F87171}
+.hist-item-del svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round}
+.hist-empty{text-align:center;padding:40px 20px;color:var(--muted2)}
+.hist-empty-icon{font-size:36px;margin-bottom:10px}
+.hist-empty-txt{font-size:13px;line-height:1.5}
+.drawer-footer{padding:10px 12px;border-top:1px solid var(--border);flex-shrink:0}
+.drawer-footer-info{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-align:center}
 
 /* MODEL SHEET */
 .sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;display:none;align-items:flex-end}
@@ -227,7 +263,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 
   <!-- TOP BAR -->
   <div class="topbar">
-    <div class="topbar-logo" onclick="window.location.href='/index.html'">Single<span>Tokens</span></div>
+    <button class="topbar-hist" onclick="openDrawer()" aria-label="Verlauf">
+      <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="topbar-logo">Single<span>Tokens</span></div>
     <div class="topbar-model" id="topbar-model" onclick="openSheet('model')">Llama 3.3 70B</div>
     <div class="topbar-tok" id="topbar-tok" onclick="nav('purchase')">716K</div>
   </div>
@@ -336,7 +375,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
         <div class="p-step-line" id="pline2"></div>
         <div class="p-step"><div class="p-step-num" id="psn3">3</div><div class="p-step-lbl" id="psl3">Fertig</div></div>
       </div>
-      <!-- STEP 1 -->
       <div class="pg active" id="pv1">
         <div class="p-sec-label">Token-Menge</div>
         <div class="amount-box">
@@ -389,7 +427,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
         </div>
         <button class="primary-btn" id="btn-to-checkout" onclick="goCheckout()">Weiter zum Checkout →</button>
       </div>
-      <!-- STEP 2 -->
       <div class="pg" id="pv2">
         <div class="p-sec-label">Bestellübersicht</div>
         <div class="co-summary">
@@ -425,7 +462,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
         <button class="primary-btn" id="btn-pay" onclick="doPayment()">Jetzt kaufen →</button>
         <button class="secondary-btn" onclick="pGoBack()">← Zurück</button>
       </div>
-      <!-- STEP 3 -->
       <div class="pg" id="pv3">
         <div class="suc-wrap">
           <div class="suc-icon"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>
@@ -453,7 +489,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           <div class="av" id="s-av">G</div>
           <div style="flex:1">
             <div style="font-size:15px;font-weight:700;color:var(--text)" id="s-display-name">Guest User</div>
-            <div style="font-size:12px;color:var(--muted2);font-family:'DM Mono',monospace;margin-top:2px"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="791e0c1c0a0d390a10171e151c0d16121c170a571a1614">[email&#160;protected]</a></div>
+            <div style="font-size:12px;color:var(--muted2);font-family:'DM Mono',monospace;margin-top:2px">guest@singletokens.ai</div>
           </div>
           <div class="tok-badge" id="s-tok-badge">716K</div>
         </div>
@@ -487,7 +523,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
         <div class="s-card">
           <div class="s-row"><div class="s-info"><div class="s-label">Trainingsdaten</div></div><div class="toggle" onclick="this.classList.toggle('on');showToast('Gespeichert')"></div></div>
           <div class="s-row"><div class="s-info"><div class="s-label">Analyse-Daten</div></div><div class="toggle on" onclick="this.classList.toggle('on');showToast('Gespeichert')"></div></div>
-          <div class="s-row"><div class="s-info"><div class="s-label">Verlauf löschen</div></div><button class="s-dbtn" onclick="showToast('Verlauf gelöscht')">Löschen</button></div>
+          <div class="s-row"><div class="s-info"><div class="s-label">Verlauf löschen</div></div><button class="s-dbtn" onclick="clearAllHistory()">Löschen</button></div>
         </div>
       </div>
       <div class="s-section">
@@ -526,6 +562,26 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
   </div>
 </div>
 
+<!-- HISTORY DRAWER -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="history-drawer">
+  <div class="drawer-top">
+    <div class="drawer-logo">Single<span>Tokens</span></div>
+    <div class="drawer-close" onclick="closeDrawer()">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </div>
+  </div>
+  <div class="drawer-new" onclick="newChat()">
+    <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    Neuer Chat
+  </div>
+  <div class="drawer-section-label" id="drawer-section-lbl">Zuletzt</div>
+  <div class="drawer-list" id="drawer-list"></div>
+  <div class="drawer-footer">
+    <div class="drawer-footer-info" id="drawer-footer-count">0 Unterhaltungen</div>
+  </div>
+</div>
+
 <!-- MODEL SHEET -->
 <div class="sheet-overlay" id="model-sheet" onclick="closeSheet()">
   <div class="sheet" onclick="event.stopPropagation()">
@@ -537,7 +593,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 
 <div class="toast" id="toast"></div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 /* ── NAV ── */
 function nav(id){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
@@ -545,6 +601,149 @@ function nav(id){
   document.getElementById('view-'+id).classList.add('active');
   const bn=document.getElementById('bn-'+id);
   if(bn)bn.classList.add('active');
+}
+
+/* ── HISTORY DRAWER ── */
+let chatHistory = [];
+let currentChatId = null;
+let currentMessages = [];
+
+function loadHistoryFromStorage(){
+  try { chatHistory = JSON.parse(localStorage.getItem('st_chat_history') || '[]'); }
+  catch(e){ chatHistory = []; }
+}
+
+function saveHistoryToStorage(){
+  try { localStorage.setItem('st_chat_history', JSON.stringify(chatHistory)); }
+  catch(e){}
+}
+
+function fmtRelTime(ts){
+  const diff = Date.now() - ts;
+  const min = Math.floor(diff/60000);
+  const h = Math.floor(diff/3600000);
+  const d = Math.floor(diff/86400000);
+  if(min < 1) return 'Gerade eben';
+  if(min < 60) return `Vor ${min} Min.`;
+  if(h < 24) return `Vor ${h} Std.`;
+  if(d === 1) return 'Gestern';
+  if(d < 7) return `Vor ${d} Tagen`;
+  return new Date(ts).toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'2-digit'});
+}
+
+function renderHistoryList(){
+  const list = document.getElementById('drawer-list');
+  const lbl = document.getElementById('drawer-section-lbl');
+  const footer = document.getElementById('drawer-footer-count');
+  footer.textContent = chatHistory.length + ' Unterhaltung' + (chatHistory.length !== 1 ? 'en' : '');
+  if(chatHistory.length === 0){
+    lbl.style.display = 'none';
+    list.innerHTML = `<div class="hist-empty"><div class="hist-empty-icon">💬</div><div class="hist-empty-txt">Noch keine Chats.<br>Starte eine neue Unterhaltung!</div></div>`;
+    return;
+  }
+  lbl.style.display = 'block';
+  // Sort newest first
+  const sorted = [...chatHistory].sort((a,b) => b.updatedAt - a.updatedAt);
+  list.innerHTML = sorted.map(c => {
+    const isActive = c.id === currentChatId;
+    const title = c.title || 'Neue Unterhaltung';
+    const meta = `${c.model} · ${fmtRelTime(c.updatedAt)}`;
+    return `<div class="hist-item${isActive?' active':''}" onclick="loadChat(${c.id})">
+      <div class="hist-item-body">
+        <div class="hist-item-title">${escHtml(title)}</div>
+        <div class="hist-item-meta">${escHtml(meta)}</div>
+      </div>
+      <button class="hist-item-del" onclick="event.stopPropagation();deleteChatEntry(${c.id})" title="Löschen">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>`;
+  }).join('');
+}
+
+function escHtml(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function openDrawer(){
+  renderHistoryList();
+  document.getElementById('drawer-overlay').classList.add('show');
+  document.getElementById('history-drawer').classList.add('show');
+}
+
+function closeDrawer(){
+  document.getElementById('drawer-overlay').classList.remove('show');
+  document.getElementById('history-drawer').classList.remove('show');
+}
+
+function newChat(){
+  // Reset state
+  currentChatId = Date.now();
+  currentMessages = [];
+  // Reset UI
+  const msgs = document.getElementById('chat-msgs');
+  msgs.innerHTML = `<div class="msg ai"><div class="msg-bubble">Hallo! Ich bin SingleTokens AI. Wie kann ich dir helfen? 👋</div><div class="msg-meta">SingleTokens · ${curModel}</div></div>`;
+  // Notify api.js if it has a reset hook
+  if(typeof apiResetConversation === 'function') apiResetConversation();
+  closeDrawer();
+  nav('chat');
+  renderHistoryList();
+}
+
+function loadChat(id){
+  const chat = chatHistory.find(c => c.id === id);
+  if(!chat) return;
+  currentChatId = chat.id;
+  currentMessages = [...chat.messages];
+  curModel = chat.model;
+  document.getElementById('topbar-model').textContent = chat.model;
+  // Re-render messages
+  const msgs = document.getElementById('chat-msgs');
+  msgs.innerHTML = chat.messages.map(m =>
+    `<div class="msg ${m.role}">
+      <div class="msg-bubble">${m.text}</div>
+      <div class="msg-meta">${m.role === 'user' ? 'Du' : escHtml(chat.model)}</div>
+    </div>`
+  ).join('');
+  msgs.scrollTop = msgs.scrollHeight;
+  // Notify api.js to restore conversation context
+  if(typeof apiLoadConversation === 'function') apiLoadConversation(chat.messages);
+  closeDrawer();
+  nav('chat');
+  showToast('Chat geladen');
+}
+
+function deleteChatEntry(id){
+  chatHistory = chatHistory.filter(c => c.id !== id);
+  saveHistoryToStorage();
+  // If we deleted the active chat, start new
+  if(id === currentChatId) newChat();
+  renderHistoryList();
+  showToast('Gelöscht');
+}
+
+function clearAllHistory(){
+  if(!confirm('Wirklich den gesamten Verlauf löschen?')) return;
+  chatHistory = [];
+  saveHistoryToStorage();
+  newChat();
+  showToast('Verlauf gelöscht');
+}
+
+function saveCurrentChat(){
+  if(currentMessages.length === 0) return;
+  const firstUserMsg = currentMessages.find(m => m.role === 'user');
+  const title = firstUserMsg ? firstUserMsg.text.slice(0, 45) + (firstUserMsg.text.length > 45 ? '…' : '') : 'Neue Unterhaltung';
+  const idx = chatHistory.findIndex(c => c.id === currentChatId);
+  const chatObj = {
+    id: currentChatId,
+    title,
+    model: curModel,
+    messages: currentMessages,
+    updatedAt: Date.now()
+  };
+  if(idx >= 0){ chatHistory[idx] = chatObj; }
+  else { chatHistory.unshift(chatObj); }
+  saveHistoryToStorage();
 }
 
 /* ── CHAT ── */
@@ -571,12 +770,17 @@ var sendMsg = function(){
   setTimeout(()=>{typing.remove();addMsg('⚠ api.js nicht geladen.','ai');},600);
 };
 
-function addMsg(text,role){
+function addMsg(text, role){
   const msgs=document.getElementById('chat-msgs');
   const d=document.createElement('div');d.className='msg '+role;
   d.innerHTML=`<div class="msg-bubble">${text}</div><div class="msg-meta">${role==='user'?'Du':curModel}</div>`;
-  msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;return d;
+  msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;
+  // ── Save to history ──
+  currentMessages.push({role, text, time: Date.now()});
+  saveCurrentChat();
+  return d;
 }
+
 function addTyping(){
   const msgs=document.getElementById('chat-msgs');
   const d=document.createElement('div');d.className='msg ai';
@@ -772,7 +976,6 @@ function deleteGptM(id){
   gptsM=gptsM.filter(x=>x.id!==id);renderGptsM();showToast('Gelöscht.');
 }
 
-// ✅ FIX: newChat zuerst, DANN setGptPrompt
 function useGptM(id){
   const g=gptsM.find(x=>x.id===id);
   if(!g)return;
@@ -783,6 +986,9 @@ function useGptM(id){
   showToast('GPT "'+g.name+'" geladen!');
 }
 
+/* ── INIT ── */
+loadHistoryFromStorage();
+currentChatId = Date.now();
 renderGptsM();
 </script>
 <script src="api.js"></script>
