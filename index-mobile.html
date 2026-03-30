@@ -281,7 +281,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
     </div>
     <div class="chat-input-area">
       <div class="chat-input-wrap">
-        <textarea class="chat-input" id="chat-input" placeholder="Nachricht..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        <textarea class="chat-input" id="chat-input" placeholder="Nachricht..." rows="1" onkeydown="handleKey(event)" onkeypress="handleKey(event)" oninput="autoResize(this)"></textarea>
         <button class="send-btn" onclick="sendMsg()">
           <svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
         </button>
@@ -723,10 +723,15 @@ function deleteChatEntry(id){
 
 async function clearAllHistory(){
   if(!confirm('Wirklich den gesamten Verlauf löschen?')) return;
-  // api.js übernimmt: localStorage + Server + apiChatHistory
-  if(typeof deleteAllHistory === 'function') await deleteAllHistory();
+  if(typeof serverDeleteAllChats === 'function') await serverDeleteAllChats();
   chatHistory = [];
-  newChat();
+  saveHistoryToStorage();
+  if(typeof apiResetConversation === 'function') apiResetConversation();
+  currentChatId = Date.now();
+  currentMessages = [];
+  const msgs = document.getElementById('chat-msgs');
+  msgs.innerHTML = `<div class="msg ai"><div class="msg-bubble">Hallo! Ich bin SingleTokens AI. Wie kann ich dir helfen? 👋</div><div class="msg-meta">SingleTokens · ${curModel}</div></div>`;
+  renderHistoryList();
   showToast('Verlauf gelöscht');
 }
 
@@ -788,7 +793,14 @@ function addTyping(){
   d.innerHTML='<div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>';
   msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;return d;
 }
-function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}}
+function handleKey(e){
+  if(e.key==='Enter'&&!e.shiftKey){
+    e.preventDefault();
+    // keypress feuert manchmal doppelt auf Desktop → nur einmal senden
+    if(e.type==='keypress'&&e.keyCode!==13)return;
+    sendMsg();
+  }
+}
 function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,100)+'px';}
 
 /* ── MODEL SHEET ── */
