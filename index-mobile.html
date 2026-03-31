@@ -82,13 +82,11 @@ html,body{height:100%;background:var(--dark);font-family:'Syne',sans-serif;color
 .drawer-footer{padding:10px 12px;border-top:1px solid var(--border);flex-shrink:0;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-align:center}
 .hist-empty{text-align:center;padding:40px 20px;color:var(--muted2);font-size:13px;line-height:1.5}
 
-/* ── SELECTION MODE ── */
+/* SELECTION MODE */
 .hi-cb{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--muted);flex-shrink:0;margin-right:10px;display:none;align-items:center;justify-content:center;transition:all .15s;background:transparent}
 .hi-cb.show{display:flex}
 .hi-cb.checked{background:var(--acc);border-color:var(--acc)}
 .hi-cb.checked::after{content:'✓';font-size:11px;color:#03060F;font-weight:800;line-height:1}
-
-/* Selection toolbar — same horizontal margin as drawer-list padding (8px) */
 .sel-bar{display:none;align-items:center;justify-content:space-between;margin:8px 8px 6px;padding:10px 12px;background:rgba(34,211,238,.06);border:1px solid rgba(34,211,238,.2);border-radius:10px;flex-shrink:0}
 .sel-bar.show{display:flex}
 .sel-left{display:flex;align-items:center;gap:10px}
@@ -106,12 +104,10 @@ html,body{height:100%;background:var(--dark);font-family:'Syne',sans-serif;color
 .sel-trash-btn:active{background:rgba(248,113,113,.25)}
 .sel-trash-btn svg{width:14px;height:14px;stroke:#F87171;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .sel-trash-btn:disabled{opacity:.35;cursor:not-allowed}
-
-/* Long-press ripple hint */
 @keyframes lp-pulse{0%{transform:scale(1)}50%{transform:scale(.97);background:rgba(34,211,238,.08)}100%{transform:scale(1)}}
 .hi.lp-active{animation:lp-pulse .5s ease}
 
-/* ── CONFIRM POPUP ── */
+/* CONFIRM POPUP */
 .confirm-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:300;display:none;align-items:center;justify-content:center;padding:20px}
 .confirm-bg.show{display:flex}
 .confirm-box{background:var(--dark2);border:1px solid var(--border);border-radius:18px;padding:22px 20px 18px;width:100%;max-width:290px;animation:pop-in .2s cubic-bezier(.34,1.56,.64,1)}
@@ -141,6 +137,38 @@ html,body{height:100%;background:var(--dark);font-family:'Syne',sans-serif;color
 .mli-check{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center}
 .mli-check.on{background:var(--acc);border-color:var(--acc)}
 .mli-check.on::after{content:'✓';font-size:11px;color:#03060F;font-weight:800}
+
+/* ── CUSTOM PICKER SHEET ── */
+.picker-bg{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:200;display:none;align-items:flex-end;transition:opacity .22s}
+.picker-bg.show{display:flex}
+.picker-sheet{background:var(--dark2);border-radius:22px 22px 0 0;width:100%;padding:0 0 calc(8px + env(safe-area-inset-bottom));overflow:hidden;transform:translateY(100%);transition:transform .28s cubic-bezier(.4,0,.2,1)}
+.picker-bg.show .picker-sheet{transform:translateY(0)}
+.picker-header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 12px}
+.picker-handle{width:36px;height:4px;border-radius:2px;background:var(--border);margin:14px auto 0;display:block}
+.picker-title-txt{font-size:15px;font-weight:800;color:var(--text)}
+.picker-done{font-size:13px;font-weight:700;color:var(--acc);background:none;border:none;cursor:pointer;font-family:'Syne',sans-serif;padding:6px 2px}
+.picker-options{padding:4px 12px 6px}
+.picker-opt{display:flex;align-items:center;gap:14px;padding:14px 10px;border-radius:12px;cursor:pointer;margin-bottom:2px;transition:background .15s;-webkit-user-select:none;user-select:none}
+.picker-opt:active{background:rgba(255,255,255,.04)}
+.picker-opt.selected{background:rgba(34,211,238,.07)}
+.picker-opt-icon{width:38px;height:38px;border-radius:10px;background:var(--dark3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:17px}
+.picker-opt.selected .picker-opt-icon{background:rgba(34,211,238,.12);border-color:rgba(34,211,238,.3)}
+.picker-opt-body{flex:1;min-width:0}
+.picker-opt-label{font-size:14px;font-weight:600;color:var(--text)}
+.picker-opt.selected .picker-opt-label{color:var(--acc)}
+.picker-opt-sub{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);margin-top:2px}
+.picker-opt-radio{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--muted);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.picker-opt.selected .picker-opt-radio{border-color:var(--acc);background:var(--acc)}
+.picker-opt.selected .picker-opt-radio::after{content:'';width:8px;height:8px;border-radius:50%;background:#03060F}
+.picker-divider{height:1px;background:var(--border);margin:2px 10px}
+
+/* ── CUSTOM SETTINGS ROWS ── */
+.s-pick-row{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);cursor:pointer;-webkit-user-select:none;user-select:none}
+.s-pick-row:last-child{border:none}
+.s-pick-row:active{background:rgba(255,255,255,.03)}
+.s-pick-label{font-size:14px;font-weight:600;color:var(--text)}
+.s-pick-val{display:flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:12px;color:var(--muted2)}
+.s-pick-val svg{width:13px;height:13px;stroke:var(--muted);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
 
 /* EXPLORE */
 .scroll-view{flex:1;overflow-y:auto;padding:16px}
@@ -268,7 +296,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 .lock-row svg{width:11px;height:11px;stroke:var(--muted2);fill:none;stroke-width:2;stroke-linecap:round}
 
 /* SETTINGS */
-.s-section{margin-bottom:24px}
+.s-section{margin-bottom:20px}
 .s-sec-title{font-size:11px;font-family:'DM Mono',monospace;color:var(--muted2);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;padding-left:4px}
 .s-card{background:var(--dark2);border:1px solid var(--border);border-radius:12px;overflow:hidden}
 .s-row{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border)}
@@ -280,7 +308,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 .toggle.on{background:var(--acc)}
 .toggle::after{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:2px;left:2px;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
 .toggle.on::after{left:22px}
-.s-sel{background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-family:'Syne',sans-serif;font-size:12px;color:var(--text);cursor:pointer;outline:none;-webkit-appearance:none}
 .swatches{display:flex;gap:8px}
 .sw{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent}
 .sw.active{border-color:#fff;transform:scale(1.15)}
@@ -289,6 +316,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 .acc-card{background:var(--dark3);border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;margin-bottom:16px}
 .av{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#22D3EE,#3B82F6);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#0A0C10;flex-shrink:0}
 .tok-badge{font-family:'DM Mono',monospace;font-size:11px;background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.2);color:var(--acc);padding:3px 10px;border-radius:6px;flex-shrink:0}
+.s-inp{background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:13px;color:var(--text);outline:none;font-family:'Syne',sans-serif;width:130px;-webkit-appearance:none;transition:border-color .2s}
+.s-inp:focus{border-color:rgba(34,211,238,.4)}
 
 /* BOTTOM NAV */
 .bottom-nav{height:var(--nav-h);padding-bottom:env(safe-area-inset-bottom);background:var(--dark2);border-top:1px solid var(--border);display:flex;flex-shrink:0}
@@ -389,17 +418,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
       <div class="field">
         <div class="field-label">Basismodell</div>
         <select class="inp-sel" id="gpt-model-sel">
-          <option>Llama 3.3 70B</option>
-          <option>Llama 3.1 8B</option>
-          <option>Gemma 2 9B</option>
-          <option>Mixtral 8x7B</option>
-          <option>DeepSeek R1 70B</option>
-          <option>Claude Sonnet 4.5</option>
-          <option>Claude Haiku 4.5</option>
-          <option>GPT-4o</option>
-          <option>GPT-5</option>
-          <option>Gemini 2.0 Flash</option>
-          <option>Grok 2</option>
+          <option>Llama 3.3 70B</option><option>Llama 3.1 8B</option><option>Gemma 2 9B</option>
+          <option>Mixtral 8x7B</option><option>DeepSeek R1 70B</option><option>Claude Sonnet 4.5</option>
+          <option>Claude Haiku 4.5</option><option>GPT-4o</option><option>GPT-5</option>
+          <option>Gemini 2.0 Flash</option><option>Grok 2</option>
         </select>
       </div>
       <div class="field">
@@ -529,6 +551,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
   <!-- SETTINGS -->
   <div class="view" id="view-settings">
     <div class="scroll-view">
+
+      <!-- Account Card -->
       <div class="s-section">
         <div class="acc-card">
           <div class="av" id="s-av">G</div>
@@ -539,19 +563,47 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           <div class="tok-badge" id="s-tok-badge">716K</div>
         </div>
       </div>
+
+      <!-- Allgemein -->
       <div class="s-section">
         <div class="s-sec-title">Allgemein</div>
         <div class="s-card">
-          <div class="s-row"><div class="s-info"><div class="s-label">Sprache</div></div><select class="s-sel" id="sel-lang"><option value="de">Deutsch</option><option value="en">English</option><option value="fr">Français</option><option value="es">Español</option></select></div>
-          <div class="s-row"><div class="s-info"><div class="s-label">Chat-Verlauf</div></div><div class="toggle on" id="tog-history"></div></div>
-          <div class="s-row"><div class="s-info"><div class="s-label">Kompakter Modus</div></div><div class="toggle" id="tog-compact"></div></div>
+          <!-- Language picker row -->
+          <div class="s-pick-row" id="row-lang">
+            <div class="s-pick-label">Sprache</div>
+            <div class="s-pick-val">
+              <span id="val-lang">Deutsch</span>
+              <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+          </div>
+          <!-- Chat-Verlauf toggle -->
+          <div class="s-row">
+            <div class="s-info"><div class="s-label">Chat-Verlauf</div></div>
+            <div class="toggle on" id="tog-history"></div>
+          </div>
+          <!-- Kompakter Modus toggle -->
+          <div class="s-row">
+            <div class="s-info"><div class="s-label">Kompakter Modus</div></div>
+            <div class="toggle" id="tog-compact"></div>
+          </div>
         </div>
       </div>
+
+      <!-- Darstellung -->
       <div class="s-section">
         <div class="s-sec-title">Darstellung</div>
         <div class="s-card">
-          <div class="s-row"><div class="s-info"><div class="s-label">Theme</div></div><select class="s-sel" id="sel-theme"><option value="dark">Dunkel</option><option value="light">Hell</option></select></div>
-          <div class="s-row"><div class="s-info"><div class="s-label">Akzentfarbe</div></div>
+          <!-- Theme picker row -->
+          <div class="s-pick-row" id="row-theme">
+            <div class="s-pick-label">Theme</div>
+            <div class="s-pick-val">
+              <span id="val-theme">Dunkel</span>
+              <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+          </div>
+          <!-- Accent color -->
+          <div class="s-row">
+            <div class="s-info"><div class="s-label">Akzentfarbe</div></div>
             <div class="swatches">
               <div class="sw active" style="background:#22D3EE" data-c="#22D3EE"></div>
               <div class="sw" style="background:#3B82F6" data-c="#3B82F6"></div>
@@ -560,17 +612,37 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
               <div class="sw" style="background:#10B981" data-c="#10B981"></div>
             </div>
           </div>
-          <div class="s-row"><div class="s-info"><div class="s-label">Schriftgröße</div></div><select class="s-sel" id="sel-fs"><option value="13px">Klein</option><option value="14px" selected>Mittel</option><option value="16px">Groß</option></select></div>
+          <!-- Font size picker row -->
+          <div class="s-pick-row" id="row-fs" style="border-bottom:none">
+            <div class="s-pick-label">Schriftgröße</div>
+            <div class="s-pick-val">
+              <span id="val-fs">Mittel</span>
+              <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+          </div>
         </div>
       </div>
+
+      <!-- Konto -->
       <div class="s-section">
         <div class="s-sec-title">Konto</div>
         <div class="s-card">
-          <div class="s-row"><div class="s-info"><div class="s-label">Anzeigename</div></div><input class="s-sel" id="inp-dname" style="width:130px;padding:6px 10px;font-size:13px" type="text" value="Guest User"></div>
-          <div class="s-row"><div class="s-info"><div class="s-label">Tokens kaufen</div><div class="s-desc" id="s-tok-desc">716K verfügbar</div></div><button class="s-abtn" id="btn-s-buy">Kaufen →</button></div>
-          <div class="s-row"><div class="s-info"><div class="s-label" style="color:#F87171">Konto löschen</div></div><button class="s-dbtn" id="btn-del-acc">Löschen</button></div>
+          <div class="s-row">
+            <div class="s-info"><div class="s-label">Anzeigename</div></div>
+            <input class="s-inp" id="inp-dname" type="text" value="Guest User">
+          </div>
+          <div class="s-row">
+            <div class="s-info"><div class="s-label">Tokens kaufen</div><div class="s-desc" id="s-tok-desc">716K verfügbar</div></div>
+            <button class="s-abtn" id="btn-s-buy">Kaufen →</button>
+          </div>
+          <div class="s-row">
+            <div class="s-info"><div class="s-label" style="color:#F87171">Konto löschen</div></div>
+            <button class="s-dbtn" id="btn-del-acc">Löschen</button>
+          </div>
         </div>
       </div>
+
+      <!-- Datenschutz -->
       <div class="s-section">
         <div class="s-sec-title">Datenschutz</div>
         <div class="s-card">
@@ -579,13 +651,22 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           <div class="s-row"><div class="s-info"><div class="s-label">Verlauf löschen</div></div><button class="s-dbtn" id="btn-clear-hist">Löschen</button></div>
         </div>
       </div>
+
+      <!-- Sicherheit -->
       <div class="s-section">
         <div class="s-sec-title">Sicherheit</div>
         <div class="s-card">
-          <div class="s-row"><div class="s-info"><div class="s-label">2FA</div><div class="s-desc" id="twofa-desc">Nicht aktiviert</div></div><div class="toggle" id="tog-2fa"></div></div>
-          <div class="s-row"><div class="s-info"><div class="s-label">Abmelden</div></div><button class="s-dbtn" id="btn-logout">Abmelden</button></div>
+          <div class="s-row">
+            <div class="s-info"><div class="s-label">2FA</div><div class="s-desc" id="twofa-desc">Nicht aktiviert</div></div>
+            <div class="toggle" id="tog-2fa"></div>
+          </div>
+          <div class="s-row">
+            <div class="s-info"><div class="s-label">Abmelden</div></div>
+            <button class="s-dbtn" id="btn-logout">Abmelden</button>
+          </div>
         </div>
       </div>
+
       <div style="height:16px"></div>
     </div>
   </div>
@@ -624,14 +705,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
       <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </div>
   </div>
-
-  <!-- Normal: Neuer Chat -->
   <div class="drawer-new" id="btn-new-chat">
     <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
     Neuer Chat
   </div>
-
-  <!-- Selection mode toolbar (hidden by default) -->
   <div class="sel-bar" id="sel-bar">
     <div class="sel-left">
       <div class="sel-all-cb" id="sel-all-cb"></div>
@@ -647,7 +724,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
       </button>
     </div>
   </div>
-
   <div class="drawer-lbl" id="drawer-lbl">Zuletzt</div>
   <div class="drawer-list" id="drawer-list"></div>
   <div class="drawer-footer" id="drawer-footer">0 Unterhaltungen</div>
@@ -659,6 +735,18 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
     <div class="sheet-handle"></div>
     <div class="sheet-title">Modell wählen</div>
     <div id="model-sheet-list"></div>
+  </div>
+</div>
+
+<!-- ── CUSTOM PICKER SHEET ── -->
+<div class="picker-bg" id="picker-bg">
+  <div class="picker-sheet">
+    <span class="picker-handle"></span>
+    <div class="picker-header">
+      <div class="picker-title-txt" id="picker-title"></div>
+      <button class="picker-done" id="picker-done">Fertig</button>
+    </div>
+    <div class="picker-options" id="picker-options"></div>
   </div>
 </div>
 
@@ -704,8 +792,6 @@ let currentChatId = Date.now();
 let currentMessages = [];
 let gptsList = [];
 let editingGptId = null;
-
-/* Selection state */
 let selectionMode = false;
 let selectedIds = new Set();
 
@@ -768,58 +854,30 @@ function saveChat(){
 
 /* ──────────────── SELECTION MODE ──────────────── */
 function enterSelectionMode(id){
-  selectionMode=true;
-  selectedIds=new Set();
+  selectionMode=true; selectedIds=new Set();
   if(id !== undefined) selectedIds.add(id);
   renderHistory();
 }
-
-function exitSelectionMode(){
-  selectionMode=false;
-  selectedIds.clear();
-  renderHistory();
-}
-
-function toggleSelect(id){
-  if(selectedIds.has(id)) selectedIds.delete(id);
-  else selectedIds.add(id);
-  renderHistory();
-}
-
+function exitSelectionMode(){ selectionMode=false; selectedIds.clear(); renderHistory(); }
+function toggleSelect(id){ if(selectedIds.has(id)) selectedIds.delete(id); else selectedIds.add(id); renderHistory(); }
 function toggleSelectAll(){
   const allSelected = chatHistory.length > 0 && selectedIds.size === chatHistory.length;
-  if(allSelected) selectedIds.clear();
-  else chatHistory.forEach(c=>selectedIds.add(c.id));
+  if(allSelected) selectedIds.clear(); else chatHistory.forEach(c=>selectedIds.add(c.id));
   renderHistory();
 }
-
 function updateSelBar(){
-  const bar=$('sel-bar');
-  const allCb=$('sel-all-cb');
-  const countTxt=$('sel-count-txt');
-  const trashBtn=$('sel-trash-btn');
-  const newBtn=$('btn-new-chat');
-  const lbl=$('drawer-lbl');
-
+  const bar=$('sel-bar'), allCb=$('sel-all-cb'), countTxt=$('sel-count-txt');
+  const trashBtn=$('sel-trash-btn'), newBtn=$('btn-new-chat'), lbl=$('drawer-lbl');
   if(selectionMode){
-    bar.classList.add('show');
-    newBtn.style.display='none';
-    lbl.style.display='none';
-
-    const total=chatHistory.length;
-    const sel=selectedIds.size;
-
+    bar.classList.add('show'); newBtn.style.display='none'; lbl.style.display='none';
+    const total=chatHistory.length, sel=selectedIds.size;
     countTxt.textContent = sel + ' ausgewählt';
     allCb.className='sel-all-cb';
-    if(sel===0){ /* none */ }
-    else if(sel===total){ allCb.className='sel-all-cb checked'; }
-    else { allCb.className='sel-all-cb partial'; }
-
+    if(sel===total && sel>0) allCb.className='sel-all-cb checked';
+    else if(sel>0) allCb.className='sel-all-cb partial';
     trashBtn.disabled = sel===0;
   } else {
-    bar.classList.remove('show');
-    newBtn.style.display='';
-    lbl.style.display=chatHistory.length?'block':'none';
+    bar.classList.remove('show'); newBtn.style.display=''; lbl.style.display=chatHistory.length?'block':'none';
   }
 }
 
@@ -832,23 +890,14 @@ function showConfirm(count){
     : `${count} Chats wirklich löschen? Das kann nicht rückgängig gemacht werden.`;
   $('confirm-bg').classList.add('show');
 }
-
-function hideConfirm(){
-  $('confirm-bg').classList.remove('show');
-}
-
+function hideConfirm(){ $('confirm-bg').classList.remove('show'); }
 $('confirm-cancel-btn').addEventListener('click', hideConfirm);
 $('confirm-bg').addEventListener('click', e=>{ if(e.target===$('confirm-bg')) hideConfirm(); });
-
 $('confirm-del-btn').addEventListener('click',()=>{
-  const ids=new Set(selectedIds);
-  const count=ids.size;
-  chatHistory=chatHistory.filter(c=>!ids.has(c.id));
-  saveHistory();
-  if(ids.has(currentChatId)) newChat();
-  else renderHistory();
-  exitSelectionMode();
-  hideConfirm();
+  const ids=new Set(selectedIds), count=ids.size;
+  chatHistory=chatHistory.filter(c=>!ids.has(c.id)); saveHistory();
+  if(ids.has(currentChatId)) newChat(); else renderHistory();
+  exitSelectionMode(); hideConfirm();
   toast(count===1 ? 'Chat gelöscht' : `${count} Chats gelöscht`);
 });
 
@@ -856,35 +905,24 @@ $('confirm-del-btn').addEventListener('click',()=>{
 $('sel-all-cb').addEventListener('click', toggleSelectAll);
 $('sel-all-lbl').addEventListener('click', toggleSelectAll);
 $('sel-cancel-btn').addEventListener('click', exitSelectionMode);
-$('sel-trash-btn').addEventListener('click',()=>{
-  if(!selectedIds.size) return;
-  showConfirm(selectedIds.size);
-});
+$('sel-trash-btn').addEventListener('click',()=>{ if(!selectedIds.size) return; showConfirm(selectedIds.size); });
 
 /* ──────────────── RENDER HISTORY ──────────────── */
 function renderHistory(){
   const list=$('drawer-list'), footer=$('drawer-footer');
   footer.textContent=chatHistory.length+' Unterhaltung'+(chatHistory.length!==1?'en':'');
-
   updateSelBar();
-
   if(!chatHistory.length){
     list.innerHTML='<div class="hist-empty">💬<br><br>Noch keine Chats.<br>Starte eine neue Unterhaltung!</div>';
     return;
   }
-
   const sorted=[...chatHistory].sort((a,b)=>b.updatedAt-a.updatedAt);
-
   list.innerHTML=sorted.map(c=>{
     const isActive=!selectionMode && c.id===currentChatId;
     const isSelected=selectionMode && selectedIds.has(c.id);
-    let cls='hi';
-    if(isActive) cls+=' active';
-    if(isSelected) cls+=' selected';
-
+    let cls='hi'; if(isActive) cls+=' active'; if(isSelected) cls+=' selected';
     const cbCls='hi-cb'+(selectionMode?' show':'')+(isSelected?' checked':'');
     const delBtn=selectionMode?'':`<button class="hi-del" data-del="${c.id}"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>`;
-
     return `<div class="${cls}" data-id="${c.id}">
       <div class="${cbCls}"></div>
       <div class="hi-body">
@@ -894,49 +932,25 @@ function renderHistory(){
       ${delBtn}
     </div>`;
   }).join('');
-
-  /* Events */
   list.querySelectorAll('.hi').forEach(el=>{
     const id=Number(el.dataset.id);
     let lpTimer=null;
-
-    /* Long press → enter selection mode */
-    el.addEventListener('touchstart',()=>{
-      lpTimer=setTimeout(()=>{
-        lpTimer=null;
-        if(!selectionMode){ enterSelectionMode(id); }
-      },520);
-    },{passive:true});
+    el.addEventListener('touchstart',()=>{ lpTimer=setTimeout(()=>{ lpTimer=null; if(!selectionMode) enterSelectionMode(id); },520); },{passive:true});
     el.addEventListener('touchend',()=>clearTimeout(lpTimer));
     el.addEventListener('touchmove',()=>clearTimeout(lpTimer));
-
-    /* Click */
-    el.addEventListener('click',e=>{
-      if(e.target.closest('.hi-del')) return;
-      if(selectionMode){ toggleSelect(id); return; }
-      loadChat(id);
-    });
+    el.addEventListener('click',e=>{ if(e.target.closest('.hi-del')) return; if(selectionMode){ toggleSelect(id); return; } loadChat(id); });
   });
-
-  /* Individual delete buttons (normal mode) */
   list.querySelectorAll('.hi-del').forEach(btn=>{
     btn.addEventListener('click',e=>{
       e.stopPropagation();
       const id=Number(btn.dataset.del);
-      /* Show confirm for single delete too */
-      selectedIds=new Set([id]);
-      showConfirm(1);
+      selectedIds=new Set([id]); showConfirm(1);
     });
   });
 }
 
 function openDrawer(){ renderHistory(); $('drawer-overlay').classList.add('show'); $('drawer').classList.add('open'); }
-function closeDrawer(){
-  $('drawer-overlay').classList.remove('show');
-  $('drawer').classList.remove('open');
-  /* Exit selection mode when drawer closes */
-  if(selectionMode) exitSelectionMode();
-}
+function closeDrawer(){ $('drawer-overlay').classList.remove('show'); $('drawer').classList.remove('open'); if(selectionMode) exitSelectionMode(); }
 $('btn-drawer').addEventListener('click', openDrawer);
 $('btn-close-drawer').addEventListener('click', closeDrawer);
 $('drawer-overlay').addEventListener('click', closeDrawer);
@@ -960,13 +974,6 @@ function loadChat(id){
   closeDrawer(); nav('chat'); toast('Chat geladen');
 }
 
-function deleteChat(id){
-  chatHistory=chatHistory.filter(c=>c.id!==id); saveHistory();
-  if(id===currentChatId) newChat();
-  selectedIds.delete(id);
-  renderHistory(); toast('Gelöscht');
-}
-
 /* ──────────────── CHAT ──────────────── */
 function addMsg(text, role){
   const msgs=$('chat-msgs');
@@ -977,7 +984,6 @@ function addMsg(text, role){
   saveChat();
   return d;
 }
-
 function addTyping(){
   const msgs=$('chat-msgs');
   const d=document.createElement('div'); d.className='msg ai';
@@ -985,9 +991,7 @@ function addTyping(){
   msgs.appendChild(d); msgs.scrollTop=msgs.scrollHeight;
   return d;
 }
-
 function autoResize(el){ el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,100)+'px'; }
-
 window.sendMsg = function(){
   const inp=$('chat-input');
   const text=inp.value.trim(); if(!text) return;
@@ -997,17 +1001,13 @@ window.sendMsg = function(){
   const typing=addTyping();
   setTimeout(()=>{ typing.remove(); addMsg('⚠ api.js nicht geladen.','ai'); },600);
 };
-
 const chatInp=$('chat-input');
 chatInp.addEventListener('input',function(){ autoResize(this); });
-chatInp.addEventListener('keydown',function(e){
-  if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); window.sendMsg(); }
-});
+chatInp.addEventListener('keydown',function(e){ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); window.sendMsg(); } });
 $('send-btn').addEventListener('click', ()=>window.sendMsg());
 
 /* ──────────────── MODEL SHEET ──────────────── */
 $('tb-model').addEventListener('click', openModelSheet);
-
 function openModelSheet(){
   const list=$('model-sheet-list');
   list.innerHTML=ALL_MODELS.map(m=>`
@@ -1023,14 +1023,110 @@ function openModelSheet(){
 }
 function closeModelSheet(){ $('model-sheet-bg').classList.remove('show'); }
 $('model-sheet-bg').addEventListener('click',e=>{ if(e.target===$('model-sheet-bg')) closeModelSheet(); });
+function selectModel(name){ curModel=name; $('tb-model').textContent=name; toast('Modell: '+name); }
 
-function selectModel(name){
-  curModel=name; $('tb-model').textContent=name; toast('Modell: '+name);
+/* ──────────────── CUSTOM PICKER ──────────────── */
+let pickerCallback = null;
+let pickerCurrentVal = null;
+
+function openPicker(title, options, currentVal, onSelect){
+  pickerCallback = onSelect;
+  pickerCurrentVal = currentVal;
+  $('picker-title').textContent = title;
+
+  const container = $('picker-options');
+  container.innerHTML = options.map((opt,i) => {
+    const sel = opt.value === currentVal;
+    return `
+      <div class="picker-opt${sel?' selected':''}" data-val="${escH(opt.value)}">
+        <div class="picker-opt-icon">${opt.icon||''}</div>
+        <div class="picker-opt-body">
+          <div class="picker-opt-label">${escH(opt.label)}</div>
+          ${opt.sub ? `<div class="picker-opt-sub">${escH(opt.sub)}</div>` : ''}
+        </div>
+        <div class="picker-opt-radio"></div>
+      </div>
+      ${i < options.length-1 ? '<div class="picker-divider"></div>' : ''}
+    `;
+  }).join('');
+
+  container.querySelectorAll('.picker-opt').forEach(el => {
+    el.addEventListener('click', () => {
+      container.querySelectorAll('.picker-opt').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+      pickerCurrentVal = el.dataset.val;
+    });
+  });
+
+  $('picker-bg').classList.add('show');
 }
+
+function closePicker(){
+  $('picker-bg').classList.remove('show');
+  if(pickerCallback && pickerCurrentVal !== null) pickerCallback(pickerCurrentVal);
+  pickerCallback = null;
+}
+
+$('picker-done').addEventListener('click', closePicker);
+$('picker-bg').addEventListener('click', e => { if(e.target === $('picker-bg')) closePicker(); });
+
+/* ──────────────── SETTINGS PICKERS ──────────────── */
+
+// Language
+const LANG_OPTS = [
+  {value:'de', label:'Deutsch',   icon:'🇩🇪', sub:'Standardsprache'},
+  {value:'en', label:'English',   icon:'🇬🇧', sub:'English interface'},
+  {value:'fr', label:'Français',  icon:'🇫🇷', sub:'Interface française'},
+  {value:'es', label:'Español',   icon:'🇪🇸', sub:'Interfaz en español'},
+];
+let curLang = 'de';
+
+$('row-lang').addEventListener('click', () => {
+  openPicker('Sprache', LANG_OPTS, curLang, val => {
+    curLang = val;
+    const opt = LANG_OPTS.find(o => o.value === val);
+    $('val-lang').textContent = opt.label;
+    toast('Gespeichert');
+  });
+});
+
+// Theme
+const THEME_OPTS = [
+  {value:'dark',  label:'Dunkel', icon:'🌙', sub:'Augenschonend im Dunkeln'},
+  {value:'light', label:'Hell',   icon:'☀️', sub:'Klassisch & hell'},
+];
+let curTheme = 'dark';
+
+$('row-theme').addEventListener('click', () => {
+  openPicker('Theme', THEME_OPTS, curTheme, val => {
+    curTheme = val;
+    const opt = THEME_OPTS.find(o => o.value === val);
+    $('val-theme').textContent = opt.label;
+    document.getElementById('app').classList.toggle('light-mode', val === 'light');
+    toast('Gespeichert');
+  });
+});
+
+// Font Size
+const FS_OPTS = [
+  {value:'13px', label:'Klein',  icon:'Aa', sub:'Kompakter Überblick'},
+  {value:'14px', label:'Mittel', icon:'Aa', sub:'Empfohlen'},
+  {value:'16px', label:'Groß',   icon:'Aa', sub:'Bessere Lesbarkeit'},
+];
+let curFs = '14px';
+
+$('row-fs').addEventListener('click', () => {
+  openPicker('Schriftgröße', FS_OPTS, curFs, val => {
+    curFs = val;
+    const opt = FS_OPTS.find(o => o.value === val);
+    $('val-fs').textContent = opt.label;
+    document.documentElement.style.setProperty('--fs', val);
+    toast('Gespeichert');
+  });
+});
 
 /* ──────────────── EXPLORE ──────────────── */
 function mcClass(m){ if(m.mult>=10) return 'expensive'; if(m.mult<=0.5) return 'cheap'; if(m.mult===1) return 'reference'; return ''; }
-
 function renderModels(f){
   const list=f==='all'?ALL_MODELS:f==='cheap'?ALL_MODELS.filter(m=>m.mult<=0.5):ALL_MODELS.filter(m=>m.cat===f);
   $('model-grid').innerHTML=list.map(m=>`
@@ -1045,12 +1141,10 @@ function renderModels(f){
     el.addEventListener('click',()=>{ selectModel(el.dataset.model); nav('chat'); });
   });
 }
-
 $('filter-row').querySelectorAll('.fbtn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    renderModels(btn.dataset.f);
+    btn.classList.add('active'); renderModels(btn.dataset.f);
   });
 });
 renderModels('all');
@@ -1072,12 +1166,8 @@ function renderGpts(){
         <button style="padding:6px 14px;background:var(--acc);border:none;border-radius:6px;color:#0A0C10;font-size:12px;font-weight:800;cursor:pointer;font-family:'Syne',sans-serif" data-use-gpt="${g.id}">Chatten →</button>
       </div>
     </div>`).join('');
-  grid.querySelectorAll('[data-del-gpt]').forEach(btn=>{
-    btn.addEventListener('click',()=>deleteGpt(Number(btn.dataset.delGpt)));
-  });
-  grid.querySelectorAll('[data-use-gpt]').forEach(btn=>{
-    btn.addEventListener('click',()=>useGpt(Number(btn.dataset.useGpt)));
-  });
+  grid.querySelectorAll('[data-del-gpt]').forEach(btn=>{ btn.addEventListener('click',()=>deleteGpt(Number(btn.dataset.delGpt))); });
+  grid.querySelectorAll('[data-use-gpt]').forEach(btn=>{ btn.addEventListener('click',()=>useGpt(Number(btn.dataset.useGpt))); });
 }
 
 function openGptModal(id){
@@ -1092,14 +1182,11 @@ function openGptModal(id){
   $('gpt-modal-bg').classList.add('show');
 }
 function closeGptModal(){ $('gpt-modal-bg').classList.remove('show'); }
-
 $('btn-new-gpt').addEventListener('click',()=>openGptModal());
 $('btn-close-gpt').addEventListener('click', closeGptModal);
 $('gpt-modal-bg').addEventListener('click',e=>{ if(e.target===$('gpt-modal-bg')) closeGptModal(); });
-
 $('btn-save-gpt').addEventListener('click',()=>{
-  const name=$('gpt-name').value.trim();
-  const prompt=$('gpt-sys-prompt').value.trim();
+  const name=$('gpt-name').value.trim(), prompt=$('gpt-sys-prompt').value.trim();
   if(!name){ toast('Bitte Namen eingeben!'); return; }
   if(!prompt){ toast('Bitte System-Prompt eingeben!'); return; }
   const gpt={id:editingGptId||Date.now(), name, desc:$('gpt-desc').value.trim(), model:$('gpt-model-sel').value, prompt};
@@ -1107,13 +1194,11 @@ $('btn-save-gpt').addEventListener('click',()=>{
   else gptsList.push(gpt);
   closeGptModal(); renderGpts(); toast(editingGptId?'GPT aktualisiert!':'GPT erstellt!');
 });
-
 function deleteGpt(id){
   const g=gptsList.find(x=>x.id===id); if(!g) return;
   if(!confirm(`GPT "${g.name}" wirklich löschen?`)) return;
   gptsList=gptsList.filter(x=>x.id!==id); renderGpts(); toast('Gelöscht.');
 }
-
 function useGpt(id){
   const g=gptsList.find(x=>x.id===id); if(!g) return;
   curModel=g.model; curGptPrompt=g.prompt;
@@ -1126,20 +1211,17 @@ function useGpt(id){
 const BASE=3, MIN_TOK=333333, AVG_TOKENS=500;
 let tokAmt=MIN_TOK, curPay='card';
 const PAY_NAMES={card:'Kreditkarte',paypal:'PayPal',gpay:'Google Pay',paysafe:'Paysafecard'};
-
 function fmtTok(t){ if(t>=1e9)return(t/1e9).toFixed(1).replace(/\.0$/,'')+'B'; if(t>=1e6)return(t/1e6).toFixed(1).replace(/\.0$/,'')+'M'; if(t>=1e3)return Math.round(t/1e3)+'K'; return t.toLocaleString(); }
 function fmtMsgs(n){ if(n>=1e6)return(n/1e6).toFixed(1).replace(/\.0$/,'')+'M'; if(n>=1e3)return Math.round(n/1e3)+'K'; return Math.round(n)+''; }
 function fmtP(p){ return '$'+p.toFixed(p<0.1?4:2); }
 function calcPrice(t){ return(t/1e6)*BASE; }
 function sliderToTok(v){ const lo=Math.log(MIN_TOK),hi=Math.log(1e8); return Math.max(MIN_TOK,Math.round(Math.exp(lo+(hi-lo)*v/100)/1000)*1000); }
 function tokToSlider(t){ if(t<=MIN_TOK) return 0; const lo=Math.log(MIN_TOK),hi=Math.log(1e8); return Math.round((Math.log(Math.min(t,1e8))-lo)/(hi-lo)*100); }
-
 function updateEsts(pfx){
   [{id:'gpt5',m:70},{id:'llama',m:0.3},{id:'sonnet',m:1},{id:'llama8b',m:0.1}].forEach(e=>{
     const el=$(pfx+'-'+e.id); if(el) el.textContent=fmtMsgs(tokAmt/(AVG_TOKENS*e.m))+'x';
   });
 }
-
 function updatePurchase(){
   const price=calcPrice(tokAmt), ok=tokAmt>=MIN_TOK;
   $('amt-big').textContent=fmtTok(tokAmt);
@@ -1151,43 +1233,28 @@ function updatePurchase(){
   sl.style.background=`linear-gradient(to right,${ok?'#22D3EE':'#F59E0B'} ${sl.value}%,var(--dark4) ${sl.value}%)`;
   updateEsts('e');
 }
-
 document.querySelectorAll('.pbtn[data-tok]').forEach(btn=>{
   btn.addEventListener('click',()=>{
     document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    $('custom-wrap').style.display='none';
-    tokAmt=Number(btn.dataset.tok);
-    $('tok-slider').value=tokToSlider(tokAmt);
-    updatePurchase();
+    btn.classList.add('active'); $('custom-wrap').style.display='none';
+    tokAmt=Number(btn.dataset.tok); $('tok-slider').value=tokToSlider(tokAmt); updatePurchase();
   });
 });
-
 $('btn-custom-toggle').addEventListener('click',()=>{
   const wrap=$('custom-wrap'), open=wrap.style.display!=='flex';
   wrap.style.display=open?'flex':'none';
   document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('active'));
   if(open) $('btn-custom-toggle').classList.add('active');
 });
-
-$('custom-input').addEventListener('input',function(){
-  const v=parseInt(this.value); if(v>0){ tokAmt=v; $('tok-slider').value=tokToSlider(v); updatePurchase(); }
-});
-
+$('custom-input').addEventListener('input',function(){ const v=parseInt(this.value); if(v>0){ tokAmt=v; $('tok-slider').value=tokToSlider(v); updatePurchase(); } });
 $('tok-slider').addEventListener('input',function(){
   tokAmt=sliderToTok(parseInt(this.value));
   document.querySelectorAll('.pbtn[data-tok]').forEach(b=>b.classList.remove('active'));
   updatePurchase();
 });
-
 document.querySelectorAll('.pay-btn[data-pay]').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.pay-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    curPay=btn.dataset.pay;
-  });
+  btn.addEventListener('click',()=>{ document.querySelectorAll('.pay-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); curPay=btn.dataset.pay; });
 });
-
 function setStep(s){
   [1,2,3].forEach(i=>{
     const n=$('pn'+i), l=$('pl'+i);
@@ -1198,16 +1265,12 @@ function setStep(s){
   $('pline1').className='p-line'+(s>1?' done':'');
   $('pline2').className='p-line'+(s>2?' done':'');
 }
-
 function showPage(n){ document.querySelectorAll('.pg').forEach(p=>p.classList.remove('active')); $('pv'+n).classList.add('active'); }
-
 $('btn-to-checkout').addEventListener('click',()=>{
   if(tokAmt<MIN_TOK) return;
   const price=calcPrice(tokAmt), tax=price*.19, total=price+tax;
-  $('co-tok').textContent=fmtTok(tokAmt);
-  $('co-sub').textContent=fmtP(price);
-  $('co-tax').textContent=fmtP(tax);
-  $('co-total-v').textContent=fmtP(total);
+  $('co-tok').textContent=fmtTok(tokAmt); $('co-sub').textContent=fmtP(price);
+  $('co-tax').textContent=fmtP(tax); $('co-total-v').textContent=fmtP(total);
   updateEsts('ce');
   const isCard=curPay==='card', isPsc=curPay==='paysafe';
   $('co-card-section').style.display=isCard?'block':'none';
@@ -1218,25 +1281,20 @@ $('btn-to-checkout').addEventListener('click',()=>{
   $('btn-pay').textContent={card:'Jetzt kaufen →',paypal:'Weiter zu PayPal →',gpay:'Mit Google Pay →',paysafe:'PIN einlösen →'}[curPay];
   setStep(2); showPage(2);
 });
-
 $('btn-pay').addEventListener('click',()=>{
   const btn=$('btn-pay'); btn.textContent='Wird verarbeitet...'; btn.disabled=true;
   setTimeout(()=>{
     const price=calcPrice(tokAmt), tax=price*.19, total=price+tax;
-    $('suc-tok').textContent='+'+fmtTok(tokAmt);
-    $('suc-price').textContent=fmtP(total);
+    $('suc-tok').textContent='+'+fmtTok(tokAmt); $('suc-price').textContent=fmtP(total);
     $('suc-method').textContent=PAY_NAMES[curPay];
     $('suc-date').textContent=new Date().toLocaleString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
-    balance+=tokAmt; updateBal();
-    btn.textContent='Jetzt kaufen →'; btn.disabled=false;
+    balance+=tokAmt; updateBal(); btn.textContent='Jetzt kaufen →'; btn.disabled=false;
     setStep(3); showPage(3);
   },1500);
 });
-
 $('btn-back').addEventListener('click',()=>{ setStep(1); showPage(1); });
 $('btn-buy-more').addEventListener('click',()=>{
-  tokAmt=MIN_TOK; curPay='card';
-  $('tok-slider').value=0;
+  tokAmt=MIN_TOK; curPay='card'; $('tok-slider').value=0;
   document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('active'));
   document.querySelector('.pbtn[data-tok="333333"]').classList.add('active');
   document.querySelectorAll('.pay-btn').forEach(b=>b.classList.remove('active'));
@@ -1244,46 +1302,33 @@ $('btn-buy-more').addEventListener('click',()=>{
   updatePurchase(); setStep(1); showPage(1);
 });
 $('btn-to-chat').addEventListener('click',()=>nav('chat'));
-
 $('inp-cardnum').addEventListener('input',function(){ let v=this.value.replace(/\D/g,'').slice(0,16); this.value=v.match(/.{1,4}/g)?.join(' ')||v; });
 $('inp-exp').addEventListener('input',function(){ let v=this.value.replace(/\D/g,''); if(v.length>=2) v=v.slice(0,2)+'/'+v.slice(2,4); this.value=v; });
-
-$('tok-slider').value=0;
-updatePurchase(); setStep(1);
+$('tok-slider').value=0; updatePurchase(); setStep(1);
 
 /* ──────────────── SETTINGS ──────────────── */
-$('sel-theme').addEventListener('change',function(){ document.getElementById('app').classList.toggle('light-mode',this.value==='light'); toast('Gespeichert'); });
-$('sel-lang').addEventListener('change',()=>toast('Gespeichert'));
-$('sel-fs').addEventListener('change',function(){ document.documentElement.style.setProperty('--fs',this.value); toast('Gespeichert'); });
-
 document.querySelectorAll('.sw[data-c]').forEach(sw=>{
   sw.addEventListener('click',()=>{
     document.querySelectorAll('.sw').forEach(s=>s.classList.remove('active'));
-    sw.classList.add('active');
-    document.documentElement.style.setProperty('--acc',sw.dataset.c);
+    sw.classList.add('active'); document.documentElement.style.setProperty('--acc',sw.dataset.c);
   });
 });
-
 [$('tog-history'),$('tog-compact'),$('tog-training'),$('tog-analytics')].forEach(t=>{
   t.addEventListener('click',()=>{ t.classList.toggle('on'); toast('Gespeichert'); });
 });
-
 $('tog-2fa').addEventListener('click',function(){
   this.classList.toggle('on');
   $('twofa-desc').textContent=this.classList.contains('on')?'Aktiviert':'Nicht aktiviert';
   toast(this.classList.contains('on')?'2FA aktiviert':'2FA deaktiviert');
 });
-
 $('inp-dname').addEventListener('change',function(){
   $('s-name').textContent=this.value;
   $('s-av').textContent=this.value.charAt(0).toUpperCase();
   toast('Gespeichert');
 });
-
 $('btn-s-buy').addEventListener('click',()=>nav('purchase'));
 $('btn-del-acc').addEventListener('click',()=>toast('Konto gelöscht'));
 $('btn-logout').addEventListener('click',()=>toast('Abgemeldet'));
-
 $('btn-clear-hist').addEventListener('click',()=>{
   if(!confirm('Wirklich den gesamten Verlauf löschen?')) return;
   chatHistory=[]; saveHistory();
@@ -1294,14 +1339,11 @@ $('btn-clear-hist').addEventListener('click',()=>{
 });
 
 /* ──────────────── INIT ──────────────── */
-loadHistory();
-updateBal();
-renderGpts();
-
-window.addMsg       = addMsg;
-window.addTyping    = addTyping;
-window.curModel     = ()=>curModel;
-window.curGptPrompt = ()=>curGptPrompt;
+loadHistory(); updateBal(); renderGpts();
+window.addMsg        = addMsg;
+window.addTyping     = addTyping;
+window.curModel      = ()=>curModel;
+window.curGptPrompt  = ()=>curGptPrompt;
 window.deductBalance = (n)=>{ balance=Math.max(0,balance-n); updateBal(); };
 </script>
 <script src="api.js"></script>
