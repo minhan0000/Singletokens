@@ -1323,4 +1323,11 @@ function useGpt(id){
   const sel=document.getElementById('chat-model-sel');if(sel)sel.value=g.model;
   openView('chat');
   newChat();
-  if(typeof setGptPrompt==='functio
+if(typeof setGptPrompt==='function')setGptPrompt(g.prompt);
+  showToast('GPT "'+g.name+'" geladen!');
+}
+renderGpts();
+applyLang();
+</script>
+</body>
+</html>
