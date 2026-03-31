@@ -349,6 +349,53 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .tag-red{background:rgba(239,68,68,.15);color:#FCA5A5}
 .tag-green{background:rgba(34,197,94,.15);color:#86EFAC}
 .tag-muted{background:rgba(255,255,255,.07);color:var(--muted2)}
+
+/* ═══ CUSTOM CONFIRM MODAL ═══ */
+.modal-backdrop{
+  position:fixed;inset:0;z-index:10000;
+  background:rgba(0,0,0,.6);
+  backdrop-filter:blur(4px);
+  display:flex;align-items:center;justify-content:center;
+  animation:fadeIn .15s ease both;
+}
+.modal-box{
+  background:var(--dark2);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:16px;
+  padding:28px 28px 22px;
+  width:100%;max-width:360px;
+  box-shadow:0 24px 60px rgba(0,0,0,.6);
+  animation:modalIn .18s cubic-bezier(.2,0,.2,1) both;
+}
+@keyframes modalIn{from{opacity:0;transform:scale(.93) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-icon{
+  width:44px;height:44px;border-radius:12px;
+  background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.25);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:16px;
+}
+.modal-icon svg{width:20px;height:20px;stroke:#F87171;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.modal-title{font-size:15px;font-weight:800;color:var(--text);letter-spacing:-.02em;margin-bottom:6px}
+.modal-msg{font-size:13px;color:var(--muted2);line-height:1.6;margin-bottom:22px}
+.modal-msg strong{color:var(--text);font-weight:700}
+.modal-hint{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:20px;margin-top:-14px}
+.modal-actions{display:flex;gap:8px}
+.modal-cancel{
+  flex:1;padding:11px;
+  background:transparent;border:1px solid var(--border);
+  border-radius:9px;color:var(--muted2);
+  font-size:13px;font-weight:700;cursor:pointer;
+  font-family:'Syne',sans-serif;transition:all .15s;
+}
+.modal-cancel:hover{border-color:rgba(255,255,255,.2);color:var(--text)}
+.modal-confirm{
+  flex:1;padding:11px;
+  background:rgba(248,113,113,.15);border:1px solid rgba(248,113,113,.35);
+  border-radius:9px;color:#F87171;
+  font-size:13px;font-weight:800;cursor:pointer;
+  font-family:'Syne',sans-serif;transition:all .15s;
+}
+.modal-confirm:hover{background:rgba(248,113,113,.25);border-color:#F87171}
 </style>
 </head>
 <body>
@@ -710,6 +757,37 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 </div><!-- end main -->
 </div><!-- end app -->
 
+<!-- ═══ CUSTOM CONFIRM MODAL ═══ -->
+<div id="confirm-modal" style="display:none" class="modal-backdrop" onclick="if(event.target===this)_confirmCancel()">
+  <div class="modal-box">
+    <div class="modal-icon">
+      <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+    </div>
+    <div class="modal-title" id="confirm-title">Löschen bestätigen</div>
+    <div class="modal-msg" id="confirm-msg"></div>
+    <div class="modal-hint">Diese Aktion kann nicht rückgängig gemacht werden.</div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="_confirmCancel()">Abbrechen</button>
+      <button class="modal-confirm" id="confirm-ok-btn" onclick="_confirmOk()">Löschen</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ RENAME MODAL ═══ -->
+<div id="rename-modal" style="display:none" class="modal-backdrop" onclick="if(event.target===this)closeRenameModal()">
+  <div class="modal-box">
+    <div class="modal-title" style="margin-bottom:14px">Chat umbenennen</div>
+    <input id="rename-input" type="text"
+      style="width:100%;background:var(--dark3);border:1px solid rgba(34,211,238,.3);border-radius:9px;padding:11px 14px;font-family:'Syne',sans-serif;font-size:13px;color:var(--text);outline:none;margin-bottom:16px"
+      placeholder="Chat-Name..."
+      onkeydown="if(event.key==='Enter')doRename();if(event.key==='Escape')closeRenameModal()">
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeRenameModal()">Abbrechen</button>
+      <button class="modal-confirm" style="background:rgba(34,211,238,.12);border-color:rgba(34,211,238,.35);color:var(--acc)" onclick="doRename()">Umbenennen</button>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ CONTEXT MENU ═══ -->
 <div id="ctx-menu" style="display:none;position:fixed;z-index:9999">
   <div class="ctx-menu">
@@ -732,6 +810,27 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 <div class="toast" id="toast"></div>
 
 <script>
+/* ═══ CUSTOM CONFIRM MODAL ENGINE ═══ */
+let _confirmCallback=null;
+function showConfirm(opts){
+  document.getElementById("confirm-title").textContent=opts.title||"Bestätigen";
+  document.getElementById("confirm-msg").innerHTML=opts.msg||"";
+  document.getElementById("confirm-ok-btn").textContent=opts.okLabel||"OK";
+  _confirmCallback=opts.onOk||null;
+  document.getElementById("confirm-modal").style.display="flex";
+}
+function _confirmOk(){
+  document.getElementById("confirm-modal").style.display="none";
+  if(typeof _confirmCallback==="function")_confirmCallback();
+  _confirmCallback=null;
+}
+function _confirmCancel(){
+  document.getElementById("confirm-modal").style.display="none";
+  _confirmCallback=null;
+}
+document.addEventListener("keydown",function(e){
+  if(e.key==="Escape"&&document.getElementById("confirm-modal").style.display!=="none")_confirmCancel();
+});
 /* ─── SIDEBAR ─── */
 function toggleSidebar(){
   const sb=document.getElementById('sidebar');
@@ -966,20 +1065,29 @@ document.addEventListener('keydown', e=>{
 document.addEventListener('scroll', hideCtxMenu, true);
 
 /* ── actions ── */
+let _renameTargetId=null;
 function ctxRename(){
   const chat=savedChats.find(c=>c.id===ctxTargetId);
   if(!chat){hideCtxMenu();return;}
+  _renameTargetId=ctxTargetId;
   hideCtxMenu();
-  // Small delay so menu is gone before prompt
   setTimeout(()=>{
-    const newName=prompt('Chat umbenennen:', chat.title);
-    if(newName!==null&&newName.trim()){
-      chat.title=newName.trim();
-      persistChats();
-      renderChatHistory();
-      showToast('✏️ Chat umbenannt');
-    }
-  }, 80);
+    const inp=document.getElementById('rename-input');
+    inp.value=chat.title;
+    document.getElementById('rename-modal').style.display='flex';
+    inp.focus();inp.select();
+  },80);
+}
+function closeRenameModal(){
+  document.getElementById('rename-modal').style.display='none';
+  _renameTargetId=null;
+}
+function doRename(){
+  const newName=document.getElementById('rename-input').value.trim();
+  if(!newName){return;}
+  const chat=savedChats.find(c=>c.id===_renameTargetId);
+  if(chat){chat.title=newName;persistChats();renderChatHistory();showToast('✏️ Chat umbenannt');}
+  closeRenameModal();
 }
 
 function ctxPin(){
@@ -997,10 +1105,12 @@ function ctxDelete(){
   const id=ctxTargetId;
   hideCtxMenu();
   setTimeout(()=>{
-    if(confirm(`"${chat?.title||'Chat'}" wirklich löschen?\n\nDiese Aktion kann nicht rückgängig gemacht werden.`)){
-      deleteChat(id);
-      showToast('🗑 Chat gelöscht');
-    }
+    showConfirm({
+      title:'Chat löschen',
+      msg:`<strong>"${escHtml(chat?.title||'Chat')}"</strong> wirklich löschen?`,
+      okLabel:'Löschen',
+      onOk:()=>{deleteChat(id);showToast('🗑 Chat gelöscht');}
+    });
   }, 80);
 }
 
@@ -1101,7 +1211,7 @@ function setAccent(c,el){document.querySelectorAll('.sw').forEach(s=>s.classList
 function setFontSize(s){document.documentElement.style.setProperty('--font-size',s);document.getElementById('s-preview').style.fontSize=s;showToast(T('saved'));}
 function saveName(v){document.getElementById('s-display-name').textContent=v;document.getElementById('s-av').textContent=v.charAt(0).toUpperCase();document.getElementById('sidebar-av').textContent=v.charAt(0).toUpperCase();document.getElementById('sidebar-name').textContent=v;showToast(T('saved'));}
 function saveEmail(v){document.getElementById('s-display-email').textContent=v;showToast(T('saved'));}
-function confirmDel(){if(confirm(T('delete_account_desc')))showToast(T('deleted'));}
+function confirmDel(){showConfirm({title:'Konto löschen',msg:'Alle Daten werden <strong>unwiderruflich gelöscht</strong>.',okLabel:'Konto löschen',onOk:()=>showToast(T('deleted'))});}
 function toggleTwoFA(el){el.classList.toggle('on');const on=el.classList.contains('on');document.getElementById('twofa-desc').textContent=on?T('two_fa_on'):T('two_fa_off');showToast(on?T('twofa_on'):T('twofa_off'));}
 function revokeKey(btn,name){const i=btn.closest('.mem-item');i.style.opacity='0';i.style.transition='opacity .2s';setTimeout(()=>i.remove(),200);showToast(T('key_revoked'));}
 function addKey(){const chars='ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqr23456789';let k='sk-aizz-';for(let i=0;i<10;i++)k+=chars[Math.floor(Math.random()*chars.length)];const d=document.createElement('div');d.className='mem-item';d.innerHTML=`<div style="flex:1"><div style="font-size:12px;color:var(--text);font-weight:600">New Key</div><div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);margin-top:2px">${k}••••</div></div><button class="s-dbtn" style="font-size:11px" onclick="revokeKey(this,'New Key')">${T('revoke')}</button>`;document.getElementById('api-keys').appendChild(d);showToast(T('key_added'));}
@@ -1159,8 +1269,12 @@ function saveGpt(){
 function editGpt(id){openGptModal(id);}
 function deleteGpt(id){
   const g=gpts.find(x=>x.id===id);if(!g)return;
-  if(!confirm('GPT "'+g.name+'" wirklich löschen?'))return;
-  gpts=gpts.filter(x=>x.id!==id);renderGpts();showToast('GPT gelöscht.');
+  showConfirm({
+    title:'GPT löschen',
+    msg:`GPT <strong>"${escHtml(g.name)}"</strong> wirklich löschen?`,
+    okLabel:'Löschen',
+    onOk:()=>{gpts=gpts.filter(x=>x.id!==id);renderGpts();showToast('GPT gelöscht.');}
+  });
 }
 function useGpt(id){
   const g=gpts.find(x=>x.id===id);if(!g)return;
