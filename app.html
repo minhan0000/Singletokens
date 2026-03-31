@@ -21,6 +21,8 @@
 }
 html,body{height:100%;overflow:hidden;background:var(--dark);font-family:'Syne',sans-serif;color:var(--text)}
 .app{display:flex;height:100vh;overflow:hidden}
+
+/* ═══ SIDEBAR ═══ */
 .sidebar{width:240px;flex-shrink:0;background:var(--dark2);border-right:1px solid var(--border);display:flex;flex-direction:column;height:100vh;overflow:hidden;transition:width .25s cubic-bezier(.4,0,.2,1)}
 .sidebar.collapsed{width:56px}
 .sidebar.collapsed .sidebar-text{display:none !important}
@@ -56,8 +58,72 @@ html,body{height:100%;overflow:hidden;background:var(--dark);font-family:'Syne',
 .recent-area::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 .model-group-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;padding:10px 16px 4px;display:flex;align-items:center;gap:6px}
 .mdot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
-.chat-item{padding:7px 14px;margin:0 8px;border-radius:7px;cursor:pointer;color:var(--muted2);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:all .15s}
-.chat-item:hover{background:var(--dark3);color:var(--text)}
+
+/* ─── CHAT ITEMS ─── */
+.chat-item{
+  position:relative;
+  padding:7px 14px;
+  margin:1px 8px;
+  border-radius:7px;
+  cursor:pointer;
+  color:var(--muted2);
+  font-size:12px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  transition:all .15s;
+  display:flex;
+  align-items:center;
+  gap:0;
+}
+.chat-item:hover{background:var(--dark3);color:var(--text);padding-right:34px}
+.chat-item.active-chat{background:var(--dark3);color:var(--text)}
+.chat-item.pinned .chat-title::before{content:'📌 ';font-size:9px;opacity:.7}
+.chat-title{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.chat-dots-btn{
+  position:absolute;right:6px;top:50%;transform:translateY(-50%);
+  width:22px;height:22px;
+  border-radius:5px;
+  background:var(--dark4);
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  opacity:0;
+  transition:opacity .15s;
+  color:var(--muted2);
+  padding:0;
+  flex-shrink:0;
+}
+.chat-dots-btn:hover{background:var(--dark3);color:var(--text);border-color:rgba(255,255,255,.15)}
+.chat-item:hover .chat-dots-btn{opacity:1}
+
+/* ─── CONTEXT MENU ─── */
+.ctx-menu{
+  position:fixed;
+  z-index:9999;
+  background:var(--dark3);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;
+  padding:4px;
+  min-width:168px;
+  box-shadow:0 8px 28px rgba(0,0,0,.5);
+  animation:ctxIn .12s cubic-bezier(.2,0,.2,1) both;
+}
+@keyframes ctxIn{from{opacity:0;transform:scale(.94) translateY(-4px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.ctx-item{
+  display:flex;align-items:center;gap:9px;
+  padding:8px 12px;border-radius:7px;
+  cursor:pointer;font-size:12px;font-weight:600;
+  color:var(--muted2);transition:all .1s;
+}
+.ctx-item:hover{background:var(--dark4);color:var(--text)}
+.ctx-item svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.ctx-item.ctx-danger{color:#F87171}
+.ctx-item.ctx-danger:hover{background:rgba(248,113,113,.1);color:#F87171}
+.ctx-item.ctx-accent{color:var(--acc)}
+.ctx-item.ctx-accent:hover{background:rgba(34,211,238,.08);color:var(--acc)}
+.ctx-sep{height:1px;background:var(--border);margin:3px 0}
+
 .sidebar-footer{flex-shrink:0;border-top:1px solid var(--border);padding:10px 12px}
 .account-btn{width:100%;padding:9px 12px;background:transparent;border:1px solid var(--border);border-radius:9px;color:var(--text);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .15s;font-family:'Syne',sans-serif}
 .account-btn:hover{background:var(--dark3)}
@@ -584,7 +650,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
       </div>
       <div class="s-pg" id="s-account">
         <div class="s-title" data-t="account"></div>
-        <div class="acc-card"><div class="big-av" id="s-av">G</div><div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--text)" id="s-display-name">Guest User</div><div style="font-size:12px;color:var(--muted2);font-family:'DM Mono',monospace;margin-top:2px" id="s-display-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5037253523241023393e373c35243f3b353e237e333f3d">[email&#160;protected]</a></div></div><div class="tok-badge" id="s-tok-badge">716K Tokens</div></div>
+        <div class="acc-card"><div class="big-av" id="s-av">G</div><div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--text)" id="s-display-name">Guest User</div><div style="font-size:12px;color:var(--muted2);font-family:'DM Mono',monospace;margin-top:2px" id="s-display-email">guest@singletokens.com</div></div><div class="tok-badge" id="s-tok-badge">716K Tokens</div></div>
         <div class="s-row"><div class="s-info"><div class="s-label" data-t="display_name"></div></div><input class="s-finput" style="width:160px" type="text" value="Guest User" onchange="saveName(this.value)"></div>
         <div class="s-row"><div class="s-info"><div class="s-label" data-t="email"></div></div><input class="s-finput" style="width:200px" type="email" value="guest@singletokens.com" onchange="saveEmail(this.value)"></div>
         <div class="s-row"><div class="s-info"><div class="s-label" data-t="password"></div><div class="s-desc" data-t="password_desc"></div></div><button class="s-nbtn" data-t="change" onclick="showToast(T('pw_sent'))"></button></div>
@@ -643,9 +709,29 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 
 </div><!-- end main -->
 </div><!-- end app -->
+
+<!-- ═══ CONTEXT MENU ═══ -->
+<div id="ctx-menu" style="display:none;position:fixed;z-index:9999">
+  <div class="ctx-menu">
+    <div class="ctx-item" id="ctx-rename-btn" onclick="ctxRename()">
+      <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4z"/></svg>
+      Umbenennen
+    </div>
+    <div class="ctx-item" id="ctx-pin-btn" onclick="ctxPin()">
+      <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+      Anheften
+    </div>
+    <div class="ctx-sep"></div>
+    <div class="ctx-item ctx-danger" onclick="ctxDelete()">
+      <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+      Löschen
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 /* ─── SIDEBAR ─── */
 function toggleSidebar(){
   const sb=document.getElementById('sidebar');
@@ -668,33 +754,20 @@ function openView(id){
   currentView=id;
 }
 
-/* ─── CHAT ─── */
+/* ─── CHAT CORE ─── */
 let balance=716000;
-
 const MODELS_MULT={
-  'Llama 3.3 70B':   0.3,
-  'Llama 3.1 8B':    0.1,
-  'Gemma 2 9B':      0.15,
-  'Mixtral 8x7B':    0.2,
-  'DeepSeek R1 70B': 0.35,
-  'Claude Sonnet 4.5':1,
-  'GPT-4o':          0.85,
-  'GPT-5':           70,
-  'Claude Opus 4.5': 5,
-  'Claude Haiku 4.5':0.27,
-  'Gemini 2.0 Flash':0.5,
-  'Grok 2':          1.67,
-  'Mistral Large 2': 2.67,
-  'DeepSeek V3':     0.9
+  'Llama 3.3 70B':0.3,'Llama 3.1 8B':0.1,'Gemma 2 9B':0.15,'Mixtral 8x7B':0.2,
+  'DeepSeek R1 70B':0.35,'Claude Sonnet 4.5':1,'GPT-4o':0.85,'GPT-5':70,
+  'Claude Opus 4.5':5,'Claude Haiku 4.5':0.27,'Gemini 2.0 Flash':0.5,
+  'Grok 2':1.67,'Mistral Large 2':2.67,'DeepSeek V3':0.9
 };
-
 function fmtBalance(){
   if(balance>=1000000)return(balance/1000000).toFixed(1).replace(/\.0$/,'')+'M';
   if(balance>=1000)return Math.round(balance/1000)+'K';
   return balance.toString();
 }
 const fmtBal=fmtBalance;
-
 function updateBalance(used){
   balance=Math.max(0,balance-used);
   const el=document.getElementById('token-counter');
@@ -702,9 +775,7 @@ function updateBalance(used){
   if(el)el.textContent=fmtBalance()+' Tokens';
   if(badge)badge.textContent=fmtBalance()+' Tokens';
 }
-
-var sendMessage = function(){ console.warn('api.js noch nicht geladen'); };
-
+var sendMessage=function(){console.warn('api.js noch nicht geladen');};
 function addMsg(text,role,model){
   const msgs=document.getElementById('chat-messages');
   const d=document.createElement('div');
@@ -716,7 +787,6 @@ function addMsg(text,role,model){
   msgs.scrollTop=msgs.scrollHeight;
   return d;
 }
-
 function addTyping(){
   const msgs=document.getElementById('chat-messages');
   const d=document.createElement('div');
@@ -726,117 +796,235 @@ function addTyping(){
   msgs.scrollTop=msgs.scrollHeight;
   return d;
 }
-
 function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}}
 function autoResize(el){el.style.height='22px';el.style.height=Math.min(el.scrollHeight,120)+'px';}
 
-/* ─── CHAT HISTORY ─── */
-let savedChats = JSON.parse(localStorage.getItem('st_chats') || '[]');
-let activeChatId = null;
+/* ═══════════════════════════════════════
+   CHAT HISTORY + CONTEXT MENU
+═══════════════════════════════════════ */
+let savedChats=JSON.parse(localStorage.getItem('st_chats')||'[]');
+let activeChatId=null;
+let ctxTargetId=null;
 
+/* ── helpers ── */
+function genId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+
+function persistChats(){
+  localStorage.setItem('st_chats',JSON.stringify(savedChats.slice(0,50)));
+}
+
+/* ── new / save / load ── */
 function newChat(){
   saveCurrentChat();
-  activeChatId = null;
+  activeChatId=null;
   document.getElementById('chat-messages').innerHTML='<div class="msg ai"><div class="msg-bubble">Hallo! Ich bin SingleTokens AI. Wie kann ich dir heute helfen?</div><div class="msg-meta">SingleTokens · Llama 3.3 70B</div></div>';
   if(typeof resetChatHistory==='function')resetChatHistory();
   renderChatHistory();
 }
 
-function genId() {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2,6);
-}
-
-function saveCurrentChat() {
-  if (!activeChatId) return;
-  const msgs = document.getElementById('chat-messages');
-  const bubbles = [...msgs.querySelectorAll('.msg')].map(m => ({
-    role: m.classList.contains('user') ? 'user' : 'ai',
-    text: m.querySelector('.msg-bubble')?.textContent || '',
-    meta: m.querySelector('.msg-meta')?.textContent || ''
+function saveCurrentChat(){
+  if(!activeChatId)return;
+  const msgs=document.getElementById('chat-messages');
+  const bubbles=[...msgs.querySelectorAll('.msg')].map(m=>({
+    role:m.classList.contains('user')?'user':'ai',
+    text:m.querySelector('.msg-bubble')?.textContent||'',
+    meta:m.querySelector('.msg-meta')?.textContent||''
   }));
-  if (bubbles.length <= 1) return;
-  const model = document.getElementById('chat-model-sel')?.value || 'Llama 3.3 70B';
-  const title = bubbles.find(b => b.role === 'user')?.text?.slice(0,40) || 'Neuer Chat';
-  const idx = savedChats.findIndex(c => c.id === activeChatId);
-  const chat = { id: activeChatId, title, model, messages: bubbles, ts: Date.now() };
-  if (idx >= 0) savedChats[idx] = chat;
+  if(bubbles.length<=1)return;
+  const model=document.getElementById('chat-model-sel')?.value||'Llama 3.3 70B';
+  const title=bubbles.find(b=>b.role==='user')?.text?.slice(0,40)||'Neuer Chat';
+  const idx=savedChats.findIndex(c=>c.id===activeChatId);
+  const existing=idx>=0?savedChats[idx]:{};
+  const chat={id:activeChatId,title,model,messages:bubbles,ts:Date.now(),pinned:existing.pinned||false};
+  if(idx>=0)savedChats[idx]=chat;
   else savedChats.unshift(chat);
-  localStorage.setItem('st_chats', JSON.stringify(savedChats.slice(0,50)));
+  persistChats();
   renderChatHistory();
 }
 
-function renderChatHistory() {
-  const list = document.getElementById('chat-history-list');
-  if (!list) return;
-  if (savedChats.length === 0) {
-    list.innerHTML = '<div style="padding:10px 16px;font-size:11px;color:var(--muted)">Noch keine Chats</div>';
+function loadSavedChat(id){
+  const chat=savedChats.find(c=>c.id===id);
+  if(!chat)return;
+  saveCurrentChat();
+  activeChatId=id;
+  openView('chat');
+  const msgs=document.getElementById('chat-messages');
+  msgs.innerHTML='';
+  chat.messages.forEach(m=>{
+    const d=document.createElement('div');
+    d.className='msg '+m.role;
+    d.innerHTML=`<div class="msg-bubble">${m.text}</div><div class="msg-meta">${m.meta}</div>`;
+    msgs.appendChild(d);
+  });
+  msgs.scrollTop=msgs.scrollHeight;
+  const sel=document.getElementById('chat-model-sel');
+  if(sel&&chat.model)sel.value=chat.model;
+  if(typeof resetChatHistory==='function')resetChatHistory();
+  renderChatHistory();
+}
+
+function onMessageComplete(){
+  if(!activeChatId)activeChatId=genId();
+  saveCurrentChat();
+}
+
+/* ── render ── */
+function renderChatHistory(){
+  const list=document.getElementById('chat-history-list');
+  if(!list)return;
+  if(savedChats.length===0){
+    list.innerHTML='<div style="padding:10px 16px;font-size:11px;color:var(--muted)">Noch keine Chats</div>';
     return;
   }
-  list.innerHTML = savedChats.map(c => `
-    <div class="chat-item ${c.id === activeChatId ? 'active-chat' : ''}"
+  // Gepinnte immer oben
+  const sorted=[...savedChats].sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0));
+  list.innerHTML=sorted.map(c=>`
+    <div class="chat-item${c.id===activeChatId?' active-chat':''}${c.pinned?' pinned':''}"
          onclick="loadSavedChat('${c.id}')"
-         style="display:flex;align-items:center;justify-content:space-between;gap:6px">
-      <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1">${c.title}</span>
-      <span onclick="event.stopPropagation();deleteChat('${c.id}')"
-            style="flex-shrink:0;opacity:0;font-size:14px;color:var(--muted2);cursor:pointer;padding:0 2px;transition:opacity .15s"
-            onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0'">&times;</span>
+         oncontextmenu="openCtxMenu(event,'${c.id}')">
+      <span class="chat-title">${escHtml(c.title)}</span>
+      <button class="chat-dots-btn"
+              onclick="event.stopPropagation();openCtxMenuFromBtn(event,'${c.id}')"
+              title="Optionen">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+          <circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/>
+        </svg>
+      </button>
     </div>`).join('');
 }
 
-function loadSavedChat(id) {
-  const chat = savedChats.find(c => c.id === id);
-  if (!chat) return;
-  saveCurrentChat();
-  activeChatId = id;
-  openView('chat');
-  const msgs = document.getElementById('chat-messages');
-  msgs.innerHTML = '';
-  chat.messages.forEach(m => {
-    const d = document.createElement('div');
-    d.className = 'msg ' + m.role;
-    d.innerHTML = `<div class="msg-bubble">${m.text}</div><div class="msg-meta">${m.meta}</div>`;
-    msgs.appendChild(d);
+function escHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ── delete (used directly by both ── */
+function deleteChat(id){
+  savedChats=savedChats.filter(c=>c.id!==id);
+  persistChats();
+  if(activeChatId===id){activeChatId=null;newChat();}
+  renderChatHistory();
+}
+
+/* ══════════════════════
+   CONTEXT MENU LOGIC
+══════════════════════ */
+const ctxEl=document.getElementById('ctx-menu');
+
+function _populateCtxMenu(id){
+  ctxTargetId=id;
+  const chat=savedChats.find(c=>c.id===id);
+  const pinBtn=document.getElementById('ctx-pin-btn');
+  if(chat?.pinned){
+    pinBtn.innerHTML=`<svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Lösen`;
+    pinBtn.className='ctx-item ctx-accent';
+  }else{
+    pinBtn.innerHTML=`<svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>Anheften`;
+    pinBtn.className='ctx-item';
+  }
+}
+
+function _positionCtxMenu(x,y){
+  ctxEl.style.display='block';
+  // Measure after display so we get real dimensions
+  requestAnimationFrame(()=>{
+    const w=ctxEl.firstElementChild.offsetWidth||170;
+    const h=ctxEl.firstElementChild.offsetHeight||120;
+    const px=Math.min(x, window.innerWidth-w-8);
+    const py=Math.min(y, window.innerHeight-h-8);
+    ctxEl.style.left=px+'px';
+    ctxEl.style.top=py+'px';
   });
-  msgs.scrollTop = msgs.scrollHeight;
-  const sel = document.getElementById('chat-model-sel');
-  if (sel && chat.model) sel.value = chat.model;
-  if (typeof resetChatHistory === 'function') resetChatHistory();
-  renderChatHistory();
 }
 
-function deleteChat(id) {
-  savedChats = savedChats.filter(c => c.id !== id);
-  localStorage.setItem('st_chats', JSON.stringify(savedChats));
-  if (activeChatId === id) { activeChatId = null; newChat(); }
-  renderChatHistory();
+// Right-click on chat item
+function openCtxMenu(e,id){
+  e.preventDefault();
+  e.stopPropagation();
+  _populateCtxMenu(id);
+  _positionCtxMenu(e.clientX, e.clientY);
 }
 
-function onMessageComplete() {
-  if (!activeChatId) activeChatId = genId();
-  saveCurrentChat();
+// Click on ··· button
+function openCtxMenuFromBtn(e,id){
+  e.preventDefault();
+  _populateCtxMenu(id);
+  const rect=e.currentTarget.getBoundingClientRect();
+  _positionCtxMenu(rect.left, rect.bottom+4);
+}
+
+function hideCtxMenu(){
+  ctxEl.style.display='none';
+  ctxTargetId=null;
+}
+
+document.addEventListener('click', e=>{
+  if(!ctxEl.contains(e.target)) hideCtxMenu();
+});
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape') hideCtxMenu();
+});
+document.addEventListener('scroll', hideCtxMenu, true);
+
+/* ── actions ── */
+function ctxRename(){
+  const chat=savedChats.find(c=>c.id===ctxTargetId);
+  if(!chat){hideCtxMenu();return;}
+  hideCtxMenu();
+  // Small delay so menu is gone before prompt
+  setTimeout(()=>{
+    const newName=prompt('Chat umbenennen:', chat.title);
+    if(newName!==null&&newName.trim()){
+      chat.title=newName.trim();
+      persistChats();
+      renderChatHistory();
+      showToast('✏️ Chat umbenannt');
+    }
+  }, 80);
+}
+
+function ctxPin(){
+  const chat=savedChats.find(c=>c.id===ctxTargetId);
+  if(!chat){hideCtxMenu();return;}
+  chat.pinned=!chat.pinned;
+  persistChats();
+  renderChatHistory();
+  showToast(chat.pinned?'📌 Angeheftet':'Gelöst');
+  hideCtxMenu();
+}
+
+function ctxDelete(){
+  const chat=savedChats.find(c=>c.id===ctxTargetId);
+  const id=ctxTargetId;
+  hideCtxMenu();
+  setTimeout(()=>{
+    if(confirm(`"${chat?.title||'Chat'}" wirklich löschen?\n\nDiese Aktion kann nicht rückgängig gemacht werden.`)){
+      deleteChat(id);
+      showToast('🗑 Chat gelöscht');
+    }
+  }, 80);
 }
 
 renderChatHistory();
 
 /* ─── YOUR MODELS ─── */
 const ALL_MODELS=[
-  {name:'Llama 3.3 70B',   provider:'Meta · Groq',  cat:'open',      mult:0.3,  tag:'Standard',    tagClass:'tag-cyan'},
-  {name:'Llama 3.1 8B',    provider:'Meta · Groq',  cat:'open',      mult:0.1,  tag:'Ultraschnell', tagClass:'tag-cyan'},
-  {name:'Gemma 2 9B',      provider:'Google · Groq',cat:'open',      mult:0.15, tag:'Effizient',   tagClass:'tag-green'},
-  {name:'Mixtral 8x7B',    provider:'Mistral · Groq',cat:'open',     mult:0.2,  tag:'Mixtral',     tagClass:'tag-muted'},
-  {name:'DeepSeek R1 70B', provider:'DeepSeek · Groq',cat:'open',    mult:0.35, tag:'Reasoning',   tagClass:'tag-blue'},
-  {name:'Claude Sonnet 4.5',provider:'Anthropic',   cat:'anthropic', mult:1,    tag:'Empfohlen',   tagClass:'tag-blue'},
-  {name:'Claude Opus 4.5', provider:'Anthropic',    cat:'anthropic', mult:5,    tag:'Leistungsstark',tagClass:'tag-blue'},
-  {name:'Claude Haiku 4.5',provider:'Anthropic',    cat:'anthropic', mult:0.27, tag:'Schnell',     tagClass:'tag-cyan'},
-  {name:'GPT-4o',          provider:'OpenAI',       cat:'openai',    mult:0.85, tag:'Vielseitig',  tagClass:'tag-green'},
-  {name:'GPT-5',           provider:'OpenAI',       cat:'openai',    mult:70,   tag:'Neuestes',    tagClass:'tag-red'},
-  {name:'GPT-4 Turbo',     provider:'OpenAI',       cat:'openai',    mult:3.33, tag:'Präzise',     tagClass:'tag-muted'},
-  {name:'OpenAI o1',       provider:'OpenAI',       cat:'openai',    mult:20,   tag:'Reasoning',   tagClass:'tag-red'},
-  {name:'OpenAI o1 Mini',  provider:'OpenAI',       cat:'openai',    mult:4,    tag:'Reasoning',   tagClass:'tag-muted'},
-  {name:'Gemini Pro 2.0',  provider:'Google',       cat:'google',    mult:2.33, tag:'Multimodal',  tagClass:'tag-blue'},
-  {name:'Gemini 2.0 Flash',provider:'Google',       cat:'google',    mult:0.5,  tag:'Flash',       tagClass:'tag-cyan'},
-  {name:'Mistral Large 2', provider:'Mistral',      cat:'open',      mult:2.67, tag:'Europäisch',  tagClass:'tag-muted'},
-  {name:'Grok 2',          provider:'xAI',          cat:'open',      mult:1.67, tag:'Von xAI',     tagClass:'tag-muted'},
+  {name:'Llama 3.3 70B',   provider:'Meta · Groq',    cat:'open',      mult:0.3,  tag:'Standard',      tagClass:'tag-cyan'},
+  {name:'Llama 3.1 8B',    provider:'Meta · Groq',    cat:'open',      mult:0.1,  tag:'Ultraschnell',  tagClass:'tag-cyan'},
+  {name:'Gemma 2 9B',      provider:'Google · Groq',  cat:'open',      mult:0.15, tag:'Effizient',     tagClass:'tag-green'},
+  {name:'Mixtral 8x7B',    provider:'Mistral · Groq', cat:'open',      mult:0.2,  tag:'Mixtral',       tagClass:'tag-muted'},
+  {name:'DeepSeek R1 70B', provider:'DeepSeek · Groq',cat:'open',      mult:0.35, tag:'Reasoning',     tagClass:'tag-blue'},
+  {name:'Claude Sonnet 4.5',provider:'Anthropic',     cat:'anthropic', mult:1,    tag:'Empfohlen',     tagClass:'tag-blue'},
+  {name:'Claude Opus 4.5', provider:'Anthropic',      cat:'anthropic', mult:5,    tag:'Leistungsstark',tagClass:'tag-blue'},
+  {name:'Claude Haiku 4.5',provider:'Anthropic',      cat:'anthropic', mult:0.27, tag:'Schnell',       tagClass:'tag-cyan'},
+  {name:'GPT-4o',          provider:'OpenAI',         cat:'openai',    mult:0.85, tag:'Vielseitig',    tagClass:'tag-green'},
+  {name:'GPT-5',           provider:'OpenAI',         cat:'openai',    mult:70,   tag:'Neuestes',      tagClass:'tag-red'},
+  {name:'GPT-4 Turbo',     provider:'OpenAI',         cat:'openai',    mult:3.33, tag:'Präzise',       tagClass:'tag-muted'},
+  {name:'OpenAI o1',       provider:'OpenAI',         cat:'openai',    mult:20,   tag:'Reasoning',     tagClass:'tag-red'},
+  {name:'OpenAI o1 Mini',  provider:'OpenAI',         cat:'openai',    mult:4,    tag:'Reasoning',     tagClass:'tag-muted'},
+  {name:'Gemini Pro 2.0',  provider:'Google',         cat:'google',    mult:2.33, tag:'Multimodal',    tagClass:'tag-blue'},
+  {name:'Gemini 2.0 Flash',provider:'Google',         cat:'google',    mult:0.5,  tag:'Flash',         tagClass:'tag-cyan'},
+  {name:'Mistral Large 2', provider:'Mistral',        cat:'open',      mult:2.67, tag:'Europäisch',    tagClass:'tag-muted'},
+  {name:'Grok 2',          provider:'xAI',            cat:'open',      mult:1.67, tag:'Von xAI',       tagClass:'tag-muted'},
 ];
 function getCardClass(m){if(m.mult>=10)return'expensive';if(m.mult<=0.5)return'cheap';if(m.mult===1)return'reference';return'';}
 function renderModels(f){
@@ -974,19 +1162,15 @@ function deleteGpt(id){
   if(!confirm('GPT "'+g.name+'" wirklich löschen?'))return;
   gpts=gpts.filter(x=>x.id!==id);renderGpts();showToast('GPT gelöscht.');
 }
-
-// ✅ FIX: newChat zuerst, DANN setGptPrompt — sonst überschreibt resetChatHistory() den Prompt
 function useGpt(id){
   const g=gpts.find(x=>x.id===id);if(!g)return;
   const sel=document.getElementById('chat-model-sel');if(sel)sel.value=g.model;
   openView('chat');
   newChat();
-  if(typeof setGptPrompt==='function') setGptPrompt(g.prompt);
+  if(typeof setGptPrompt==='function')setGptPrompt(g.prompt);
   showToast('GPT "'+g.name+'" geladen!');
 }
-
 document.getElementById('gpt-modal').addEventListener('click',closeGptModal);
-
 renderGpts();
 applyLang();
 </script>
