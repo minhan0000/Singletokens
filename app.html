@@ -387,8 +387,13 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
   position:fixed;inset:0;z-index:10000;
   background:rgba(0,0,0,.75);
   backdrop-filter:blur(6px);
-  display:flex;align-items:center;justify-content:center;
+  display:none;
+  align-items:center;justify-content:center;
   animation:fadeIn .15s ease both;
+}
+.modal-backdrop.is-open{
+  display:flex;
+  pointer-events:all;
 }
 .modal-box{
   background:#0F1218;
@@ -795,7 +800,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 </div><!-- end app -->
 
 <!-- ═══ CUSTOM CONFIRM MODAL ═══ -->
-<div id="confirm-modal" style="display:none" class="modal-backdrop" onclick="if(event.target===this)_confirmCancel()">
+<div id="confirm-modal" class="modal-backdrop" onclick="if(event.target===this)_confirmCancel()">
   <div class="modal-box">
     <div class="modal-icon">
       <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
@@ -811,7 +816,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 </div>
 
 <!-- ═══ RENAME MODAL ═══ -->
-<div id="rename-modal" style="display:none" class="modal-backdrop" onclick="if(event.target===this)closeRenameModal()">
+<div id="rename-modal" class="modal-backdrop" onclick="if(event.target===this)closeRenameModal()">
   <div class="modal-box">
     <div class="modal-title" style="margin-bottom:14px">Chat umbenennen</div>
     <input id="rename-input" type="text"
@@ -854,19 +859,19 @@ function showConfirm(opts){
   document.getElementById("confirm-msg").innerHTML=opts.msg||"";
   document.getElementById("confirm-ok-btn").textContent=opts.okLabel||"OK";
   _confirmCallback=opts.onOk||null;
-  document.getElementById("confirm-modal").style.display="flex";
+  document.getElementById("confirm-modal").classList.add("is-open");
 }
 function _confirmOk(){
-  document.getElementById("confirm-modal").style.display="none";
+  document.getElementById("confirm-modal").classList.remove("is-open");
   if(typeof _confirmCallback==="function")_confirmCallback();
   _confirmCallback=null;
 }
 function _confirmCancel(){
-  document.getElementById("confirm-modal").style.display="none";
+  document.getElementById("confirm-modal").classList.remove("is-open");
   _confirmCallback=null;
 }
 document.addEventListener("keydown",function(e){
-  if(e.key==="Escape"&&document.getElementById("confirm-modal").style.display!=="none")_confirmCancel();
+  if(e.key==="Escape"&&document.getElementById("confirm-modal").classList.contains("is-open"))_confirmCancel();
 });
 /* ─── SIDEBAR ─── */
 function toggleSidebar(){
@@ -1111,12 +1116,12 @@ function ctxRename(){
   setTimeout(()=>{
     const inp=document.getElementById('rename-input');
     inp.value=chat.title;
-    document.getElementById('rename-modal').style.display='flex';
+    document.getElementById('rename-modal').classList.add('is-open');
     inp.focus();inp.select();
   },80);
 }
 function closeRenameModal(){
-  document.getElementById('rename-modal').style.display='none';
+  document.getElementById('rename-modal').classList.remove('is-open');
   _renameTargetId=null;
 }
 function doRename(){
