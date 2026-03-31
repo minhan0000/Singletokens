@@ -1329,5 +1329,12 @@ if(typeof setGptPrompt==='function')setGptPrompt(g.prompt);
 renderGpts();
 applyLang();
 </script>
+if(typeof setGptPrompt==='function')setGptPrompt(g.prompt);
+  showToast('GPT "'+g.name+'" geladen!');
+}
+renderGpts();
+applyLang();
+</script>
+<script src="api.js"></script>
 </body>
 </html>
