@@ -58,64 +58,17 @@ html,body{height:100%;overflow:hidden;background:var(--dark);font-family:'Syne',
 .recent-area::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 .model-group-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;padding:10px 16px 4px;display:flex;align-items:center;gap:6px}
 .mdot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
-
-/* ─── CHAT ITEMS ─── */
-.chat-item{
-  position:relative;
-  padding:7px 14px;
-  margin:1px 8px;
-  border-radius:7px;
-  cursor:pointer;
-  color:var(--muted2);
-  font-size:12px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  transition:all .15s;
-  display:flex;
-  align-items:center;
-  gap:0;
-}
+.chat-item{position:relative;padding:7px 14px;margin:1px 8px;border-radius:7px;cursor:pointer;color:var(--muted2);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:all .15s;display:flex;align-items:center;gap:0}
 .chat-item:hover{background:var(--dark3);color:var(--text);padding-right:34px}
 .chat-item.active-chat{background:var(--dark3);color:var(--text)}
 .chat-item.pinned .chat-title::before{content:'📌 ';font-size:9px;opacity:.7}
 .chat-title{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
-.chat-dots-btn{
-  position:absolute;right:6px;top:50%;transform:translateY(-50%);
-  width:22px;height:22px;
-  border-radius:5px;
-  background:var(--dark4);
-  border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;
-  opacity:0;
-  transition:opacity .15s;
-  color:var(--muted2);
-  padding:0;
-  flex-shrink:0;
-}
+.chat-dots-btn{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:22px;height:22px;border-radius:5px;background:var(--dark4);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transition:opacity .15s;color:var(--muted2);padding:0;flex-shrink:0}
 .chat-dots-btn:hover{background:var(--dark3);color:var(--text);border-color:rgba(255,255,255,.15)}
 .chat-item:hover .chat-dots-btn{opacity:1}
-
-/* ─── CONTEXT MENU ─── */
-.ctx-menu{
-  position:fixed;
-  z-index:9999;
-  background:var(--dark3);
-  border:1px solid rgba(255,255,255,.1);
-  border-radius:10px;
-  padding:4px;
-  min-width:168px;
-  box-shadow:0 8px 28px rgba(0,0,0,.5);
-  animation:ctxIn .12s cubic-bezier(.2,0,.2,1) both;
-}
+.ctx-menu{position:fixed;z-index:9999;background:var(--dark3);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:4px;min-width:168px;box-shadow:0 8px 28px rgba(0,0,0,.5);animation:ctxIn .12s cubic-bezier(.2,0,.2,1) both}
 @keyframes ctxIn{from{opacity:0;transform:scale(.94) translateY(-4px)}to{opacity:1;transform:scale(1) translateY(0)}}
-.ctx-item{
-  display:flex;align-items:center;gap:9px;
-  padding:8px 12px;border-radius:7px;
-  cursor:pointer;font-size:12px;font-weight:600;
-  color:var(--muted2);transition:all .1s;
-}
+.ctx-item{display:flex;align-items:center;gap:9px;padding:8px 12px;border-radius:7px;cursor:pointer;font-size:12px;font-weight:600;color:var(--muted2);transition:all .1s}
 .ctx-item:hover{background:var(--dark4);color:var(--text)}
 .ctx-item svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
 .ctx-item.ctx-danger{color:#F87171}
@@ -123,7 +76,6 @@ html,body{height:100%;overflow:hidden;background:var(--dark);font-family:'Syne',
 .ctx-item.ctx-accent{color:var(--acc)}
 .ctx-item.ctx-accent:hover{background:rgba(34,211,238,.08);color:var(--acc)}
 .ctx-sep{height:1px;background:var(--border);margin:3px 0}
-
 .sidebar-footer{flex-shrink:0;border-top:1px solid var(--border);padding:10px 12px}
 .account-btn{width:100%;padding:9px 12px;background:transparent;border:1px solid var(--border);border-radius:9px;color:var(--text);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .15s;font-family:'Syne',sans-serif}
 .account-btn:hover{background:var(--dark3)}
@@ -139,8 +91,6 @@ html,body{height:100%;overflow:hidden;background:var(--dark);font-family:'Syne',
 @keyframes cardIn{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 .chat-header{padding:14px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.chat-model-sel{background:var(--dark2);border:1px solid var(--border);border-radius:8px;padding:6px 28px 6px 12px;font-family:'Syne',sans-serif;font-size:13px;font-weight:600;color:var(--text);cursor:pointer;outline:none;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239CA3AF' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center}
-.chat-model-sel option{background:#151A22}
 .token-counter{font-family:'DM Mono',monospace;font-size:11px;background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.2);color:var(--acc);padding:4px 12px;border-radius:6px;cursor:pointer}
 .token-counter:hover{background:rgba(34,211,238,.15)}
 .chat-messages{flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:16px}
@@ -168,6 +118,98 @@ html,body{height:100%;overflow:hidden;background:var(--dark);font-family:'Syne',
 .typing-dot:nth-child(2){animation-delay:.2s}
 .typing-dot:nth-child(3){animation-delay:.4s}
 @keyframes typingPulse{0%,60%,100%{opacity:.3;transform:scale(.8)}30%{opacity:1;transform:scale(1)}}
+
+/* ═══ CUSTOM SELECT ═══ */
+.csel-wrap{position:relative;display:inline-block}
+.csel-trigger{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:7px 10px 7px 12px;
+  background:var(--dark3);
+  border:1px solid var(--border);
+  border-radius:8px;
+  font-family:'Syne',sans-serif;font-size:12px;font-weight:600;
+  color:var(--text);
+  cursor:pointer;
+  transition:all .15s;
+  white-space:nowrap;
+  outline:none;
+  user-select:none;
+  -webkit-user-select:none;
+}
+.csel-trigger:hover{border-color:rgba(255,255,255,.18);background:var(--dark4)}
+.csel-trigger.open{border-color:rgba(34,211,238,.4);box-shadow:0 0 0 2px rgba(34,211,238,.08)}
+.csel-val{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.csel-chev{transition:transform .22s cubic-bezier(.4,0,.2,1);flex-shrink:0;opacity:.55}
+.csel-trigger.open .csel-chev{transform:rotate(180deg);opacity:1;color:var(--acc)}
+
+.csel-panel{
+  display:none;
+  position:absolute;
+  min-width:100%;
+  background:var(--dark2);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;
+  padding:4px;
+  z-index:9000;
+  box-shadow:0 16px 48px rgba(0,0,0,.7), 0 0 0 1px rgba(255,255,255,.04);
+  max-height:300px;
+  overflow-y:auto;
+  top:calc(100% + 6px);
+  right:0;
+}
+.csel-panel.drop-up{top:auto;bottom:calc(100% + 6px)}
+.csel-panel::-webkit-scrollbar{width:3px}
+.csel-panel::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.csel-panel.open{display:block;animation:cselIn .18s cubic-bezier(.2,0,.2,1) both}
+@keyframes cselIn{from{opacity:0;transform:translateY(-6px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.csel-panel.drop-up.open{animation:cselInUp .18s cubic-bezier(.2,0,.2,1) both}
+@keyframes cselInUp{from{opacity:0;transform:translateY(6px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+.csel-opt{
+  padding:8px 12px;
+  border-radius:7px;
+  font-size:12px;font-weight:600;
+  color:var(--muted2);
+  cursor:pointer;
+  transition:all .1s;
+  display:flex;align-items:center;gap:8px;
+  white-space:nowrap;
+  position:relative;
+}
+.csel-opt:hover{background:var(--dark3);color:var(--text)}
+.csel-opt.active{color:var(--acc)}
+.csel-opt .csel-dot{
+  width:5px;height:5px;border-radius:50%;
+  background:var(--acc);flex-shrink:0;
+  opacity:0;transition:opacity .15s;
+}
+.csel-opt.active .csel-dot{opacity:1}
+.csel-sep{height:1px;background:var(--border);margin:3px 0}
+
+/* Model selector special */
+.csel-model-wrap .csel-trigger{
+  padding:6px 10px 6px 10px;
+  background:var(--dark2);
+  border-color:var(--border);
+  font-size:13px;font-weight:600;
+  gap:8px;
+}
+.csel-model-wrap .csel-panel{min-width:220px;right:auto;left:0}
+.csel-model-icon{width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0}
+.csel-opt-sub{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-left:auto;padding-left:12px}
+
+/* Light mode overrides */
+.light-mode .csel-trigger,.body.light-mode .csel-trigger{background:#F3F4F6;border-color:#E5E7EB;color:#111827}
+.light-mode .csel-trigger:hover{background:#E9EBEE;border-color:#D1D5DB}
+.light-mode .csel-trigger.open{border-color:rgba(8,145,178,.5)}
+.light-mode .csel-panel{background:#FFFFFF;border-color:#E5E7EB;box-shadow:0 12px 36px rgba(0,0,0,.15)}
+.light-mode .csel-opt{color:#6B7280}
+.light-mode .csel-opt:hover{background:#F3F4F6;color:#111827}
+.light-mode .csel-opt.active{color:#0891B2}
+.light-mode .csel-sep{background:#E5E7EB}
+.light-mode .csel-model-wrap .csel-trigger{background:#FFFFFF;border-color:#E5E7EB;color:#111827}
+
+/* Purchase section */
 .purchase-wrap{flex:1;overflow-y:auto;display:flex;justify-content:center;padding:32px 24px}
 .purchase-wrap::-webkit-scrollbar{width:4px}
 .purchase-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
@@ -274,8 +316,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .toggle.on{background:var(--acc)}
 .toggle::after{content:'';position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:2px;left:2px;transition:left .2s}
 .toggle.on::after{left:20px}
-.s-sel{background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:7px 28px 7px 12px;font-family:'Syne',sans-serif;font-size:12px;color:var(--text);cursor:pointer;outline:none;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239CA3AF' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center}
-.s-sel option{background:#151A22}
+.s-sel{display:none} /* hidden; replaced by csel */
 .s-dbtn{padding:7px 14px;background:transparent;border:1px solid rgba(248,113,113,.3);border-radius:8px;color:#F87171;font-size:12px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;transition:all .15s;flex-shrink:0}
 .s-dbtn:hover{background:rgba(248,113,113,.08);border-color:#F87171}
 .s-nbtn{padding:7px 14px;background:var(--dark3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:12px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;transition:all .15s;flex-shrink:0}
@@ -323,38 +364,25 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .light-mode .token-counter{background:rgba(34,211,238,.1);border-color:rgba(34,211,238,.3);color:#0891B2}
 .light-mode .settings-wrap,.light-mode .settings-main,.light-mode .settings-sidebar{background:var(--dark2)}
 .compact-mode .s-row{padding:8px 0}
-
-/* ─── LIGHT MODE: CONTEXT MENU ─── */
-.light-mode .ctx-menu, body.light-mode .ctx-menu{background:#FFFFFF;border-color:#E5E7EB;box-shadow:0 8px 28px rgba(0,0,0,.12)}
-.light-mode .ctx-item, body.light-mode .ctx-item{color:#6B7280}
-.light-mode .ctx-item:hover, body.light-mode .ctx-item:hover{background:#F3F4F6;color:#111827}
-.light-mode .ctx-item.ctx-danger, body.light-mode .ctx-item.ctx-danger{color:#DC2626}
-.light-mode .ctx-item.ctx-danger:hover, body.light-mode .ctx-item.ctx-danger:hover{background:#FEF2F2;color:#DC2626}
-.light-mode .ctx-item.ctx-accent, body.light-mode .ctx-item.ctx-accent{color:#0891B2}
-.light-mode .ctx-item.ctx-accent:hover, body.light-mode .ctx-item.ctx-accent:hover{background:#ECFEFF;color:#0891B2}
-.light-mode .ctx-sep, body.light-mode .ctx-sep{background:#E5E7EB}
+.light-mode .ctx-menu{background:#FFFFFF;border-color:#E5E7EB;box-shadow:0 8px 28px rgba(0,0,0,.12)}
+.light-mode .ctx-item{color:#6B7280}
+.light-mode .ctx-item:hover{background:#F3F4F6;color:#111827}
+.light-mode .ctx-item.ctx-danger{color:#DC2626}
+.light-mode .ctx-item.ctx-danger:hover{background:#FEF2F2;color:#DC2626}
+.light-mode .ctx-item.ctx-accent{color:#0891B2}
+.light-mode .ctx-item.ctx-accent:hover{background:#ECFEFF;color:#0891B2}
+.light-mode .ctx-sep{background:#E5E7EB}
 .light-mode .chat-dots-btn{background:#F3F4F6;border-color:#E5E7EB;color:#9CA3AF}
 .light-mode .chat-dots-btn:hover{background:#E5E7EB;color:#374151}
-
-/* ─── LIGHT MODE: MODALS ─── */
-.light-mode .modal-backdrop, body.light-mode .modal-backdrop{background:rgba(0,0,0,.4)}
-.light-mode .modal-box, body.light-mode .modal-box{
-  background:#FFFFFF;
-  border:1px solid rgba(239,68,68,.2);
-  box-shadow:0 0 0 1px rgba(239,68,68,.06), 0 20px 50px rgba(0,0,0,.15);
-}
-.light-mode .modal-title, body.light-mode .modal-title{color:#111827}
-.light-mode .modal-msg, body.light-mode .modal-msg{color:#6B7280}
-.light-mode .modal-msg strong, body.light-mode .modal-msg strong{color:#111827}
-.light-mode .modal-hint, body.light-mode .modal-hint{color:#9CA3AF}
-.light-mode .modal-cancel, body.light-mode .modal-cancel{
-  background:#F9FAFB;
-  border-color:#E5E7EB;
-  color:#6B7280;
-}
-.light-mode .modal-cancel:hover, body.light-mode .modal-cancel:hover{background:#F3F4F6;border-color:#D1D5DB;color:#111827}
-/* rename modal input in light mode */
-.light-mode #rename-input, body.light-mode #rename-input{background:#F9FAFB !important;border-color:rgba(34,211,238,.4) !important;color:#111827 !important}
+.light-mode .modal-backdrop{background:rgba(0,0,0,.4)}
+.light-mode .modal-box{background:#FFFFFF;border:1px solid rgba(239,68,68,.2);box-shadow:0 0 0 1px rgba(239,68,68,.06),0 20px 50px rgba(0,0,0,.15)}
+.light-mode .modal-title{color:#111827}
+.light-mode .modal-msg{color:#6B7280}
+.light-mode .modal-msg strong{color:#111827}
+.light-mode .modal-hint{color:#9CA3AF}
+.light-mode .modal-cancel{background:#F9FAFB;border-color:#E5E7EB;color:#6B7280}
+.light-mode .modal-cancel:hover{background:#F3F4F6;border-color:#D1D5DB;color:#111827}
+.light-mode #rename-input{background:#F9FAFB !important;border-color:rgba(34,211,238,.4) !important;color:#111827 !important}
 .models-view-inner{padding:28px;max-width:900px;width:100%}
 .models-view-inner h2{font-size:20px;font-weight:800;letter-spacing:-.03em;margin-bottom:6px}
 .models-view-inner p{font-size:13px;color:var(--muted2);margin-bottom:24px}
@@ -381,62 +409,20 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .tag-red{background:rgba(239,68,68,.15);color:#FCA5A5}
 .tag-green{background:rgba(34,197,94,.15);color:#86EFAC}
 .tag-muted{background:rgba(255,255,255,.07);color:var(--muted2)}
-
-/* ═══ CUSTOM CONFIRM MODAL ═══ */
-.modal-backdrop{
-  position:fixed;inset:0;z-index:10000;
-  background:rgba(0,0,0,.75);
-  backdrop-filter:blur(6px);
-  display:none;
-  align-items:center;justify-content:center;
-  animation:fadeIn .15s ease both;
-}
-.modal-backdrop.is-open{
-  display:flex;
-  pointer-events:all;
-}
-.modal-box{
-  background:#0F1218;
-  border:1px solid rgba(239,68,68,.22);
-  border-radius:16px;
-  padding:28px 28px 22px;
-  width:100%;max-width:360px;
-  box-shadow:0 0 0 1px rgba(239,68,68,.08), 0 28px 70px rgba(0,0,0,.8);
-  animation:modalIn .18s cubic-bezier(.2,0,.2,1) both;
-}
+.modal-backdrop{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;animation:fadeIn .15s ease both}
+.modal-backdrop.is-open{display:flex;pointer-events:all}
+.modal-box{background:#0F1218;border:1px solid rgba(239,68,68,.22);border-radius:16px;padding:28px 28px 22px;width:100%;max-width:360px;box-shadow:0 0 0 1px rgba(239,68,68,.08),0 28px 70px rgba(0,0,0,.8);animation:modalIn .18s cubic-bezier(.2,0,.2,1) both}
 @keyframes modalIn{from{opacity:0;transform:scale(.93) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
-.modal-icon{
-  width:46px;height:46px;border-radius:12px;
-  background:rgba(239,68,68,.18);
-  border:1px solid rgba(239,68,68,.55);
-  display:flex;align-items:center;justify-content:center;
-  margin-bottom:18px;
-  box-shadow:0 0 18px rgba(239,68,68,.22);
-}
+.modal-icon{width:46px;height:46px;border-radius:12px;background:rgba(239,68,68,.18);border:1px solid rgba(239,68,68,.55);display:flex;align-items:center;justify-content:center;margin-bottom:18px;box-shadow:0 0 18px rgba(239,68,68,.22)}
 .modal-icon svg{width:20px;height:20px;stroke:#EF4444;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .modal-title{font-size:16px;font-weight:800;color:#fff;letter-spacing:-.02em;margin-bottom:8px}
 .modal-msg{font-size:13px;color:#9CA3AF;line-height:1.65;margin-bottom:6px}
 .modal-msg strong{color:#fff;font-weight:700}
 .modal-hint{font-family:'DM Mono',monospace;font-size:10px;color:#4B5563;margin-bottom:22px;margin-top:0}
 .modal-actions{display:flex;gap:8px}
-.modal-cancel{
-  flex:1;padding:11px;
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.1);
-  border-radius:9px;color:#9CA3AF;
-  font-size:13px;font-weight:700;cursor:pointer;
-  font-family:'Syne',sans-serif;transition:all .15s;
-}
+.modal-cancel{flex:1;padding:11px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:9px;color:#9CA3AF;font-size:13px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;transition:all .15s}
 .modal-cancel:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.22);color:#fff}
-.modal-confirm{
-  flex:1;padding:11px;
-  background:#EF4444;
-  border:1px solid #EF4444;
-  border-radius:9px;color:#fff;
-  font-size:13px;font-weight:800;cursor:pointer;
-  font-family:'Syne',sans-serif;transition:all .15s;
-  box-shadow:0 0 22px rgba(239,68,68,.4);
-}
+.modal-confirm{flex:1;padding:11px;background:#EF4444;border:1px solid #EF4444;border-radius:9px;color:#fff;font-size:13px;font-weight:800;cursor:pointer;font-family:'Syne',sans-serif;transition:all .15s;box-shadow:0 0 22px rgba(239,68,68,.4)}
 .modal-confirm:hover{background:#DC2626;border-color:#DC2626;box-shadow:0 0 32px rgba(239,68,68,.55)}
 </style>
 </head>
@@ -488,24 +474,27 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 <!-- ── CHAT ── -->
 <div class="view active" id="view-chat">
   <div class="chat-header">
-    <select class="chat-model-sel" id="chat-model-sel">
-      <option value="Llama 3.3 70B" selected>Llama 3.3 70B</option>
-      <option value="Llama 3.1 8B">Llama 3.1 8B</option>
-      <option value="Gemma 2 9B">Gemma 2 9B</option>
-      <option value="Mixtral 8x7B">Mixtral 8x7B</option>
-      <option value="DeepSeek R1 70B">DeepSeek R1 70B</option>
-      <option value="Claude Sonnet 4.5">Claude Sonnet 4.5</option>
-      <option value="GPT-4o">GPT-4o</option>
-      <option value="GPT-5">GPT-5</option>
-      <option value="Claude Opus 4.5">Claude Opus 4.5</option>
-      <option value="Claude Haiku 4.5">Claude Haiku 4.5</option>
-      <option value="Gemini 2.0 Flash">Gemini 2.0 Flash</option>
-      <option value="Grok 2">Grok 2</option>
-      <option value="Mistral Large 2">Mistral Large 2</option>
-      <option value="DeepSeek V3">DeepSeek V3</option>
-    </select>
+    <!-- Custom model select injected by JS -->
+    <div id="chat-model-sel-wrap"></div>
     <div class="token-counter" id="token-counter" onclick="openView('purchase')">716K Tokens</div>
   </div>
+  <!-- Hidden native select kept for value reference -->
+  <select id="chat-model-sel" style="display:none">
+    <option value="Llama 3.3 70B" selected>Llama 3.3 70B</option>
+    <option value="Llama 3.1 8B">Llama 3.1 8B</option>
+    <option value="Gemma 2 9B">Gemma 2 9B</option>
+    <option value="Mixtral 8x7B">Mixtral 8x7B</option>
+    <option value="DeepSeek R1 70B">DeepSeek R1 70B</option>
+    <option value="Claude Sonnet 4.5">Claude Sonnet 4.5</option>
+    <option value="GPT-4o">GPT-4o</option>
+    <option value="GPT-5">GPT-5</option>
+    <option value="Claude Opus 4.5">Claude Opus 4.5</option>
+    <option value="Claude Haiku 4.5">Claude Haiku 4.5</option>
+    <option value="Gemini 2.0 Flash">Gemini 2.0 Flash</option>
+    <option value="Grok 2">Grok 2</option>
+    <option value="Mistral Large 2">Mistral Large 2</option>
+    <option value="DeepSeek V3">DeepSeek V3</option>
+  </select>
   <div class="chat-messages" id="chat-messages">
     <div class="msg ai">
       <div class="msg-bubble">Hallo! Ich bin SingleTokens AI. Wie kann ich dir heute helfen?</div>
@@ -566,8 +555,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
     <div style="display:flex;flex-direction:column;gap:14px">
       <div><div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px">Name *</div><input id="gpt-name" type="text" placeholder="z.B. Coding-Assistent" style="width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Syne',sans-serif;font-size:13px;color:var(--text);outline:none"></div>
       <div><div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px">Beschreibung</div><input id="gpt-desc" type="text" placeholder="Wofür ist dieser GPT?" style="width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Syne',sans-serif;font-size:13px;color:var(--text);outline:none"></div>
-      <div><div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px">Basismodell</div>
-        <select id="gpt-model" style="width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Syne',sans-serif;font-size:13px;color:var(--text);outline:none;-webkit-appearance:none">
+      <div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px">Basismodell</div>
+        <!-- Hidden native select for GPT modal; custom one inserted by JS -->
+        <select id="gpt-model" style="display:none">
           <option value="Llama 3.3 70B">Llama 3.3 70B</option>
           <option value="Llama 3.1 8B">Llama 3.1 8B</option>
           <option value="Gemma 2 9B">Gemma 2 9B</option>
@@ -581,6 +572,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
           <option value="Grok 2">Grok 2</option>
           <option value="Mistral Small">Mistral Small</option>
         </select>
+        <div id="gpt-model-sel-wrap"></div>
       </div>
       <div><div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px">System-Prompt *</div><textarea id="gpt-prompt" placeholder="Du bist ein hilfreicher Assistent der..." style="width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Syne',sans-serif;font-size:13px;color:var(--text);outline:none;resize:vertical;min-height:120px"></textarea></div>
       <div style="display:flex;gap:8px">
@@ -731,15 +723,38 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
     <div class="settings-main">
       <div class="s-pg active" id="s-general">
         <div class="s-title" data-t="general"></div>
-        <div class="s-row"><div class="s-info"><div class="s-label" data-t="language"></div><div class="s-desc" data-t="language_desc"></div></div><select class="s-sel" id="lang-sel" onchange="setLang(this.value)"><option value="de">Deutsch</option><option value="en">English</option><option value="fr">Français</option><option value="es">Español</option><option value="tr">Türkçe</option><option value="ja">日本語</option></select></div>
-        <div class="s-row"><div class="s-info"><div class="s-label" data-t="default_model"></div><div class="s-desc" data-t="default_model_desc"></div></div><select class="s-sel" onchange="showToast(T('saved'))"><option value="Llama 3.3 70B" selected>Llama 3.3 70B</option><option value="Llama 3.1 8B">Llama 3.1 8B</option><option value="Claude Sonnet 4.5">Claude Sonnet 4.5</option><option value="GPT-4o">GPT-4o</option><option value="Gemini 2.0 Flash">Gemini 2.0 Flash</option><option value="Grok 2">Grok 2</option></select></div>
+        <div class="s-row">
+          <div class="s-info"><div class="s-label" data-t="language"></div><div class="s-desc" data-t="language_desc"></div></div>
+          <!-- hidden select, replaced by csel -->
+          <select id="lang-sel" class="s-sel" onchange="setLang(this.value)">
+            <option value="de">Deutsch</option>
+            <option value="en">English</option>
+            <option value="fr">Français</option>
+            <option value="es">Español</option>
+            <option value="tr">Türkçe</option>
+            <option value="ja">日本語</option>
+          </select>
+          <div id="lang-sel-wrap"></div>
+        </div>
+        <div class="s-row">
+          <div class="s-info"><div class="s-label" data-t="default_model"></div><div class="s-desc" data-t="default_model_desc"></div></div>
+          <select id="default-model-sel" class="s-sel" onchange="showToast(T('saved'))">
+            <option value="Llama 3.3 70B" selected>Llama 3.3 70B</option>
+            <option value="Llama 3.1 8B">Llama 3.1 8B</option>
+            <option value="Claude Sonnet 4.5">Claude Sonnet 4.5</option>
+            <option value="GPT-4o">GPT-4o</option>
+            <option value="Gemini 2.0 Flash">Gemini 2.0 Flash</option>
+            <option value="Grok 2">Grok 2</option>
+          </select>
+          <div id="default-model-sel-wrap"></div>
+        </div>
         <div class="s-row"><div class="s-info"><div class="s-label" data-t="chat_history"></div><div class="s-desc" data-t="chat_history_desc"></div></div><div class="toggle on" onclick="sTog(this,'history')"></div></div>
         <div class="s-row"><div class="s-info"><div class="s-label" data-t="compact"></div><div class="s-desc" data-t="compact_desc"></div></div><div class="toggle" onclick="sTog(this,'compact')"></div></div>
         <div class="s-row"><div class="s-info"><div class="s-label" data-t="animations"></div><div class="s-desc" data-t="animations_desc"></div></div><div class="toggle on" onclick="sTog(this,'anim')"></div></div>
       </div>
       <div class="s-pg" id="s-account">
         <div class="s-title" data-t="account"></div>
-        <div class="acc-card"><div class="big-av" id="s-av">G</div><div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--text)" id="s-display-name">Guest User</div><div style="font-size:12px;color:var(--muted2);font-family:'DM Mono',monospace;margin-top:2px" id="s-display-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5f382a3a2c2b1f2c363138333a2b30343a312c713c3032">[email&#160;protected]</a></div></div><div class="tok-badge" id="s-tok-badge">716K Tokens</div></div>
+        <div class="acc-card"><div class="big-av" id="s-av">G</div><div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--text)" id="s-display-name">Guest User</div><div style="font-size:12px;color:var(--muted2);font-family:'DM Mono',monospace;margin-top:2px" id="s-display-email">guest@singletokens.com</div></div><div class="tok-badge" id="s-tok-badge">716K Tokens</div></div>
         <div class="s-row"><div class="s-info"><div class="s-label" data-t="display_name"></div></div><input class="s-finput" style="width:160px" type="text" value="Guest User" onchange="saveName(this.value)"></div>
         <div class="s-row"><div class="s-info"><div class="s-label" data-t="email"></div></div><input class="s-finput" style="width:200px" type="email" value="guest@singletokens.com" onchange="saveEmail(this.value)"></div>
         <div class="s-row"><div class="s-info"><div class="s-label" data-t="password"></div><div class="s-desc" data-t="password_desc"></div></div><button class="s-nbtn" data-t="change" onclick="showToast(T('pw_sent'))"></button></div>
@@ -749,9 +764,24 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
       </div>
       <div class="s-pg" id="s-appearance">
         <div class="s-title" data-t="appearance"></div>
-        <div class="s-row"><div class="s-info"><div class="s-label" data-t="theme"></div><div class="s-desc" data-t="theme_desc"></div></div><select class="s-sel" onchange="setTheme(this.value)"><option value="dark" data-t="dark"></option><option value="light" data-t="light"></option></select></div>
+        <div class="s-row">
+          <div class="s-info"><div class="s-label" data-t="theme"></div><div class="s-desc" data-t="theme_desc"></div></div>
+          <select id="theme-sel" class="s-sel" onchange="setTheme(this.value)">
+            <option value="dark" data-t="dark">Dunkel</option>
+            <option value="light" data-t="light">Hell</option>
+          </select>
+          <div id="theme-sel-wrap"></div>
+        </div>
         <div class="s-row"><div class="s-info"><div class="s-label" data-t="accent_color"></div><div class="s-desc" data-t="accent_desc"></div></div><div class="swatches"><div class="sw active" style="background:#22D3EE" onclick="setAccent('#22D3EE',this)"></div><div class="sw" style="background:#3B82F6" onclick="setAccent('#3B82F6',this)"></div><div class="sw" style="background:#8B5CF6" onclick="setAccent('#8B5CF6',this)"></div><div class="sw" style="background:#EC4899" onclick="setAccent('#EC4899',this)"></div><div class="sw" style="background:#F59E0B" onclick="setAccent('#F59E0B',this)"></div><div class="sw" style="background:#10B981" onclick="setAccent('#10B981',this)"></div></div></div>
-        <div class="s-row"><div class="s-info"><div class="s-label" data-t="font_size"></div><div class="s-desc" data-t="font_size_desc"></div></div><select class="s-sel" onchange="setFontSize(this.value)"><option value="12px" data-t="small"></option><option value="13px" selected data-t="medium"></option><option value="15px" data-t="large"></option></select></div>
+        <div class="s-row">
+          <div class="s-info"><div class="s-label" data-t="font_size"></div><div class="s-desc" data-t="font_size_desc"></div></div>
+          <select id="fontsize-sel" class="s-sel" onchange="setFontSize(this.value)">
+            <option value="12px" data-t="small">Klein</option>
+            <option value="13px" selected data-t="medium">Mittel</option>
+            <option value="15px" data-t="large">Groß</option>
+          </select>
+          <div id="fontsize-sel-wrap"></div>
+        </div>
         <div class="s-row" style="border:none"><div class="s-info"><div class="s-label" data-t="preview"></div></div></div>
         <div class="preview-box" id="s-preview" data-t="preview_text"></div>
       </div>
@@ -851,8 +881,267 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 
 <div class="toast" id="toast"></div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-/* ═══ CUSTOM CONFIRM MODAL ENGINE ═══ */
+<script>
+/* ══════════════════════════════════════════
+   CUSTOM SELECT COMPONENT
+══════════════════════════════════════════ */
+
+// Model metadata for visual icons
+const MODEL_META = {
+  'Llama 3.3 70B':   { icon:'🦙', color:'#22D3EE' },
+  'Llama 3.1 8B':    { icon:'🦙', color:'#22D3EE' },
+  'Gemma 2 9B':      { icon:'💎', color:'#34D399' },
+  'Mixtral 8x7B':    { icon:'🌀', color:'#A78BFA' },
+  'DeepSeek R1 70B': { icon:'🔍', color:'#60A5FA' },
+  'DeepSeek V3':     { icon:'🔍', color:'#60A5FA' },
+  'Claude Sonnet 4.5':{ icon:'◆',  color:'#F97316' },
+  'Claude Opus 4.5': { icon:'◆',  color:'#F97316' },
+  'Claude Haiku 4.5':{ icon:'◆',  color:'#F97316' },
+  'GPT-4o':          { icon:'⬡',  color:'#4ADE80' },
+  'GPT-5':           { icon:'⬡',  color:'#4ADE80' },
+  'GPT-4 Turbo':     { icon:'⬡',  color:'#4ADE80' },
+  'Gemini 2.0 Flash':{ icon:'✦',  color:'#FBBF24' },
+  'Gemini Pro 2.0':  { icon:'✦',  color:'#FBBF24' },
+  'Grok 2':          { icon:'✕',  color:'#E5E7EB' },
+  'Mistral Large 2': { icon:'▲',  color:'#F472B6' },
+  'Mistral Small':   { icon:'▲',  color:'#F472B6' },
+};
+
+const CHEVRON_SVG = `<svg class="csel-chev" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>`;
+
+// Registry of all custom select instances
+const _cselInstances = [];
+
+class CustomSelect {
+  constructor(selectEl, targetWrap, opts = {}) {
+    this.select = selectEl;
+    this.targetWrap = targetWrap; // div where we insert the custom UI
+    this.isModel = opts.isModel || false;
+    this.width = opts.width || null;
+    this.alignLeft = opts.alignLeft || false;
+    this.build();
+    _cselInstances.push(this);
+  }
+
+  build() {
+    this.wrap = document.createElement('div');
+    this.wrap.className = 'csel-wrap' + (this.isModel ? ' csel-model-wrap' : '');
+    if (this.width) this.wrap.style.width = this.width;
+
+    // ── Trigger ──
+    this.trigger = document.createElement('button');
+    this.trigger.type = 'button';
+    this.trigger.className = 'csel-trigger';
+
+    if (this.isModel) {
+      this.iconEl = document.createElement('span');
+      this.iconEl.className = 'csel-model-icon';
+      this.trigger.appendChild(this.iconEl);
+    }
+
+    this.valEl = document.createElement('span');
+    this.valEl.className = 'csel-val';
+    this.trigger.appendChild(this.valEl);
+    this.trigger.insertAdjacentHTML('beforeend', CHEVRON_SVG);
+
+    // ── Panel ──
+    this.panel = document.createElement('div');
+    this.panel.className = 'csel-panel';
+    if (this.alignLeft) this.panel.style.left = '0';
+    else this.panel.style.right = '0';
+
+    this.buildOptions();
+
+    this.wrap.appendChild(this.trigger);
+    this.wrap.appendChild(this.panel);
+    this.targetWrap.appendChild(this.wrap);
+
+    this.syncDisplay();
+
+    // ── Events ──
+    this.trigger.addEventListener('click', e => {
+      e.stopPropagation();
+      this.toggle();
+    });
+    this.trigger.addEventListener('keydown', e => {
+      if (e.key === 'Escape') this.close();
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.toggle(); }
+    });
+  }
+
+  buildOptions() {
+    this.panel.innerHTML = '';
+    const opts = [...this.select.options];
+    opts.forEach((opt, i) => {
+      if (this.isModel && i > 0 && !this._sameGroup(opts[i-1], opt)) {
+        const sep = document.createElement('div');
+        sep.className = 'csel-sep';
+        this.panel.appendChild(sep);
+      }
+      const div = document.createElement('div');
+      div.className = 'csel-opt' + (opt.selected ? ' active' : '');
+      div.dataset.value = opt.value;
+      if (opt.dataset.t) div.dataset.t = opt.dataset.t;
+
+      // Dot indicator
+      const dot = document.createElement('span');
+      dot.className = 'csel-dot';
+      div.appendChild(dot);
+
+      if (this.isModel) {
+        const meta = MODEL_META[opt.value];
+        if (meta) {
+          const icon = document.createElement('span');
+          icon.style.cssText = `font-size:11px;width:18px;text-align:center;flex-shrink:0;color:${meta.color}`;
+          icon.textContent = meta.icon;
+          div.appendChild(icon);
+        }
+      }
+
+      const label = document.createElement('span');
+      label.textContent = opt.textContent;
+      div.appendChild(label);
+
+      div.addEventListener('click', e => {
+        e.stopPropagation();
+        this.setValue(opt.value);
+        this.close();
+      });
+      this.panel.appendChild(div);
+    });
+  }
+
+  _sameGroup(a, b) {
+    const groups = {
+      anthropic: ['Claude Sonnet 4.5','Claude Opus 4.5','Claude Haiku 4.5'],
+      openai: ['GPT-4o','GPT-5','GPT-4 Turbo','OpenAI o1','OpenAI o1 Mini'],
+      google: ['Gemini 2.0 Flash','Gemini Pro 2.0'],
+    };
+    for (const g of Object.values(groups)) {
+      if (g.includes(a.value) && g.includes(b.value)) return true;
+    }
+    return false;
+  }
+
+  syncDisplay() {
+    const selected = this.select.options[this.select.selectedIndex];
+    if (!selected) return;
+    this.valEl.textContent = selected.textContent;
+
+    if (this.isModel && this.iconEl) {
+      const meta = MODEL_META[selected.value];
+      if (meta) {
+        this.iconEl.textContent = meta.icon;
+        this.iconEl.style.color = meta.color;
+        this.iconEl.style.background = meta.color + '22';
+      }
+    }
+
+    this.panel.querySelectorAll('.csel-opt').forEach(d => {
+      d.classList.toggle('active', d.dataset.value === this.select.value);
+    });
+  }
+
+  setValue(val) {
+    this.select.value = val;
+    this.select.dispatchEvent(new Event('change'));
+    this.syncDisplay();
+  }
+
+  toggle() {
+    const isOpen = this.panel.classList.contains('open');
+    _closeAllCsel();
+    if (!isOpen) {
+      this.open();
+    }
+  }
+
+  open() {
+    // Smart positioning: open up if near bottom
+    const trigRect = this.trigger.getBoundingClientRect();
+    const spaceBelow = window.innerHeight - trigRect.bottom;
+    if (spaceBelow < 200) {
+      this.panel.classList.add('drop-up');
+    } else {
+      this.panel.classList.remove('drop-up');
+    }
+    this.panel.classList.add('open');
+    this.trigger.classList.add('open');
+  }
+
+  close() {
+    this.panel.classList.remove('open');
+    this.trigger.classList.remove('open');
+  }
+
+  // Re-sync option labels after language change
+  refresh() {
+    [...this.select.options].forEach(opt => {
+      const div = this.panel.querySelector(`.csel-opt[data-value="${CSS.escape(opt.value)}"]`);
+      if (div) {
+        // Update only the label span (last child or labeled span)
+        const spans = div.querySelectorAll('span:not(.csel-dot)');
+        const labelSpan = spans[spans.length - 1];
+        if (labelSpan) labelSpan.textContent = opt.textContent;
+      }
+    });
+    this.syncDisplay();
+  }
+}
+
+function _closeAllCsel() {
+  _cselInstances.forEach(cs => cs.close());
+}
+
+document.addEventListener('click', _closeAllCsel);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') _closeAllCsel(); });
+
+/* ─── Initialize all custom selects ─── */
+function initCustomSelects() {
+  // Chat model select (in header, with icons)
+  const chatModelSel = document.getElementById('chat-model-sel');
+  const chatModelWrap = document.getElementById('chat-model-sel-wrap');
+  if (chatModelSel && chatModelWrap) {
+    window._chatModelCsel = new CustomSelect(chatModelSel, chatModelWrap, { isModel: true, alignLeft: true });
+  }
+
+  // Language select
+  const langSel = document.getElementById('lang-sel');
+  const langWrap = document.getElementById('lang-sel-wrap');
+  if (langSel && langWrap) {
+    window._langCsel = new CustomSelect(langSel, langWrap, { width: '130px' });
+  }
+
+  // Default model select (settings)
+  const defModelSel = document.getElementById('default-model-sel');
+  const defModelWrap = document.getElementById('default-model-sel-wrap');
+  if (defModelSel && defModelWrap) {
+    new CustomSelect(defModelSel, defModelWrap, { isModel: true });
+  }
+
+  // Theme select
+  const themeSel = document.getElementById('theme-sel');
+  const themeWrap = document.getElementById('theme-sel-wrap');
+  if (themeSel && themeWrap) {
+    new CustomSelect(themeSel, themeWrap, { width: '110px' });
+  }
+
+  // Font size select
+  const fontSel = document.getElementById('fontsize-sel');
+  const fontWrap = document.getElementById('fontsize-sel-wrap');
+  if (fontSel && fontWrap) {
+    new CustomSelect(fontSel, fontWrap, { width: '100px' });
+  }
+
+  // GPT model select (in modal)
+  const gptModelSel = document.getElementById('gpt-model');
+  const gptModelWrap = document.getElementById('gpt-model-sel-wrap');
+  if (gptModelSel && gptModelWrap) {
+    window._gptModelCsel = new CustomSelect(gptModelSel, gptModelWrap, { isModel: true, alignLeft: true, width: '100%' });
+  }
+}
+
+/* ═══ CUSTOM CONFIRM MODAL ═══ */
 let _confirmCallback=null;
 function showConfirm(opts){
   document.getElementById("confirm-title").textContent=opts.title||"Bestätigen";
@@ -873,6 +1162,7 @@ function _confirmCancel(){
 document.addEventListener("keydown",function(e){
   if(e.key==="Escape"&&document.getElementById("confirm-modal").classList.contains("is-open"))_confirmCancel();
 });
+
 /* ─── SIDEBAR ─── */
 function toggleSidebar(){
   const sb=document.getElementById('sidebar');
@@ -940,21 +1230,13 @@ function addTyping(){
 function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}}
 function autoResize(el){el.style.height='22px';el.style.height=Math.min(el.scrollHeight,120)+'px';}
 
-/* ═══════════════════════════════════════
-   CHAT HISTORY + CONTEXT MENU
-═══════════════════════════════════════ */
+/* ═══ CHAT HISTORY ═══ */
 let savedChats=JSON.parse(localStorage.getItem('st_chats')||'[]');
 let activeChatId=null;
 let ctxTargetId=null;
-
-/* ── helpers ── */
 function genId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+function persistChats(){localStorage.setItem('st_chats',JSON.stringify(savedChats.slice(0,50)));}
 
-function persistChats(){
-  localStorage.setItem('st_chats',JSON.stringify(savedChats.slice(0,50)));
-}
-
-/* ── new / save / load ── */
 function newChat(){
   saveCurrentChat();
   activeChatId=null;
@@ -999,7 +1281,10 @@ function loadSavedChat(id){
   });
   msgs.scrollTop=msgs.scrollHeight;
   const sel=document.getElementById('chat-model-sel');
-  if(sel&&chat.model)sel.value=chat.model;
+  if(sel&&chat.model){
+    sel.value=chat.model;
+    if(window._chatModelCsel) window._chatModelCsel.syncDisplay();
+  }
   if(typeof resetChatHistory==='function')resetChatHistory();
   renderChatHistory();
 }
@@ -1009,7 +1294,6 @@ function onMessageComplete(){
   saveCurrentChat();
 }
 
-/* ── render ── */
 function renderChatHistory(){
   const list=document.getElementById('chat-history-list');
   if(!list)return;
@@ -1017,7 +1301,6 @@ function renderChatHistory(){
     list.innerHTML='<div style="padding:10px 16px;font-size:11px;color:var(--muted)">Noch keine Chats</div>';
     return;
   }
-  // Gepinnte immer oben
   const sorted=[...savedChats].sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0));
   list.innerHTML=sorted.map(c=>`
     <div class="chat-item${c.id===activeChatId?' active-chat':''}${c.pinned?' pinned':''}"
@@ -1038,7 +1321,6 @@ function escHtml(s){
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-/* ── delete (used directly by both ── */
 function deleteChat(id){
   savedChats=savedChats.filter(c=>c.id!==id);
   persistChats();
@@ -1046,9 +1328,6 @@ function deleteChat(id){
   renderChatHistory();
 }
 
-/* ══════════════════════
-   CONTEXT MENU LOGIC
-══════════════════════ */
 const ctxEl=document.getElementById('ctx-menu');
 
 function _populateCtxMenu(id){
@@ -1066,47 +1345,35 @@ function _populateCtxMenu(id){
 
 function _positionCtxMenu(x,y){
   ctxEl.style.display='block';
-  // Measure after display so we get real dimensions
   requestAnimationFrame(()=>{
     const w=ctxEl.firstElementChild.offsetWidth||170;
     const h=ctxEl.firstElementChild.offsetHeight||120;
-    const px=Math.min(x, window.innerWidth-w-8);
-    const py=Math.min(y, window.innerHeight-h-8);
+    const px=Math.min(x,window.innerWidth-w-8);
+    const py=Math.min(y,window.innerHeight-h-8);
     ctxEl.style.left=px+'px';
     ctxEl.style.top=py+'px';
   });
 }
 
-// Right-click on chat item
 function openCtxMenu(e,id){
-  e.preventDefault();
-  e.stopPropagation();
+  e.preventDefault();e.stopPropagation();
   _populateCtxMenu(id);
-  _positionCtxMenu(e.clientX, e.clientY);
+  _positionCtxMenu(e.clientX,e.clientY);
 }
 
-// Click on ··· button
 function openCtxMenuFromBtn(e,id){
   e.preventDefault();
   _populateCtxMenu(id);
   const rect=e.currentTarget.getBoundingClientRect();
-  _positionCtxMenu(rect.left, rect.bottom+4);
+  _positionCtxMenu(rect.left,rect.bottom+4);
 }
 
-function hideCtxMenu(){
-  ctxEl.style.display='none';
-  ctxTargetId=null;
-}
+function hideCtxMenu(){ctxEl.style.display='none';ctxTargetId=null;}
 
-document.addEventListener('click', e=>{
-  if(!ctxEl.contains(e.target)) hideCtxMenu();
-});
-document.addEventListener('keydown', e=>{
-  if(e.key==='Escape') hideCtxMenu();
-});
-document.addEventListener('scroll', hideCtxMenu, true);
+document.addEventListener('click',e=>{if(!ctxEl.contains(e.target))hideCtxMenu();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')hideCtxMenu();});
+document.addEventListener('scroll',hideCtxMenu,true);
 
-/* ── actions ── */
 let _renameTargetId=null;
 function ctxRename(){
   const chat=savedChats.find(c=>c.id===ctxTargetId);
@@ -1120,13 +1387,10 @@ function ctxRename(){
     inp.focus();inp.select();
   },80);
 }
-function closeRenameModal(){
-  document.getElementById('rename-modal').classList.remove('is-open');
-  _renameTargetId=null;
-}
+function closeRenameModal(){document.getElementById('rename-modal').classList.remove('is-open');_renameTargetId=null;}
 function doRename(){
   const newName=document.getElementById('rename-input').value.trim();
-  if(!newName){return;}
+  if(!newName)return;
   const chat=savedChats.find(c=>c.id===_renameTargetId);
   if(chat){chat.title=newName;persistChats();renderChatHistory();showToast('✏️ Chat umbenannt');}
   closeRenameModal();
@@ -1136,8 +1400,7 @@ function ctxPin(){
   const chat=savedChats.find(c=>c.id===ctxTargetId);
   if(!chat){hideCtxMenu();return;}
   chat.pinned=!chat.pinned;
-  persistChats();
-  renderChatHistory();
+  persistChats();renderChatHistory();
   showToast(chat.pinned?'📌 Angeheftet':'Gelöst');
   hideCtxMenu();
 }
@@ -1153,7 +1416,7 @@ function ctxDelete(){
       okLabel:'Löschen',
       onOk:()=>{deleteChat(id);showToast('🗑 Chat gelöscht');}
     });
-  }, 80);
+  },80);
 }
 
 renderChatHistory();
@@ -1187,7 +1450,10 @@ function renderModels(f){
 function filterM(f,btn){document.querySelectorAll('.mfbtn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderModels(f);}
 function useModel(name){
   const sel=document.getElementById('chat-model-sel');
-  if(sel)sel.value=name;
+  if(sel){
+    sel.value=name;
+    if(window._chatModelCsel) window._chatModelCsel.syncDisplay();
+  }
   openView('chat');
   showToast('Modell: '+name);
 }
@@ -1235,20 +1501,40 @@ function fmtExp(el){let v=el.value.replace(/\D/g,'');if(v.length>=2)v=v.slice(0,
 document.getElementById('tok-slider').value=0;
 updatePurchase();setStep(1);
 
-/* ─── SETTINGS TRANSLATIONS ─── */
+/* ─── TRANSLATIONS ─── */
 const LANGS={
   de:{settings:'Einstellungen',general:'Allgemein',account:'Konto',appearance:'Darstellung',memory:'Memory',privacy:'Datenschutz',notifications:'Benachrichtigungen',security:'Sicherheit',language:'Sprache',language_desc:'Sprache der Oberfläche',default_model:'Standardmodell',default_model_desc:'Wird für neue Chats verwendet',chat_history:'Chat-Verlauf',chat_history_desc:'Gespräche in der Sidebar anzeigen',compact:'Kompakter Modus',compact_desc:'Weniger Abstände',animations:'Animationen',animations_desc:'Übergänge aktivieren',display_name:'Anzeigename',email:'E-Mail-Adresse',password:'Passwort',password_desc:'Zuletzt geändert vor 30 Tagen',buy_tokens:'Tokens kaufen',balance_desc:'Guthaben verwalten',change:'Ändern',buy:'Kaufen →',danger_zone:'Gefahrenzone',delete_account:'Konto löschen',delete_account_desc:'Alle Daten werden unwiderruflich gelöscht',delete:'Löschen',theme:'Theme',theme_desc:'Farbschema',dark:'Dunkel',light:'Hell',accent_color:'Akzentfarbe',accent_desc:'Farbe für aktive Elemente',font_size:'Schriftgröße',font_size_desc:'Textgröße',small:'Klein',medium:'Mittel',large:'Groß',preview:'Vorschau',preview_text:'Das ist ein Beispieltext mit der aktuellen Schriftgröße.',enable_memory:'Memory aktivieren',enable_memory_desc:'SingleTokens merkt sich Infos aus Gesprächen',stored_memories:'Gespeicherte Erinnerungen',mem1:'Bevorzugt präzise, direkte Antworten',mem1_date:'vor 3 Tagen',mem2:'Arbeitet an SingleTokens',mem2_date:'vor 1 Woche',mem3:'Bevorzugt dunkle UI-Designs',mem3_date:'vor 2 Wochen',clear_all:'Alle löschen',clear_all_desc:'Alle Erinnerungen entfernen',delete_all:'Alle löschen',training_data:'Trainingsdaten',training_data_desc:'Gespräche zur Modellverbesserung',analytics:'Analyse-Daten',analytics_desc:'Anonyme Nutzungsstatistiken teilen',export_chats:'Verlauf exportieren',export_chats_desc:'Als JSON herunterladen',export:'Exportieren',delete_chats:'Verlauf löschen',delete_chats_desc:'Alle Gespräche dauerhaft löschen',email_notifs:'E-Mail-Benachrichtigungen',email_notifs_desc:'Updates per E-Mail',token_warning:'Token-Warnung',token_warning_desc:'Warnung wenn Guthaben unter 50K',new_models_notif:'Neue Modelle',new_models_notif_desc:'Info bei neuen Modellen',marketing_emails:'Marketing-E-Mails',marketing_emails_desc:'Neuigkeiten und Angebote',two_fa:'Zwei-Faktor-Authentifizierung',two_fa_off:'Nicht aktiviert',two_fa_on:'Aktiviert',active_sessions:'Aktive Sitzungen',active_sessions_desc:'1 Gerät · Chrome, Windows 11',sign_out:'Abmelden',api_keys:'API-Keys',revoke:'Sperren',new_key:'+ Neuer Key',saved:'Einstellung gespeichert',pw_sent:'Passwort-Reset-E-Mail gesendet!',exporting:'Export wird vorbereitet...',deleted:'Gelöscht.',sessions_ended:'Andere Sitzungen beendet.',mem_deleted:'Erinnerung gelöscht',all_mem_deleted:'Alle Erinnerungen gelöscht',key_revoked:'Key gesperrt',key_added:'Neuer Key erstellt',compact_on:'Kompakter Modus aktiviert',compact_off:'Kompakter Modus deaktiviert',twofa_on:'2FA aktiviert',twofa_off:'2FA deaktiviert'},
   en:{settings:'Settings',general:'General',account:'Account',appearance:'Appearance',memory:'Memory',privacy:'Privacy',notifications:'Notifications',security:'Security',language:'Language',language_desc:'Interface language',default_model:'Default model',default_model_desc:'Used for new chats',chat_history:'Chat history',chat_history_desc:'Show in sidebar',compact:'Compact mode',compact_desc:'Less spacing',animations:'Animations',animations_desc:'Enable transitions',display_name:'Display name',email:'Email address',password:'Password',password_desc:'Changed 30 days ago',buy_tokens:'Buy tokens',balance_desc:'Manage balance',change:'Change',buy:'Buy →',danger_zone:'Danger zone',delete_account:'Delete account',delete_account_desc:'All data will be permanently deleted',delete:'Delete',theme:'Theme',theme_desc:'Color scheme',dark:'Dark',light:'Light',accent_color:'Accent color',accent_desc:'Color for active elements',font_size:'Font size',font_size_desc:'Text size',small:'Small',medium:'Medium',large:'Large',preview:'Preview',preview_text:'This is a preview text with the current font size.',enable_memory:'Enable memory',enable_memory_desc:'SingleTokens remembers info from chats',stored_memories:'Stored memories',mem1:'Prefers precise, direct answers',mem1_date:'3 days ago',mem2:'Working on SingleTokens',mem2_date:'1 week ago',mem3:'Prefers dark UI designs',mem3_date:'2 weeks ago',clear_all:'Clear all',clear_all_desc:'Remove all memories',delete_all:'Delete all',training_data:'Training data',training_data_desc:'Use chats to improve models',analytics:'Analytics',analytics_desc:'Share anonymous usage stats',export_chats:'Export history',export_chats_desc:'Download as JSON',export:'Export',delete_chats:'Delete history',delete_chats_desc:'Permanently delete all chats',email_notifs:'Email notifications',email_notifs_desc:'Receive updates by email',token_warning:'Token warning',token_warning_desc:'Alert when balance drops below 50K',new_models_notif:'New models',new_models_notif_desc:'Notify on new models',marketing_emails:'Marketing emails',marketing_emails_desc:'News and offers',two_fa:'Two-factor authentication',two_fa_off:'Not enabled',two_fa_on:'Enabled',active_sessions:'Active sessions',active_sessions_desc:'1 device · Chrome, Windows 11',sign_out:'Sign out',api_keys:'API Keys',revoke:'Revoke',new_key:'+ New key',saved:'Setting saved',pw_sent:'Password reset email sent!',exporting:'Preparing export...',deleted:'Deleted.',sessions_ended:'Other sessions ended.',mem_deleted:'Memory deleted',all_mem_deleted:'All memories deleted',key_revoked:'Key revoked',key_added:'New key created',compact_on:'Compact mode enabled',compact_off:'Compact mode disabled',twofa_on:'2FA enabled',twofa_off:'2FA disabled'}
 };
 let lang='de';
 function T(k){return(LANGS[lang]||LANGS.de)[k]||k;}
-function applyLang(){document.querySelectorAll('[data-t]').forEach(el=>{const v=T(el.getAttribute('data-t'));if(v!==undefined)el.textContent=v;});}
+function applyLang(){
+  // Update data-t text elements
+  document.querySelectorAll('[data-t]').forEach(el=>{
+    // Skip options inside hidden selects (we handle via custom select refresh)
+    if(el.tagName==='OPTION')return;
+    const v=T(el.getAttribute('data-t'));
+    if(v!==undefined)el.textContent=v;
+  });
+  // Also update option text in hidden selects for data-t options
+  document.querySelectorAll('select option[data-t]').forEach(opt=>{
+    const v=T(opt.getAttribute('data-t'));
+    if(v!==undefined)opt.textContent=v;
+  });
+  // Refresh custom selects to reflect new text
+  _cselInstances.forEach(cs=>cs.refresh());
+}
 function setLang(l){lang=l;applyLang();showToast(T('saved'));}
 
-/* ─── SETTINGS ACTIONS ─── */
+/* ─── SETTINGS ─── */
 function sGo(id,el){document.querySelectorAll('.s-pg').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.s-nav').forEach(n=>n.classList.remove('active'));document.getElementById('s-'+id).classList.add('active');el.classList.add('active');}
 function sTog(el,key){el.classList.toggle('on');const on=el.classList.contains('on');if(key==='compact'){document.getElementById('app').classList.toggle('compact-mode',on);showToast(on?T('compact_on'):T('compact_off'));}else showToast(T('saved'));}
-function setTheme(v){const on=v==='light';document.getElementById('app').classList.toggle('light-mode',on);document.body.classList.toggle('light-mode',on);showToast(T('saved'));}
+function setTheme(v){
+  const on=v==='light';
+  document.getElementById('app').classList.toggle('light-mode',on);
+  document.body.classList.toggle('light-mode',on);
+  showToast(T('saved'));
+}
 function setAccent(c,el){document.querySelectorAll('.sw').forEach(s=>s.classList.remove('active'));el.classList.add('active');document.documentElement.style.setProperty('--acc',c);showToast(T('saved'));}
 function setFontSize(s){document.documentElement.style.setProperty('--font-size',s);document.getElementById('s-preview').style.fontSize=s;showToast(T('saved'));}
 function saveName(v){document.getElementById('s-display-name').textContent=v;document.getElementById('s-av').textContent=v.charAt(0).toUpperCase();document.getElementById('sidebar-av').textContent=v.charAt(0).toUpperCase();document.getElementById('sidebar-name').textContent=v;showToast(T('saved'));}
@@ -1280,7 +1566,9 @@ function openGptModal(id=null){
     document.getElementById('gpt-modal-title').textContent='GPT bearbeiten';
     document.getElementById('gpt-name').value=g.name;
     document.getElementById('gpt-desc').value=g.desc||'';
+    // Update hidden select + refresh custom select
     document.getElementById('gpt-model').value=g.model;
+    if(window._gptModelCsel)window._gptModelCsel.syncDisplay();
     document.getElementById('gpt-prompt').value=g.prompt;
     document.getElementById('gpt-temp').value=g.temp;
     document.getElementById('gpt-cap').value=g.cap||'';
@@ -1290,6 +1578,7 @@ function openGptModal(id=null){
     document.getElementById('gpt-name').value='';
     document.getElementById('gpt-desc').value='';
     document.getElementById('gpt-model').value='Llama 3.3 70B';
+    if(window._gptModelCsel)window._gptModelCsel.syncDisplay();
     document.getElementById('gpt-prompt').value='';
     document.getElementById('gpt-temp').value='0.7';
     document.getElementById('gpt-cap').value='';
@@ -1311,28 +1600,24 @@ function saveGpt(){
 function editGpt(id){openGptModal(id);}
 function deleteGpt(id){
   const g=gpts.find(x=>x.id===id);if(!g)return;
-  showConfirm({
-    title:'GPT löschen',
-    msg:`GPT <strong>"${escHtml(g.name)}"</strong> wirklich löschen?`,
-    okLabel:'Löschen',
-    onOk:()=>{gpts=gpts.filter(x=>x.id!==id);renderGpts();showToast('GPT gelöscht.');}
-  });
+  showConfirm({title:'GPT löschen',msg:`GPT <strong>"${escHtml(g.name)}"</strong> wirklich löschen?`,okLabel:'Löschen',onOk:()=>{gpts=gpts.filter(x=>x.id!==id);renderGpts();showToast('GPT gelöscht.');}});
 }
 function useGpt(id){
   const g=gpts.find(x=>x.id===id);if(!g)return;
-  const sel=document.getElementById('chat-model-sel');if(sel)sel.value=g.model;
+  const sel=document.getElementById('chat-model-sel');
+  if(sel){
+    sel.value=g.model;
+    if(window._chatModelCsel)window._chatModelCsel.syncDisplay();
+  }
   openView('chat');
   newChat();
-if(typeof setGptPrompt==='function')setGptPrompt(g.prompt);
+  if(typeof setGptPrompt==='function')setGptPrompt(g.prompt);
   showToast('GPT "'+g.name+'" geladen!');
 }
 renderGpts();
-applyLang();
-</script>
-if(typeof setGptPrompt==='function')setGptPrompt(g.prompt);
-  showToast('GPT "'+g.name+'" geladen!');
-}
-renderGpts();
+
+/* ─── BOOT ─── */
+initCustomSelects();
 applyLang();
 </script>
 <script src="api.js"></script>
