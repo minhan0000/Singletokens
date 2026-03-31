@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-:root{--acc:#22D3EE;--dark:#09090B;--dark2:#0F1218;--dark3:#151A22;--dark4:#1B2130;--text:#FAFAFA;--muted:#4B5563;--muted2:#9CA3AF;--border:rgba(255,255,255,0.07);--fs:14px;--nav-h:60px}
+:root{--acc:#22D3EE;--acc2:#3B82F6;--dark:#09090B;--dark2:#0F1218;--dark3:#151A22;--dark4:#1B2130;--text:#FAFAFA;--muted:#4B5563;--muted2:#9CA3AF;--border:rgba(255,255,255,0.07);--fs:14px;--nav-h:60px}
 html,body{height:100%;background:var(--dark);font-family:'Syne',sans-serif;color:var(--text);overflow:hidden}
 .app{display:flex;flex-direction:column;height:100vh;height:100dvh}
 
@@ -66,19 +66,21 @@ html,body{height:100%;background:var(--dark);font-family:'Syne',sans-serif;color
 .drawer-lbl{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;padding:2px 14px 6px;flex-shrink:0}
 .drawer-list{flex:1;overflow-y:auto;padding:0 8px 12px}
 .drawer-list::-webkit-scrollbar{display:none}
-.hi{display:flex;align-items:center;padding:10px 8px;border-radius:9px;cursor:pointer;position:relative;margin-bottom:2px;user-select:none;-webkit-user-select:none}
-.hi.active{background:rgba(34,211,238,.07);border:1px solid rgba(34,211,238,.15)}
+
+/* ─── CHAT HISTORY ITEMS (matches web sidebar style) ─── */
+.hi{display:flex;align-items:center;padding:7px 8px;border-radius:8px;cursor:pointer;position:relative;margin-bottom:1px;user-select:none;-webkit-user-select:none;color:var(--muted2);font-size:12px;font-weight:600;transition:all .15s}
+.hi:not(.active):not(.selected):active{background:var(--dark3);color:var(--text)}
+.hi:hover{background:var(--dark3);color:var(--text)}
+.hi.active{background:var(--dark3);color:var(--text)}
 .hi.selected{background:rgba(34,211,238,.05);border:1px solid rgba(34,211,238,.2)}
-.hi:not(.active):not(.selected):active{background:var(--dark3)}
 .hi-body{flex:1;min-width:0}
-.hi-title{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:28px}
-.hi.active .hi-title{color:var(--acc)}
-.hi.selected .hi-title{color:var(--acc);padding-right:0}
-.hi-meta{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hi-del{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:24px;height:24px;display:flex;align-items:center;justify-content:center;background:transparent;border:none;color:var(--muted);cursor:pointer;border-radius:6px;opacity:0}
-.hi:hover .hi-del,.hi:active .hi-del{opacity:1}
-.hi-del:active{background:rgba(248,113,113,.15);color:#F87171}
-.hi-del svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round}
+.hi-title{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:6px}
+.hi.active .hi-title{color:var(--text)}
+.hi.selected .hi-title{color:var(--acc)}
+.hi-del{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:22px;height:22px;display:flex;align-items:center;justify-content:center;background:var(--dark4);border:1px solid var(--border);color:var(--muted2);cursor:pointer;border-radius:5px;opacity:0;transition:opacity .15s}
+.hi:active .hi-del,.hi.active .hi-del{opacity:1}
+.hi-del:active{background:rgba(248,113,113,.15);color:#F87171;border-color:rgba(248,113,113,.3)}
+.hi-del svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round}
 .drawer-footer{padding:10px 12px;border-top:1px solid var(--border);flex-shrink:0;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-align:center}
 .hist-empty{text-align:center;padding:40px 20px;color:var(--muted2);font-size:13px;line-height:1.5}
 
@@ -162,7 +164,7 @@ html,body{height:100%;background:var(--dark);font-family:'Syne',sans-serif;color
 .picker-opt.selected .picker-opt-radio::after{content:'';width:8px;height:8px;border-radius:50%;background:#03060F}
 .picker-divider{height:1px;background:var(--border);margin:2px 10px}
 
-/* ── CUSTOM SETTINGS ROWS ── */
+/* ── SETTINGS PICKER ROWS ── */
 .s-pick-row{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);cursor:pointer;-webkit-user-select:none;user-select:none}
 .s-pick-row:last-child{border:none}
 .s-pick-row:active{background:rgba(255,255,255,.03)}
@@ -170,7 +172,7 @@ html,body{height:100%;background:var(--dark);font-family:'Syne',sans-serif;color
 .s-pick-val{display:flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:12px;color:var(--muted2)}
 .s-pick-val svg{width:13px;height:13px;stroke:var(--muted);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
 
-/* EXPLORE */
+/* ─── MODEL EXPLORE (matches web desktop) ─── */
 .scroll-view{flex:1;overflow-y:auto;padding:16px}
 .scroll-view::-webkit-scrollbar{display:none}
 .page-title{font-size:18px;font-weight:800;letter-spacing:-.03em;margin-bottom:4px}
@@ -178,30 +180,36 @@ html,body{height:100%;background:var(--dark);font-family:'Syne',sans-serif;color
 .filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
 .fbtn{padding:6px 14px;font-size:12px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted2);cursor:pointer;font-family:'Syne',sans-serif;font-weight:600;white-space:nowrap}
 .fbtn.active{background:var(--acc);border-color:var(--acc);color:#03060F}
-.model-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.mc{border:1px solid var(--border);border-radius:10px;padding:12px;background:var(--dark2);cursor:pointer}
-.mc:active{opacity:.7}
+
+@keyframes cardIn{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+.model-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.mc{border:1px solid var(--border);border-radius:10px;padding:14px;background:var(--dark2);cursor:pointer;transition:all .2s ease;animation:cardIn .35s ease both}
+.mc:active{transform:scale(.97);opacity:.85}
 .mc.cheap{border-color:rgba(6,182,212,.25);background:rgba(6,182,212,.05)}
 .mc.expensive{border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.05)}
 .mc.reference{border-color:rgba(59,130,246,.35);background:rgba(59,130,246,.07)}
-.mc-prov{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);margin-bottom:4px;letter-spacing:.04em;text-transform:uppercase}
-.mc.cheap .mc-prov{color:#22D3EE}.mc.expensive .mc-prov{color:#F87171}.mc.reference .mc-prov{color:#93C5FD}
-.mc-name{font-size:12px;font-weight:700;margin-bottom:6px;line-height:1.3}
-.mc-mult{font-size:18px;font-weight:800;letter-spacing:-.03em}
+.mc-provider{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);margin-bottom:5px;letter-spacing:.05em;text-transform:uppercase}
+.mc.cheap .mc-provider{color:#22D3EE}.mc.expensive .mc-provider{color:#F87171}.mc.reference .mc-provider{color:#93C5FD}
+.mc-name{font-size:12px;font-weight:700;margin-bottom:8px;line-height:1.3}
+.mc-mult{font-size:20px;font-weight:800;letter-spacing:-.03em}
 .mc.cheap .mc-mult{color:#22D3EE}.mc.expensive .mc-mult{color:#F87171}.mc.reference .mc-mult{color:#93C5FD}
-.mc-price{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);margin-top:1px}
-.mc-tag{display:inline-block;font-size:9px;padding:2px 6px;border-radius:3px;margin-top:6px;font-family:'DM Mono',monospace}
+.mc-price{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);margin-top:2px}
+.mc-tag{display:inline-block;font-size:10px;padding:2px 7px;border-radius:4px;margin-top:7px;font-family:'DM Mono',monospace}
 .tag-blue{background:rgba(59,130,246,.15);color:#93C5FD}
 .tag-cyan{background:rgba(34,211,238,.15);color:#67E8F9}
 .tag-red{background:rgba(239,68,68,.15);color:#FCA5A5}
 .tag-green{background:rgba(34,197,94,.15);color:#86EFAC}
 .tag-muted{background:rgba(255,255,255,.07);color:var(--muted2)}
 
-/* GPTs */
-.gpt-card{background:var(--dark2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px}
-.gpt-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
-.gpt-card-name{font-size:14px;font-weight:700}
-.gpt-card-desc{font-size:12px;color:var(--muted2);margin-bottom:12px}
+/* ─── GPT GRID (matches web desktop) ─── */
+.gpt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.gpt-card{background:var(--dark2);border:1px solid var(--border);border-radius:12px;padding:18px;transition:border-color .2s;animation:cardIn .3s ease both;cursor:pointer}
+.gpt-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+.gpt-card-icon{width:38px;height:38px;border-radius:10px;background:rgba(34,211,238,.12);border:1px solid rgba(34,211,238,.2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.gpt-card-btns{display:flex;gap:6px}
+.gpt-card-name{font-size:14px;font-weight:700;margin-bottom:4px}
+.gpt-card-desc{font-size:12px;color:var(--muted2);margin-bottom:10px;line-height:1.5}
 .gpt-card-bot{display:flex;justify-content:space-between;align-items:center}
 .gpt-model-tag{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2)}
 
@@ -369,7 +377,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
   <div class="view" id="view-explore">
     <div class="scroll-view">
       <div class="page-title">Modelle</div>
-      <div class="page-sub">Wähle ein Modell um damit zu chatten.</div>
+      <div class="page-sub">17 Modelle verfügbar. Tippe um damit zu chatten.</div>
       <div class="filter-row" id="filter-row">
         <button class="fbtn active" data-f="all">Alle</button>
         <button class="fbtn" data-f="anthropic">Anthropic</button>
@@ -387,10 +395,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
     <div class="scroll-view">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
         <div class="page-title" style="margin-bottom:0">Your GPTs</div>
-        <button id="btn-new-gpt" style="padding:8px 14px;background:var(--acc);border:none;border-radius:8px;color:#0A0C10;font-size:12px;font-weight:800;cursor:pointer;font-family:'Syne',sans-serif">+ Neuer GPT</button>
+        <button id="btn-new-gpt" style="padding:8px 16px;background:var(--acc);border:none;border-radius:8px;color:#0A0C10;font-size:12px;font-weight:800;cursor:pointer;font-family:'Syne',sans-serif;display:flex;align-items:center;gap:5px"><span style="font-size:15px;line-height:1">+</span> Neuer GPT</button>
       </div>
-      <div class="page-sub">Eigene KI-Assistenten erstellen.</div>
-      <div id="gpt-list"></div>
+      <div class="page-sub">Eigene KI-Assistenten mit individuellem System-Prompt erstellen.</div>
+      <div id="gpt-grid" class="gpt-grid"></div>
       <div id="gpt-empty" style="text-align:center;padding:60px 20px;color:var(--muted2)">
         <div style="font-size:48px;margin-bottom:12px">🤖</div>
         <div style="font-size:15px;font-weight:700;margin-bottom:6px;color:var(--text)">Noch keine GPTs</div>
@@ -551,8 +559,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
   <!-- SETTINGS -->
   <div class="view" id="view-settings">
     <div class="scroll-view">
-
-      <!-- Account Card -->
       <div class="s-section">
         <div class="acc-card">
           <div class="av" id="s-av">G</div>
@@ -563,45 +569,30 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           <div class="tok-badge" id="s-tok-badge">716K</div>
         </div>
       </div>
-
-      <!-- Allgemein -->
       <div class="s-section">
         <div class="s-sec-title">Allgemein</div>
         <div class="s-card">
-          <!-- Language picker row -->
           <div class="s-pick-row" id="row-lang">
             <div class="s-pick-label">Sprache</div>
-            <div class="s-pick-val">
-              <span id="val-lang">Deutsch</span>
-              <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-            </div>
+            <div class="s-pick-val"><span id="val-lang">Deutsch</span><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
           </div>
-          <!-- Chat-Verlauf toggle -->
           <div class="s-row">
             <div class="s-info"><div class="s-label">Chat-Verlauf</div></div>
             <div class="toggle on" id="tog-history"></div>
           </div>
-          <!-- Kompakter Modus toggle -->
           <div class="s-row">
             <div class="s-info"><div class="s-label">Kompakter Modus</div></div>
             <div class="toggle" id="tog-compact"></div>
           </div>
         </div>
       </div>
-
-      <!-- Darstellung -->
       <div class="s-section">
         <div class="s-sec-title">Darstellung</div>
         <div class="s-card">
-          <!-- Theme picker row -->
           <div class="s-pick-row" id="row-theme">
             <div class="s-pick-label">Theme</div>
-            <div class="s-pick-val">
-              <span id="val-theme">Dunkel</span>
-              <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-            </div>
+            <div class="s-pick-val"><span id="val-theme">Dunkel</span><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
           </div>
-          <!-- Accent color -->
           <div class="s-row">
             <div class="s-info"><div class="s-label">Akzentfarbe</div></div>
             <div class="swatches">
@@ -612,18 +603,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
               <div class="sw" style="background:#10B981" data-c="#10B981"></div>
             </div>
           </div>
-          <!-- Font size picker row -->
           <div class="s-pick-row" id="row-fs" style="border-bottom:none">
             <div class="s-pick-label">Schriftgröße</div>
-            <div class="s-pick-val">
-              <span id="val-fs">Mittel</span>
-              <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-            </div>
+            <div class="s-pick-val"><span id="val-fs">Mittel</span><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
           </div>
         </div>
       </div>
-
-      <!-- Konto -->
       <div class="s-section">
         <div class="s-sec-title">Konto</div>
         <div class="s-card">
@@ -641,8 +626,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           </div>
         </div>
       </div>
-
-      <!-- Datenschutz -->
       <div class="s-section">
         <div class="s-sec-title">Datenschutz</div>
         <div class="s-card">
@@ -651,8 +634,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           <div class="s-row"><div class="s-info"><div class="s-label">Verlauf löschen</div></div><button class="s-dbtn" id="btn-clear-hist">Löschen</button></div>
         </div>
       </div>
-
-      <!-- Sicherheit -->
       <div class="s-section">
         <div class="s-sec-title">Sicherheit</div>
         <div class="s-card">
@@ -666,7 +647,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           </div>
         </div>
       </div>
-
       <div style="height:16px"></div>
     </div>
   </div>
@@ -738,7 +718,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
   </div>
 </div>
 
-<!-- ── CUSTOM PICKER SHEET ── -->
+<!-- CUSTOM PICKER SHEET -->
 <div class="picker-bg" id="picker-bg">
   <div class="picker-sheet">
     <span class="picker-handle"></span>
@@ -803,21 +783,21 @@ const MULT = {
 };
 
 const ALL_MODELS = [
-  {name:'Llama 3.3 70B',  provider:'Meta · Groq',    cat:'open',      mult:0.3,  tag:'Standard',      tc:'tag-cyan'},
-  {name:'Llama 3.1 8B',   provider:'Meta · Groq',    cat:'open',      mult:0.1,  tag:'Ultraschnell',  tc:'tag-cyan'},
-  {name:'Gemma 2 9B',     provider:'Google · Groq',  cat:'open',      mult:0.15, tag:'Effizient',     tc:'tag-green'},
-  {name:'Mixtral 8x7B',   provider:'Mistral · Groq', cat:'open',      mult:0.2,  tag:'Mixtral',       tc:'tag-muted'},
-  {name:'DeepSeek R1 70B',provider:'DeepSeek · Groq',cat:'open',      mult:0.35, tag:'Reasoning',     tc:'tag-blue'},
-  {name:'Claude Sonnet 4.5',provider:'Anthropic',    cat:'anthropic', mult:1,    tag:'Empfohlen',     tc:'tag-blue'},
-  {name:'Claude Opus 4.5',provider:'Anthropic',      cat:'anthropic', mult:5,    tag:'Leistungsstark',tc:'tag-blue'},
-  {name:'Claude Haiku 4.5',provider:'Anthropic',     cat:'anthropic', mult:0.27, tag:'Schnell',       tc:'tag-cyan'},
-  {name:'GPT-4o',         provider:'OpenAI',         cat:'openai',    mult:0.85, tag:'Vielseitig',    tc:'tag-green'},
-  {name:'GPT-5',          provider:'OpenAI',         cat:'openai',    mult:70,   tag:'Neuestes',      tc:'tag-red'},
-  {name:'Gemini 2.0 Flash',provider:'Google',        cat:'google',    mult:0.5,  tag:'Flash',         tc:'tag-cyan'},
-  {name:'Gemini Pro 2.0', provider:'Google',         cat:'google',    mult:2.33, tag:'Multimodal',    tc:'tag-blue'},
-  {name:'Grok 2',         provider:'xAI',            cat:'open',      mult:1.67, tag:'Von xAI',       tc:'tag-muted'},
-  {name:'Mistral Large 2',provider:'Mistral',        cat:'open',      mult:2.67, tag:'Europäisch',    tc:'tag-muted'},
-  {name:'DeepSeek V3',    provider:'DeepSeek',       cat:'open',      mult:0.9,  tag:'Open Source',   tc:'tag-green'},
+  {name:'Llama 3.3 70B',   provider:'Meta · Groq',    cat:'open',      mult:0.3,  tag:'Standard',       tc:'tag-cyan'},
+  {name:'Llama 3.1 8B',    provider:'Meta · Groq',    cat:'open',      mult:0.1,  tag:'Ultraschnell',   tc:'tag-cyan'},
+  {name:'Gemma 2 9B',      provider:'Google · Groq',  cat:'open',      mult:0.15, tag:'Effizient',      tc:'tag-green'},
+  {name:'Mixtral 8x7B',    provider:'Mistral · Groq', cat:'open',      mult:0.2,  tag:'Mixtral',        tc:'tag-muted'},
+  {name:'DeepSeek R1 70B', provider:'DeepSeek · Groq',cat:'open',      mult:0.35, tag:'Reasoning',      tc:'tag-blue'},
+  {name:'Claude Sonnet 4.5',provider:'Anthropic',     cat:'anthropic', mult:1,    tag:'Empfohlen',      tc:'tag-blue'},
+  {name:'Claude Opus 4.5', provider:'Anthropic',      cat:'anthropic', mult:5,    tag:'Leistungsstark', tc:'tag-blue'},
+  {name:'Claude Haiku 4.5',provider:'Anthropic',      cat:'anthropic', mult:0.27, tag:'Schnell',        tc:'tag-cyan'},
+  {name:'GPT-4o',          provider:'OpenAI',         cat:'openai',    mult:0.85, tag:'Vielseitig',     tc:'tag-green'},
+  {name:'GPT-5',           provider:'OpenAI',         cat:'openai',    mult:70,   tag:'Neuestes',       tc:'tag-red'},
+  {name:'Gemini 2.0 Flash',provider:'Google',         cat:'google',    mult:0.5,  tag:'Flash',          tc:'tag-cyan'},
+  {name:'Gemini Pro 2.0',  provider:'Google',         cat:'google',    mult:2.33, tag:'Multimodal',     tc:'tag-blue'},
+  {name:'Grok 2',          provider:'xAI',            cat:'open',      mult:1.67, tag:'Von xAI',        tc:'tag-muted'},
+  {name:'Mistral Large 2', provider:'Mistral',        cat:'open',      mult:2.67, tag:'Europäisch',     tc:'tag-muted'},
+  {name:'DeepSeek V3',     provider:'DeepSeek',       cat:'open',      mult:0.9,  tag:'Open Source',    tc:'tag-green'},
 ];
 
 /* ──────────────── NAV ──────────────── */
@@ -927,7 +907,6 @@ function renderHistory(){
       <div class="${cbCls}"></div>
       <div class="hi-body">
         <div class="hi-title">${escH(c.title||'Neue Unterhaltung')}</div>
-        <div class="hi-meta">${escH(c.model)} · ${fmtRel(c.updatedAt)}</div>
       </div>
       ${delBtn}
     </div>`;
@@ -1033,7 +1012,6 @@ function openPicker(title, options, currentVal, onSelect){
   pickerCallback = onSelect;
   pickerCurrentVal = currentVal;
   $('picker-title').textContent = title;
-
   const container = $('picker-options');
   container.innerHTML = options.map((opt,i) => {
     const sel = opt.value === currentVal;
@@ -1049,7 +1027,6 @@ function openPicker(title, options, currentVal, onSelect){
       ${i < options.length-1 ? '<div class="picker-divider"></div>' : ''}
     `;
   }).join('');
-
   container.querySelectorAll('.picker-opt').forEach(el => {
     el.addEventListener('click', () => {
       container.querySelectorAll('.picker-opt').forEach(o => o.classList.remove('selected'));
@@ -1057,30 +1034,24 @@ function openPicker(title, options, currentVal, onSelect){
       pickerCurrentVal = el.dataset.val;
     });
   });
-
   $('picker-bg').classList.add('show');
 }
-
 function closePicker(){
   $('picker-bg').classList.remove('show');
   if(pickerCallback && pickerCurrentVal !== null) pickerCallback(pickerCurrentVal);
   pickerCallback = null;
 }
-
 $('picker-done').addEventListener('click', closePicker);
 $('picker-bg').addEventListener('click', e => { if(e.target === $('picker-bg')) closePicker(); });
 
 /* ──────────────── SETTINGS PICKERS ──────────────── */
-
-// Language
 const LANG_OPTS = [
-  {value:'de', label:'Deutsch',   icon:'🇩🇪', sub:'Standardsprache'},
-  {value:'en', label:'English',   icon:'🇬🇧', sub:'English interface'},
-  {value:'fr', label:'Français',  icon:'🇫🇷', sub:'Interface française'},
-  {value:'es', label:'Español',   icon:'🇪🇸', sub:'Interfaz en español'},
+  {value:'de', label:'Deutsch',  icon:'🇩🇪', sub:'Standardsprache'},
+  {value:'en', label:'English',  icon:'🇬🇧', sub:'English interface'},
+  {value:'fr', label:'Français', icon:'🇫🇷', sub:'Interface française'},
+  {value:'es', label:'Español',  icon:'🇪🇸', sub:'Interfaz en español'},
 ];
 let curLang = 'de';
-
 $('row-lang').addEventListener('click', () => {
   openPicker('Sprache', LANG_OPTS, curLang, val => {
     curLang = val;
@@ -1090,13 +1061,11 @@ $('row-lang').addEventListener('click', () => {
   });
 });
 
-// Theme
 const THEME_OPTS = [
   {value:'dark',  label:'Dunkel', icon:'🌙', sub:'Augenschonend im Dunkeln'},
   {value:'light', label:'Hell',   icon:'☀️', sub:'Klassisch & hell'},
 ];
 let curTheme = 'dark';
-
 $('row-theme').addEventListener('click', () => {
   openPicker('Theme', THEME_OPTS, curTheme, val => {
     curTheme = val;
@@ -1107,14 +1076,12 @@ $('row-theme').addEventListener('click', () => {
   });
 });
 
-// Font Size
 const FS_OPTS = [
   {value:'13px', label:'Klein',  icon:'Aa', sub:'Kompakter Überblick'},
   {value:'14px', label:'Mittel', icon:'Aa', sub:'Empfohlen'},
   {value:'16px', label:'Groß',   icon:'Aa', sub:'Bessere Lesbarkeit'},
 ];
 let curFs = '14px';
-
 $('row-fs').addEventListener('click', () => {
   openPicker('Schriftgröße', FS_OPTS, curFs, val => {
     curFs = val;
@@ -1125,49 +1092,57 @@ $('row-fs').addEventListener('click', () => {
   });
 });
 
-/* ──────────────── EXPLORE ──────────────── */
+/* ──────────────── EXPLORE / MODEL GRID ──────────────── */
 function mcClass(m){ if(m.mult>=10) return 'expensive'; if(m.mult<=0.5) return 'cheap'; if(m.mult===1) return 'reference'; return ''; }
+
 function renderModels(f){
-  const list=f==='all'?ALL_MODELS:f==='cheap'?ALL_MODELS.filter(m=>m.mult<=0.5):ALL_MODELS.filter(m=>m.cat===f);
-  $('model-grid').innerHTML=list.map(m=>`
-    <div class="mc ${mcClass(m)}" data-model="${escH(m.name)}">
-      <div class="mc-prov">${escH(m.provider)}</div>
+  const list = f==='all' ? ALL_MODELS : f==='cheap' ? ALL_MODELS.filter(m=>m.mult<=0.5) : ALL_MODELS.filter(m=>m.cat===f);
+  $('model-grid').innerHTML = list.map((m,i) => `
+    <div class="mc ${mcClass(m)}" data-model="${escH(m.name)}" style="animation-delay:${i*0.04}s">
+      <div class="mc-provider">${escH(m.provider)}</div>
       <div class="mc-name">${escH(m.name)}</div>
       <div class="mc-mult">x${m.mult}</div>
-      <div class="mc-price">$${(3*m.mult).toFixed(2)}/1M</div>
+      <div class="mc-price">$${(3*m.mult).toFixed(2)} / 1M</div>
       <span class="mc-tag ${m.tc}">${m.tag}</span>
     </div>`).join('');
-  $('model-grid').querySelectorAll('.mc').forEach(el=>{
-    el.addEventListener('click',()=>{ selectModel(el.dataset.model); nav('chat'); });
+  $('model-grid').querySelectorAll('.mc').forEach(el => {
+    el.addEventListener('click', () => { selectModel(el.dataset.model); nav('chat'); });
   });
 }
-$('filter-row').querySelectorAll('.fbtn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active'); renderModels(btn.dataset.f);
+
+$('filter-row').querySelectorAll('.fbtn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderModels(btn.dataset.f);
   });
 });
 renderModels('all');
 
 /* ──────────────── GPTs ──────────────── */
 function renderGpts(){
-  const grid=$('gpt-list'), empty=$('gpt-empty');
+  const grid = $('gpt-grid'), empty = $('gpt-empty');
   if(!gptsList.length){ grid.innerHTML=''; empty.style.display='block'; return; }
   empty.style.display='none';
-  grid.innerHTML=gptsList.map(g=>`
-    <div class="gpt-card">
+  grid.innerHTML = gptsList.map((g, i) => `
+    <div class="gpt-card" style="animation-delay:${i*0.05}s">
       <div class="gpt-card-top">
-        <div class="gpt-card-name">${escH(g.name)}</div>
-        <button style="background:transparent;border:none;color:#F87171;font-size:20px;cursor:pointer;line-height:1;padding:0 4px" data-del-gpt="${g.id}">×</button>
+        <div class="gpt-card-icon">🤖</div>
+        <div class="gpt-card-btns">
+          <button data-edit-gpt="${g.id}" style="padding:4px 10px;background:var(--dark3);border:1px solid var(--border);border-radius:6px;color:var(--muted2);font-size:11px;cursor:pointer;font-family:'Syne',sans-serif">Bearbeiten</button>
+          <button data-del-gpt="${g.id}" style="padding:4px 10px;background:transparent;border:1px solid rgba(248,113,113,.3);border-radius:6px;color:#F87171;font-size:11px;cursor:pointer;font-family:'Syne',sans-serif">Löschen</button>
+        </div>
       </div>
-      <div class="gpt-card-desc">${escH(g.desc||'')}</div>
+      <div class="gpt-card-name">${escH(g.name)}</div>
+      <div class="gpt-card-desc">${escH(g.desc||'Keine Beschreibung')}</div>
       <div class="gpt-card-bot">
         <span class="gpt-model-tag">${escH(g.model)}</span>
-        <button style="padding:6px 14px;background:var(--acc);border:none;border-radius:6px;color:#0A0C10;font-size:12px;font-weight:800;cursor:pointer;font-family:'Syne',sans-serif" data-use-gpt="${g.id}">Chatten →</button>
+        <button data-use-gpt="${g.id}" style="padding:5px 12px;background:var(--acc);border:none;border-radius:6px;color:#0A0C10;font-size:11px;font-weight:800;cursor:pointer;font-family:'Syne',sans-serif">Chatten →</button>
       </div>
     </div>`).join('');
-  grid.querySelectorAll('[data-del-gpt]').forEach(btn=>{ btn.addEventListener('click',()=>deleteGpt(Number(btn.dataset.delGpt))); });
-  grid.querySelectorAll('[data-use-gpt]').forEach(btn=>{ btn.addEventListener('click',()=>useGpt(Number(btn.dataset.useGpt))); });
+  grid.querySelectorAll('[data-edit-gpt]').forEach(btn => btn.addEventListener('click', e => { e.stopPropagation(); openGptModal(Number(btn.dataset.editGpt)); }));
+  grid.querySelectorAll('[data-del-gpt]').forEach(btn => btn.addEventListener('click', e => { e.stopPropagation(); deleteGpt(Number(btn.dataset.delGpt)); }));
+  grid.querySelectorAll('[data-use-gpt]').forEach(btn => btn.addEventListener('click', e => { e.stopPropagation(); useGpt(Number(btn.dataset.useGpt)); }));
 }
 
 function openGptModal(id){
@@ -1182,10 +1157,10 @@ function openGptModal(id){
   $('gpt-modal-bg').classList.add('show');
 }
 function closeGptModal(){ $('gpt-modal-bg').classList.remove('show'); }
-$('btn-new-gpt').addEventListener('click',()=>openGptModal());
+$('btn-new-gpt').addEventListener('click', () => openGptModal());
 $('btn-close-gpt').addEventListener('click', closeGptModal);
-$('gpt-modal-bg').addEventListener('click',e=>{ if(e.target===$('gpt-modal-bg')) closeGptModal(); });
-$('btn-save-gpt').addEventListener('click',()=>{
+$('gpt-modal-bg').addEventListener('click', e => { if(e.target===$('gpt-modal-bg')) closeGptModal(); });
+$('btn-save-gpt').addEventListener('click', () => {
   const name=$('gpt-name').value.trim(), prompt=$('gpt-sys-prompt').value.trim();
   if(!name){ toast('Bitte Namen eingeben!'); return; }
   if(!prompt){ toast('Bitte System-Prompt eingeben!'); return; }
@@ -1349,3 +1324,10 @@ window.deductBalance = (n)=>{ balance=Math.max(0,balance-n); updateBal(); };
 <script src="api.js"></script>
 </body>
 </html>
+"""
+
+with open('/home/claude/index-mobile.html', 'w') as f:
+    f.write(content)
+
+print("Written:", len(content), "chars")
+EOF
