@@ -1353,11 +1353,14 @@ function attachScrollbar(el){
     if(scrollH <= clientH + 2){ bar.style.opacity = '0'; return; }
     const rect = el.getBoundingClientRect();
     if(rect.width === 0 && rect.height === 0){ bar.style.opacity = '0'; return; }
-    const inset = 10; // keep bar away from rounded corners
-    const trackH = clientH - inset * 2;
+    // If element has a sticky header child, start track below it
+    const stickyEl = el.querySelector('.sheet-sticky, .modal-top, .drawer-top');
+    const topInset = stickyEl ? stickyEl.offsetHeight + 6 : 10;
+    const botInset = 10;
+    const trackH = clientH - topInset - botInset;
     const ratio = el.scrollTop / (scrollH - clientH);
     const thumbH = Math.max(30, (clientH / scrollH) * trackH);
-    const thumbY = inset + ratio * (trackH - thumbH);
+    const thumbY = topInset + ratio * (trackH - thumbH);
     bar.style.top    = (rect.top + thumbY) + 'px';
     bar.style.height = thumbH + 'px';
     bar.style.right  = (window.innerWidth - rect.right + 5) + 'px';
