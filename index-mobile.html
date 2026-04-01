@@ -7,6 +7,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+*::-webkit-scrollbar{display:none!important}
+*{scrollbar-width:none!important;-ms-overflow-style:none!important}
 :root{--acc:#22D3EE;--acc2:#3B82F6;--dark:#09090B;--dark2:#0F1218;--dark3:#151A22;--dark4:#1B2130;--text:#FAFAFA;--muted:#4B5563;--muted2:#9CA3AF;--border:rgba(255,255,255,0.07);--fs:14px;--nav-h:60px}
 html,body{height:100%;background:var(--dark);font-family:'Syne',sans-serif;color:var(--text);overflow:hidden}
 .app{display:flex;flex-direction:column;height:100vh;height:100dvh}
@@ -337,6 +339,11 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 /* TOAST */
 .toast{position:fixed;bottom:calc(var(--nav-h) + 12px);left:50%;transform:translateX(-50%) translateY(30px);background:var(--dark3);border:1px solid rgba(34,211,238,.3);color:var(--acc);font-family:'DM Mono',monospace;font-size:12px;padding:10px 20px;border-radius:10px;transition:transform .3s,opacity .3s;z-index:400;white-space:nowrap;pointer-events:none;opacity:0}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* CUSTOM SCROLLBAR */
+.cscroll{position:fixed;width:5px;border-radius:99px;background:var(--acc);pointer-events:none;opacity:0;transition:opacity .4s;z-index:999}
+.cscroll.vis{opacity:.55;transition:opacity .15s}
+.cscroll.scrolling{opacity:.85;transition:opacity .08s}
 
 /* LIGHT MODE */
 .light-mode{--dark:#F0F2F5;--dark2:#FFFFFF;--dark3:#F0F2F5;--dark4:#E4E6EA;--text:#0A0C10;--muted:#B0B8C1;--muted2:#606770;--border:rgba(0,0,0,.1)}
@@ -928,7 +935,7 @@ function renderHistory(){
   });
 }
 
-function openDrawer(){ renderHistory(); $('drawer-overlay').classList.add('show'); $('drawer').classList.add('open'); }
+function openDrawer(){ renderHistory(); $('drawer-overlay').classList.add('show'); $('drawer').classList.add('open'); setTimeout(()=>attachScrollbar($('drawer-list')),60); }
 function closeDrawer(){ $('drawer-overlay').classList.remove('show'); $('drawer').classList.remove('open'); if(selectionMode) exitSelectionMode(); }
 $('btn-drawer').addEventListener('click', openDrawer);
 $('btn-close-drawer').addEventListener('click', closeDrawer);
@@ -999,6 +1006,7 @@ function openModelSheet(){
     el.addEventListener('click',()=>{ selectModel(el.dataset.model); closeModelSheet(); });
   });
   $('model-sheet-bg').classList.add('show');
+  setTimeout(()=>attachScrollbar($('model-sheet-inner')),60);
 }
 function closeModelSheet(){ $('model-sheet-bg').classList.remove('show'); }
 $('model-sheet-bg').addEventListener('click',e=>{ if(e.target===$('model-sheet-bg')) closeModelSheet(); });
@@ -1155,6 +1163,7 @@ function openGptModal(id){
   $('gpt-sys-prompt').value = gpt ? gpt.prompt : '';
   $('btn-save-gpt').textContent = gpt ? 'Speichern' : 'GPT erstellen';
   $('gpt-modal-bg').classList.add('show');
+  setTimeout(()=>attachScrollbar($('gpt-modal')),60);
 }
 function closeGptModal(){ $('gpt-modal-bg').classList.remove('show'); }
 $('btn-new-gpt').addEventListener('click', () => openGptModal());
@@ -1320,14 +1329,59 @@ window.addTyping     = addTyping;
 window.curModel      = ()=>curModel;
 window.curGptPrompt  = ()=>curGptPrompt;
 window.deductBalance = (n)=>{ balance=Math.max(0,balance-n); updateBal(); };
+
+/* ──────────────── CUSTOM SCROLLBAR ──────────────── */
+function attachScrollbar(el){
+  if(!el) return;
+  // Reuse existing bar or create new
+  let bar = el._cscroll;
+  if(!bar){
+    bar = document.createElement('div');
+    bar.className = 'cscroll';
+    document.body.appendChild(bar);
+    el._cscroll = bar;
+  }
+
+  let fadeTimer, raf;
+
+  function update(){
+    const scrollH = el.scrollHeight, clientH = el.clientHeight;
+    if(scrollH <= clientH + 2){ bar.style.opacity = '0'; return; }
+    const rect = el.getBoundingClientRect();
+    if(rect.width === 0 && rect.height === 0){ bar.style.opacity = '0'; return; }
+    const inset = 10; // keep bar away from rounded corners
+    const trackH = clientH - inset * 2;
+    const ratio = el.scrollTop / (scrollH - clientH);
+    const thumbH = Math.max(30, (clientH / scrollH) * trackH);
+    const thumbY = inset + ratio * (trackH - thumbH);
+    bar.style.top    = (rect.top + thumbY) + 'px';
+    bar.style.height = thumbH + 'px';
+    bar.style.right  = (window.innerWidth - rect.right + 5) + 'px';
+    bar.classList.add('vis', 'scrolling');
+    clearTimeout(fadeTimer);
+    fadeTimer = setTimeout(()=>bar.classList.remove('scrolling'), 160);
+    fadeTimer = setTimeout(()=>bar.classList.remove('vis'), 1500);
+  }
+
+  if(!el._cscroll_bound){
+    el._cscroll_bound = true;
+    el.addEventListener('scroll', ()=>{ cancelAnimationFrame(raf); raf = requestAnimationFrame(update); }, {passive:true});
+  }
+}
+
+// Init all static scrollable areas
+document.addEventListener('DOMContentLoaded', ()=>{
+  ['chat-msgs'].forEach(id => attachScrollbar(document.getElementById(id)));
+  document.querySelectorAll('.scroll-view').forEach(el => attachScrollbar(el));
+});
+// Fallback after all scripts loaded
+setTimeout(()=>{
+  attachScrollbar(document.getElementById('chat-msgs'));
+  document.querySelectorAll('.scroll-view').forEach(el => attachScrollbar(el));
+}, 800);
+
+
 </script>
 <script src="api.js"></script>
 </body>
 </html>
-"""
-
-with open('/home/claude/index-mobile.html', 'w') as f:
-    f.write(content)
-
-print("Written:", len(content), "chars")
-EOF
