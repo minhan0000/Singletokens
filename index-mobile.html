@@ -348,7 +348,25 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 .cscroll.scrolling{opacity:.85;transition:opacity .08s}
 
 /* LIGHT MODE */
-.light-mode{--dark:#F0F2F5;--dark2:#FFFFFF;--dark3:#F0F2F5;--dark4:#E4E6EA;--text:#0A0C10;--muted:#B0B8C1;--muted2:#606770;--border:rgba(0,0,0,.1)}
+.light-mode,html.light-mode,body.light-mode{--dark:#F0F2F5;--dark2:#FFFFFF;--dark3:#F0F2F5;--dark4:#E4E6EA;--text:#0A0C10;--muted:#B0B8C1;--muted2:#606770;--border:rgba(0,0,0,.1)}
+html.light-mode,body.light-mode{background:#F0F2F5}
+
+/* Light mode: model cards */
+html.light-mode .mc.cheap,body.light-mode .mc.cheap,.light-mode .mc.cheap{border-color:rgba(6,182,212,.5);background:rgba(6,182,212,.12)}
+html.light-mode .mc.expensive,body.light-mode .mc.expensive,.light-mode .mc.expensive{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.1)}
+html.light-mode .mc.reference,body.light-mode .mc.reference,.light-mode .mc.reference{border-color:rgba(59,130,246,.55);background:rgba(59,130,246,.12)}
+html.light-mode .mc,body.light-mode .mc,.light-mode .mc{border-color:rgba(0,0,0,.12);background:#FFFFFF}
+
+/* Light mode: tags */
+html.light-mode .tag-cyan,body.light-mode .tag-cyan,.light-mode .tag-cyan{background:rgba(6,182,212,.18);color:#0891B2}
+html.light-mode .tag-blue,body.light-mode .tag-blue,.light-mode .tag-blue{background:rgba(59,130,246,.18);color:#2563EB}
+html.light-mode .tag-red,body.light-mode .tag-red,.light-mode .tag-red{background:rgba(239,68,68,.18);color:#DC2626}
+html.light-mode .tag-green,body.light-mode .tag-green,.light-mode .tag-green{background:rgba(34,197,94,.18);color:#16A34A}
+html.light-mode .tag-muted,body.light-mode .tag-muted,.light-mode .tag-muted{background:rgba(0,0,0,.08);color:#606770}
+
+/* Light mode: filter buttons */
+html.light-mode .fbtn,body.light-mode .fbtn,.light-mode .fbtn{border-color:rgba(0,0,0,.15);color:#606770}
+html.light-mode .fbtn.active,body.light-mode .fbtn.active,.light-mode .fbtn.active{color:#03060F}
 </style>
 </head>
 <body>
@@ -573,7 +591,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           <div class="av" id="s-av">G</div>
           <div style="flex:1">
             <div style="font-size:15px;font-weight:700" id="s-name">Guest User</div>
-            <div style="font-size:12px;color:var(--muted2);font-family:'DM Mono',monospace;margin-top:2px">guest@singletokens.ai</div>
+            <div style="font-size:12px;color:var(--muted2);font-family:'DM Mono',monospace;margin-top:2px"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3b5c4e5e484f7b4852555c575e4f54505e5548155a52">[email&#160;protected]</a></div>
           </div>
           <div class="tok-badge" id="s-tok-badge">716K</div>
         </div>
@@ -758,7 +776,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 
 <div class="toast" id="toast"></div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 'use strict';
 
 /* ──────────────── HELPERS ──────────────── */
@@ -1083,6 +1101,8 @@ $('row-theme').addEventListener('click', () => {
     curTheme = val;
     const opt = THEME_OPTS.find(o => o.value === val);
     $('val-theme').textContent = opt.label;
+    document.documentElement.classList.toggle('light-mode', val === 'light');
+    document.body.classList.toggle('light-mode', val === 'light');
     document.getElementById('app').classList.toggle('light-mode', val === 'light');
     toast('Gespeichert');
   });
@@ -1381,14 +1401,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
   ['chat-msgs'].forEach(id => attachScrollbar(document.getElementById(id)));
   document.querySelectorAll('.scroll-view').forEach(el => attachScrollbar(el));
 });
-// Fallback after all scripts loaded
-setTimeout(()=>{
-  attachScrollbar(document.getElementById('chat-msgs'));
-  document.querySelectorAll('.scroll-view').forEach(el => attachScrollbar(el));
-}, 800);
-
-
+// Fallback after all scrip-e 
 </script>
-<script src="api.js"></script>
 </body>
 </html>
