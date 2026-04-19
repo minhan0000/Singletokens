@@ -800,6 +800,8 @@ let chatHistory = [];
 let currentChatId = Date.now();
 let currentMessages = [];
 let gptsList = [];
+function loadGpts(){ try{ gptsList=JSON.parse(localStorage.getItem('st_gpts')||'[]'); }catch(e){ gptsList=[]; } }
+function saveGpts(){ try{ localStorage.setItem('st_gpts',JSON.stringify(gptsList)); }catch(e){} }
 let editingGptId = null;
 let selectionMode = false;
 let selectedIds = new Set();
