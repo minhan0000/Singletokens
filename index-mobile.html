@@ -1200,8 +1200,9 @@ $('btn-save-gpt').addEventListener('click', () => {
   if(!name){ toast('Bitte Namen eingeben!'); return; }
   if(!prompt){ toast('Bitte System-Prompt eingeben!'); return; }
   const gpt={id:editingGptId||Date.now(), name, desc:$('gpt-desc').value.trim(), model:$('gpt-model-sel').value, prompt};
-  if(editingGptId) gptsList=gptsList.map(g=>g.id===editingGptId?gpt:g);
+ if(editingGptId) gptsList=gptsList.map(g=>g.id===editingGptId?gpt:g);
   else gptsList.push(gpt);
+  saveGpts(); // ← neu
   closeGptModal(); renderGpts(); toast(editingGptId?'GPT aktualisiert!':'GPT erstellt!');
 });
 function deleteGpt(id){
