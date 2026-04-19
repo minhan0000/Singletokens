@@ -69,7 +69,6 @@ html,body{height:100%;background:var(--dark);font-family:'Syne',sans-serif;color
 .drawer-list{flex:1;overflow-y:auto;padding:0 8px 12px}
 .drawer-list::-webkit-scrollbar{display:none}
 
-/* ─── CHAT HISTORY ITEMS (matches web sidebar style) ─── */
 .hi{display:flex;align-items:center;padding:7px 8px;border-radius:8px;cursor:pointer;position:relative;margin-bottom:1px;user-select:none;-webkit-user-select:none;color:var(--muted2);font-size:12px;font-weight:600;transition:all .15s}
 .hi:not(.active):not(.selected):active{background:var(--dark3);color:var(--text)}
 .hi:hover{background:var(--dark3);color:var(--text)}
@@ -86,7 +85,6 @@ html,body{height:100%;background:var(--dark);font-family:'Syne',sans-serif;color
 .drawer-footer{padding:10px 12px;border-top:1px solid var(--border);flex-shrink:0;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-align:center}
 .hist-empty{text-align:center;padding:40px 20px;color:var(--muted2);font-size:13px;line-height:1.5}
 
-/* SELECTION MODE */
 .hi-cb{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--muted);flex-shrink:0;margin-right:10px;display:none;align-items:center;justify-content:center;transition:all .15s;background:transparent}
 .hi-cb.show{display:flex}
 .hi-cb.checked{background:var(--acc);border-color:var(--acc)}
@@ -111,7 +109,6 @@ html,body{height:100%;background:var(--dark);font-family:'Syne',sans-serif;color
 @keyframes lp-pulse{0%{transform:scale(1)}50%{transform:scale(.97);background:rgba(34,211,238,.08)}100%{transform:scale(1)}}
 .hi.lp-active{animation:lp-pulse .5s ease}
 
-/* CONFIRM POPUP */
 .confirm-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:300;display:none;align-items:center;justify-content:center;padding:20px}
 .confirm-bg.show{display:flex}
 .confirm-box{background:var(--dark2);border:1px solid var(--border);border-radius:18px;padding:22px 20px 18px;width:100%;max-width:290px;animation:pop-in .2s cubic-bezier(.34,1.56,.64,1)}
@@ -126,7 +123,6 @@ html,body{height:100%;background:var(--dark);font-family:'Syne',sans-serif;color
 .confirm-del-btn{flex:1;padding:11px;background:#F87171;border:none;border-radius:10px;color:#fff;font-size:13px;font-weight:800;cursor:pointer;font-family:'Syne',sans-serif}
 .confirm-del-btn:active{opacity:.85}
 
-/* MODEL SHEET */
 .sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;display:none;align-items:flex-end}
 .sheet-bg.show{display:flex}
 .sheet{background:var(--dark2);border-radius:20px 20px 0 0;width:100%;max-height:80vh;overflow-y:auto;padding-bottom:calc(20px + env(safe-area-inset-bottom));display:flex;flex-direction:column}
@@ -144,7 +140,6 @@ html,body{height:100%;background:var(--dark);font-family:'Syne',sans-serif;color
 .mli-check.on{background:var(--acc);border-color:var(--acc)}
 .mli-check.on::after{content:'✓';font-size:11px;color:#03060F;font-weight:800}
 
-/* ── CUSTOM PICKER SHEET ── */
 .picker-bg{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:200;display:none;align-items:flex-end;transition:opacity .22s}
 .picker-bg.show{display:flex}
 .picker-sheet{background:var(--dark2);border-radius:22px 22px 0 0;width:100%;padding:0 0 calc(8px + env(safe-area-inset-bottom));overflow:hidden;transform:translateY(100%);transition:transform .28s cubic-bezier(.4,0,.2,1)}
@@ -168,7 +163,6 @@ html,body{height:100%;background:var(--dark);font-family:'Syne',sans-serif;color
 .picker-opt.selected .picker-opt-radio::after{content:'';width:8px;height:8px;border-radius:50%;background:#03060F}
 .picker-divider{height:1px;background:var(--border);margin:2px 10px}
 
-/* ── SETTINGS PICKER ROWS ── */
 .s-pick-row{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);cursor:pointer;-webkit-user-select:none;user-select:none}
 .s-pick-row:last-child{border:none}
 .s-pick-row:active{background:rgba(255,255,255,.03)}
@@ -176,7 +170,6 @@ html,body{height:100%;background:var(--dark);font-family:'Syne',sans-serif;color
 .s-pick-val{display:flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:12px;color:var(--muted2)}
 .s-pick-val svg{width:13px;height:13px;stroke:var(--muted);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
 
-/* ─── MODEL EXPLORE (matches web desktop) ─── */
 .scroll-view{flex:1;overflow-y:auto;padding:16px}
 .scroll-view::-webkit-scrollbar{display:none}
 .page-title{font-size:18px;font-weight:800;letter-spacing:-.03em;margin-bottom:4px}
@@ -206,7 +199,6 @@ html,body{height:100%;background:var(--dark);font-family:'Syne',sans-serif;color
 .tag-green{background:rgba(34,197,94,.15);color:#86EFAC}
 .tag-muted{background:rgba(255,255,255,.07);color:var(--muted2)}
 
-/* ─── GPT GRID (matches web desktop) ─── */
 .gpt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
 .gpt-card{background:var(--dark2);border:1px solid var(--border);border-radius:12px;padding:18px;transition:border-color .2s;animation:cardIn .3s ease both;cursor:pointer}
 .gpt-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
@@ -217,7 +209,16 @@ html,body{height:100%;background:var(--dark);font-family:'Syne',sans-serif;color
 .gpt-card-bot{display:flex;justify-content:space-between;align-items:center}
 .gpt-model-tag{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2)}
 
-/* MODAL */
+/* BEHAVIOR CHIPS */
+.behavior-chip{padding:7px 13px;border-radius:20px;border:1px solid var(--border);background:var(--dark3);color:var(--muted2);font-size:12px;font-weight:600;cursor:pointer;font-family:'Syne',sans-serif;transition:all .15s;-webkit-user-select:none;user-select:none}
+.behavior-chip.active{background:rgba(34,211,238,.12);border-color:rgba(34,211,238,.4);color:var(--acc)}
+.behavior-chip:active{opacity:.75}
+
+/* GPT ICON PICKER */
+.icon-opt{width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-size:20px;border-radius:8px;cursor:pointer;border:2px solid transparent;background:var(--dark4);transition:all .15s;-webkit-user-select:none;user-select:none}
+.icon-opt.selected{border-color:var(--acc);background:rgba(34,211,238,.12)}
+.icon-opt:active{opacity:.75}
+
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;display:none;align-items:flex-end}
 .modal-bg.show{display:flex}
 .modal{background:var(--dark2);border-radius:20px 20px 0 0;width:100%;max-height:92vh;overflow-y:auto;padding:20px 16px;padding-bottom:calc(20px + env(safe-area-inset-bottom))}
@@ -235,7 +236,6 @@ html,body{height:100%;background:var(--dark);font-family:'Syne',sans-serif;color
 .inp-area::placeholder{color:var(--muted2)}
 .inp-sel{width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:11px 12px;font-size:14px;color:var(--text);outline:none;-webkit-appearance:none;font-family:'Syne',sans-serif}
 
-/* PURCHASE */
 .p-steps{display:flex;align-items:center;margin-bottom:20px}
 .p-step{display:flex;align-items:center;gap:6px}
 .p-num{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);flex-shrink:0;transition:all .3s}
@@ -307,7 +307,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 .lock-row{display:flex;align-items:center;justify-content:center;gap:5px;margin-bottom:10px;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2)}
 .lock-row svg{width:11px;height:11px;stroke:var(--muted2);fill:none;stroke-width:2;stroke-linecap:round}
 
-/* SETTINGS */
 .s-section{margin-bottom:20px}
 .s-sec-title{font-size:11px;font-family:'DM Mono',monospace;color:var(--muted2);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;padding-left:4px}
 .s-card{background:var(--dark2);border:1px solid var(--border);border-radius:12px;overflow:hidden}
@@ -331,18 +330,15 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 .s-inp{background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:13px;color:var(--text);outline:none;font-family:'Syne',sans-serif;width:130px;-webkit-appearance:none;transition:border-color .2s}
 .s-inp:focus{border-color:rgba(34,211,238,.4)}
 
-/* BOTTOM NAV */
 .bottom-nav{height:var(--nav-h);padding-bottom:env(safe-area-inset-bottom);background:var(--dark2);border-top:1px solid var(--border);display:flex;flex-shrink:0}
 .bn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;color:var(--muted2);padding-bottom:2px;border:none;background:transparent;font-family:'Syne',sans-serif}
 .bn.active{color:var(--acc)}
 .bn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .bn span{font-size:10px;font-weight:600}
 
-/* TOAST */
 .toast{position:fixed;bottom:calc(var(--nav-h) + 12px);left:50%;transform:translateX(-50%) translateY(30px);background:var(--dark3);border:1px solid rgba(34,211,238,.3);color:var(--acc);font-family:'DM Mono',monospace;font-size:12px;padding:10px 20px;border-radius:10px;transition:transform .3s,opacity .3s;z-index:400;white-space:nowrap;pointer-events:none;opacity:0}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 
-/* CUSTOM SCROLLBAR */
 .cscroll{position:fixed;width:5px;border-radius:99px;background:var(--acc);pointer-events:none;opacity:0;transition:opacity .4s;z-index:999}
 .cscroll.vis{opacity:.55;transition:opacity .15s}
 .cscroll.scrolling{opacity:.85;transition:opacity .08s}
@@ -350,29 +346,22 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 /* LIGHT MODE */
 .light-mode,html.light-mode,body.light-mode{--dark:#F0F2F5;--dark2:#FFFFFF;--dark3:#F0F2F5;--dark4:#E4E6EA;--text:#0A0C10;--muted:#B0B8C1;--muted2:#606770;--border:rgba(0,0,0,.1)}
 html.light-mode,body.light-mode{background:#F0F2F5}
-
-/* Light mode: model cards */
-html.light-mode .mc.cheap,body.light-mode .mc.cheap,.light-mode .mc.cheap{border-color:rgba(6,182,212,.5);background:rgba(6,182,212,.12)}
-html.light-mode .mc.expensive,body.light-mode .mc.expensive,.light-mode .mc.expensive{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.1)}
-html.light-mode .mc.reference,body.light-mode .mc.reference,.light-mode .mc.reference{border-color:rgba(59,130,246,.55);background:rgba(59,130,246,.12)}
-html.light-mode .mc,body.light-mode .mc,.light-mode .mc{border-color:rgba(0,0,0,.12);background:#FFFFFF}
-
-/* Light mode: tags */
-html.light-mode .tag-cyan,body.light-mode .tag-cyan,.light-mode .tag-cyan{background:rgba(6,182,212,.18);color:#0891B2}
-html.light-mode .tag-blue,body.light-mode .tag-blue,.light-mode .tag-blue{background:rgba(59,130,246,.18);color:#2563EB}
-html.light-mode .tag-red,body.light-mode .tag-red,.light-mode .tag-red{background:rgba(239,68,68,.18);color:#DC2626}
-html.light-mode .tag-green,body.light-mode .tag-green,.light-mode .tag-green{background:rgba(34,197,94,.18);color:#16A34A}
-html.light-mode .tag-muted,body.light-mode .tag-muted,.light-mode .tag-muted{background:rgba(0,0,0,.08);color:#606770}
-
-/* Light mode: filter buttons */
-html.light-mode .fbtn,body.light-mode .fbtn,.light-mode .fbtn{border-color:rgba(0,0,0,.15);color:#606770}
-html.light-mode .fbtn.active,body.light-mode .fbtn.active,.light-mode .fbtn.active{color:#03060F}
+html.light-mode .mc.cheap,body.light-mode .mc.cheap{border-color:rgba(6,182,212,.5);background:rgba(6,182,212,.12)}
+html.light-mode .mc.expensive,body.light-mode .mc.expensive{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.1)}
+html.light-mode .mc.reference,body.light-mode .mc.reference{border-color:rgba(59,130,246,.55);background:rgba(59,130,246,.12)}
+html.light-mode .mc,body.light-mode .mc{border-color:rgba(0,0,0,.12);background:#FFFFFF}
+html.light-mode .tag-cyan,body.light-mode .tag-cyan{background:rgba(6,182,212,.18);color:#0891B2}
+html.light-mode .tag-blue,body.light-mode .tag-blue{background:rgba(59,130,246,.18);color:#2563EB}
+html.light-mode .tag-red,body.light-mode .tag-red{background:rgba(239,68,68,.18);color:#DC2626}
+html.light-mode .tag-green,body.light-mode .tag-green{background:rgba(34,197,94,.18);color:#16A34A}
+html.light-mode .tag-muted,body.light-mode .tag-muted{background:rgba(0,0,0,.08);color:#606770}
+html.light-mode .fbtn,body.light-mode .fbtn{border-color:rgba(0,0,0,.15);color:#606770}
+html.light-mode .fbtn.active,body.light-mode .fbtn.active{color:#03060F}
 </style>
 </head>
 <body>
 <div class="app" id="app">
 
-  <!-- TOP BAR -->
   <div class="topbar">
     <button class="tb-btn" id="btn-drawer" aria-label="Verlauf">
       <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -442,6 +431,16 @@ html.light-mode .fbtn.active,body.light-mode .fbtn.active,.light-mode .fbtn.acti
         <div class="modal-title" id="gpt-modal-title">Neuer GPT</div>
         <button class="modal-close" id="btn-close-gpt">×</button>
       </div>
+
+      <!-- Icon Picker -->
+      <div class="field">
+        <div class="field-label">Icon</div>
+        <div style="background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:10px">
+          <div id="gpt-icon-grid" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+        </div>
+        <input type="hidden" id="gpt-icon-val" value="🤖">
+      </div>
+
       <div class="field">
         <div class="field-label">Name *</div>
         <input class="inp" id="gpt-name" type="text" placeholder="z.B. Coding-Assistent">
@@ -459,6 +458,13 @@ html.light-mode .fbtn.active,body.light-mode .fbtn.active,.light-mode .fbtn.acti
           <option>Gemini 2.0 Flash</option><option>Grok 2</option>
         </select>
       </div>
+
+      <!-- Behavior Chips -->
+      <div class="field">
+        <div class="field-label">Verhalten</div>
+        <div id="behavior-chips" style="display:flex;flex-wrap:wrap;gap:7px;margin-top:2px"></div>
+      </div>
+
       <div class="field">
         <div class="field-label">System-Prompt *</div>
         <textarea class="inp-area" id="gpt-sys-prompt" placeholder="Du bist ein hilfreicher Assistent der..."></textarea>
@@ -591,7 +597,7 @@ html.light-mode .fbtn.active,body.light-mode .fbtn.active,.light-mode .fbtn.acti
           <div class="av" id="s-av">G</div>
           <div style="flex:1">
             <div style="font-size:15px;font-weight:700" id="s-name">Guest User</div>
-            <div style="font-size:12px;color:var(--muted2);font-family:'DM Mono',monospace;margin-top:2px"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3b5c4e5e484f7b4852555c575e4f54505e5548155a52">[email&#160;protected]</a></div>
+            <div style="font-size:12px;color:var(--muted2);font-family:'DM Mono',monospace;margin-top:2px">guest@singletokens.com</div>
           </div>
           <div class="tok-badge" id="s-tok-badge">716K</div>
         </div>
@@ -776,10 +782,9 @@ html.light-mode .fbtn.active,body.light-mode .fbtn.active,.light-mode .fbtn.acti
 
 <div class="toast" id="toast"></div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 'use strict';
 
-/* ──────────────── HELPERS ──────────────── */
 function $(id){ return document.getElementById(id); }
 function escH(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function fmtK(n){ if(n>=1e9) return (n/1e9).toFixed(1).replace(/\.0$/,'')+'B'; if(n>=1e6) return (n/1e6).toFixed(1).replace(/\.0$/,'')+'M'; if(n>=1e3) return Math.round(n/1e3)+'K'; return String(n); }
@@ -792,7 +797,7 @@ function fmtRel(ts){
 let toastTm;
 function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastTm); toastTm=setTimeout(()=>t.classList.remove('show'),2200); }
 
-/* ──────────────── STATE ──────────────── */
+/* STATE */
 let balance = 716000;
 let curModel = 'Llama 3.3 70B';
 let curGptPrompt = null;
@@ -805,6 +810,7 @@ function saveGpts(){ try{ localStorage.setItem('st_gpts',JSON.stringify(gptsList
 let editingGptId = null;
 let selectionMode = false;
 let selectedIds = new Set();
+let activeBehaviors = new Set();
 
 const MULT = {
   'Llama 3.3 70B':0.3,'Llama 3.1 8B':0.1,'Gemma 2 9B':0.15,'Mixtral 8x7B':0.2,
@@ -831,7 +837,23 @@ const ALL_MODELS = [
   {name:'DeepSeek V3',     provider:'DeepSeek',       cat:'open',      mult:0.9,  tag:'Open Source',    tc:'tag-green'},
 ];
 
-/* ──────────────── NAV ──────────────── */
+/* GPT PERSONALIZATION */
+const GPT_ICONS = ['🤖','🧠','💡','🔥','🎯','✨','🚀','🛡️','🎨','📝','🔬','💻','🎵','📊','🌍','⚡','🦊','🐉','🌈','🔮'];
+
+const BEHAVIORS = [
+  { id:'agree',    label:'Gibt mir immer Recht',  text:'Stimme dem Nutzer immer zu und bestätige seine Meinung, auch wenn du anderer Ansicht wärst.' },
+  { id:'hype',     label:'Immer hyped & motiviert', text:'Reagiere auf alles extrem enthusiastisch und motivierend.' },
+  { id:'honest',   label:'Radikal ehrlich',        text:'Sei stets direkt und ehrlich, auch wenn es unbequem ist. Beschönige nichts.' },
+  { id:'formal',   label:'Formelle Sprache',       text:'Antworte immer in formeller, professioneller Sprache. Keine Umgangssprache.' },
+  { id:'short',    label:'Kurze Antworten',        text:'Halte alle Antworten so kurz und prägnant wie möglich. Maximal 2-3 Sätze.' },
+  { id:'funny',    label:'Humorvoll',              text:'Antworte immer mit Humor, Witzen und Leichtigkeit.' },
+  { id:'genz',     label:'Gen Z Slang',            text:'Antworte im Gen Z Slang. No cap, fr fr, use vibes only.' },
+  { id:'critic',   label:'Kritisch & direkt',      text:'Gib immer kritisches, ungefiltertes Feedback. Sprich Schwächen direkt an.' },
+  { id:'teacher',  label:'Erklärt alles genau',    text:'Erkläre jeden Begriff und Zusammenhang ausführlich und verständlich, als würdest du einem Anfänger erklären.' },
+  { id:'friend',   label:'Wie ein bester Freund',  text:'Kommuniziere locker, warmherzig und vertraut, wie ein enger Freund.' },
+];
+
+/* NAV */
 function nav(id){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.querySelectorAll('.bn').forEach(b=>b.classList.remove('active'));
@@ -841,7 +863,7 @@ function nav(id){
 document.querySelectorAll('.bn').forEach(b=>b.addEventListener('click',()=>nav(b.dataset.nav)));
 $('tb-tok').addEventListener('click',()=>nav('purchase'));
 
-/* ──────────────── BALANCE ──────────────── */
+/* BALANCE */
 function updateBal(){
   const s=fmtK(balance);
   $('tb-tok').textContent=s;
@@ -849,7 +871,7 @@ function updateBal(){
   $('s-tok-desc').textContent=s+' verfügbar';
 }
 
-/* ──────────────── HISTORY ──────────────── */
+/* HISTORY */
 function loadHistory(){ try{ chatHistory=JSON.parse(localStorage.getItem('st_hist')||'[]'); }catch(e){ chatHistory=[]; } }
 function saveHistory(){ try{ localStorage.setItem('st_hist',JSON.stringify(chatHistory)); }catch(e){} }
 
@@ -863,7 +885,7 @@ function saveChat(){
   saveHistory();
 }
 
-/* ──────────────── SELECTION MODE ──────────────── */
+/* SELECTION MODE */
 function enterSelectionMode(id){
   selectionMode=true; selectedIds=new Set();
   if(id !== undefined) selectedIds.add(id);
@@ -892,7 +914,7 @@ function updateSelBar(){
   }
 }
 
-/* ──────────────── CONFIRM DELETE ──────────────── */
+/* CONFIRM DELETE */
 function showConfirm(count){
   const single = count===1;
   $('confirm-title').textContent = single ? '1 Chat löschen?' : `${count} Chats löschen?`;
@@ -912,13 +934,12 @@ $('confirm-del-btn').addEventListener('click',()=>{
   toast(count===1 ? 'Chat gelöscht' : `${count} Chats gelöscht`);
 });
 
-/* ──────────────── SELECTION BAR EVENTS ──────────────── */
 $('sel-all-cb').addEventListener('click', toggleSelectAll);
 $('sel-all-lbl').addEventListener('click', toggleSelectAll);
 $('sel-cancel-btn').addEventListener('click', exitSelectionMode);
 $('sel-trash-btn').addEventListener('click',()=>{ if(!selectedIds.size) return; showConfirm(selectedIds.size); });
 
-/* ──────────────── RENDER HISTORY ──────────────── */
+/* RENDER HISTORY */
 function renderHistory(){
   const list=$('drawer-list'), footer=$('drawer-footer');
   footer.textContent=chatHistory.length+' Unterhaltung'+(chatHistory.length!==1?'en':'');
@@ -936,9 +957,7 @@ function renderHistory(){
     const delBtn=selectionMode?'':`<button class="hi-del" data-del="${c.id}"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>`;
     return `<div class="${cls}" data-id="${c.id}">
       <div class="${cbCls}"></div>
-      <div class="hi-body">
-        <div class="hi-title">${escH(c.title||'Neue Unterhaltung')}</div>
-      </div>
+      <div class="hi-body"><div class="hi-title">${escH(c.title||'Neue Unterhaltung')}</div></div>
       ${delBtn}
     </div>`;
   }).join('');
@@ -984,7 +1003,7 @@ function loadChat(id){
   closeDrawer(); nav('chat'); toast('Chat geladen');
 }
 
-/* ──────────────── CHAT ──────────────── */
+/* CHAT */
 function addMsg(text, role){
   const msgs=$('chat-msgs');
   const d=document.createElement('div'); d.className='msg '+role;
@@ -1016,7 +1035,7 @@ chatInp.addEventListener('input',function(){ autoResize(this); });
 chatInp.addEventListener('keydown',function(e){ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); window.sendMsg(); } });
 $('send-btn').addEventListener('click', ()=>window.sendMsg());
 
-/* ──────────────── MODEL SHEET ──────────────── */
+/* MODEL SHEET */
 $('tb-model').addEventListener('click', openModelSheet);
 function openModelSheet(){
   const list=$('model-sheet-list');
@@ -1036,7 +1055,7 @@ function closeModelSheet(){ $('model-sheet-bg').classList.remove('show'); hideSc
 $('model-sheet-bg').addEventListener('click',e=>{ if(e.target===$('model-sheet-bg')) closeModelSheet(); });
 function selectModel(name){ curModel=name; $('tb-model').textContent=name; toast('Modell: '+name); }
 
-/* ──────────────── CUSTOM PICKER ──────────────── */
+/* CUSTOM PICKER */
 let pickerCallback = null;
 let pickerCurrentVal = null;
 
@@ -1076,7 +1095,7 @@ function closePicker(){
 $('picker-done').addEventListener('click', closePicker);
 $('picker-bg').addEventListener('click', e => { if(e.target === $('picker-bg')) closePicker(); });
 
-/* ──────────────── SETTINGS PICKERS ──────────────── */
+/* SETTINGS PICKERS */
 const LANG_OPTS = [
   {value:'de', label:'Deutsch',  icon:'🇩🇪', sub:'Standardsprache'},
   {value:'en', label:'English',  icon:'🇬🇧', sub:'English interface'},
@@ -1126,7 +1145,7 @@ $('row-fs').addEventListener('click', () => {
   });
 });
 
-/* ──────────────── EXPLORE / MODEL GRID ──────────────── */
+/* EXPLORE / MODEL GRID */
 function mcClass(m){ if(m.mult>=10) return 'expensive'; if(m.mult<=0.5) return 'cheap'; if(m.mult===1) return 'reference'; return ''; }
 
 function renderModels(f){
@@ -1153,7 +1172,7 @@ $('filter-row').querySelectorAll('.fbtn').forEach(btn => {
 });
 renderModels('all');
 
-/* ──────────────── GPTs ──────────────── */
+/* GPTs */
 function renderGpts(){
   const grid = $('gpt-grid'), empty = $('gpt-empty');
   if(!gptsList.length){ grid.innerHTML=''; empty.style.display='block'; return; }
@@ -1161,7 +1180,7 @@ function renderGpts(){
   grid.innerHTML = gptsList.map((g, i) => `
     <div class="gpt-card" style="animation-delay:${i*0.05}s">
       <div class="gpt-card-top">
-        <div class="gpt-card-icon">🤖</div>
+        <div class="gpt-card-icon">${g.icon||'🤖'}</div>
         <div class="gpt-card-btns">
           <button data-edit-gpt="${g.id}" style="padding:4px 10px;background:var(--dark3);border:1px solid var(--border);border-radius:6px;color:var(--muted2);font-size:11px;cursor:pointer;font-family:'Syne',sans-serif">Bearbeiten</button>
           <button data-del-gpt="${g.id}" style="padding:4px 10px;background:transparent;border:1px solid rgba(248,113,113,.3);border-radius:6px;color:#F87171;font-size:11px;cursor:pointer;font-family:'Syne',sans-serif">Löschen</button>
@@ -1186,25 +1205,86 @@ function openGptModal(id){
   $('gpt-name').value = gpt ? gpt.name : '';
   $('gpt-desc').value = gpt ? gpt.desc : '';
   $('gpt-model-sel').value = gpt ? gpt.model : 'Llama 3.3 70B';
-  $('gpt-sys-prompt').value = gpt ? gpt.prompt : '';
+  $('gpt-sys-prompt').value = gpt ? (gpt.rawPrompt || gpt.prompt) : '';
   $('btn-save-gpt').textContent = gpt ? 'Speichern' : 'GPT erstellen';
+
+  /* ── ICON PICKER ── */
+  const curIcon = gpt ? (gpt.icon || '🤖') : '🤖';
+  $('gpt-icon-val').value = curIcon;
+  const iconGrid = $('gpt-icon-grid');
+  iconGrid.innerHTML = GPT_ICONS.map(ic =>
+    `<div class="icon-opt${ic === curIcon ? ' selected' : ''}" data-icon="${ic}">${ic}</div>`
+  ).join('');
+  iconGrid.querySelectorAll('.icon-opt').forEach(el => {
+    el.addEventListener('click', () => {
+      iconGrid.querySelectorAll('.icon-opt').forEach(e => e.classList.remove('selected'));
+      el.classList.add('selected');
+      $('gpt-icon-val').value = el.dataset.icon;
+    });
+  });
+
+  /* ── BEHAVIOR CHIPS ── */
+  activeBehaviors = new Set(gpt ? (gpt.behaviors || []) : []);
+  const chipWrap = $('behavior-chips');
+  chipWrap.innerHTML = BEHAVIORS.map(b =>
+    `<button class="behavior-chip${activeBehaviors.has(b.id) ? ' active' : ''}" data-bid="${b.id}">${b.label}</button>`
+  ).join('');
+  chipWrap.querySelectorAll('.behavior-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const bid = chip.dataset.bid;
+      if(activeBehaviors.has(bid)){
+        activeBehaviors.delete(bid);
+        chip.classList.remove('active');
+      } else {
+        activeBehaviors.add(bid);
+        chip.classList.add('active');
+      }
+    });
+  });
+
   $('gpt-modal-bg').classList.add('show');
   setTimeout(()=>attachScrollbar($('gpt-modal')),60);
 }
+
 function closeGptModal(){ $('gpt-modal-bg').classList.remove('show'); hideScrollbar($('gpt-modal')); }
 $('btn-new-gpt').addEventListener('click', () => openGptModal());
 $('btn-close-gpt').addEventListener('click', closeGptModal);
 $('gpt-modal-bg').addEventListener('click', e => { if(e.target===$('gpt-modal-bg')) closeGptModal(); });
+
 $('btn-save-gpt').addEventListener('click', () => {
-  const name=$('gpt-name').value.trim(), prompt=$('gpt-sys-prompt').value.trim();
+  const name = $('gpt-name').value.trim();
+  const rawPrompt = $('gpt-sys-prompt').value.trim();
   if(!name){ toast('Bitte Namen eingeben!'); return; }
-  if(!prompt){ toast('Bitte System-Prompt eingeben!'); return; }
-  const gpt={id:editingGptId||Date.now(), name, desc:$('gpt-desc').value.trim(), model:$('gpt-model-sel').value, prompt};
- if(editingGptId) gptsList=gptsList.map(g=>g.id===editingGptId?gpt:g);
+  if(!rawPrompt){ toast('Bitte System-Prompt eingeben!'); return; }
+
+  // Verhaltens-Regeln an System-Prompt anhängen
+  const behaviorTexts = BEHAVIORS
+    .filter(b => activeBehaviors.has(b.id))
+    .map(b => '- ' + b.text);
+  const fullPrompt = behaviorTexts.length
+    ? rawPrompt + '\n\nVerhaltensregeln:\n' + behaviorTexts.join('\n')
+    : rawPrompt;
+
+  const gpt = {
+    id: editingGptId || Date.now(),
+    name,
+    desc: $('gpt-desc').value.trim(),
+    model: $('gpt-model-sel').value,
+    icon: $('gpt-icon-val').value,
+    rawPrompt,          // gespeichert für späteres Bearbeiten
+    prompt: fullPrompt, // wird an die API geschickt
+    behaviors: [...activeBehaviors]
+  };
+
+  if(editingGptId) gptsList = gptsList.map(g => g.id === editingGptId ? gpt : g);
   else gptsList.push(gpt);
-  saveGpts(); // ← neu
-  closeGptModal(); renderGpts(); toast(editingGptId?'GPT aktualisiert!':'GPT erstellt!');
+
+  saveGpts();
+  closeGptModal();
+  renderGpts();
+  toast(editingGptId ? 'GPT aktualisiert!' : 'GPT erstellt!');
 });
+
 function deleteGpt(id){
   const g=gptsList.find(x=>x.id===id); if(!g) return;
   $('confirm-title').textContent = `GPT löschen?`;
@@ -1226,7 +1306,7 @@ function useGpt(id){
   newChat(); toast('GPT: '+g.name);
 }
 
-/* ──────────────── PURCHASE ──────────────── */
+/* PURCHASE */
 const BASE=3, MIN_TOK=333333, AVG_TOKENS=500;
 let tokAmt=MIN_TOK, curPay='card';
 const PAY_NAMES={card:'Kreditkarte',paypal:'PayPal',gpay:'Google Pay',paysafe:'Paysafecard'};
@@ -1325,7 +1405,7 @@ $('inp-cardnum').addEventListener('input',function(){ let v=this.value.replace(/
 $('inp-exp').addEventListener('input',function(){ let v=this.value.replace(/\D/g,''); if(v.length>=2) v=v.slice(0,2)+'/'+v.slice(2,4); this.value=v; });
 $('tok-slider').value=0; updatePurchase(); setStep(1);
 
-/* ──────────────── SETTINGS ──────────────── */
+/* SETTINGS */
 document.querySelectorAll('.sw[data-c]').forEach(sw=>{
   sw.addEventListener('click',()=>{
     document.querySelectorAll('.sw').forEach(s=>s.classList.remove('active'));
@@ -1357,7 +1437,7 @@ $('btn-clear-hist').addEventListener('click',()=>{
   toast('Verlauf gelöscht');
 });
 
-/* ──────────────── INIT ──────────────── */
+/* INIT */
 loadHistory(); loadGpts(); updateBal(); renderGpts();
 window.addMsg        = addMsg;
 window.addTyping     = addTyping;
@@ -1365,14 +1445,13 @@ window.curModel      = ()=>curModel;
 window.curGptPrompt  = ()=>curGptPrompt;
 window.deductBalance = (n)=>{ balance=Math.max(0,balance-n); updateBal(); };
 
-/* ──────────────── CUSTOM SCROLLBAR ──────────────── */
+/* CUSTOM SCROLLBAR */
 function hideScrollbar(el){
   if(!el || !el._cscroll) return;
   el._cscroll.classList.remove('vis','scrolling');
 }
-  function attachScrollbar(el){
+function attachScrollbar(el){
   if(!el) return;
-  // Reuse existing bar or create new
   let bar = el._cscroll;
   if(!bar){
     bar = document.createElement('div');
@@ -1380,15 +1459,12 @@ function hideScrollbar(el){
     document.body.appendChild(bar);
     el._cscroll = bar;
   }
-
   let fadeTimer, raf;
-
   function update(){
     const scrollH = el.scrollHeight, clientH = el.clientHeight;
     if(scrollH <= clientH + 2){ bar.style.opacity = '0'; return; }
     const rect = el.getBoundingClientRect();
     if(rect.width === 0 && rect.height === 0){ bar.style.opacity = '0'; return; }
-    // If element has a sticky header child, start track below it
     const stickyEl = el.querySelector('.sheet-sticky, .modal-top, .drawer-top');
     const topInset = stickyEl ? stickyEl.offsetHeight + 6 : 10;
     const botInset = 10;
@@ -1404,19 +1480,16 @@ function hideScrollbar(el){
     fadeTimer = setTimeout(()=>bar.classList.remove('scrolling'), 160);
     fadeTimer = setTimeout(()=>bar.classList.remove('vis'), 1500);
   }
-
   if(!el._cscroll_bound){
     el._cscroll_bound = true;
     el.addEventListener('scroll', ()=>{ cancelAnimationFrame(raf); raf = requestAnimationFrame(update); }, {passive:true});
   }
 }
 
-// Init all static scrollable areas
 document.addEventListener('DOMContentLoaded', ()=>{
   ['chat-msgs'].forEach(id => attachScrollbar(document.getElementById(id)));
   document.querySelectorAll('.scroll-view').forEach(el => attachScrollbar(el));
 });
-// Fallback after all scrip-e 
 </script>
 <script src="api.js"></script>
 </body>
