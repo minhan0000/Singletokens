@@ -1207,8 +1207,16 @@ $('btn-save-gpt').addEventListener('click', () => {
 });
 function deleteGpt(id){
   const g=gptsList.find(x=>x.id===id); if(!g) return;
-  if(!confirm(`GPT "${g.name}" wirklich löschen?`)) return;
-  gptsList=gptsList.filter(x=>x.id!==id); renderGpts(); toast('Gelöscht.');
+  $('confirm-title').textContent = `GPT löschen?`;
+  $('confirm-sub').textContent = `"${g.name}" wirklich löschen?`;
+  $('confirm-bg').classList.add('show');
+  const delBtn = $('confirm-del-btn');
+  const handler = () => {
+    gptsList=gptsList.filter(x=>x.id!==id);
+    saveGpts(); renderGpts(); toast('Gelöscht.'); hideConfirm();
+    delBtn.removeEventListener('click', handler);
+  };
+  delBtn.addEventListener('click', handler);
 }
 function useGpt(id){
   const g=gptsList.find(x=>x.id===id); if(!g) return;
