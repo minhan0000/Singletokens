@@ -1366,7 +1366,11 @@ window.curGptPrompt  = ()=>curGptPrompt;
 window.deductBalance = (n)=>{ balance=Math.max(0,balance-n); updateBal(); };
 
 /* ──────────────── CUSTOM SCROLLBAR ──────────────── */
-function attachScrollbar(el){
+function hideScrollbar(el){
+  if(!el || !el._cscroll) return;
+  el._cscroll.classList.remove('vis','scrolling');
+}
+  function attachScrollbar(el){
   if(!el) return;
   // Reuse existing bar or create new
   let bar = el._cscroll;
