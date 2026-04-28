@@ -357,9 +357,15 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 var _cornClicks=0;
 var _corn=document.getElementById('corn-link');
 function _cornPos(){
-  var m=50;
-  _corn.style.left=m+Math.random()*(window.innerWidth-m*2-80)+'px';
-  _corn.style.top=m+Math.random()*(window.innerHeight-m*2-20)+'px';
+  var corners=[
+    {l:'8px',t:'auto',b:'8px',r:'auto'},
+    {l:'auto',t:'auto',b:'8px',r:'8px'},
+    {l:'8px',t:'8px',b:'auto',r:'auto'},
+    {l:'auto',t:'8px',b:'auto',r:'8px'}
+  ];
+  var c=corners[Math.floor(Math.random()*corners.length)];
+  _corn.style.left=c.l; _corn.style.right=c.r;
+  _corn.style.top=c.t;  _corn.style.bottom=c.b;
 }
 setTimeout(_cornPos,200);
 _corn.addEventListener('mousemove',_cornPos);
