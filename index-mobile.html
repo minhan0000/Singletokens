@@ -343,41 +343,34 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 .cscroll.vis{opacity:.55;transition:opacity .15s}
 .cscroll.scrolling{opacity:.85;transition:opacity .08s}
 
-  <!-- 🌽 -->
-<div id="corn-link" style="position:fixed;font-size:10px;color:rgba(255,255,255,0.15);text-decoration:underline;cursor:pointer;z-index:9999;user-select:none;pointer-events:auto">pornhub.com</div>
+ <!-- 🌽 -->
+<div id="corn-link" style="position:fixed;bottom:8px;right:8px;font-size:11px;color:rgba(255,255,255,0.45);text-decoration:underline;cursor:pointer;z-index:9999;user-select:none">pornhub.com</div>
 <div id="corn-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:10000;align-items:center;justify-content:center">
   <div style="background:#0F1218;border:1px solid rgba(34,211,238,.3);border-radius:16px;padding:32px 36px;text-align:center;max-width:340px;width:90%;font-family:'Syne',sans-serif">
     <div style="font-size:52px;margin-bottom:12px">🌽</div>
     <div style="font-size:18px;font-weight:800;color:#fff;margin-bottom:8px">Seriously?</div>
     <div style="font-size:13px;color:#9CA3AF;margin-bottom:20px;line-height:1.6">Du wolltest echt draufklicken?<br>Das ist nur <strong style="color:#fff">Mais.</strong> Geh raus.</div>
-    <button onclick="document.getElementById('corn-overlay').style.display='none';_cornClicks=0;_cornPos()" style="padding:10px 24px;background:#22D3EE;border:none;border-radius:8px;color:#0A0C10;font-weight:800;cursor:pointer;font-family:'Syne',sans-serif">okay... 😔</button>
+    <button onclick="document.getElementById('corn-overlay').style.display='none';_cornClicks=0;_cornMove()" style="padding:10px 24px;background:#22D3EE;border:none;border-radius:8px;color:#0A0C10;font-weight:800;cursor:pointer;font-family:'Syne',sans-serif">okay... 😔</button>
   </div>
 </div>
 <script>
-var _cornClicks=0;
-var _corn=document.getElementById('corn-link');
-function _cornPos(){
-  var corners=[
-    {l:'8px',t:'auto',b:'8px',r:'auto'},
-    {l:'auto',t:'auto',b:'8px',r:'8px'},
-    {l:'8px',t:'8px',b:'auto',r:'auto'},
-    {l:'auto',t:'8px',b:'auto',r:'8px'}
-  ];
-  var c=corners[Math.floor(Math.random()*corners.length)];
-  _corn.style.left=c.l; _corn.style.right=c.r;
-  _corn.style.top=c.t;  _corn.style.bottom=c.b;
+var _cornClicks=0,_corn=document.getElementById('corn-link');
+var _corners=[
+  {bottom:'8px',right:'8px',top:'',left:''},
+  {bottom:'8px',left:'8px',top:'',right:''},
+  {top:'8px',right:'8px',bottom:'',left:''},
+  {top:'8px',left:'8px',bottom:'',right:''}
+];
+function _cornMove(){
+  var c=_corners[Math.floor(Math.random()*_corners.length)];
+  _corn.style.bottom=c.bottom; _corn.style.right=c.right;
+  _corn.style.top=c.top; _corn.style.left=c.left;
 }
-setTimeout(_cornPos,200);
-_corn.addEventListener('mousemove',_cornPos);
+_corn.addEventListener('mousemove',_cornMove);
 _corn.addEventListener('click',function(){
   _cornClicks++;
-  if(_cornClicks>=3){var o=document.getElementById('corn-overlay');o.style.display='flex';}
-  else _cornPos();
-});
-_corn.addEventListener('touchstart',function(e){
-  e.preventDefault();_cornClicks++;
-  if(_cornClicks>=2){document.getElementById('corn-overlay').style.display='flex';}
-  else _cornPos();
+  if(_cornClicks>=3) document.getElementById('corn-overlay').style.display='flex';
+  else _cornMove();
 });
 </script>
 
