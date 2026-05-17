@@ -1,0 +1,327 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--acc:#22D3EE;--dark:#0A0C10;--dark2:#0F1218;--dark3:#151A22;--dark4:#1B2130;--text:#FAFAFA;--muted:#4B5563;--muted2:#9CA3AF;--border:rgba(255,255,255,0.07)}
+body{background:var(--dark);display:flex;justify-content:center;padding:20px;font-family:'Syne',sans-serif}
+.wrap{width:100%;max-width:680px;background:var(--dark2);border:1px solid var(--border);border-radius:16px;overflow:hidden;display:flex;min-height:540px}
+.sidebar{width:196px;flex-shrink:0;border-right:1px solid var(--border);padding:16px 0}
+.sidebar-title{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.1em;text-transform:uppercase;padding:0 16px 12px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 16px;cursor:pointer;color:var(--muted2);font-size:13px;font-weight:600;transition:all .15s;border-left:2px solid transparent}
+.nav-item:hover{background:var(--dark3);color:var(--text)}
+.nav-item.active{background:var(--dark3);color:var(--text);border-left-color:var(--acc)}
+.nav-item svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;flex-shrink:0}
+.nav-item.active svg{stroke:var(--acc)}
+.main{flex:1;overflow-y:auto;padding:24px}
+.main::-webkit-scrollbar{width:3px}
+.main::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.pg{display:none}.pg.active{display:block}
+.pg-title{font-size:16px;font-weight:800;color:var(--text);letter-spacing:-.02em;margin-bottom:20px}
+.row{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--border)}
+.row:last-child{border:none}
+.row-info{flex:1;padding-right:16px}
+.row-label{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}
+.row-desc{font-size:12px;color:var(--muted2);line-height:1.5;font-weight:400}
+.toggle{width:40px;height:22px;border-radius:11px;background:var(--dark4);border:1px solid var(--border);cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
+.toggle.on{background:var(--acc)}
+.toggle::after{content:'';position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:2px;left:2px;transition:left .2s}
+.toggle.on::after{left:20px}
+.sel{background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:7px 28px 7px 12px;font-family:'Syne',sans-serif;font-size:12px;color:var(--text);cursor:pointer;outline:none;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239CA3AF' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center}
+.sel option{background:#151A22}
+.dbtn{padding:7px 14px;background:transparent;border:1px solid rgba(248,113,113,.3);border-radius:8px;color:#F87171;font-size:12px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;transition:all .15s;flex-shrink:0}
+.dbtn:hover{background:rgba(248,113,113,.08);border-color:#F87171}
+.nbtn{padding:7px 14px;background:var(--dark3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:12px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;transition:all .15s;flex-shrink:0}
+.nbtn:hover{border-color:rgba(34,211,238,.3);color:var(--acc)}
+.abtn{padding:7px 14px;background:transparent;border:1px solid rgba(34,211,238,.3);border-radius:8px;color:var(--acc);font-size:12px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;transition:all .15s;flex-shrink:0}
+.abtn:hover{background:rgba(34,211,238,.08)}
+.div{height:1px;background:var(--border);margin:16px 0}
+.slbl{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
+.acc-card{background:var(--dark3);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.av{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22D3EE,#3B82F6);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#0A0C10;flex-shrink:0}
+.tok-badge{font-family:'DM Mono',monospace;font-size:11px;background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.2);color:var(--acc);padding:3px 10px;border-radius:6px;flex-shrink:0}
+.swatches{display:flex;gap:8px}
+.sw{width:24px;height:24px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .15s}
+.sw.active{border-color:#fff;transform:scale(1.15)}
+.finput{background:var(--dark3);border:1px solid var(--border);border-radius:7px;padding:8px 12px;font-family:'DM Mono',monospace;font-size:12px;color:var(--text);outline:none;width:100%;transition:border-color .15s;margin-bottom:8px}
+.finput:focus{border-color:rgba(34,211,238,.4)}
+.mem-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.mem-item:last-child{border:none}
+.mem-x{width:20px;height:20px;border-radius:50%;background:transparent;border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all .15s}
+.mem-x:hover{background:rgba(248,113,113,.1);border-color:#F87171}
+.mem-x svg{width:10px;height:10px;stroke:var(--muted2)}
+.mem-x:hover svg{stroke:#F87171}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:#151A22;border:1px solid rgba(34,211,238,.3);color:var(--acc);font-family:'DM Mono',monospace;font-size:12px;padding:10px 20px;border-radius:8px;transition:transform .3s;z-index:99;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.light-mode{--dark:#F0F2F5;--dark2:#FFFFFF;--dark3:#F0F2F5;--dark4:#E4E6EA;--text:#0A0C10;--muted2:#606770;--border:rgba(0,0,0,0.1)}
+.compact-mode .row{padding:8px 0}
+.preview-box{background:var(--dark3);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:8px;font-size:12px;color:var(--muted2);line-height:1.6;font-style:italic}
+</style>
+
+<div class="wrap" id="app">
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-title" data-t="settings">Einstellungen</div>
+    <div class="nav-item active" onclick="go('general',this)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v2m0 16v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M2 12h2m16 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg><span data-t="general">Allgemein</span></div>
+    <div class="nav-item" onclick="go('account',this)"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg><span data-t="account">Konto</span></div>
+    <div class="nav-item" onclick="go('appearance',this)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg><span data-t="appearance">Darstellung</span></div>
+    <div class="nav-item" onclick="go('memory',this)"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4.03 3-9 3S3 13.66 3 12M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/></svg><span data-t="memory">Memory</span></div>
+    <div class="nav-item" onclick="go('privacy',this)"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg><span data-t="privacy">Datenschutz</span></div>
+    <div class="nav-item" onclick="go('notifs',this)"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg><span data-t="notifications">Benachrichtigungen</span></div>
+    <div class="nav-item" onclick="go('security',this)"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span data-t="security">Sicherheit</span></div>
+  </div>
+
+  <div class="main" id="main">
+
+    <!-- ALLGEMEIN -->
+    <div class="pg active" id="pg-general">
+      <div class="pg-title" data-t="general"></div>
+      <div class="row">
+        <div class="row-info"><div class="row-label" data-t="language"></div><div class="row-desc" data-t="language_desc"></div></div>
+        <select class="sel" id="lang-sel" onchange="setLang(this.value)">
+          <option value="de">Deutsch</option>
+          <option value="en">English</option>
+          <option value="fr">Français</option>
+          <option value="es">Español</option>
+          <option value="tr">Türkçe</option>
+          <option value="ja">日本語</option>
+        </select>
+      </div>
+      <div class="row">
+        <div class="row-info"><div class="row-label" data-t="default_model"></div><div class="row-desc" data-t="default_model_desc"></div></div>
+        <select class="sel" onchange="showToast(T('saved'))">
+          <option>Claude Sonnet 4.5</option><option>GPT-4o</option><option>Gemini Pro 2.0</option><option>Grok 2</option>
+        </select>
+      </div>
+      <div class="row">
+        <div class="row-info"><div class="row-label" data-t="chat_history"></div><div class="row-desc" data-t="chat_history_desc"></div></div>
+        <div class="toggle on" onclick="tog(this,'history')"></div>
+      </div>
+      <div class="row">
+        <div class="row-info"><div class="row-label" data-t="compact"></div><div class="row-desc" data-t="compact_desc"></div></div>
+        <div class="toggle" onclick="tog(this,'compact')"></div>
+      </div>
+      <div class="row">
+        <div class="row-info"><div class="row-label" data-t="animations"></div><div class="row-desc" data-t="animations_desc"></div></div>
+        <div class="toggle on" onclick="tog(this,'animations')"></div>
+      </div>
+    </div>
+
+    <!-- KONTO -->
+    <div class="pg" id="pg-account">
+      <div class="pg-title" data-t="account"></div>
+      <div class="acc-card">
+        <div class="av" id="av-circle">G</div>
+        <div style="flex:1">
+          <div style="font-size:14px;font-weight:700;color:var(--text)" id="display-name">Guest User</div>
+          <div style="font-size:12px;color:var(--muted2);font-family:'DM Mono',monospace;margin-top:2px" id="display-email">guest@singletokens.com</div>
+        </div>
+        <div class="tok-badge">716K Tokens</div>
+      </div>
+      <div class="row">
+        <div class="row-info"><div class="row-label" data-t="display_name"></div></div>
+        <input class="finput" style="width:160px;margin:0" type="text" value="Guest User" onchange="saveName(this.value)">
+      </div>
+      <div class="row">
+        <div class="row-info"><div class="row-label" data-t="email"></div></div>
+        <input class="finput" style="width:200px;margin:0" type="email" value="guest@singletokens.com" onchange="saveEmail(this.value)">
+      </div>
+      <div class="row">
+        <div class="row-info"><div class="row-label" data-t="password"></div><div class="row-desc" data-t="password_desc"></div></div>
+        <button class="nbtn" data-t="change" onclick="showToast(T('pw_sent'))"></button>
+      </div>
+      <div class="row">
+        <div class="row-info"><div class="row-label" data-t="buy_tokens"></div><div class="row-desc" data-t="balance_desc"></div></div>
+        <button class="abtn" data-t="buy" onclick="showToast(T('opening'))"></button>
+      </div>
+      <div class="div"></div>
+      <div class="slbl" data-t="danger_zone"></div>
+      <div class="row">
+        <div class="row-info"><div class="row-label" data-t="delete_account"></div><div class="row-desc" data-t="delete_account_desc"></div></div>
+        <button class="dbtn" data-t="delete" onclick="confirmDel()"></button>
+      </div>
+    </div>
+
+    <!-- DARSTELLUNG -->
+    <div class="pg" id="pg-appearance">
+      <div class="pg-title" data-t="appearance"></div>
+      <div class="row">
+        <div class="row-info"><div class="row-label" data-t="theme"></div><div class="row-desc" data-t="theme_desc"></div></div>
+        <select class="sel" onchange="setTheme(this.value)">
+          <option value="dark" data-t="dark"></option>
+          <option value="light" data-t="light"></option>
+        </select>
+      </div>
+      <div class="row">
+        <div class="row-info"><div class="row-label" data-t="accent_color"></div><div class="row-desc" data-t="accent_desc"></div></div>
+        <div class="swatches">
+          <div class="sw active" style="background:#22D3EE" onclick="setAccent('#22D3EE',this)"></div>
+          <div class="sw" style="background:#3B82F6" onclick="setAccent('#3B82F6',this)"></div>
+          <div class="sw" style="background:#8B5CF6" onclick="setAccent('#8B5CF6',this)"></div>
+          <div class="sw" style="background:#EC4899" onclick="setAccent('#EC4899',this)"></div>
+          <div class="sw" style="background:#F59E0B" onclick="setAccent('#F59E0B',this)"></div>
+          <div class="sw" style="background:#10B981" onclick="setAccent('#10B981',this)"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="row-info"><div class="row-label" data-t="font_size"></div><div class="row-desc" data-t="font_size_desc"></div></div>
+        <select class="sel" onchange="setFontSize(this.value)">
+          <option value="12px" data-t="small"></option>
+          <option value="13px" selected data-t="medium"></option>
+          <option value="15px" data-t="large"></option>
+        </select>
+      </div>
+      <div class="row" style="border:none">
+        <div class="row-info"><div class="row-label" data-t="preview"></div></div>
+      </div>
+      <div class="preview-box" id="preview-box" data-t="preview_text"></div>
+    </div>
+
+    <!-- MEMORY -->
+    <div class="pg" id="pg-memory">
+      <div class="pg-title" data-t="memory"></div>
+      <div class="row">
+        <div class="row-info"><div class="row-label" data-t="enable_memory"></div><div class="row-desc" data-t="enable_memory_desc"></div></div>
+        <div class="toggle on" onclick="tog(this,'memory')"></div>
+      </div>
+      <div class="div"></div>
+      <div class="slbl" data-t="stored_memories"></div>
+      <div id="mem-list">
+        <div class="mem-item"><div style="flex:1"><div style="font-size:12px;color:var(--muted2);line-height:1.5" data-t="mem1"></div><div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)" data-t="mem1_date"></div></div><button class="mem-x" onclick="delMem(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+        <div class="mem-item"><div style="flex:1"><div style="font-size:12px;color:var(--muted2);line-height:1.5" data-t="mem2"></div><div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)" data-t="mem2_date"></div></div><button class="mem-x" onclick="delMem(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+        <div class="mem-item"><div style="flex:1"><div style="font-size:12px;color:var(--muted2);line-height:1.5" data-t="mem3"></div><div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)" data-t="mem3_date"></div></div><button class="mem-x" onclick="delMem(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+      </div>
+      <div class="div"></div>
+      <div class="row" style="border:none;padding-top:0">
+        <div class="row-info"><div class="row-label" data-t="clear_all"></div><div class="row-desc" data-t="clear_all_desc"></div></div>
+        <button class="dbtn" data-t="delete_all" onclick="clearMem()"></button>
+      </div>
+    </div>
+
+    <!-- DATENSCHUTZ -->
+    <div class="pg" id="pg-privacy">
+      <div class="pg-title" data-t="privacy"></div>
+      <div class="row"><div class="row-info"><div class="row-label" data-t="training_data"></div><div class="row-desc" data-t="training_data_desc"></div></div><div class="toggle" onclick="tog(this,'training')"></div></div>
+      <div class="row"><div class="row-info"><div class="row-label" data-t="analytics"></div><div class="row-desc" data-t="analytics_desc"></div></div><div class="toggle on" onclick="tog(this,'analytics')"></div></div>
+      <div class="row"><div class="row-info"><div class="row-label" data-t="export_chats"></div><div class="row-desc" data-t="export_chats_desc"></div></div><button class="nbtn" data-t="export" onclick="showToast(T('exporting'))"></button></div>
+      <div class="row"><div class="row-info"><div class="row-label" data-t="delete_chats"></div><div class="row-desc" data-t="delete_chats_desc"></div></div><button class="dbtn" data-t="delete" onclick="showToast(T('deleted'))"></button></div>
+    </div>
+
+    <!-- BENACHRICHTIGUNGEN -->
+    <div class="pg" id="pg-notifs">
+      <div class="pg-title" data-t="notifications"></div>
+      <div class="row"><div class="row-info"><div class="row-label" data-t="email_notifs"></div><div class="row-desc" data-t="email_notifs_desc"></div></div><div class="toggle on" onclick="tog(this,'en')"></div></div>
+      <div class="row"><div class="row-info"><div class="row-label" data-t="token_warning"></div><div class="row-desc" data-t="token_warning_desc"></div></div><div class="toggle on" onclick="tog(this,'tw')"></div></div>
+      <div class="row"><div class="row-info"><div class="row-label" data-t="new_models_notif"></div><div class="row-desc" data-t="new_models_notif_desc"></div></div><div class="toggle on" onclick="tog(this,'nm')"></div></div>
+      <div class="row"><div class="row-info"><div class="row-label" data-t="marketing_emails"></div><div class="row-desc" data-t="marketing_emails_desc"></div></div><div class="toggle" onclick="tog(this,'mk')"></div></div>
+    </div>
+
+    <!-- SICHERHEIT -->
+    <div class="pg" id="pg-security">
+      <div class="pg-title" data-t="security"></div>
+      <div class="row"><div class="row-info"><div class="row-label" data-t="two_fa"></div><div class="row-desc" id="twofa-desc" data-t="two_fa_off"></div></div><div class="toggle" onclick="toggleTwoFA(this)"></div></div>
+      <div class="row"><div class="row-info"><div class="row-label" data-t="active_sessions"></div><div class="row-desc" data-t="active_sessions_desc"></div></div><button class="dbtn" data-t="sign_out" onclick="showToast(T('sessions_ended'))"></button></div>
+      <div class="div"></div>
+      <div class="slbl" data-t="api_keys"></div>
+      <div id="api-keys">
+        <div class="mem-item"><div style="flex:1"><div style="font-size:12px;color:var(--text);font-weight:600">Production</div><div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);margin-top:2px">sk-aizz-prod-x7k2••••</div></div><button class="dbtn" style="font-size:11px" data-t="revoke" onclick="revokeKey(this,'Production')"></button></div>
+        <div class="mem-item"><div style="flex:1"><div style="font-size:12px;color:var(--text);font-weight:600">Test</div><div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);margin-top:2px">sk-aizz-test-h3jL••••</div></div><button class="dbtn" style="font-size:11px" data-t="revoke" onclick="revokeKey(this,'Test')"></button></div>
+      </div>
+      <div style="margin-top:12px"><button class="abtn" data-t="new_key" onclick="addKey()"></button></div>
+    </div>
+
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const LANGS={
+  de:{settings:'Einstellungen',general:'Allgemein',account:'Konto',appearance:'Darstellung',memory:'Memory',privacy:'Datenschutz',notifications:'Benachrichtigungen',security:'Sicherheit',language:'Sprache',language_desc:'Sprache der Oberfläche',default_model:'Standardmodell',default_model_desc:'Wird für neue Chats verwendet',chat_history:'Chat-Verlauf',chat_history_desc:'Gespräche in der Sidebar anzeigen',compact:'Kompakter Modus',compact_desc:'Weniger Abstände für dichtere Anzeige',animations:'Animationen',animations_desc:'Übergänge und Animationen aktivieren',display_name:'Anzeigename',email:'E-Mail-Adresse',password:'Passwort',password_desc:'Zuletzt geändert vor 30 Tagen',buy_tokens:'Tokens kaufen',balance_desc:'Guthaben: 716K Tokens',change:'Ändern',buy:'Kaufen →',danger_zone:'Gefahrenzone',delete_account:'Konto löschen',delete_account_desc:'Alle Daten werden unwiderruflich gelöscht',delete:'Löschen',theme:'Theme',theme_desc:'Farbschema der Oberfläche',dark:'Dunkel',light:'Hell',accent_color:'Akzentfarbe',accent_desc:'Farbe für aktive Elemente',font_size:'Schriftgröße',font_size_desc:'Textgröße',small:'Klein',medium:'Mittel',large:'Groß',preview:'Vorschau',preview_text:'Das ist ein Beispieltext mit der aktuellen Schriftgröße. Nachrichten sehen so aus.',enable_memory:'Memory aktivieren',enable_memory_desc:'SingleTokens merkt sich Infos aus Gesprächen',stored_memories:'Gespeicherte Erinnerungen',mem1:'Bevorzugt präzise, direkte Antworten',mem1_date:'vor 3 Tagen',mem2:'Arbeitet an einem KI-Token-Marktplatz namens SingleTokens',mem2_date:'vor 1 Woche',mem3:'Bevorzugt dunkle UI-Designs mit Cyan-Akzentfarben',mem3_date:'vor 2 Wochen',clear_all:'Alle löschen',clear_all_desc:'Alle Erinnerungen entfernen',delete_all:'Alle löschen',training_data:'Trainingsdaten',training_data_desc:'Gespräche zur Modellverbesserung verwenden',analytics:'Analyse-Daten',analytics_desc:'Anonyme Nutzungsstatistiken teilen',export_chats:'Chat-Verlauf exportieren',export_chats_desc:'Alle Gespräche als JSON herunterladen',export:'Exportieren',delete_chats:'Chat-Verlauf löschen',delete_chats_desc:'Alle Gespräche dauerhaft löschen',email_notifs:'E-Mail-Benachrichtigungen',email_notifs_desc:'Updates per E-Mail erhalten',token_warning:'Token-Warnung',token_warning_desc:'Benachrichtigung wenn Guthaben unter 50K sinkt',new_models_notif:'Neue Modelle',new_models_notif_desc:'Info wenn neue KI-Modelle verfügbar sind',marketing_emails:'Marketing-E-Mails',marketing_emails_desc:'Neuigkeiten und Angebote',two_fa:'Zwei-Faktor-Authentifizierung',two_fa_off:'Nicht aktiviert',two_fa_on:'Aktiviert',active_sessions:'Aktive Sitzungen',active_sessions_desc:'1 Gerät · Chrome, Windows 11',sign_out:'Abmelden',api_keys:'API-Keys',revoke:'Sperren',new_key:'+ Neuer Key',saved:'Einstellung gespeichert',pw_sent:'Passwort-Reset-E-Mail gesendet!',opening:'Kaufseite wird geöffnet...',exporting:'Export wird vorbereitet...',deleted:'Verlauf gelöscht.',sessions_ended:'Alle anderen Sitzungen beendet.',mem_deleted:'Erinnerung gelöscht',all_mem_deleted:'Alle Erinnerungen gelöscht',key_revoked:'Key gesperrt',key_added:'Neuer Key erstellt',compact_on:'Kompakter Modus aktiviert',compact_off:'Kompakter Modus deaktiviert',twofa_on:'2FA aktiviert',twofa_off:'2FA deaktiviert'},
+  en:{settings:'Settings',general:'General',account:'Account',appearance:'Appearance',memory:'Memory',privacy:'Privacy',notifications:'Notifications',security:'Security',language:'Language',language_desc:'Interface language',default_model:'Default model',default_model_desc:'Used for new chats',chat_history:'Chat history',chat_history_desc:'Show conversations in sidebar',compact:'Compact mode',compact_desc:'Less spacing for denser view',animations:'Animations',animations_desc:'Enable transitions and animations',display_name:'Display name',email:'Email address',password:'Password',password_desc:'Last changed 30 days ago',buy_tokens:'Buy tokens',balance_desc:'Balance: 716K tokens',change:'Change',buy:'Buy →',danger_zone:'Danger zone',delete_account:'Delete account',delete_account_desc:'All data will be permanently deleted',delete:'Delete',theme:'Theme',theme_desc:'Color scheme',dark:'Dark',light:'Light',accent_color:'Accent color',accent_desc:'Color for active elements',font_size:'Font size',font_size_desc:'Text size',small:'Small',medium:'Medium',large:'Large',preview:'Preview',preview_text:'This is a preview text with the current font size. Messages will look like this.',enable_memory:'Enable memory',enable_memory_desc:'SingleTokens remembers info from conversations',stored_memories:'Stored memories',mem1:'Prefers precise, direct answers',mem1_date:'3 days ago',mem2:'Working on an AI token marketplace called SingleTokens',mem2_date:'1 week ago',mem3:'Prefers dark UI designs with cyan accents',mem3_date:'2 weeks ago',clear_all:'Clear all',clear_all_desc:'Remove all memories',delete_all:'Delete all',training_data:'Training data',training_data_desc:'Use conversations to improve models',analytics:'Analytics',analytics_desc:'Share anonymous usage statistics',export_chats:'Export chat history',export_chats_desc:'Download all conversations as JSON',export:'Export',delete_chats:'Delete chat history',delete_chats_desc:'Permanently delete all conversations',email_notifs:'Email notifications',email_notifs_desc:'Receive updates by email',token_warning:'Token warning',token_warning_desc:'Alert when balance drops below 50K',new_models_notif:'New models',new_models_notif_desc:'Notify when new AI models are available',marketing_emails:'Marketing emails',marketing_emails_desc:'News and offers',two_fa:'Two-factor authentication',two_fa_off:'Not enabled',two_fa_on:'Enabled',active_sessions:'Active sessions',active_sessions_desc:'1 device · Chrome, Windows 11',sign_out:'Sign out',api_keys:'API Keys',revoke:'Revoke',new_key:'+ New key',saved:'Setting saved',pw_sent:'Password reset email sent!',opening:'Opening store...',exporting:'Preparing export...',deleted:'History deleted.',sessions_ended:'All other sessions ended.',mem_deleted:'Memory deleted',all_mem_deleted:'All memories deleted',key_revoked:'Key revoked',key_added:'New key created',compact_on:'Compact mode enabled',compact_off:'Compact mode disabled',twofa_on:'2FA enabled',twofa_off:'2FA disabled'},
+  fr:{settings:'Paramètres',general:'Général',account:'Compte',appearance:'Apparence',memory:'Mémoire',privacy:'Confidentialité',notifications:'Notifications',security:'Sécurité',language:'Langue',language_desc:"Langue de l'interface",default_model:'Modèle par défaut',default_model_desc:'Utilisé pour les nouveaux chats',chat_history:'Historique',chat_history_desc:'Afficher les conversations dans la barre latérale',compact:'Mode compact',compact_desc:'Moins d\'espacement',animations:'Animations',animations_desc:'Activer les transitions',display_name:"Nom d'affichage",email:'Adresse e-mail',password:'Mot de passe',password_desc:'Modifié il y a 30 jours',buy_tokens:'Acheter des tokens',balance_desc:'Solde : 716K tokens',change:'Modifier',buy:'Acheter →',danger_zone:'Zone dangereuse',delete_account:'Supprimer le compte',delete_account_desc:'Toutes les données seront supprimées définitivement',delete:'Supprimer',theme:'Thème',theme_desc:'Schéma de couleurs',dark:'Sombre',light:'Clair',accent_color:"Couleur d'accentuation",accent_desc:'Couleur des éléments actifs',font_size:'Taille de police',font_size_desc:'Taille du texte',small:'Petite',medium:'Moyenne',large:'Grande',preview:'Aperçu',preview_text:"Ceci est un texte d'aperçu avec la taille de police actuelle.",enable_memory:'Activer la mémoire',enable_memory_desc:'SingleTokens mémorise les infos des conversations',stored_memories:'Souvenirs enregistrés',mem1:'Préfère des réponses précises et directes',mem1_date:'il y a 3 jours',mem2:'Travaille sur un marché de tokens IA appelé SingleTokens',mem2_date:'il y a 1 semaine',mem3:'Préfère les interfaces sombres avec des accents cyan',mem3_date:'il y a 2 semaines',clear_all:'Tout effacer',clear_all_desc:'Supprimer tous les souvenirs',delete_all:'Tout supprimer',training_data:"Données d'entraînement",training_data_desc:'Utiliser les conversations pour améliorer les modèles',analytics:'Analytique',analytics_desc:'Partager des statistiques anonymes',export_chats:"Exporter l'historique",export_chats_desc:'Télécharger toutes les conversations en JSON',export:'Exporter',delete_chats:"Supprimer l'historique",delete_chats_desc:'Supprimer définitivement toutes les conversations',email_notifs:'Notifications e-mail',email_notifs_desc:'Recevoir des mises à jour par e-mail',token_warning:'Alerte tokens',token_warning_desc:'Alerte si le solde descend sous 50K',new_models_notif:'Nouveaux modèles',new_models_notif_desc:'Notifier quand de nouveaux modèles sont disponibles',marketing_emails:'E-mails marketing',marketing_emails_desc:'Actualités et offres',two_fa:'Authentification à deux facteurs',two_fa_off:'Non activé',two_fa_on:'Activé',active_sessions:'Sessions actives',active_sessions_desc:'1 appareil · Chrome, Windows 11',sign_out:'Déconnecter',api_keys:'Clés API',revoke:'Révoquer',new_key:'+ Nouvelle clé',saved:'Paramètre enregistré',pw_sent:'E-mail de réinitialisation envoyé!',opening:'Ouverture...',exporting:'Préparation...',deleted:'Historique supprimé.',sessions_ended:'Autres sessions terminées.',mem_deleted:'Souvenir supprimé',all_mem_deleted:'Tous les souvenirs supprimés',key_revoked:'Clé révoquée',key_added:'Nouvelle clé créée',compact_on:'Mode compact activé',compact_off:'Mode compact désactivé',twofa_on:'2FA activé',twofa_off:'2FA désactivé'},
+  es:{settings:'Configuración',general:'General',account:'Cuenta',appearance:'Apariencia',memory:'Memoria',privacy:'Privacidad',notifications:'Notificaciones',security:'Seguridad',language:'Idioma',language_desc:'Idioma de la interfaz',default_model:'Modelo predeterminado',default_model_desc:'Usado para nuevos chats',chat_history:'Historial',chat_history_desc:'Mostrar conversaciones en la barra lateral',compact:'Modo compacto',compact_desc:'Menos espaciado',animations:'Animaciones',animations_desc:'Activar transiciones',display_name:'Nombre de usuario',email:'Correo electrónico',password:'Contraseña',password_desc:'Cambiada hace 30 días',buy_tokens:'Comprar tokens',balance_desc:'Saldo: 716K tokens',change:'Cambiar',buy:'Comprar →',danger_zone:'Zona de peligro',delete_account:'Eliminar cuenta',delete_account_desc:'Todos los datos serán eliminados permanentemente',delete:'Eliminar',theme:'Tema',theme_desc:'Esquema de colores',dark:'Oscuro',light:'Claro',accent_color:'Color de acento',accent_desc:'Color para elementos activos',font_size:'Tamaño de fuente',font_size_desc:'Tamaño del texto',small:'Pequeño',medium:'Mediano',large:'Grande',preview:'Vista previa',preview_text:'Este es un texto de vista previa con el tamaño de fuente actual.',enable_memory:'Activar memoria',enable_memory_desc:'SingleTokens recuerda info de las conversaciones',stored_memories:'Memorias guardadas',mem1:'Prefiere respuestas precisas y directas',mem1_date:'hace 3 días',mem2:'Trabajando en un mercado de tokens IA llamado SingleTokens',mem2_date:'hace 1 semana',mem3:'Prefiere interfaces oscuras con acentos cian',mem3_date:'hace 2 semanas',clear_all:'Borrar todo',clear_all_desc:'Eliminar todas las memorias',delete_all:'Eliminar todo',training_data:'Datos de entrenamiento',training_data_desc:'Usar conversaciones para mejorar modelos',analytics:'Análisis',analytics_desc:'Compartir estadísticas anónimas',export_chats:'Exportar historial',export_chats_desc:'Descargar conversaciones como JSON',export:'Exportar',delete_chats:'Eliminar historial',delete_chats_desc:'Eliminar permanentemente todas las conversaciones',email_notifs:'Notificaciones por email',email_notifs_desc:'Recibir actualizaciones por email',token_warning:'Alerta de tokens',token_warning_desc:'Alerta cuando el saldo baje de 50K',new_models_notif:'Nuevos modelos',new_models_notif_desc:'Notificar cuando haya nuevos modelos disponibles',marketing_emails:'Emails de marketing',marketing_emails_desc:'Noticias y ofertas',two_fa:'Autenticación de dos factores',two_fa_off:'No activado',two_fa_on:'Activado',active_sessions:'Sesiones activas',active_sessions_desc:'1 dispositivo · Chrome, Windows 11',sign_out:'Cerrar sesión',api_keys:'Claves API',revoke:'Revocar',new_key:'+ Nueva clave',saved:'Configuración guardada',pw_sent:'Email de restablecimiento enviado!',opening:'Abriendo...',exporting:'Preparando...',deleted:'Historial eliminado.',sessions_ended:'Otras sesiones terminadas.',mem_deleted:'Memoria eliminada',all_mem_deleted:'Todas las memorias eliminadas',key_revoked:'Clave revocada',key_added:'Nueva clave creada',compact_on:'Modo compacto activado',compact_off:'Modo compacto desactivado',twofa_on:'2FA activado',twofa_off:'2FA desactivado'},
+  tr:{settings:'Ayarlar',general:'Genel',account:'Hesap',appearance:'Görünüm',memory:'Bellek',privacy:'Gizlilik',notifications:'Bildirimler',security:'Güvenlik',language:'Dil',language_desc:'Arayüz dili',default_model:'Varsayılan model',default_model_desc:'Yeni sohbetler için kullanılır',chat_history:'Sohbet geçmişi',chat_history_desc:'Konuşmaları kenar çubuğunda göster',compact:'Kompakt mod',compact_desc:'Daha az boşluk',animations:'Animasyonlar',animations_desc:'Geçişleri etkinleştir',display_name:'Görünen ad',email:'E-posta adresi',password:'Şifre',password_desc:'30 gün önce değiştirildi',buy_tokens:'Token satın al',balance_desc:'Bakiye: 716K token',change:'Değiştir',buy:'Satın al →',danger_zone:'Tehlike bölgesi',delete_account:'Hesabı sil',delete_account_desc:'Tüm veriler kalıcı olarak silinecek',delete:'Sil',theme:'Tema',theme_desc:'Renk şeması',dark:'Koyu',light:'Açık',accent_color:'Vurgu rengi',accent_desc:'Aktif öğeler için renk',font_size:'Yazı boyutu',font_size_desc:'Metin boyutu',small:'Küçük',medium:'Orta',large:'Büyük',preview:'Önizleme',preview_text:'Bu mevcut yazı boyutuyla bir önizleme metnidir.',enable_memory:'Belleği etkinleştir',enable_memory_desc:'SingleTokens konuşmalardan bilgi hatırlar',stored_memories:'Kayıtlı anılar',mem1:'Kesin ve doğrudan yanıtları tercih eder',mem1_date:'3 gün önce',mem2:'SingleTokens adlı bir AI token pazarı üzerinde çalışıyor',mem2_date:'1 hafta önce',mem3:'Cyan vurgulu koyu UI tasarımlarını tercih eder',mem3_date:'2 hafta önce',clear_all:'Tümünü temizle',clear_all_desc:'Tüm anıları kaldır',delete_all:'Tümünü sil',training_data:'Eğitim verileri',training_data_desc:'Konuşmaları model geliştirmek için kullan',analytics:'Analitik',analytics_desc:'Anonim kullanım istatistiklerini paylaş',export_chats:'Geçmişi dışa aktar',export_chats_desc:'Tüm konuşmaları JSON olarak indir',export:'Dışa aktar',delete_chats:'Geçmişi sil',delete_chats_desc:'Tüm konuşmaları kalıcı olarak sil',email_notifs:'E-posta bildirimleri',email_notifs_desc:'E-posta ile güncellemeler al',token_warning:'Token uyarısı',token_warning_desc:'Bakiye 50K altına düşünce uyar',new_models_notif:'Yeni modeller',new_models_notif_desc:'Yeni AI modelleri mevcut olduğunda bildir',marketing_emails:'Pazarlama e-postaları',marketing_emails_desc:'Haberler ve teklifler',two_fa:'İki faktörlü kimlik doğrulama',two_fa_off:'Etkin değil',two_fa_on:'Etkin',active_sessions:'Aktif oturumlar',active_sessions_desc:'1 cihaz · Chrome, Windows 11',sign_out:'Çıkış yap',api_keys:'API Anahtarları',revoke:'İptal et',new_key:'+ Yeni anahtar',saved:'Ayar kaydedildi',pw_sent:'Şifre sıfırlama e-postası gönderildi!',opening:'Açılıyor...',exporting:'Hazırlanıyor...',deleted:'Geçmiş silindi.',sessions_ended:'Diğer oturumlar sonlandırıldı.',mem_deleted:'Anı silindi',all_mem_deleted:'Tüm anılar silindi',key_revoked:'Anahtar iptal edildi',key_added:'Yeni anahtar oluşturuldu',compact_on:'Kompakt mod etkinleştirildi',compact_off:'Kompakt mod devre dışı',twofa_on:'2FA etkinleştirildi',twofa_off:'2FA devre dışı'},
+  ja:{settings:'設定',general:'一般',account:'アカウント',appearance:'外観',memory:'メモリー',privacy:'プライバシー',notifications:'通知',security:'セキュリティ',language:'言語',language_desc:'インターフェース言語',default_model:'デフォルトモデル',default_model_desc:'新しいチャットに使用',chat_history:'チャット履歴',chat_history_desc:'サイドバーに会話を表示',compact:'コンパクトモード',compact_desc:'間隔を減らす',animations:'アニメーション',animations_desc:'トランジションを有効にする',display_name:'表示名',email:'メールアドレス',password:'パスワード',password_desc:'30日前に変更',buy_tokens:'トークンを購入',balance_desc:'残高：716Kトークン',change:'変更',buy:'購入 →',danger_zone:'危険ゾーン',delete_account:'アカウントを削除',delete_account_desc:'すべてのデータが完全に削除されます',delete:'削除',theme:'テーマ',theme_desc:'カラースキーム',dark:'ダーク',light:'ライト',accent_color:'アクセントカラー',accent_desc:'アクティブな要素の色',font_size:'フォントサイズ',font_size_desc:'テキストサイズ',small:'小',medium:'中',large:'大',preview:'プレビュー',preview_text:'現在のフォントサイズのプレビューテキストです。',enable_memory:'メモリーを有効化',enable_memory_desc:'SingleTokensは会話から情報を記憶します',stored_memories:'保存されたメモリー',mem1:'簡潔で直接的な回答を好む',mem1_date:'3日前',mem2:'SingleTokensというAIトークンマーケットで作業中',mem2_date:'1週間前',mem3:'シアンアクセントのダークUI設計を好む',mem3_date:'2週間前',clear_all:'すべてクリア',clear_all_desc:'すべてのメモリーを削除',delete_all:'すべて削除',training_data:'トレーニングデータ',training_data_desc:'会話をモデル改善に使用',analytics:'分析',analytics_desc:'匿名の使用統計を共有',export_chats:'チャット履歴をエクスポート',export_chats_desc:'すべての会話をJSONでダウンロード',export:'エクスポート',delete_chats:'チャット履歴を削除',delete_chats_desc:'すべての会話を完全に削除',email_notifs:'メール通知',email_notifs_desc:'メールで更新情報を受け取る',token_warning:'トークン警告',token_warning_desc:'残高が50K以下になったら警告',new_models_notif:'新モデル',new_models_notif_desc:'新しいAIモデルが利用可能になったら通知',marketing_emails:'マーケティングメール',marketing_emails_desc:'ニュースとオファー',two_fa:'二要素認証',two_fa_off:'無効',two_fa_on:'有効',active_sessions:'アクティブセッション',active_sessions_desc:'1台のデバイス · Chrome, Windows 11',sign_out:'サインアウト',api_keys:'APIキー',revoke:'失効',new_key:'+ 新しいキー',saved:'設定を保存しました',pw_sent:'パスワードリセットメールを送信しました!',opening:'開いています...',exporting:'準備中...',deleted:'履歴を削除しました。',sessions_ended:'他のセッションを終了しました。',mem_deleted:'メモリーを削除しました',all_mem_deleted:'すべてのメモリーを削除しました',key_revoked:'キーを失効しました',key_added:'新しいキーを作成しました',compact_on:'コンパクトモードを有効化',compact_off:'コンパクトモードを無効化',twofa_on:'2FAを有効化',twofa_off:'2FAを無効化'}
+};
+
+let lang='de';
+function T(key){return(LANGS[lang]||LANGS.de)[key]||key;}
+
+function applyLang(){
+  document.querySelectorAll('[data-t]').forEach(el=>{
+    const key=el.getAttribute('data-t');
+    const val=T(key);
+    if(val!==undefined)el.textContent=val;
+  });
+}
+
+function setLang(l){
+  lang=l;
+  applyLang();
+  showToast(T('saved'));
+}
+
+function go(id,el){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('pg-'+id).classList.add('active');
+  el.classList.add('active');
+}
+
+function tog(el,key){
+  el.classList.toggle('on');
+  const on=el.classList.contains('on');
+  if(key==='compact'){document.getElementById('app').classList.toggle('compact-mode',on);showToast(on?T('compact_on'):T('compact_off'));}
+  else showToast(T('saved'));
+}
+
+function setTheme(v){
+  document.getElementById('app').classList.toggle('light-mode',v==='light');
+  showToast(T('saved'));
+}
+
+function setAccent(c,el){
+  document.querySelectorAll('.sw').forEach(s=>s.classList.remove('active'));
+  el.classList.add('active');
+  document.documentElement.style.setProperty('--acc',c);
+  showToast(T('saved'));
+}
+
+function setFontSize(s){
+  document.documentElement.style.setProperty('--font-size',s);
+  document.getElementById('preview-box').style.fontSize=s;
+  showToast(T('saved'));
+}
+
+function saveName(v){
+  document.getElementById('display-name').textContent=v;
+  document.getElementById('av-circle').textContent=v.charAt(0).toUpperCase();
+  showToast(T('saved'));
+}
+function saveEmail(v){document.getElementById('display-email').textContent=v;showToast(T('saved'));}
+function confirmDel(){if(confirm(T('delete_account_desc')))showToast(T('deleted'));}
+function toggleTwoFA(el){
+  el.classList.toggle('on');
+  const on=el.classList.contains('on');
+  document.getElementById('twofa-desc').textContent=on?T('two_fa_on'):T('two_fa_off');
+  showToast(on?T('twofa_on'):T('twofa_off'));
+}
+function revokeKey(btn,name){
+  btn.closest('.mem-item').style.opacity='0';btn.closest('.mem-item').style.transition='opacity .2s';
+  setTimeout(()=>btn.closest('.mem-item').remove(),200);
+  showToast(T('key_revoked'));
+}
+function addKey(){
+  const chars='ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqr23456789';
+  let k='sk-aizz-new-';for(let i=0;i<8;i++)k+=chars[Math.floor(Math.random()*chars.length)];
+  const d=document.createElement('div');d.className='mem-item';
+  d.innerHTML=`<div style="flex:1"><div style="font-size:12px;color:var(--text);font-weight:600">New Key</div><div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);margin-top:2px">${k}••••</div></div><button class="dbtn" style="font-size:11px" onclick="revokeKey(this,'New Key')">${T('revoke')}</button>`;
+  document.getElementById('api-keys').appendChild(d);
+  showToast(T('key_added'));
+}
+function delMem(btn){const i=btn.closest('.mem-item');i.style.opacity='0';i.style.transition='opacity .2s';setTimeout(()=>i.remove(),200);showToast(T('mem_deleted'));}
+function clearMem(){document.querySelectorAll('#mem-list .mem-item').forEach(m=>{m.style.opacity='0';m.style.transition='opacity .2s';setTimeout(()=>m.remove(),200);});showToast(T('all_mem_deleted'));}
+
+let tt;
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2200);}
+
+applyLang();
+</script>

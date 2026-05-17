@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>SingleTokens – Anmelden</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgc2hhcGUtcmVuZGVyaW5nPSJnZW9tZXRyaWNQcmVjaXNpb24iPgogIDxkZWZzPgogICAgPGNsaXBQYXRoIGlkPSJjaXJjbGUtY2xpcCI+CiAgICAgIDxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjUwIi8+CiAgICA8L2NsaXBQYXRoPgogIDwvZGVmcz4KICA8cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0ibm9uZSIvPgogIDxnIGNsaXAtcGF0aD0idXJsKCNjaXJjbGUtY2xpcCkiPgogICAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNTAiIGZpbGw9IiMwMENGRkYiLz4KICAgIDxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjQyIiBmaWxsPSIjMDAwMDAwIi8+CiAgICA8Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIzOCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIxLjIiLz4KICAgIDx0ZXh0IHg9IjUwIiB5PSI2MiIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzQiIGZvbnQtd2VpZ2h0PSI5MDAiIGZvbnQtc3R5bGU9Iml0YWxpYyIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlNUPC90ZXh0PgogIDwvZz4KPC9zdmc+">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --acc:#22D3EE;--acc2:#3B82F6;
+  --dark:#09090B;--dark2:#0F1218;--dark3:#151A22;--dark4:#1B2130;
+  --text:#FAFAFA;--muted:#4B5563;--muted2:#9CA3AF;--border:rgba(255,255,255,0.07);
+}
+html,body{height:100%;background:var(--dark);font-family:'Syne',sans-serif;color:var(--text)}
+body{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px;position:relative;overflow:hidden}
+
+/* Glow orbs */
+.orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0}
+.orb1{width:500px;height:500px;background:rgba(34,211,238,.07);top:-150px;left:-150px;animation:drift1 14s ease-in-out infinite}
+.orb2{width:400px;height:400px;background:rgba(59,130,246,.06);bottom:-100px;right:-100px;animation:drift2 18s ease-in-out infinite}
+@keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(50px,40px)}}
+@keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-40px,-50px)}}
+
+/* Card */
+.card{position:relative;z-index:1;width:100%;max-width:400px;background:var(--dark2);border:1px solid var(--border);border-radius:18px;padding:36px 32px 28px;box-shadow:0 40px 100px rgba(0,0,0,.6)}
+
+/* Logo */
+.logo{display:flex;align-items:center;gap:8px;margin-bottom:28px}
+.logo-icon{width:34px;height:34px;border-radius:9px;background:#000;border:1.5px solid rgba(34,211,238,.5);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;font-style:italic;color:#fff;letter-spacing:-.02em;box-shadow:0 0 16px rgba(34,211,238,.2)}
+.logo-text{font-size:17px;font-weight:800;letter-spacing:-.03em}
+.logo-text span{color:var(--acc)}
+
+/* Tabs */
+.tabs{display:flex;background:var(--dark3);border:1px solid var(--border);border-radius:10px;padding:3px;margin-bottom:28px}
+.tab{flex:1;padding:8px;border-radius:7px;border:none;background:transparent;color:var(--muted2);font-size:13px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;transition:all .15s}
+.tab.active{background:var(--dark4);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.4)}
+
+/* Form */
+.form-group{margin-bottom:14px}
+label{display:block;font-size:12px;font-weight:700;color:var(--muted2);margin-bottom:6px;letter-spacing:.01em}
+input{width:100%;padding:11px 14px;background:var(--dark3);border:1px solid var(--border);border-radius:9px;color:var(--text);font-size:14px;font-family:'Syne',sans-serif;outline:none;transition:border-color .15s}
+input:focus{border-color:rgba(34,211,238,.4)}
+input::placeholder{color:var(--muted)}
+
+/* Submit button */
+.btn-submit{width:100%;padding:13px;background:var(--acc);border:none;border-radius:10px;color:#03060F;font-size:14px;font-weight:800;cursor:pointer;font-family:'Syne',sans-serif;margin-top:4px;transition:all .15s;letter-spacing:-.01em}
+.btn-submit:hover:not(:disabled){background:#67E8F9}
+.btn-submit:disabled{opacity:.6;cursor:not-allowed}
+
+/* Error */
+.error-box{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:9px;padding:10px 14px;font-size:12px;color:#F87171;margin-bottom:14px;display:none}
+.error-box.show{display:block}
+
+/* Success */
+.success-box{background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.25);border-radius:9px;padding:10px 14px;font-size:12px;color:var(--acc);margin-bottom:14px;display:none}
+.success-box.show{display:block}
+
+/* Footer */
+.card-footer{text-align:center;margin-top:20px;font-size:11px;color:var(--muted);font-family:'DM Mono',monospace}
+.card-footer a{color:var(--acc);text-decoration:none}
+.card-footer a:hover{text-decoration:underline}
+
+/* 500 Tokens badge */
+.bonus-badge{display:flex;align-items:center;gap:8px;background:rgba(34,211,238,.07);border:1px solid rgba(34,211,238,.15);border-radius:9px;padding:10px 14px;margin-bottom:20px;font-size:12px;color:var(--muted2);line-height:1.4}
+.bonus-badge strong{color:var(--acc)}
+.bonus-icon{font-size:18px;flex-shrink:0}
+
+.fade-in{animation:fadeIn .2s ease both}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Loading spinner in button */
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{width:14px;height:14px;border:2px solid rgba(0,0,0,.3);border-top-color:#000;border-radius:50%;animation:spin .6s linear infinite;display:inline-block;vertical-align:middle;margin-right:6px}
+</style>
+</head>
+<body>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+
+<div class="card fade-in">
+  <div class="logo">
+    <div class="logo-icon">ST</div>
+    <div class="logo-text">Single<span>Tokens</span></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" id="tab-login" onclick="switchTab('login')">Anmelden</button>
+    <button class="tab" id="tab-register" onclick="switchTab('register')">Registrieren</button>
+  </div>
+
+  <div id="error-box" class="error-box"></div>
+  <div id="success-box" class="success-box"></div>
+
+  <!-- LOGIN FORM -->
+  <div id="form-login">
+    <div class="form-group">
+      <label>E-Mail</label>
+      <input type="email" id="login-email" placeholder="deine@email.com" autocomplete="email">
+    </div>
+    <div class="form-group">
+      <label>Passwort</label>
+      <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="btn-submit" id="btn-login" onclick="doLogin()">Anmelden →</button>
+  </div>
+
+  <!-- REGISTER FORM -->
+  <div id="form-register" style="display:none">
+    <div class="bonus-badge">
+      <span class="bonus-icon">🎁</span>
+      <span>Du bekommst <strong>500K Tokens gratis</strong> beim Registrieren – kein Abo, kein Risiko.</span>
+    </div>
+    <div class="form-group">
+      <label>Name</label>
+      <input type="text" id="reg-name" placeholder="Dein Name" autocomplete="name">
+    </div>
+    <div class="form-group">
+      <label>E-Mail</label>
+      <input type="email" id="reg-email" placeholder="deine@email.com" autocomplete="email">
+    </div>
+    <div class="form-group">
+      <label>Passwort <span style="color:var(--muted);font-weight:400">(min. 6 Zeichen)</span></label>
+      <input type="password" id="reg-password" placeholder="••••••••" autocomplete="new-password">
+    </div>
+    <button class="btn-submit" id="btn-register" onclick="doRegister()">Konto erstellen →</button>
+  </div>
+
+  <div class="card-footer">
+    <a href="index.html">← Zurück zur Startseite</a>
+  </div>
+</div>
+
+<script>
+const API = '';
+
+/* ── Tab switch ── */
+function switchTab(tab) {
+  document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+  document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+  document.getElementById('form-login').style.display = tab === 'login' ? '' : 'none';
+  document.getElementById('form-register').style.display = tab === 'register' ? '' : 'none';
+  hideMsg();
+}
+
+/* ── Messages ── */
+function showError(msg) {
+  const el = document.getElementById('error-box');
+  el.textContent = msg; el.classList.add('show');
+  document.getElementById('success-box').classList.remove('show');
+}
+function showSuccess(msg) {
+  const el = document.getElementById('success-box');
+  el.textContent = msg; el.classList.add('show');
+  document.getElementById('error-box').classList.remove('show');
+}
+function hideMsg() {
+  document.getElementById('error-box').classList.remove('show');
+  document.getElementById('success-box').classList.remove('show');
+}
+
+/* ── Loading state ── */
+function setLoading(btnId, loading, defaultText) {
+  const btn = document.getElementById(btnId);
+  btn.disabled = loading;
+  btn.innerHTML = loading
+    ? `<span class="spinner"></span> Bitte warten...`
+    : defaultText;
+}
+
+/* ── Redirect after login ── */
+function redirectToApp() {
+  if (/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) || window.innerWidth <= 768) {
+    window.location.href = '/index-mobile.html';
+  } else {
+    window.location.href = '/app.html';
+  }
+}
+
+/* ── Login ── */
+async function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  if (!email || !password) { showError('Bitte E-Mail und Passwort eingeben.'); return; }
+  setLoading('btn-login', true, 'Anmelden →');
+  try {
+    const r = await fetch(API + '/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await r.json();
+    if (!r.ok) { showError(data.error || 'Anmeldung fehlgeschlagen.'); return; }
+    localStorage.setItem('st_token', data.token);
+    localStorage.setItem('st_user', JSON.stringify(data.user));
+    showSuccess('Angemeldet! Weiterleitung...');
+    setTimeout(redirectToApp, 600);
+  } catch (e) {
+    showError('Server nicht erreichbar. Bitte später nochmal versuchen.');
+  } finally {
+    setLoading('btn-login', false, 'Anmelden →');
+  }
+}
+
+/* ── Register ── */
+async function doRegister() {
+  const name = document.getElementById('reg-name').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const password = document.getElementById('reg-password').value;
+  if (!name) { showError('Bitte einen Namen eingeben.'); return; }
+  if (!email) { showError('Bitte eine E-Mail eingeben.'); return; }
+  if (password.length < 6) { showError('Passwort muss mindestens 6 Zeichen haben.'); return; }
+  setLoading('btn-register', true, 'Konto erstellen →');
+  try {
+    const r = await fetch(API + '/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password, name })
+    });
+    const data = await r.json();
+    if (!r.ok) { showError(data.error || 'Registrierung fehlgeschlagen.'); return; }
+    localStorage.setItem('st_token', data.token);
+    localStorage.setItem('st_user', JSON.stringify(data.user));
+    showSuccess('Konto erstellt! 500K Tokens wurden gutgeschrieben. Weiterleitung...');
+    setTimeout(redirectToApp, 900);
+  } catch (e) {
+    showError('Server nicht erreichbar. Bitte später nochmal versuchen.');
+  } finally {
+    setLoading('btn-register', false, 'Konto erstellen →');
+  }
+}
+
+/* ── Enter key ── */
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  const loginVisible = document.getElementById('form-login').style.display !== 'none';
+  if (loginVisible) doLogin(); else doRegister();
+});
+
+/* ── Already logged in? ── */
+if (localStorage.getItem('st_token')) redirectToApp();
+</script>
+</body>
+</html>
