@@ -372,3 +372,9 @@ async function apiDeleteGpt(id) {
     });
   } catch { }
 }
+
+/* ══ BOOT — called after api.js is fully loaded ═════════════════════════════ */
+if (typeof initApp === 'function') {
+  // Mobile needs loadGpts stub first (noop, GPTs loaded in initApp)
+  initApp();
+}
