@@ -1,6 +1,6 @@
 {
   "name": "singletokens",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "SingleTokens – KI ohne Abo",
   "main": "backend/server.js",
   "scripts": {
@@ -14,7 +14,7 @@
     "jsonwebtoken": "^9.0.2",
     "dotenv": "^16.3.1",
     "uuid": "^9.0.0",
-    "sql.js": "^1.12.0"
+    "pg": "^8.12.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.0"
