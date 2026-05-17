@@ -1440,10 +1440,10 @@ function setLang(l) { lang = l; applyLang(); showToast(T('saved')); }
 
 /* ─── SETTINGS ─── */
 function sGo(id, el) { document.querySelectorAll('.s-pg').forEach(p => p.classList.remove('active')); document.querySelectorAll('.s-nav').forEach(n => n.classList.remove('active')); document.getElementById('s-'+id).classList.add('active'); el.classList.add('active'); }
-function sTog(el, key) { el.classList.toggle('on'); const on = el.classList.contains('on'); if (key === 'compact') { document.getElementById('app').classList.toggle('compact-mode', on); showToast(on ? T('compact_on') : T('compact_off')); } else showToast(T('saved')); }
-function setTheme(v) { const on = v === 'light'; document.getElementById('app').classList.toggle('light-mode', on); document.body.classList.toggle('light-mode', on); showToast(T('saved')); }
-function setAccent(c, el) { document.querySelectorAll('.sw').forEach(s => s.classList.remove('active')); el.classList.add('active'); document.documentElement.style.setProperty('--acc', c); showToast(T('saved')); }
-function setFontSize(s) { document.documentElement.style.setProperty('--font-size', s); document.getElementById('s-preview').style.fontSize = s; showToast(T('saved')); }
+function sTog(el, key) { el.classList.toggle('on'); const on = el.classList.contains('on'); localStorage.setItem('st_pref_' + key, on); if (key === 'compact') { document.getElementById('app').classList.toggle('compact-mode', on); showToast(on ? T('compact_on') : T('compact_off')); } else showToast(T('saved')); }
+function setTheme(v) { const on = v === 'light'; document.getElementById('app').classList.toggle('light-mode', on); document.body.classList.toggle('light-mode', on); localStorage.setItem('st_pref_theme', v); showToast(T('saved')); }
+function setAccent(c, el) { document.querySelectorAll('.sw').forEach(s => s.classList.remove('active')); el.classList.add('active'); document.documentElement.style.setProperty('--acc', c); localStorage.setItem('st_pref_accent', c); showToast(T('saved')); }
+function setFontSize(s) { document.documentElement.style.setProperty('--font-size', s); document.getElementById('s-preview').style.fontSize = s; localStorage.setItem('st_pref_fontsize', s); showToast(T('saved')); }
 function saveName(v) { if (!v.trim()) return; document.getElementById('s-display-name').textContent = v; document.getElementById('s-av').textContent = v.charAt(0).toUpperCase(); document.getElementById('sidebar-av').textContent = v.charAt(0).toUpperCase(); document.getElementById('sidebar-name').textContent = v; apiUpdateName(v.trim()); showToast(T('saved')); }
 function saveEmail(v) { document.getElementById('s-display-email').textContent = v; showToast(T('saved')); }
 function confirmDel() { showConfirm({title:'Konto löschen',msg:'Alle Daten werden <strong>unwiderruflich gelöscht</strong>.',okLabel:'Konto löschen',onOk:async()=>{ const ok=await apiDeleteAccount(); if(ok) { showToast('Konto gelöscht.'); setTimeout(apiLogout,1000); } else showToast('Fehler beim Löschen.'); }}); }
@@ -1521,6 +1521,18 @@ function editGpt(id) { openGptModal(id); }
 function deleteGpt(id) { const g = gpts.find(x => String(x.id) === String(id)); if (!g) return; showConfirm({title:'GPT löschen',msg:`GPT <strong>"${escHtml(g.name)}"</strong> wirklich löschen?`,okLabel:'Löschen',onOk:async()=>{await apiDeleteGpt(id);gpts=gpts.filter(x=>String(x.id)!==String(id));renderGpts();showToast('GPT gelöscht.');}}); }
 function useGpt(id) { const g = gpts.find(x => String(x.id) === String(id)); if (!g) return; const sel = document.getElementById('chat-model-sel'); if (sel) { sel.value = g.model; if (window._chatModelCsel) window._chatModelCsel.syncDisplay(); } openView('chat'); newChat(); if (typeof setGptPrompt === 'function') setGptPrompt(g.prompt); showToast('GPT "'+g.name+'" geladen!'); }
 renderGpts();
+
+/* ─── RESTORE PREFERENCES ─── */
+(function() {
+  const theme  = localStorage.getItem('st_pref_theme');
+  const accent = localStorage.getItem('st_pref_accent');
+  const fsize  = localStorage.getItem('st_pref_fontsize');
+  const compact = localStorage.getItem('st_pref_compact') === 'true';
+  if (theme === 'light') { document.getElementById('app').classList.add('light-mode'); document.body.classList.add('light-mode'); const sel = document.getElementById('theme-sel'); if (sel) sel.value = 'light'; }
+  if (accent) { document.documentElement.style.setProperty('--acc', accent); document.querySelectorAll('.sw').forEach(s => { if (s.style.background === accent || s.style.backgroundColor === accent) s.classList.add('active'); else s.classList.remove('active'); }); }
+  if (fsize)  { document.documentElement.style.setProperty('--font-size', fsize); const sel = document.getElementById('fontsize-sel'); if (sel) sel.value = fsize; }
+  if (compact) { document.getElementById('app').classList.add('compact-mode'); }
+})();
 
 /* ─── API KEY LOADER ─── */
 async function loadApiKeys() {
@@ -1604,7 +1616,7 @@ async function initApp() {
   loadApiKeys();
 }
 
-initApp();
+// initApp() is called by api.js after it loads
 </script>
 <script src="api.js"></script>
 </body>
