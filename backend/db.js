@@ -66,7 +66,7 @@ async function getDb() {
       created_at TEXT DEFAULT (datetime('now')),
       updated_at TEXT DEFAULT (datetime('now'))
     );
-  \`);
+  `);
   save();
   return db;
 }
