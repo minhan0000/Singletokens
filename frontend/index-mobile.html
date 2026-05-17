@@ -1120,9 +1120,9 @@ function renderGpts(){
   if(!gptsList.length){ grid.innerHTML=''; empty.style.display='block'; return; }
   empty.style.display='none';
   grid.innerHTML=gptsList.map((g,i)=>`<div class="gpt-card" style="animation-delay:${i*0.05}s"><div class="gpt-card-top"><div class="gpt-card-icon">${g.icon||'🤖'}</div><div class="gpt-card-btns"><button data-edit-gpt="${g.id}" style="padding:4px 10px;background:var(--dark3);border:1px solid var(--border);border-radius:6px;color:var(--muted2);font-size:11px;cursor:pointer;font-family:'Syne',sans-serif">Bearbeiten</button><button data-del-gpt="${g.id}" style="padding:4px 10px;background:transparent;border:1px solid rgba(248,113,113,.3);border-radius:6px;color:#F87171;font-size:11px;cursor:pointer;font-family:'Syne',sans-serif">Löschen</button></div></div><div class="gpt-card-name">${escH(g.name)}</div><div class="gpt-card-desc">${escH(g.desc||'Keine Beschreibung')}</div><div class="gpt-card-bot"><span class="gpt-model-tag">${escH(g.model)}</span><button data-use-gpt="${g.id}" style="padding:5px 12px;background:var(--acc);border:none;border-radius:6px;color:#0A0C10;font-size:11px;font-weight:800;cursor:pointer;font-family:'Syne',sans-serif">Chatten →</button></div></div>`).join('');
-  grid.querySelectorAll('[data-edit-gpt]').forEach(btn=>btn.addEventListener('click',e=>{ e.stopPropagation(); openGptModal(Number(btn.dataset.editGpt)); }));
+  grid.querySelectorAll('[data-edit-gpt]').forEach(btn=>btn.addEventListener('click',e=>{ e.stopPropagation(); openGptModal(btn.dataset.editGpt); }));
   grid.querySelectorAll('[data-del-gpt]').forEach(btn=>btn.addEventListener('click',e=>{ e.stopPropagation(); deleteGpt(btn.dataset.delGpt); }));
-  grid.querySelectorAll('[data-use-gpt]').forEach(btn=>btn.addEventListener('click',e=>{ e.stopPropagation(); useGpt(Number(btn.dataset.useGpt)); }));
+  grid.querySelectorAll('[data-use-gpt]').forEach(btn=>btn.addEventListener('click',e=>{ e.stopPropagation(); useGpt(btn.dataset.useGpt); }));
 }
 
 function openGptModal(id){
@@ -1156,7 +1156,7 @@ $('btn-save-gpt').addEventListener('click',()=>{
   if(!rawPrompt){ toast('Bitte System-Prompt eingeben!'); return; }
   const behaviorTexts=BEHAVIORS.filter(b=>activeBehaviors.has(b.id)).map(b=>'- '+b.text);
   const fullPrompt=behaviorTexts.length?rawPrompt+'\n\nVerhaltensregeln:\n'+behaviorTexts.join('\n'):rawPrompt;
-  const gpt={id:editingGptId||Date.now(),name,desc:$('gpt-desc').value.trim(),model:$('gpt-model-sel').value,icon:$('gpt-icon-val').value,rawPrompt,prompt:fullPrompt,behaviors:[...activeBehaviors]};
+  const gpt={id:editingGptId||null,name,description:$('gpt-desc').value.trim(),desc:$('gpt-desc').value.trim(),model:$('gpt-model-sel').value,icon:$('gpt-icon-val').value,rawPrompt,prompt:fullPrompt,behaviors:[...activeBehaviors]};
   if(editingGptId){
     await apiUpdateGpt(editingGptId,gpt);
     gptsList=gptsList.map(g=>String(g.id)===String(editingGptId)?{...g,...gpt,id:editingGptId}:g);
@@ -1289,7 +1289,7 @@ async function initApp(){
   }
 }
 
-loadGpts(); initApp();
+// initApp() called by api.js after load
 window.addMsg       = addMsg;
 window.addTyping    = addTyping;
 window.curModel     = ()=>curModel;
