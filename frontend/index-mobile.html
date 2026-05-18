@@ -215,21 +215,11 @@ footer{border-top:1px solid var(--border);padding:40px;display:flex;align-items:
 </style>
 </head>
 <script>
-// Auto-redirect if already logged in
-if (localStorage.getItem('st_token')) { goToApp(); }
-
 function goToApp() {
   const token = localStorage.getItem('st_token');
   if (!token) { window.location.href = '/login.html'; return; }
-  if (/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) || window.innerWidth <= 768) {
-    window.location.href = '/index-mobile.html';
-  } else {
-    window.location.href = '/app.html';
-  }
+  window.location.href = '/app.html';
 }
-</script>
-<body>
-
 <!-- NAV -->
 <nav>
   <div class="nav-logo">Single<span>Tokens</span></div>
