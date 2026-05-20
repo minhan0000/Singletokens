@@ -1464,6 +1464,38 @@ function deleteGpt(id) { const g = gpts.find(x => x.id === id); if (!g) return; 
 function useGpt(id) { const g = gpts.find(x => x.id === id); if (!g) return; const sel = document.getElementById('chat-model-sel'); if (sel) { sel.value = g.model; if (window._chatModelCsel) window._chatModelCsel.syncDisplay(); } openView('chat'); newChat(); if (typeof setGptPrompt === 'function') setGptPrompt(g.prompt); showToast('GPT "'+g.name+'" geladen!'); }
 renderGpts();
 
+// ─── BOOT ───
+(async function initApp() {
+  if (!_getToken()) { window.location.href = '/login.html'; return; }
+  const cached = JSON.parse(localStorage.getItem('st_user') || 'null');
+  if (cached) {
+    balance = cached.balance || 0;
+    updateBalance(0);
+    const n = cached.name || 'User';
+    document.getElementById('s-av').textContent = n.charAt(0).toUpperCase();
+    document.getElementById('s-display-name').value = n;
+    document.getElementById('s-display-email').value = cached.email || '';
+    document.getElementById('sidebar-av').textContent = n.charAt(0).toUpperCase();
+    document.getElementById('sidebar-name').textContent = n;
+  }
+  const user = await apiGetUser();
+  if (user) {
+    localStorage.setItem('st_user', JSON.stringify(user));
+    balance = user.balance || 0;
+    updateBalance(0);
+    const n = user.name || 'User';
+    document.getElementById('s-av').textContent = n.charAt(0).toUpperCase();
+    document.getElementById('s-display-name').value = n;
+    document.getElementById('s-display-email').value = user.email || '';
+    document.getElementById('sidebar-av').textContent = n.charAt(0).toUpperCase();
+    document.getElementById('sidebar-name').textContent = n;
+    document.getElementById('s-tok-badge').textContent = fmtBalance() + ' Tokens';
+  }
+  const serverGpts = await apiFetchGpts();
+  gpts = serverGpts;
+  renderGpts();
+})();
+
 /* ─── BOOT ─── */
 initCustomSelects();
 applyLang();
