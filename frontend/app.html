@@ -488,7 +488,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
   <div class="chat-messages" id="chat-messages">
     <!-- Welcome screen shown until first message is sent -->
     <div id="welcome-screen">
-      <div id="welcome-greeting">Schön, dich zu sehen.</div>
+      <div id="welcome-greeting">Guten Tag!</div>
       <div id="welcome-sub">Wie kann ich dir heute helfen?</div>
     </div>
   </div>
@@ -1112,8 +1112,64 @@ function newChat() {
 
 function _getWelcomeGreeting() {
   const cached = JSON.parse(localStorage.getItem('st_user') || 'null');
-  const name = cached?.name;
-  return name ? 'Schön, dich zu sehen, ' + name + '.' : 'Schön, dich zu sehen.';
+  const n = cached?.name || null;
+  const h = new Date().getHours();
+  const rnd = arr => arr[Math.floor(Math.random() * arr.length)];
+
+  const morning = n ? [
+    'Guten Morgen, ' + n + '! Womit kann ich dir heute helfen?',
+    'Moin, ' + n + '! Was steht heute an?',
+    'Hey ' + n + ', schön dass du da bist!',
+    'Guten Morgen, ' + n + '. Frisch in den Tag gestartet?',
+    'Rise and shine, ' + n + '! Was kann ich für dich tun?',
+  ] : [
+    'Guten Morgen! Womit kann ich dir helfen?',
+    'Moin! Was steht heute an?',
+    'Guten Morgen – schön, dass du da bist!',
+  ];
+
+  const day = n ? [
+    'Schön, dich zu sehen, ' + n + '.',
+    'Hey ' + n + '! Was kann ich heute für dich tun?',
+    'Hallo ' + n + '! Womit darf ich dich unterstützen?',
+    'Na ' + n + ', was gibt's? Ich bin bereit.',
+    'Hi ' + n + '! Stell mir eine Frage oder gib mir eine Aufgabe.',
+    'Guten Tag, ' + n + '. Wie kann ich helfen?',
+  ] : [
+    'Schön, dich zu sehen.',
+    'Wie kann ich dir helfen?',
+    'Hallo! Was darf ich für dich tun?',
+    'Stell mir eine Frage oder gib mir eine Aufgabe.',
+  ];
+
+  const evening = n ? [
+    'Guten Abend, ' + n + '! Noch was erledigen?',
+    'Hey ' + n + ', langer Tag? Ich helfe gerne.',
+    'Abend, ' + n + '! Was kann ich für dich tun?',
+    'Guten Abend, ' + n + '. Womit darf ich dir noch helfen?',
+    'Na ' + n + ', wie war dein Tag? Ich bin für dich da.',
+  ] : [
+    'Guten Abend! Noch was erledigen?',
+    'Abend! Womit kann ich helfen?',
+    'Guten Abend – wie kann ich dir behilflich sein?',
+  ];
+
+  const night = n ? [
+    'Noch so spät wach, ' + n + '? Ich bin hier.',
+    'Hey ' + n + ', Nachtschicht? Ich helf dir.',
+    'Auch um diese Zeit bin ich für dich da, ' + n + '!',
+    'Schläfst du nicht, ' + n + '? Na gut, lass uns arbeiten.',
+    'Nacht ' + n + '! Was beschäftigt dich gerade?',
+  ] : [
+    'Noch wach? Ich bin hier.',
+    'Gute Nacht – oder doch nicht schlafen?',
+    'Auch um diese Uhrzeit bin ich für dich da!',
+  ];
+
+  if (h >= 5 && h < 11)       return rnd(morning);
+  else if (h >= 11 && h < 18) return rnd(day);
+  else if (h >= 18 && h < 22) return rnd(evening);
+  else                         return rnd(night);
 }
 
 function saveCurrentChat() {
@@ -1459,6 +1515,34 @@ function _applyUserToUI(user) {
 /* ─── BOOT ─── */
 initCustomSelects();
 applyLang();
+
+// Sofort aus localStorage füllen (bevor api.js geladen ist)
+(function() {
+  const cached = JSON.parse(localStorage.getItem('st_user') || 'null');
+  if (!cached) return;
+  const n = cached.name || '';
+  const email = cached.email || '';
+  const nameInput = document.getElementById('s-name-input');
+  const emailInput = document.getElementById('s-email-input');
+  if (nameInput && n) nameInput.value = n;
+  if (emailInput && email) emailInput.value = email;
+  if (n) {
+    const sName = document.getElementById('s-display-name');
+    const sEmail = document.getElementById('s-display-email');
+    const sAv = document.getElementById('s-av');
+    const sbAv = document.getElementById('sidebar-av');
+    const sbName = document.getElementById('sidebar-name');
+    const sbEmail = document.getElementById('sidebar-email');
+    if (sName) sName.textContent = n;
+    if (sEmail) sEmail.textContent = email;
+    if (sAv) sAv.textContent = n.charAt(0).toUpperCase();
+    if (sbAv) sbAv.textContent = n.charAt(0).toUpperCase();
+    if (sbName) sbName.textContent = n;
+    if (sbEmail) sbEmail.textContent = email;
+    const wg = document.getElementById('welcome-greeting');
+    if (wg) wg.textContent = _getWelcomeGreeting();
+  }
+})();
 </script>
 <script src="api.js"></script>
 </body>
