@@ -33,7 +33,7 @@ html,body{height:100%;overflow:hidden;background:var(--dark);font-family:'Syne',
 .sidebar.collapsed .nav-item{padding:10px;justify-content:center;width:40px;margin:2px auto}
 .sidebar.collapsed .nav-item span{display:none}
 .sidebar.collapsed .account-btn{padding:8px;justify-content:center;width:40px;height:40px;margin:0 auto;border-radius:50%}
-.sidebar.collapsed .account-btn span{display:none}
+.sidebar.collapsed .account-btn .sidebar-user-info{display:none}
 .sidebar.collapsed .slogo{display:none !important}
 .sidebar.collapsed .sidebar-top{padding:8px;display:flex;flex-direction:column;align-items:center;gap:8px}
 .sidebar.collapsed .sidebar-footer{padding:8px;display:flex;justify-content:center;border-top:none;margin-top:auto}
@@ -77,9 +77,15 @@ html,body{height:100%;overflow:hidden;background:var(--dark);font-family:'Syne',
 .ctx-item.ctx-accent{color:var(--acc)}
 .ctx-item.ctx-accent:hover{background:rgba(34,211,238,.08);color:var(--acc)}
 .ctx-sep{height:1px;background:var(--border);margin:3px 0}
+
+/* ── SIDEBAR FOOTER ── */
 .sidebar-footer{flex-shrink:0;border-top:1px solid var(--border);padding:10px 12px}
-.account-btn{width:100%;padding:9px 12px;background:transparent;border:1px solid var(--border);border-radius:9px;color:var(--text);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .15s;font-family:'Syne',sans-serif}
+.account-btn{width:100%;padding:9px 12px;background:transparent;border:1px solid var(--border);border-radius:9px;color:var(--text);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .15s;font-family:'Syne',sans-serif;text-align:left}
 .account-btn:hover{background:var(--dark3)}
+.sidebar-user-info{flex:1;min-width:0;overflow:hidden}
+.sidebar-user-name{font-size:12px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+.sidebar-user-email{font-size:10px;color:var(--muted2);font-family:'DM Mono',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4;margin-top:1px}
+
 .avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--acc),var(--acc2));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0}
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--dark)}
 .view{display:none;flex:1;overflow:hidden;flex-direction:column}
@@ -329,6 +335,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .light-mode .sidebar-divider{background:#E5E7EB}
 .light-mode .new-chat-btn{background:#FFFFFF;border-color:#E5E7EB;color:#111827}
 .light-mode .account-btn{border-color:#E5E7EB;color:#111827}
+.light-mode .sidebar-user-email{color:#9CA3AF}
 .light-mode .main{background:#F9FAFB}
 .light-mode .chat-header{background:#FFFFFF;border-bottom-color:#E5E7EB}
 .light-mode .chat-messages{background:#F9FAFB}
@@ -438,7 +445,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
   <div class="sidebar-footer">
     <button class="account-btn" onclick="openView('settings')">
       <div class="avatar" id="sidebar-av">G</div>
-      <span style="flex:1;text-align:left;font-size:13px" class="sidebar-text" id="sidebar-name">Account</span>
+      <div class="sidebar-user-info sidebar-text">
+        <div class="sidebar-user-name" id="sidebar-name">Account</div>
+        <div class="sidebar-user-email" id="sidebar-email"></div>
+      </div>
     </button>
   </div>
 </div>
@@ -858,15 +868,46 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
    MARKED.JS KONFIGURATION
 ══════════════════════════════════════════ */
 if (typeof marked !== 'undefined') {
-  marked.setOptions({
-    breaks: true,
-    gfm: true,
-  });
+  marked.setOptions({ breaks: true, gfm: true });
 }
-
 function renderMarkdown(text) {
   if (typeof marked === 'undefined') return text;
   try { return marked.parse(text); } catch(e) { return text; }
+}
+
+/* ══════════════════════════════════════════
+   GREETING
+══════════════════════════════════════════ */
+function getGreeting(name) {
+  const h = new Date().getHours();
+  const pools = {
+    morning: [
+      'Guten Morgen, ' + name + '! Wie kann ich dir helfen?',
+      'Moin, ' + name + '! Was steht heute an?',
+      'Hey ' + name + ', schön dass du da bist! Womit soll ich loslegen?',
+    ],
+    day: [
+      'Schön, dich zu sehen, ' + name + '. Wie kann ich helfen?',
+      'Hey ' + name + '! Was kann ich heute für dich tun?',
+      'Hallo ' + name + '! Womit darf ich dich unterstützen?',
+      'Na ' + name + ', was gibt\'s? Ich bin bereit.',
+    ],
+    evening: [
+      'Guten Abend, ' + name + '! Noch was erledigen?',
+      'Hey ' + name + ', langer Tag? Ich helfe gerne.',
+      'Abend, ' + name + '! Was kann ich für dich tun?',
+    ],
+    night: [
+      'Noch so spät wach, ' + name + '? Ich bin hier.',
+      'Hey ' + name + ', Nachtschicht? Ich helf dir.',
+      'Auch um diese Zeit bin ich für dich da, ' + name + '!',
+    ]
+  };
+  const pool = h >= 5 && h < 11 ? pools.morning
+             : h >= 11 && h < 18 ? pools.day
+             : h >= 18 && h < 22 ? pools.evening
+             : pools.night;
+  return pool[Math.floor(Math.random() * pool.length)];
 }
 
 /* ══════════════════════════════════════════
@@ -893,7 +934,6 @@ const MODEL_META = {
 };
 
 const CHEVRON_SVG = `<svg class="csel-chev" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>`;
-
 const _cselInstances = [];
 
 class CustomSelect {
@@ -906,159 +946,63 @@ class CustomSelect {
     this.build();
     _cselInstances.push(this);
   }
-
   build() {
     this.wrap = document.createElement('div');
     this.wrap.className = 'csel-wrap' + (this.isModel ? ' csel-model-wrap' : '');
     if (this.width) this.wrap.style.width = this.width;
-
     this.trigger = document.createElement('button');
     this.trigger.type = 'button';
     this.trigger.className = 'csel-trigger';
-
-    if (this.isModel) {
-      this.iconEl = document.createElement('span');
-      this.iconEl.className = 'csel-model-icon';
-      this.trigger.appendChild(this.iconEl);
-    }
-
+    if (this.isModel) { this.iconEl = document.createElement('span'); this.iconEl.className = 'csel-model-icon'; this.trigger.appendChild(this.iconEl); }
     this.valEl = document.createElement('span');
     this.valEl.className = 'csel-val';
     this.trigger.appendChild(this.valEl);
     this.trigger.insertAdjacentHTML('beforeend', CHEVRON_SVG);
-
     this.panel = document.createElement('div');
     this.panel.className = 'csel-panel';
     if (this.alignLeft) this.panel.style.left = '0';
     else this.panel.style.right = '0';
-
     this.buildOptions();
-
     this.wrap.appendChild(this.trigger);
     this.wrap.appendChild(this.panel);
     this.targetWrap.appendChild(this.wrap);
-
     this.syncDisplay();
-
-    this.trigger.addEventListener('click', e => {
-      e.stopPropagation();
-      this.toggle();
-    });
-    this.trigger.addEventListener('keydown', e => {
-      if (e.key === 'Escape') this.close();
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.toggle(); }
-    });
+    this.trigger.addEventListener('click', e => { e.stopPropagation(); this.toggle(); });
+    this.trigger.addEventListener('keydown', e => { if (e.key === 'Escape') this.close(); if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.toggle(); } });
   }
-
   buildOptions() {
     this.panel.innerHTML = '';
     const opts = [...this.select.options];
     opts.forEach((opt, i) => {
-      if (this.isModel && i > 0 && !this._sameGroup(opts[i-1], opt)) {
-        const sep = document.createElement('div');
-        sep.className = 'csel-sep';
-        this.panel.appendChild(sep);
-      }
+      if (this.isModel && i > 0 && !this._sameGroup(opts[i-1], opt)) { const sep = document.createElement('div'); sep.className = 'csel-sep'; this.panel.appendChild(sep); }
       const div = document.createElement('div');
       div.className = 'csel-opt' + (opt.selected ? ' active' : '');
       div.dataset.value = opt.value;
       if (opt.dataset.t) div.dataset.t = opt.dataset.t;
-
-      const dot = document.createElement('span');
-      dot.className = 'csel-dot';
-      div.appendChild(dot);
-
-      if (this.isModel) {
-        const meta = MODEL_META[opt.value];
-        if (meta) {
-          const icon = document.createElement('span');
-          icon.style.cssText = `font-size:11px;width:18px;text-align:center;flex-shrink:0;color:${meta.color}`;
-          icon.textContent = meta.icon;
-          div.appendChild(icon);
-        }
-      }
-
-      const label = document.createElement('span');
-      label.textContent = opt.textContent;
-      div.appendChild(label);
-
-      div.addEventListener('click', e => {
-        e.stopPropagation();
-        this.setValue(opt.value);
-        this.close();
-      });
+      const dot = document.createElement('span'); dot.className = 'csel-dot'; div.appendChild(dot);
+      if (this.isModel) { const meta = MODEL_META[opt.value]; if (meta) { const icon = document.createElement('span'); icon.style.cssText = `font-size:11px;width:18px;text-align:center;flex-shrink:0;color:${meta.color}`; icon.textContent = meta.icon; div.appendChild(icon); } }
+      const label = document.createElement('span'); label.textContent = opt.textContent; div.appendChild(label);
+      div.addEventListener('click', e => { e.stopPropagation(); this.setValue(opt.value); this.close(); });
       this.panel.appendChild(div);
     });
   }
-
   _sameGroup(a, b) {
-    const groups = {
-      anthropic: ['Claude Sonnet 4.5','Claude Opus 4.5','Claude Haiku 4.5'],
-      openai: ['GPT-4o','GPT-5','GPT-4 Turbo','OpenAI o1','OpenAI o1 Mini'],
-      google: ['Gemini 2.0 Flash','Gemini Pro 2.0'],
-    };
-    for (const g of Object.values(groups)) {
-      if (g.includes(a.value) && g.includes(b.value)) return true;
-    }
+    const groups = { anthropic: ['Claude Sonnet 4.5','Claude Opus 4.5','Claude Haiku 4.5'], openai: ['GPT-4o','GPT-5','GPT-4 Turbo','OpenAI o1','OpenAI o1 Mini'], google: ['Gemini 2.0 Flash','Gemini Pro 2.0'] };
+    for (const g of Object.values(groups)) { if (g.includes(a.value) && g.includes(b.value)) return true; }
     return false;
   }
-
   syncDisplay() {
     const selected = this.select.options[this.select.selectedIndex];
     if (!selected) return;
     this.valEl.textContent = selected.textContent;
-
-    if (this.isModel && this.iconEl) {
-      const meta = MODEL_META[selected.value];
-      if (meta) {
-        this.iconEl.textContent = meta.icon;
-        this.iconEl.style.color = meta.color;
-        this.iconEl.style.background = meta.color + '22';
-      }
-    }
-
-    this.panel.querySelectorAll('.csel-opt').forEach(d => {
-      d.classList.toggle('active', d.dataset.value === this.select.value);
-    });
+    if (this.isModel && this.iconEl) { const meta = MODEL_META[selected.value]; if (meta) { this.iconEl.textContent = meta.icon; this.iconEl.style.color = meta.color; this.iconEl.style.background = meta.color + '22'; } }
+    this.panel.querySelectorAll('.csel-opt').forEach(d => { d.classList.toggle('active', d.dataset.value === this.select.value); });
   }
-
-  setValue(val) {
-    this.select.value = val;
-    this.select.dispatchEvent(new Event('change'));
-    this.syncDisplay();
-  }
-
-  toggle() {
-    const isOpen = this.panel.classList.contains('open');
-    _closeAllCsel();
-    if (!isOpen) this.open();
-  }
-
-  open() {
-    const trigRect = this.trigger.getBoundingClientRect();
-    const spaceBelow = window.innerHeight - trigRect.bottom;
-    if (spaceBelow < 200) this.panel.classList.add('drop-up');
-    else this.panel.classList.remove('drop-up');
-    this.panel.classList.add('open');
-    this.trigger.classList.add('open');
-  }
-
-  close() {
-    this.panel.classList.remove('open');
-    this.trigger.classList.remove('open');
-  }
-
-  refresh() {
-    [...this.select.options].forEach(opt => {
-      const div = this.panel.querySelector(`.csel-opt[data-value="${CSS.escape(opt.value)}"]`);
-      if (div) {
-        const spans = div.querySelectorAll('span:not(.csel-dot)');
-        const labelSpan = spans[spans.length - 1];
-        if (labelSpan) labelSpan.textContent = opt.textContent;
-      }
-    });
-    this.syncDisplay();
-  }
+  setValue(val) { this.select.value = val; this.select.dispatchEvent(new Event('change')); this.syncDisplay(); }
+  toggle() { const isOpen = this.panel.classList.contains('open'); _closeAllCsel(); if (!isOpen) this.open(); }
+  open() { const trigRect = this.trigger.getBoundingClientRect(); const spaceBelow = window.innerHeight - trigRect.bottom; if (spaceBelow < 200) this.panel.classList.add('drop-up'); else this.panel.classList.remove('drop-up'); this.panel.classList.add('open'); this.trigger.classList.add('open'); }
+  close() { this.panel.classList.remove('open'); this.trigger.classList.remove('open'); }
+  refresh() { [...this.select.options].forEach(opt => { const div = this.panel.querySelector(`.csel-opt[data-value="${CSS.escape(opt.value)}"]`); if (div) { const spans = div.querySelectorAll('span:not(.csel-dot)'); const labelSpan = spans[spans.length - 1]; if (labelSpan) labelSpan.textContent = opt.textContent; } }); this.syncDisplay(); }
 }
 
 function _closeAllCsel() { _cselInstances.forEach(cs => cs.close()); }
@@ -1068,33 +1012,22 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') _closeAllCse
 function initCustomSelects() {
   const chatModelSel = document.getElementById('chat-model-sel');
   const chatModelWrap = document.getElementById('chat-model-sel-wrap');
-  if (chatModelSel && chatModelWrap)
-    window._chatModelCsel = new CustomSelect(chatModelSel, chatModelWrap, { isModel: true, alignLeft: true });
-
+  if (chatModelSel && chatModelWrap) window._chatModelCsel = new CustomSelect(chatModelSel, chatModelWrap, { isModel: true, alignLeft: true });
   const langSel = document.getElementById('lang-sel');
   const langWrap = document.getElementById('lang-sel-wrap');
-  if (langSel && langWrap)
-    window._langCsel = new CustomSelect(langSel, langWrap, { width: '130px' });
-
+  if (langSel && langWrap) window._langCsel = new CustomSelect(langSel, langWrap, { width: '130px' });
   const defModelSel = document.getElementById('default-model-sel');
   const defModelWrap = document.getElementById('default-model-sel-wrap');
-  if (defModelSel && defModelWrap)
-    new CustomSelect(defModelSel, defModelWrap, { isModel: true });
-
+  if (defModelSel && defModelWrap) new CustomSelect(defModelSel, defModelWrap, { isModel: true });
   const themeSel = document.getElementById('theme-sel');
   const themeWrap = document.getElementById('theme-sel-wrap');
-  if (themeSel && themeWrap)
-    new CustomSelect(themeSel, themeWrap, { width: '110px' });
-
+  if (themeSel && themeWrap) new CustomSelect(themeSel, themeWrap, { width: '110px' });
   const fontSel = document.getElementById('fontsize-sel');
   const fontWrap = document.getElementById('fontsize-sel-wrap');
-  if (fontSel && fontWrap)
-    new CustomSelect(fontSel, fontWrap, { width: '100px' });
-
+  if (fontSel && fontWrap) new CustomSelect(fontSel, fontWrap, { width: '100px' });
   const gptModelSel = document.getElementById('gpt-model');
   const gptModelWrap = document.getElementById('gpt-model-sel-wrap');
-  if (gptModelSel && gptModelWrap)
-    window._gptModelCsel = new CustomSelect(gptModelSel, gptModelWrap, { isModel: true, alignLeft: true, width: '100%' });
+  if (gptModelSel && gptModelWrap) window._gptModelCsel = new CustomSelect(gptModelSel, gptModelWrap, { isModel: true, alignLeft: true, width: '100%' });
 }
 
 /* ═══ CONFIRM MODAL ═══ */
@@ -1152,7 +1085,6 @@ function addMsg(text, role, model) {
   const d = document.createElement('div');
   d.className = 'msg ' + role;
   const m = document.getElementById('chat-model-sel').value;
-  // ✅ Markdown nur für AI-Nachrichten rendern
   const rendered = role === 'ai' ? renderMarkdown(text) : text;
   d.innerHTML = `<div class="msg-bubble">${rendered}</div><div class="msg-meta">${role === 'user' ? 'Du' : (model || m)}</div>`;
   d.style.animation = 'msgIn .3s ease both';
@@ -1180,10 +1112,19 @@ let ctxTargetId = null;
 function genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
 function persistChats() { localStorage.setItem('st_chats', JSON.stringify(savedChats.slice(0,50))); }
 
+function _getCurrentUserName() {
+  const cached = JSON.parse(localStorage.getItem('st_user') || 'null');
+  return cached?.name || 'dort';
+}
+
 function newChat() {
   saveCurrentChat();
   activeChatId = null;
-  document.getElementById('chat-messages').innerHTML = '<div class="msg ai"><div class="msg-bubble">Hallo! Ich bin SingleTokens AI. Wie kann ich dir heute helfen?</div><div class="msg-meta">SingleTokens · Llama 3.3 70B</div></div>';
+  const name = _getCurrentUserName();
+  const greeting = getGreeting(name);
+  const model = document.getElementById('chat-model-sel')?.value || 'Llama 3.3 70B';
+  document.getElementById('chat-messages').innerHTML =
+    `<div class="msg ai"><div class="msg-bubble">${greeting}</div><div class="msg-meta">SingleTokens · ${model}</div></div>`;
   if (typeof resetChatHistory === 'function') resetChatHistory();
   renderChatHistory();
 }
@@ -1219,7 +1160,6 @@ function loadSavedChat(id) {
   chat.messages.forEach(m => {
     const d = document.createElement('div');
     d.className = 'msg ' + m.role;
-    // ✅ Markdown beim Laden von gespeicherten Chats
     const rendered = m.role === 'ai' ? renderMarkdown(m.text) : m.text;
     d.innerHTML = `<div class="msg-bubble">${rendered}</div><div class="msg-meta">${m.meta}</div>`;
     msgs.appendChild(d);
@@ -1252,7 +1192,6 @@ function renderChatHistory() {
 }
 
 function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
 function deleteChat(id) { savedChats = savedChats.filter(c => c.id !== id); persistChats(); if (activeChatId === id) { activeChatId = null; newChat(); } renderChatHistory(); }
 
 const ctxEl = document.getElementById('ctx-menu');
@@ -1401,8 +1340,26 @@ function sTog(el, key) { el.classList.toggle('on'); const on = el.classList.cont
 function setTheme(v) { const on = v === 'light'; document.getElementById('app').classList.toggle('light-mode', on); document.body.classList.toggle('light-mode', on); showToast(T('saved')); }
 function setAccent(c, el) { document.querySelectorAll('.sw').forEach(s => s.classList.remove('active')); el.classList.add('active'); document.documentElement.style.setProperty('--acc', c); showToast(T('saved')); }
 function setFontSize(s) { document.documentElement.style.setProperty('--font-size', s); document.getElementById('s-preview').style.fontSize = s; showToast(T('saved')); }
-function saveName(v) { document.getElementById('s-display-name').textContent = v; document.getElementById('s-av').textContent = v.charAt(0).toUpperCase(); document.getElementById('sidebar-av').textContent = v.charAt(0).toUpperCase(); document.getElementById('sidebar-name').textContent = v; showToast(T('saved')); }
-function saveEmail(v) { document.getElementById('s-display-email').textContent = v; showToast(T('saved')); }
+function saveName(v) {
+  document.getElementById('s-display-name').textContent = v;
+  document.getElementById('s-av').textContent = v.charAt(0).toUpperCase();
+  document.getElementById('sidebar-av').textContent = v.charAt(0).toUpperCase();
+  document.getElementById('sidebar-name').textContent = v;
+  // auch im localStorage updaten
+  const cached = JSON.parse(localStorage.getItem('st_user') || '{}');
+  cached.name = v;
+  localStorage.setItem('st_user', JSON.stringify(cached));
+  showToast(T('saved'));
+}
+function saveEmail(v) {
+  document.getElementById('s-display-email').textContent = v;
+  document.getElementById('sidebar-email').textContent = v;
+  // auch im localStorage updaten
+  const cached = JSON.parse(localStorage.getItem('st_user') || '{}');
+  cached.email = v;
+  localStorage.setItem('st_user', JSON.stringify(cached));
+  showToast(T('saved'));
+}
 function confirmDel() { showConfirm({title:'Konto löschen',msg:'Alle Daten werden <strong>unwiderruflich gelöscht</strong>.',okLabel:'Konto löschen',onOk:()=>showToast(T('deleted'))}); }
 function toggleTwoFA(el) { el.classList.toggle('on'); const on = el.classList.contains('on'); document.getElementById('twofa-desc').textContent = on ? T('two_fa_on') : T('two_fa_off'); showToast(on ? T('twofa_on') : T('twofa_off')); }
 function revokeKey(btn, name) { const i = btn.closest('.mem-item'); i.style.opacity = '0'; i.style.transition = 'opacity .2s'; setTimeout(() => i.remove(), 200); showToast(T('key_revoked')); }
@@ -1464,33 +1421,51 @@ function deleteGpt(id) { const g = gpts.find(x => x.id === id); if (!g) return; 
 function useGpt(id) { const g = gpts.find(x => x.id === id); if (!g) return; const sel = document.getElementById('chat-model-sel'); if (sel) { sel.value = g.model; if (window._chatModelCsel) window._chatModelCsel.syncDisplay(); } openView('chat'); newChat(); if (typeof setGptPrompt === 'function') setGptPrompt(g.prompt); showToast('GPT "'+g.name+'" geladen!'); }
 renderGpts();
 
+/* ─── HELPER: UI UPDATE ─── */
+function _applyUserToUI(user) {
+  if (!user) return;
+  balance = user.balance || 0;
+  updateBalance(0);
+  const n = user.name || 'User';
+  const email = user.email || '';
+  // Avatar
+  document.getElementById('s-av').textContent = n.charAt(0).toUpperCase();
+  document.getElementById('sidebar-av').textContent = n.charAt(0).toUpperCase();
+  // Namen
+  document.getElementById('s-display-name').textContent = n;
+  const nameInput = document.querySelector('#s-account input.s-finput[type="text"]');
+  if (nameInput) nameInput.value = n;
+  document.getElementById('sidebar-name').textContent = n;
+  // E-Mail
+  document.getElementById('s-display-email').textContent = email;
+  const emailInput = document.querySelector('#s-account input.s-finput[type="email"]');
+  if (emailInput) emailInput.value = email;
+  document.getElementById('sidebar-email').textContent = email;
+  // Token Badge
+  document.getElementById('s-tok-badge').textContent = fmtBalance() + ' Tokens';
+  // Initiale Begrüßung updaten falls noch die Default-Nachricht da ist
+  const msgs = document.getElementById('chat-messages');
+  if (msgs && msgs.querySelectorAll('.msg').length === 1) {
+    const bubble = msgs.querySelector('.msg.ai .msg-bubble');
+    if (bubble) bubble.textContent = getGreeting(n);
+  }
+}
+
 // ─── BOOT ───
 (async function initApp() {
   if (!_getToken()) { window.location.href = '/login.html'; return; }
+
+  // Sofort aus Cache laden
   const cached = JSON.parse(localStorage.getItem('st_user') || 'null');
-  if (cached) {
-    balance = cached.balance || 0;
-    updateBalance(0);
-    const n = cached.name || 'User';
-    document.getElementById('s-av').textContent = n.charAt(0).toUpperCase();
-    document.getElementById('s-display-name').value = n;
-    document.getElementById('s-display-email').value = cached.email || '';
-    document.getElementById('sidebar-av').textContent = n.charAt(0).toUpperCase();
-    document.getElementById('sidebar-name').textContent = n;
-  }
+  if (cached) _applyUserToUI(cached);
+
+  // Dann vom Server holen
   const user = await apiGetUser();
   if (user) {
     localStorage.setItem('st_user', JSON.stringify(user));
-    balance = user.balance || 0;
-    updateBalance(0);
-    const n = user.name || 'User';
-    document.getElementById('s-av').textContent = n.charAt(0).toUpperCase();
-    document.getElementById('s-display-name').value = n;
-    document.getElementById('s-display-email').value = user.email || '';
-    document.getElementById('sidebar-av').textContent = n.charAt(0).toUpperCase();
-    document.getElementById('sidebar-name').textContent = n;
-    document.getElementById('s-tok-badge').textContent = fmtBalance() + ' Tokens';
+    _applyUserToUI(user);
   }
+
   const serverGpts = await apiFetchGpts();
   gpts = serverGpts;
   renderGpts();
