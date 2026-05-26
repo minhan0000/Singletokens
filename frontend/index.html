@@ -219,7 +219,7 @@ function goToApp() {
   const token = localStorage.getItem('st_token');
   if (!token) { window.location.href = '/login.html'; return; }
   if (/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) || window.innerWidth <= 768) {
-    window.location.href = '/index-mobile.html';
+    window.location.href = '/app-mobile.html';
   } else {
     window.location.href = '/app.html';
   }
