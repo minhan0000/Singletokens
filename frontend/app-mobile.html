@@ -47,6 +47,10 @@ html,body{height:100%;height:-webkit-fill-available;background:var(--dark);font-
 .model-trigger.open .model-chev{transform:rotate(180deg)}
 .chat-messages{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:11px;-webkit-overflow-scrolling:touch}
 .chat-messages::-webkit-scrollbar{display:none}
+#welcome-screen-mobile{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 24px;min-height:55vh;animation:fadeIn .4s ease both}
+#welcome-greeting-bubble{font-size:28px;font-weight:800;letter-spacing:-.03em;margin-bottom:8px;color:var(--text);line-height:1.2}
+#welcome-sub-mobile{font-size:15px;color:var(--muted2);font-weight:500}
+.light-mode #welcome-greeting-bubble{color:#111827}
 .msg{display:flex;flex-direction:column;gap:3px;max-width:86%}
 .msg.user{align-self:flex-end}.msg.ai{align-self:flex-start}
 .msg-bubble{padding:10px 13px;border-radius:14px;font-size:14px;line-height:1.55;font-weight:400;word-break:break-word}
@@ -239,9 +243,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
         </div>
       </div>
       <div class="chat-messages" id="chat-messages">
-        <div class="msg ai" style="animation:msgIn .3s ease both">
-          <div class="msg-bubble">Hallo! Ich bin SingleTokens AI. Wie kann ich dir heute helfen?</div>
-          <div class="msg-meta">SingleTokens · Llama 3.3 70B</div>
+        <div id="welcome-screen-mobile">
+          <div id="welcome-greeting-bubble">Hallo!</div>
+          <div id="welcome-sub-mobile">Wie kann ich dir heute helfen?</div>
         </div>
       </div>
       <div class="input-area">
@@ -551,6 +555,8 @@ function updateBalance(used){
 /* MESSAGES */
 function addMsg(text,role,model){
   const msgs=document.getElementById('chat-messages');
+  const ws=document.getElementById('welcome-screen-mobile');
+  if(ws)ws.remove();
   const d=document.createElement('div');d.className='msg '+role;d.style.animation='msgIn .3s ease both';
   const m=document.getElementById('chat-model-sel').value;
   d.innerHTML=`<div class="msg-bubble">${role==='ai'?renderMarkdown(text):escHtml(text)}</div><div class="msg-meta">${role==='user'?'Du':(model||m)}</div>`;
@@ -587,7 +593,7 @@ function renderChatHistory(){
 
 function newChat(){
   saveCurrentChat();activeChatId=null;
-  document.getElementById('chat-messages').innerHTML='<div class="msg ai" style="animation:msgIn .3s ease both"><div class="msg-bubble">Hallo! Ich bin SingleTokens AI. Wie kann ich dir heute helfen?</div><div class="msg-meta">SingleTokens · Llama 3.3 70B</div></div>';
+  document.getElementById('chat-messages').innerHTML='<div id="welcome-screen-mobile"><div id="welcome-greeting-bubble">'+_getWelcomeGreeting()+'</div><div id="welcome-sub-mobile">Wie kann ich dir heute helfen?</div></div>';
   if(typeof resetChatHistory==='function')resetChatHistory();
   renderChatHistory();
 }
@@ -701,6 +707,69 @@ function useGpt(id){
   newChat();switchView('chat');showToast('GPT "'+g.name+'" geladen!');
 }
 
+/* GREETING */
+function _getWelcomeGreeting() {
+  const cached = JSON.parse(localStorage.getItem('st_user') || 'null');
+  const n = cached?.name || null;
+  const h = new Date().getHours();
+  const rnd = arr => arr[Math.floor(Math.random() * arr.length)];
+
+  const morning = n ? [
+    'Guten Morgen, ' + n + '! Womit kann ich dir heute helfen?',
+    'Moin, ' + n + '! Was steht heute an?',
+    'Hey ' + n + ', sch\u00f6n dass du da bist!',
+    'Guten Morgen, ' + n + '. Frisch in den Tag gestartet?',
+    'Rise and shine, ' + n + '! Was kann ich f\u00fcr dich tun?',
+  ] : [
+    'Guten Morgen! Womit kann ich dir helfen?',
+    'Moin! Was steht heute an?',
+    'Guten Morgen \u2013 sch\u00f6n, dass du da bist!',
+  ];
+
+  const day = n ? [
+    'Sch\u00f6n, dich zu sehen, ' + n + '.',
+    'Hey ' + n + '! Was kann ich heute f\u00fcr dich tun?',
+    'Hallo ' + n + '! Womit darf ich dich unterst\u00fctzen?',
+    'Na ' + n + ', was gibt\'s? Ich bin bereit.',
+    'Hi ' + n + '! Stell mir eine Frage oder gib mir eine Aufgabe.',
+    'Guten Tag, ' + n + '. Wie kann ich helfen?',
+  ] : [
+    'Sch\u00f6n, dich zu sehen.',
+    'Wie kann ich dir helfen?',
+    'Hallo! Was darf ich f\u00fcr dich tun?',
+    'Stell mir eine Frage oder gib mir eine Aufgabe.',
+  ];
+
+  const evening = n ? [
+    'Guten Abend, ' + n + '! Noch was erledigen?',
+    'Hey ' + n + ', langer Tag? Ich helfe gerne.',
+    'Abend, ' + n + '! Was kann ich f\u00fcr dich tun?',
+    'Guten Abend, ' + n + '. Womit darf ich dir noch helfen?',
+    'Na ' + n + ', wie war dein Tag? Ich bin f\u00fcr dich da.',
+  ] : [
+    'Guten Abend! Noch was erledigen?',
+    'Abend! Womit kann ich helfen?',
+    'Guten Abend \u2013 wie kann ich dir behilflich sein?',
+  ];
+
+  const night = n ? [
+    'Noch so sp\u00e4t wach, ' + n + '? Ich bin hier.',
+    'Hey ' + n + ', Nachtschicht? Ich helf dir.',
+    'Auch um diese Zeit bin ich f\u00fcr dich da, ' + n + '!',
+    'Schl\u00e4fst du nicht, ' + n + '? Na gut, lass uns arbeiten.',
+    'Nacht ' + n + '! Was besch\u00e4ftigt dich gerade?',
+  ] : [
+    'Noch wach? Ich bin hier.',
+    'Gute Nacht \u2013 oder doch nicht schlafen?',
+    'Auch um diese Uhrzeit bin ich f\u00fcr dich da!',
+  ];
+
+  if (h >= 5 && h < 11)       return rnd(morning);
+  else if (h >= 11 && h < 18) return rnd(day);
+  else if (h >= 18 && h < 22) return rnd(evening);
+  else                         return rnd(night);
+}
+
 /* BOOT */
 async function initApp(){
   if(!_getToken()){window.location.href='/login.html';return;}
@@ -710,9 +779,27 @@ async function initApp(){
   savedChats=serverChats.map(c=>({id:c.id,title:c.title,model:c.model,messages:[],ts:new Date(c.updated_at||c.created_at).getTime()}));
   renderChatHistory();
   const user=await apiGetUser();
-  if(user){localStorage.setItem('st_user',JSON.stringify(user));balance=user.balance||0;updateBalance(0);const n=user.name||'User';document.getElementById('s-av').textContent=n.charAt(0).toUpperCase();document.getElementById('s-display-name').textContent=n;document.getElementById('s-display-email').textContent=user.email||'';}
+  if(user){
+    localStorage.setItem('st_user',JSON.stringify(user));
+    balance=user.balance||0;updateBalance(0);
+    const n=user.name||'User';
+    document.getElementById('s-av').textContent=n.charAt(0).toUpperCase();
+    document.getElementById('s-display-name').textContent=n;
+    document.getElementById('s-display-email').textContent=user.email||'';
+    const wb=document.getElementById('welcome-greeting-bubble');
+    if(wb)wb.textContent=_getWelcomeGreeting();
+  }
   const serverGpts=await apiFetchGpts();gpts=serverGpts.map(g=>({...g,desc:g.description}));renderGpts();
 }
+
+// Sofort aus localStorage laden (bevor api.js geladen ist)
+(function(){
+  const cached=JSON.parse(localStorage.getItem('st_user')||'null');
+  if(!cached)return;
+  const n=cached.name||'';
+  const wb=document.getElementById('welcome-greeting-bubble');
+  if(wb)wb.textContent=_getWelcomeGreeting();
+})();
 
 renderModelCards('all');
 
