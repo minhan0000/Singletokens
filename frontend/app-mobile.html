@@ -130,6 +130,14 @@ html,body{height:100%;height:-webkit-fill-available;background:var(--dark);font-
 .tag-red{background:rgba(239,68,68,.15);color:#FCA5A5}
 .tag-green{background:rgba(34,197,94,.15);color:#86EFAC}
 .tag-muted{background:rgba(255,255,255,.07);color:var(--muted2)}
+.tag-pink{background:rgba(236,72,153,.15);color:#F9A8D4}
+.tag-purple{background:rgba(139,92,246,.15);color:#C4B5FD}
+.mc.img-card{border-color:rgba(236,72,153,.25);background:rgba(236,72,153,.04)}
+.mc.img-card .mc-provider{color:#F9A8D4}.mc.img-card .mc-mult{color:#F9A8D4}
+.mc.voice-card{border-color:rgba(139,92,246,.25);background:rgba(139,92,246,.04)}
+.mc.voice-card .mc-provider{color:#C4B5FD}.mc.voice-card .mc-mult{color:#C4B5FD}
+.mc-new{position:absolute;top:9px;right:9px;font-family:'DM Mono',monospace;font-size:8px;background:rgba(16,185,129,.15);color:#6EE7B7;border:1px solid rgba(16,185,129,.25);padding:1px 5px;border-radius:4px;text-transform:uppercase}
+.mc{position:relative}
 
 /* GPTS VIEW */
 .gpt-add-btn{margin:12px;padding:12px;background:var(--acc);border:none;border-radius:10px;color:#03060F;font-size:14px;font-weight:800;cursor:pointer;width:calc(100% - 24px);font-family:'Syne',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px;flex-shrink:0}
@@ -291,6 +299,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
         <button class="mfbtn" onclick="filterModels('openai',this)">OpenAI</button>
         <button class="mfbtn" onclick="filterModels('google',this)">Google</button>
         <button class="mfbtn" onclick="filterModels('open',this)">Open Source</button>
+        <button class="mfbtn" onclick="filterModels('image',this)">Bild</button>
+        <button class="mfbtn" onclick="filterModels('voice',this)">Sprache</button>
         <button class="mfbtn" onclick="filterModels('cheap',this)">Günstig</button>
       </div>
       <div class="view-scroll">
@@ -455,19 +465,29 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 
 <select id="chat-model-sel" style="display:none">
   <option value="Llama 3.3 70B" selected>Llama 3.3 70B</option>
-  <option value="Llama 3.1 8B">Llama 3.1 8B</option>
-  <option value="Gemma 2 9B">Gemma 2 9B</option>
-  <option value="Mixtral 8x7B">Mixtral 8x7B</option>
-  <option value="DeepSeek R1 70B">DeepSeek R1 70B</option>
+  <option value="Claude Haiku 4.5">Claude Haiku 4.5</option>
   <option value="Claude Sonnet 4.5">Claude Sonnet 4.5</option>
+  <option value="Claude 3.7 Sonnet">Claude 3.7 Sonnet</option>
+  <option value="Claude Opus 4.5">Claude Opus 4.5</option>
   <option value="GPT-4o">GPT-4o</option>
   <option value="GPT-5">GPT-5</option>
-  <option value="Claude Opus 4.5">Claude Opus 4.5</option>
-  <option value="Claude Haiku 4.5">Claude Haiku 4.5</option>
-  <option value="Gemini 2.0 Flash">Gemini 2.0 Flash</option>
-  <option value="Grok 2">Grok 2</option>
+  <option value="OpenAI o1">OpenAI o1</option>
+  <option value="OpenAI o1 Mini">OpenAI o1 Mini</option>
+  <option value="Gemini 2.5 Pro">Gemini 2.5 Pro</option>
+  <option value="Gemini Pro 2.0">Gemini Pro 2.0</option>
+  <option value="Gemini Flash 2.0">Gemini Flash 2.0</option>
+  <option value="Llama 11B">Llama 11B</option>
+  <option value="Llama 3.2 Vision 11B">Llama 3.2 Vision 11B</option>
   <option value="Mistral Large 2">Mistral Large 2</option>
+  <option value="Mistral Small">Mistral Small</option>
   <option value="DeepSeek V3">DeepSeek V3</option>
+  <option value="Qwen 2.5 72B">Qwen 2.5 72B</option>
+  <option value="Grok 2">Grok 2</option>
+  <option value="Perplexity Sonar Pro">Perplexity Sonar Pro</option>
+  <option value="Command R+">Command R+</option>
+  <option value="Phi-4 Mini">Phi-4 Mini</option>
+  <option value="Amazon Nova Lite">Amazon Nova Lite</option>
+  <option value="Gemma 2 27B">Gemma 2 27B</option>
 </select>
 
 <script>
@@ -475,30 +495,55 @@ if(typeof marked!=='undefined')marked.setOptions({breaks:true,gfm:true});
 function renderMarkdown(t){if(typeof marked==='undefined')return t;try{return marked.parse(t);}catch(e){return t;}}
 
 const MOBILE_MODELS=[
-  {name:'Llama 3.3 70B',   icon:'🦙',color:'#22D3EE',mult:0.3, cat:'open',     tag:'Standard',     tagClass:'tag-cyan'},
-  {name:'Llama 3.1 8B',    icon:'🦙',color:'#22D3EE',mult:0.1, cat:'open',     tag:'Ultraschnell', tagClass:'tag-cyan'},
-  {name:'Gemma 2 9B',      icon:'💎',color:'#34D399',mult:0.15,cat:'open',     tag:'Effizient',    tagClass:'tag-green'},
-  {name:'Mixtral 8x7B',    icon:'🌀',color:'#A78BFA',mult:0.2, cat:'open',     tag:'Mixtral',      tagClass:'tag-muted'},
-  {name:'DeepSeek R1 70B', icon:'🔍',color:'#60A5FA',mult:0.35,cat:'open',     tag:'Reasoning',    tagClass:'tag-blue'},
-  {name:'Claude Haiku 4.5',icon:'◆', color:'#F97316',mult:0.27,cat:'anthropic',tag:'Schnell',      tagClass:'tag-cyan'},
-  {name:'Claude Sonnet 4.5',icon:'◆',color:'#F97316',mult:1,  cat:'anthropic',tag:'Empfohlen',    tagClass:'tag-blue'},
-  {name:'Claude Opus 4.5', icon:'◆', color:'#F97316',mult:5,  cat:'anthropic',tag:'Leistungsstark',tagClass:'tag-blue'},
-  {name:'GPT-4o',          icon:'⬡', color:'#4ADE80',mult:0.85,cat:'openai',  tag:'Vielseitig',   tagClass:'tag-green'},
-  {name:'GPT-5',           icon:'⬡', color:'#4ADE80',mult:70, cat:'openai',   tag:'Neuestes',     tagClass:'tag-red'},
-  {name:'Gemini 2.0 Flash',icon:'✦', color:'#FBBF24',mult:0.5,cat:'google',   tag:'Flash',        tagClass:'tag-cyan'},
-  {name:'Grok 2',          icon:'✕', color:'#E5E7EB',mult:1.67,cat:'open',    tag:'Von xAI',      tagClass:'tag-muted'},
-  {name:'Mistral Large 2', icon:'▲', color:'#F472B6',mult:2.67,cat:'open',    tag:'Europäisch',   tagClass:'tag-muted'},
-  {name:'DeepSeek V3',     icon:'🔍',color:'#60A5FA',mult:0.9, cat:'open',    tag:'Open Source',  tagClass:'tag-green'},
+  {name:'Claude Haiku 4.5',    icon:'◆',color:'#F97316',mult:0.27,cat:'anthropic',tag:'Ultraschnell',    tagClass:'tag-cyan'},
+  {name:'Claude Sonnet 4.5',   icon:'◆',color:'#F97316',mult:1,   cat:'anthropic',tag:'Empfohlen',       tagClass:'tag-blue'},
+  {name:'Claude 3.7 Sonnet',   icon:'◆',color:'#F97316',mult:2,   cat:'anthropic',tag:'Thinking',        tagClass:'tag-blue',isNew:true},
+  {name:'Claude Opus 4.5',     icon:'◆',color:'#F97316',mult:5,   cat:'anthropic',tag:'Leistungsstark',  tagClass:'tag-blue'},
+  {name:'GPT-4o',              icon:'⬡',color:'#4ADE80',mult:0.85,cat:'openai',   tag:'Vielseitig',      tagClass:'tag-green'},
+  {name:'GPT-5',               icon:'⬡',color:'#4ADE80',mult:70,  cat:'openai',   tag:'Neuestes',        tagClass:'tag-red'},
+  {name:'OpenAI o1',           icon:'⬡',color:'#4ADE80',mult:20,  cat:'openai',   tag:'Reasoning',       tagClass:'tag-red'},
+  {name:'OpenAI o1 Mini',      icon:'⬡',color:'#4ADE80',mult:4,   cat:'openai',   tag:'Reasoning',       tagClass:'tag-muted'},
+  {name:'Gemini 2.5 Pro',      icon:'✦',color:'#FBBF24',mult:4,   cat:'google',   tag:'Thinking',        tagClass:'tag-blue',isNew:true},
+  {name:'Gemini Pro 2.0',      icon:'✦',color:'#FBBF24',mult:2.33,cat:'google',   tag:'Multimodal',      tagClass:'tag-blue'},
+  {name:'Gemini Flash 2.0',    icon:'✦',color:'#FBBF24',mult:0.5, cat:'google',   tag:'Günstig',         tagClass:'tag-cyan'},
+  {name:'Llama 3.3 70B',       icon:'🦙',color:'#22D3EE',mult:0.3, cat:'open',    tag:'Open Source',     tagClass:'tag-cyan'},
+  {name:'Llama 11B',           icon:'🦙',color:'#22D3EE',mult:0.13,cat:'open',    tag:'Kleinst',         tagClass:'tag-cyan'},
+  {name:'Llama 3.2 Vision 11B',icon:'🦙',color:'#22D3EE',mult:0.3, cat:'open',    tag:'Multimodal',      tagClass:'tag-green',isNew:true},
+  {name:'Mistral Large 2',     icon:'▲',color:'#F472B6',mult:2.67,cat:'open',     tag:'Europäisch',      tagClass:'tag-muted'},
+  {name:'Mistral Small',       icon:'▲',color:'#F472B6',mult:0.67,cat:'open',     tag:'Effizient',       tagClass:'tag-green'},
+  {name:'DeepSeek V3',         icon:'🔍',color:'#60A5FA',mult:0.9, cat:'open',    tag:'Open Source',     tagClass:'tag-green'},
+  {name:'Qwen 2.5 72B',        icon:'☰',color:'#FCA5A5',mult:0.3, cat:'open',    tag:'Open Source',     tagClass:'tag-cyan'},
+  {name:'Grok 2',              icon:'✕',color:'#E5E7EB',mult:1.67,cat:'open',    tag:'Von xAI',         tagClass:'tag-muted'},
+  {name:'Perplexity Sonar Pro',icon:'◎',color:'#86EFAC',mult:2.5, cat:'open',    tag:'Web-Suche',       tagClass:'tag-green',isNew:true},
+  {name:'Command R+',          icon:'◈',color:'#93C5FD',mult:0.8, cat:'open',    tag:'RAG',             tagClass:'tag-green',isNew:true},
+  {name:'Phi-4 Mini',          icon:'Φ',color:'#93C5FD',mult:0.2, cat:'open',    tag:'Kompakt',         tagClass:'tag-cyan',isNew:true},
+  {name:'Amazon Nova Lite',    icon:'◇',color:'#FCD34D',mult:0.15,cat:'open',    tag:'Günstig',         tagClass:'tag-cyan',isNew:true},
+  {name:'Gemma 2 27B',         icon:'💎',color:'#34D399',mult:0.35,cat:'open',   tag:'Open Source',     tagClass:'tag-cyan'},
+  {name:'Flux 1.1 Pro',        icon:'🖼',color:'#F9A8D4',mult:3,   cat:'image',   tag:'Scharf',          tagClass:'tag-pink',isNew:true},
+  {name:'DALL·E 3',            icon:'🖼',color:'#F9A8D4',mult:6,   cat:'image',   tag:'Kreativ',         tagClass:'tag-pink',isNew:true},
+  {name:'Stable Diffusion 3.5',icon:'🖼',color:'#F9A8D4',mult:2,   cat:'image',   tag:'Open Source',     tagClass:'tag-pink',isNew:true},
+  {name:'Ideogram 2.0',        icon:'🖼',color:'#F9A8D4',mult:4,   cat:'image',   tag:'Text in Bild',    tagClass:'tag-pink',isNew:true},
+  {name:'Multilingual v2',     icon:'🎙',color:'#C4B5FD',mult:2.5, cat:'voice',   tag:'Natürlich',       tagClass:'tag-purple',isNew:true},
+  {name:'Whisper Large v3',    icon:'🎙',color:'#C4B5FD',mult:0.5, cat:'voice',   tag:'Transkription',   tagClass:'tag-purple',isNew:true},
 ];
 const MODELS_MULT={};MOBILE_MODELS.forEach(m=>MODELS_MULT[m.name]=m.mult);
 
-function getCardClass(mult){if(mult>=10)return'expensive';if(mult<=0.5)return'cheap';if(mult===1)return'reference';return'';}
+/* getCardClass removed – replaced by getMobileCardClass(m) */
 
+function getMobileCardClass(m){
+  if(m.cat==='image')return'img-card';
+  if(m.cat==='voice')return'voice-card';
+  if(m.mult>=10)return'expensive';
+  if(m.mult<=0.5)return'cheap';
+  if(m.mult===1)return'reference';
+  return'';
+}
 function renderModelCards(filter){
-  const prov={anthropic:'Anthropic',openai:'OpenAI',google:'Google',open:'Open Source'};
+  const prov={anthropic:'Anthropic',openai:'OpenAI',google:'Google',open:'Open Source',image:'Bild',voice:'Sprache'};
   const list=filter==='all'?MOBILE_MODELS:filter==='cheap'?MOBILE_MODELS.filter(m=>m.mult<=0.5):MOBILE_MODELS.filter(m=>m.cat===filter);
   document.getElementById('model-cards').innerHTML=list.map(m=>`
-    <div class="mc ${getCardClass(m.mult)}" onclick="useModelFromCards('${m.name}')">
+    <div class="mc ${getMobileCardClass(m)}" onclick="useModelFromCards('${m.name.replace(/'/g,"\\'")}')">
+      ${m.isNew?'<div class="mc-new">NEU</div>':''}
       <div class="mc-provider">${prov[m.cat]||m.cat}</div>
       <div class="mc-name">${m.name}</div>
       <div class="mc-mult">x${m.mult}</div>
@@ -507,13 +552,20 @@ function renderModelCards(filter){
     </div>`).join('');
 }
 function filterModels(f,btn){document.querySelectorAll('.mfbtn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderModelCards(f);}
-function useModelFromCards(name){selectModel(name);switchView('chat');showToast('Modell: '+name);}
+function useModelFromCards(name){
+  const m=MOBILE_MODELS.find(x=>x.name===name);
+  if(m&&(m.cat==='image'||m.cat==='voice')){showToast('Bild & Sprache – bald verfügbar');return;}
+  selectModel(name);switchView('chat');showToast('Modell: '+name);
+}
 
 function buildModelSheet(){
   const cur=document.getElementById('chat-model-sel').value;
-  document.getElementById('model-list').innerHTML=MOBILE_MODELS.map((m,i)=>{
-    const sep=(i===5||i===8||i===10)?'<div class="model-sep"></div>':'';
-    return`${sep}<div class="model-opt${m.name===cur?' active':''}" onclick="selectModel('${m.name}')">
+  const textModels=MOBILE_MODELS.filter(m=>m.cat!=='image'&&m.cat!=='voice');
+  let lastCat='';
+  document.getElementById('model-list').innerHTML=textModels.map(m=>{
+    const sep=(lastCat!==''&&m.cat!==lastCat)?'<div class="model-sep"></div>':'';
+    lastCat=m.cat;
+    return`${sep}<div class="model-opt${m.name===cur?' active':''}" onclick="selectModel('${m.name.replace(/'/g,"\\'")}')">
       <div class="model-opt-icon" style="background:${m.color}22;color:${m.color}">${m.icon}</div>
       <div class="model-opt-name">${m.name}</div>
       <div class="model-opt-mult">x${m.mult}</div>

@@ -398,6 +398,14 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .tag-red{background:rgba(239,68,68,.15);color:#FCA5A5}
 .tag-green{background:rgba(34,197,94,.15);color:#86EFAC}
 .tag-muted{background:rgba(255,255,255,.07);color:var(--muted2)}
+.tag-pink{background:rgba(236,72,153,.15);color:#F9A8D4}
+.tag-purple{background:rgba(139,92,246,.15);color:#C4B5FD}
+.mc.img-card{border-color:rgba(236,72,153,.25);background:rgba(236,72,153,.04)}
+.mc.img-card .mc-provider{color:#F9A8D4}.mc.img-card .mc-mult{color:#F9A8D4}
+.mc.voice-card{border-color:rgba(139,92,246,.25);background:rgba(139,92,246,.04)}
+.mc.voice-card .mc-provider{color:#C4B5FD}.mc.voice-card .mc-mult{color:#C4B5FD}
+.mc-new{position:absolute;top:10px;right:10px;font-family:'DM Mono',monospace;font-size:9px;background:rgba(16,185,129,.15);color:#6EE7B7;border:1px solid rgba(16,185,129,.25);padding:1px 6px;border-radius:4px;text-transform:uppercase}
+.mc{position:relative}
 .modal-backdrop{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;animation:fadeIn .15s ease both}
 .modal-backdrop.is-open{display:flex;pointer-events:all}
 .modal-box{background:#0F1218;border:1px solid rgba(239,68,68,.22);border-radius:16px;padding:28px 28px 22px;width:100%;max-width:360px;box-shadow:0 0 0 1px rgba(239,68,68,.08),0 28px 70px rgba(0,0,0,.8);animation:modalIn .18s cubic-bezier(.2,0,.2,1) both}
@@ -471,19 +479,29 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
   </div>
   <select id="chat-model-sel" style="display:none">
     <option value="Llama 3.3 70B" selected>Llama 3.3 70B</option>
-    <option value="Llama 3.1 8B">Llama 3.1 8B</option>
-    <option value="Gemma 2 9B">Gemma 2 9B</option>
-    <option value="Mixtral 8x7B">Mixtral 8x7B</option>
-    <option value="DeepSeek R1 70B">DeepSeek R1 70B</option>
+    <option value="Claude Haiku 4.5">Claude Haiku 4.5</option>
     <option value="Claude Sonnet 4.5">Claude Sonnet 4.5</option>
+    <option value="Claude 3.7 Sonnet">Claude 3.7 Sonnet</option>
+    <option value="Claude Opus 4.5">Claude Opus 4.5</option>
     <option value="GPT-4o">GPT-4o</option>
     <option value="GPT-5">GPT-5</option>
-    <option value="Claude Opus 4.5">Claude Opus 4.5</option>
-    <option value="Claude Haiku 4.5">Claude Haiku 4.5</option>
-    <option value="Gemini 2.0 Flash">Gemini 2.0 Flash</option>
-    <option value="Grok 2">Grok 2</option>
+    <option value="OpenAI o1">OpenAI o1</option>
+    <option value="OpenAI o1 Mini">OpenAI o1 Mini</option>
+    <option value="Gemini 2.5 Pro">Gemini 2.5 Pro</option>
+    <option value="Gemini Pro 2.0">Gemini Pro 2.0</option>
+    <option value="Gemini Flash 2.0">Gemini Flash 2.0</option>
+    <option value="Llama 11B">Llama 11B</option>
+    <option value="Llama 3.2 Vision 11B">Llama 3.2 Vision 11B</option>
     <option value="Mistral Large 2">Mistral Large 2</option>
+    <option value="Mistral Small">Mistral Small</option>
     <option value="DeepSeek V3">DeepSeek V3</option>
+    <option value="Qwen 2.5 72B">Qwen 2.5 72B</option>
+    <option value="Grok 2">Grok 2</option>
+    <option value="Perplexity Sonar Pro">Perplexity Sonar Pro</option>
+    <option value="Command R+">Command R+</option>
+    <option value="Phi-4 Mini">Phi-4 Mini</option>
+    <option value="Amazon Nova Lite">Amazon Nova Lite</option>
+    <option value="Gemma 2 27B">Gemma 2 27B</option>
   </select>
   <div class="chat-messages" id="chat-messages">
     <!-- Welcome screen shown until first message is sent -->
@@ -506,13 +524,15 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 <div class="view" id="view-models" style="overflow-y:auto">
   <div class="models-view-inner">
     <h2>Your Models</h2>
-    <p>17 Modelle verfügbar. Klick auf ein Modell um damit zu chatten.</p>
+    <p>30 Modelle verfügbar. Klick auf ein Modell um damit zu chatten.</p>
     <div class="model-filter">
       <button class="mfbtn active" onclick="filterM('all',this)">Alle</button>
       <button class="mfbtn" onclick="filterM('anthropic',this)">Anthropic</button>
       <button class="mfbtn" onclick="filterM('openai',this)">OpenAI</button>
       <button class="mfbtn" onclick="filterM('google',this)">Google</button>
       <button class="mfbtn" onclick="filterM('open',this)">Open Source</button>
+      <button class="mfbtn" onclick="filterM('image',this)">Bild</button>
+      <button class="mfbtn" onclick="filterM('voice',this)">Sprache</button>
       <button class="mfbtn" onclick="filterM('cheap',this)">Günstigste</button>
     </div>
     <div class="model-grid" id="model-grid"></div>
@@ -550,17 +570,21 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
         <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px">Basismodell</div>
         <select id="gpt-model" style="display:none">
           <option value="Llama 3.3 70B">Llama 3.3 70B</option>
-          <option value="Llama 3.1 8B">Llama 3.1 8B</option>
-          <option value="Gemma 2 9B">Gemma 2 9B</option>
-          <option value="Mixtral 8x7B">Mixtral 8x7B</option>
-          <option value="DeepSeek R1 70B">DeepSeek R1 70B</option>
-          <option value="Claude Sonnet 4.5">Claude Sonnet 4.5</option>
           <option value="Claude Haiku 4.5">Claude Haiku 4.5</option>
+          <option value="Claude Sonnet 4.5">Claude Sonnet 4.5</option>
+          <option value="Claude 3.7 Sonnet">Claude 3.7 Sonnet</option>
+          <option value="Claude Opus 4.5">Claude Opus 4.5</option>
           <option value="GPT-4o">GPT-4o</option>
           <option value="GPT-5">GPT-5</option>
-          <option value="Gemini 2.0 Flash">Gemini 2.0 Flash</option>
-          <option value="Grok 2">Grok 2</option>
+          <option value="OpenAI o1">OpenAI o1</option>
+          <option value="OpenAI o1 Mini">OpenAI o1 Mini</option>
+          <option value="Gemini 2.5 Pro">Gemini 2.5 Pro</option>
+          <option value="Gemini Flash 2.0">Gemini Flash 2.0</option>
+          <option value="Mistral Large 2">Mistral Large 2</option>
           <option value="Mistral Small">Mistral Small</option>
+          <option value="DeepSeek V3">DeepSeek V3</option>
+          <option value="Grok 2">Grok 2</option>
+          <option value="Perplexity Sonar Pro">Perplexity Sonar Pro</option>
         </select>
         <div id="gpt-model-sel-wrap"></div>
       </div>
@@ -1036,10 +1060,15 @@ function openView(id) {
 /* ─── CHAT CORE ─── */
 let balance = 716000;
 const MODELS_MULT = {
-  'Llama 3.3 70B':0.3,'Llama 3.1 8B':0.1,'Gemma 2 9B':0.15,'Mixtral 8x7B':0.2,
-  'DeepSeek R1 70B':0.35,'Claude Sonnet 4.5':1,'GPT-4o':0.85,'GPT-5':70,
-  'Claude Opus 4.5':5,'Claude Haiku 4.5':0.27,'Gemini 2.0 Flash':0.5,
-  'Grok 2':1.67,'Mistral Large 2':2.67,'DeepSeek V3':0.9
+  'Llama 3.3 70B':0.3,'Llama 11B':0.13,'Llama 3.2 Vision 11B':0.3,
+  'Claude Haiku 4.5':0.27,'Claude Sonnet 4.5':1,'Claude 3.7 Sonnet':2,'Claude Opus 4.5':5,
+  'GPT-4o':0.85,'GPT-5':70,'OpenAI o1':20,'OpenAI o1 Mini':4,
+  'Gemini 2.5 Pro':4,'Gemini Pro 2.0':2.33,'Gemini Flash 2.0':0.5,
+  'Mistral Large 2':2.67,'Mistral Small':0.67,'DeepSeek V3':0.9,
+  'Qwen 2.5 72B':0.3,'Grok 2':1.67,'Perplexity Sonar Pro':2.5,
+  'Command R+':0.8,'Phi-4 Mini':0.2,'Amazon Nova Lite':0.15,'Gemma 2 27B':0.35,
+  'Flux 1.1 Pro':3,'DALL·E 3':6,'Stable Diffusion 3.5':2,'Ideogram 2.0':4,
+  'Multilingual v2':2.5,'Whisper Large v3':0.5
 };
 function fmtBalance() { if (balance >= 1000000) return (balance/1000000).toFixed(1).replace(/\.0$/,'')+'M'; if (balance >= 1000) return Math.round(balance/1000)+'K'; return balance.toString(); }
 const fmtBal = fmtBalance;
@@ -1281,32 +1310,57 @@ renderChatHistory();
 
 /* ─── YOUR MODELS ─── */
 const ALL_MODELS = [
-  {name:'Llama 3.3 70B',   provider:'Meta · Groq',    cat:'open',      mult:0.3,  tag:'Standard',       tagClass:'tag-cyan'},
-  {name:'Llama 3.1 8B',    provider:'Meta · Groq',    cat:'open',      mult:0.1,  tag:'Ultraschnell',   tagClass:'tag-cyan'},
-  {name:'Gemma 2 9B',      provider:'Google · Groq',  cat:'open',      mult:0.15, tag:'Effizient',      tagClass:'tag-green'},
-  {name:'Mixtral 8x7B',    provider:'Mistral · Groq', cat:'open',      mult:0.2,  tag:'Mixtral',        tagClass:'tag-muted'},
-  {name:'DeepSeek R1 70B', provider:'DeepSeek · Groq',cat:'open',      mult:0.35, tag:'Reasoning',      tagClass:'tag-blue'},
-  {name:'Claude Sonnet 4.5',provider:'Anthropic',     cat:'anthropic', mult:1,    tag:'Empfohlen',      tagClass:'tag-blue'},
-  {name:'Claude Opus 4.5', provider:'Anthropic',      cat:'anthropic', mult:5,    tag:'Leistungsstark', tagClass:'tag-blue'},
-  {name:'Claude Haiku 4.5',provider:'Anthropic',      cat:'anthropic', mult:0.27, tag:'Schnell',        tagClass:'tag-cyan'},
-  {name:'GPT-4o',          provider:'OpenAI',         cat:'openai',    mult:0.85, tag:'Vielseitig',     tagClass:'tag-green'},
-  {name:'GPT-5',           provider:'OpenAI',         cat:'openai',    mult:70,   tag:'Neuestes',       tagClass:'tag-red'},
-  {name:'GPT-4 Turbo',     provider:'OpenAI',         cat:'openai',    mult:3.33, tag:'Präzise',        tagClass:'tag-muted'},
-  {name:'OpenAI o1',       provider:'OpenAI',         cat:'openai',    mult:20,   tag:'Reasoning',      tagClass:'tag-red'},
-  {name:'OpenAI o1 Mini',  provider:'OpenAI',         cat:'openai',    mult:4,    tag:'Reasoning',      tagClass:'tag-muted'},
-  {name:'Gemini Pro 2.0',  provider:'Google',         cat:'google',    mult:2.33, tag:'Multimodal',     tagClass:'tag-blue'},
-  {name:'Gemini 2.0 Flash',provider:'Google',         cat:'google',    mult:0.5,  tag:'Flash',          tagClass:'tag-cyan'},
-  {name:'Mistral Large 2', provider:'Mistral',        cat:'open',      mult:2.67, tag:'Europäisch',     tagClass:'tag-muted'},
-  {name:'Grok 2',          provider:'xAI',            cat:'open',      mult:1.67, tag:'Von xAI',        tagClass:'tag-muted'},
+  {name:'Claude Haiku 4.5',    provider:'Anthropic',         cat:'anthropic', mult:0.27, tag:'Ultraschnell',   tagClass:'tag-cyan'},
+  {name:'Claude Sonnet 4.5',   provider:'Anthropic',         cat:'anthropic', mult:1,    tag:'Empfohlen',      tagClass:'tag-blue'},
+  {name:'Claude 3.7 Sonnet',   provider:'Anthropic',         cat:'anthropic', mult:2,    tag:'Thinking',       tagClass:'tag-blue', isNew:true},
+  {name:'Claude Opus 4.5',     provider:'Anthropic',         cat:'anthropic', mult:5,    tag:'Leistungsstark', tagClass:'tag-blue'},
+  {name:'GPT-4o',              provider:'OpenAI',            cat:'openai',    mult:0.85, tag:'Vielseitig',     tagClass:'tag-green'},
+  {name:'GPT-5',               provider:'OpenAI',            cat:'openai',    mult:70,   tag:'Neuestes',       tagClass:'tag-red'},
+  {name:'OpenAI o1',           provider:'OpenAI',            cat:'openai',    mult:20,   tag:'Reasoning',      tagClass:'tag-red'},
+  {name:'OpenAI o1 Mini',      provider:'OpenAI',            cat:'openai',    mult:4,    tag:'Reasoning',      tagClass:'tag-muted'},
+  {name:'Gemini 2.5 Pro',      provider:'Google',            cat:'google',    mult:4,    tag:'Thinking',       tagClass:'tag-blue', isNew:true},
+  {name:'Gemini Pro 2.0',      provider:'Google',            cat:'google',    mult:2.33, tag:'Multimodal',     tagClass:'tag-blue'},
+  {name:'Gemini Flash 2.0',    provider:'Google',            cat:'google',    mult:0.5,  tag:'Günstig',        tagClass:'tag-cyan'},
+  {name:'Llama 3.3 70B',       provider:'Meta',              cat:'open',      mult:0.3,  tag:'Open Source',    tagClass:'tag-cyan'},
+  {name:'Llama 11B',           provider:'Meta',              cat:'open',      mult:0.13, tag:'Kleinst',        tagClass:'tag-cyan'},
+  {name:'Llama 3.2 Vision 11B',provider:'Meta',              cat:'open',      mult:0.3,  tag:'Multimodal',     tagClass:'tag-green', isNew:true},
+  {name:'Mistral Large 2',     provider:'Mistral',           cat:'open',      mult:2.67, tag:'Europäisch',     tagClass:'tag-muted'},
+  {name:'Mistral Small',       provider:'Mistral',           cat:'open',      mult:0.67, tag:'Effizient',      tagClass:'tag-green'},
+  {name:'DeepSeek V3',         provider:'DeepSeek',          cat:'open',      mult:0.9,  tag:'Open Source',    tagClass:'tag-green'},
+  {name:'Qwen 2.5 72B',        provider:'Alibaba',           cat:'open',      mult:0.3,  tag:'Open Source',    tagClass:'tag-cyan'},
+  {name:'Grok 2',              provider:'xAI',               cat:'open',      mult:1.67, tag:'Von xAI',        tagClass:'tag-muted'},
+  {name:'Perplexity Sonar Pro',provider:'Perplexity',        cat:'open',      mult:2.5,  tag:'Web-Suche',      tagClass:'tag-green', isNew:true},
+  {name:'Command R+',          provider:'Cohere',            cat:'open',      mult:0.8,  tag:'RAG',            tagClass:'tag-green', isNew:true},
+  {name:'Phi-4 Mini',          provider:'Microsoft',         cat:'open',      mult:0.2,  tag:'Kompakt',        tagClass:'tag-cyan', isNew:true},
+  {name:'Amazon Nova Lite',    provider:'Amazon',            cat:'open',      mult:0.15, tag:'Günstig',        tagClass:'tag-cyan', isNew:true},
+  {name:'Gemma 2 27B',         provider:'Google',            cat:'open',      mult:0.35, tag:'Open Source',    tagClass:'tag-cyan'},
+  {name:'Flux 1.1 Pro',        provider:'Black Forest Labs', cat:'image',     mult:3,    tag:'Scharf',         tagClass:'tag-pink', isNew:true},
+  {name:'DALL·E 3',            provider:'OpenAI',            cat:'image',     mult:6,    tag:'Kreativ',        tagClass:'tag-pink', isNew:true},
+  {name:'Stable Diffusion 3.5',provider:'Stability AI',      cat:'image',     mult:2,    tag:'Open Source',    tagClass:'tag-pink', isNew:true},
+  {name:'Ideogram 2.0',        provider:'Ideogram',          cat:'image',     mult:4,    tag:'Text in Bild',   tagClass:'tag-pink', isNew:true},
+  {name:'Multilingual v2',     provider:'ElevenLabs',        cat:'voice',     mult:2.5,  tag:'Natürlich',      tagClass:'tag-purple', isNew:true},
+  {name:'Whisper Large v3',    provider:'OpenAI',            cat:'voice',     mult:0.5,  tag:'Transkription',  tagClass:'tag-purple', isNew:true},
 ];
-function getCardClass(m) { if (m.mult >= 10) return 'expensive'; if (m.mult <= 0.5) return 'cheap'; if (m.mult === 1) return 'reference'; return ''; }
+function getCardClass(m) {
+  if (m.cat === 'image') return 'img-card';
+  if (m.cat === 'voice') return 'voice-card';
+  if (m.mult >= 10) return 'expensive';
+  if (m.mult <= 0.5) return 'cheap';
+  if (m.mult === 1) return 'reference';
+  return '';
+}
 function renderModels(f) {
   const g = document.getElementById('model-grid');
   let list = f === 'all' ? ALL_MODELS : f === 'cheap' ? ALL_MODELS.filter(m => m.mult <= 0.5) : ALL_MODELS.filter(m => m.cat === f);
-  g.innerHTML = list.map((m,i) => `<div class="mc ${getCardClass(m)}" onclick="useModel('${m.name}')" style="animation-delay:${i*0.04}s"><div class="mc-provider">${m.provider}</div><div class="mc-name">${m.name}</div><div class="mc-mult">x${m.mult}</div><div class="mc-price">$${(3*m.mult).toFixed(2)} / 1M</div><span class="mc-tag ${m.tagClass}">${m.tag}</span></div>`).join('');
+  g.innerHTML = list.map((m,i) => `<div class="mc ${getCardClass(m)}" onclick="useModel('${m.name}')" style="animation-delay:${i*0.04}s">${m.isNew?'<div class="mc-new">NEU</div>':''}<div class="mc-provider">${m.provider}</div><div class="mc-name">${m.name}</div><div class="mc-mult">x${m.mult}</div><div class="mc-price">$${(3*m.mult).toFixed(2)} / 1M</div><span class="mc-tag ${m.tagClass}">${m.tag}</span></div>`).join('');
 }
 function filterM(f, btn) { document.querySelectorAll('.mfbtn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); renderModels(f); }
 function useModel(name) {
+  const m = ALL_MODELS.find(x => x.name === name);
+  if (m && (m.cat === 'image' || m.cat === 'voice')) {
+    showToast('Bild & Sprache – bald im App verfügbar');
+    return;
+  }
   const sel = document.getElementById('chat-model-sel');
   if (sel) { sel.value = name; if (window._chatModelCsel) window._chatModelCsel.syncDisplay(); }
   openView('chat');
