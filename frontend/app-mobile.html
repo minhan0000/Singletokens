@@ -108,7 +108,7 @@ html,body{height:100%;height:-webkit-fill-available;background:var(--dark);font-
 .chat-list-empty-text{font-size:13px}
 
 /* MODELS VIEW */
-.filter-bar{display:flex;gap:6px;padding:10px 12px;overflow-x:auto;flex-shrink:0;border-bottom:1px solid var(--border)}
+.filter-bar{display:flex;gap:6px;padding:10px 12px;overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;flex-shrink:0;border-bottom:1px solid var(--border)}
 .filter-bar::-webkit-scrollbar{display:none}
 .mfbtn{padding:5px 13px;font-size:12px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted2);cursor:pointer;font-family:'Syne',sans-serif;white-space:nowrap;flex-shrink:0;font-weight:600}
 .mfbtn.active{background:var(--acc);border-color:var(--acc);color:#03060F}
