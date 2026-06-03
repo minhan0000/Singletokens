@@ -593,78 +593,124 @@ function selectModel(name){
 /* NAVIGATION */
 const VIEW_ORDER=['chat','history','models','gpts','purchase','settings'];
 let currentViewId='chat';
-let _switching=false;
 
-function switchView(id){
+function switchView(id,animated){
   if(id===currentViewId)return;
   const oldId=currentViewId;
   const oldIndex=VIEW_ORDER.indexOf(oldId);
   const newIndex=VIEW_ORDER.indexOf(id);
   const goRight=newIndex>oldIndex;
+  const W=window.innerWidth;
 
-  // update nav immediately and reliably
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('tab-'+id).classList.add('active');
   currentViewId=id;
 
-  // reset all inactive views cleanly
-  document.querySelectorAll('.view').forEach(v=>{
-    if(v.id!=='view-'+oldId&&v.id!=='view-'+id){
-      v.className='view';
-      v.style.cssText='';
-    }
-  });
-
   const outEl=document.getElementById('view-'+oldId);
   const inEl=document.getElementById('view-'+id);
 
-  // prepare incoming view off-screen (no transition)
-  inEl.style.cssText='transition:none;opacity:0;transform:translateX('+(goRight?'40px':'-40px')+');pointer-events:none';
-
-  requestAnimationFrame(()=>{
-    requestAnimationFrame(()=>{
-      const t='opacity .25s cubic-bezier(.4,0,.2,1),transform .25s cubic-bezier(.4,0,.2,1)';
-      // animate out
-      outEl.style.cssText='transition:'+t+';opacity:0;transform:translateX('+(goRight?'-40px':'40px')+');pointer-events:none';
-      // animate in
-      inEl.className='view active';
-      inEl.style.cssText='transition:'+t;
-      // cleanup outgoing after animation
-      setTimeout(()=>{
-        outEl.className='view';
-        outEl.style.cssText='';
-      },280);
-    });
+  // reset all other views
+  document.querySelectorAll('.view').forEach(v=>{
+    if(v!==outEl&&v!==inEl){v.className='view';v.style.cssText='';}
   });
+
+  if(animated===false){
+    outEl.className='view';outEl.style.cssText='';
+    inEl.className='view active';inEl.style.cssText='';
+    return;
+  }
+
+  const tr='transform .28s cubic-bezier(.4,0,.2,1),opacity .28s cubic-bezier(.4,0,.2,1)';
+  outEl.style.cssText='transition:'+tr+';transform:translateX('+(goRight?-W:W)+'px);opacity:0.3;pointer-events:none';
+  inEl.className='view active';
+  inEl.style.cssText='transition:'+tr+';transform:translateX(0);opacity:1';
+  setTimeout(()=>{outEl.className='view';outEl.style.cssText='';inEl.style.cssText='';},300);
 }
 
-/* SWIPE TO SWITCH VIEWS */
+/* LIVE DRAG NAVIGATION */
 (function(){
-  let sx=0,sy=0,locked=null;
+  const W=()=>window.innerWidth;
+  let sx=0,sy=0,locked=null,dragging=false;
+  let curEl=null,adjEl=null,adjDir=0;
+
+  function getEl(id){return document.getElementById('view-'+id);}
+
   document.addEventListener('touchstart',e=>{
     sx=e.touches[0].clientX;
     sy=e.touches[0].clientY;
-    locked=null;
+    locked=null;dragging=false;
+    curEl=null;adjEl=null;adjDir=0;
   },{passive:true});
+
   document.addEventListener('touchmove',e=>{
     const dx=e.touches[0].clientX-sx;
     const dy=e.touches[0].clientY-sy;
+
     if(locked===null&&(Math.abs(dx)>6||Math.abs(dy)>6)){
       locked=Math.abs(dx)>Math.abs(dy)?'h':'v';
     }
-    if(locked==='h'){
-      const scrollable=e.target.closest('.view-scroll,.chat-messages,.filter-bar');
-      if(!scrollable) e.preventDefault();
+    if(locked!=='h')return;
+
+    const scrollable=e.target.closest('.view-scroll,.chat-messages,.filter-bar');
+    if(!scrollable) e.preventDefault();
+
+    const idx=VIEW_ORDER.indexOf(currentViewId);
+
+    if(!dragging){
+      // determine adjacent view
+      if(dx<0&&idx<VIEW_ORDER.length-1){
+        adjDir=1;adjEl=getEl(VIEW_ORDER[idx+1]);
+      } else if(dx>0&&idx>0){
+        adjDir=-1;adjEl=getEl(VIEW_ORDER[idx-1]);
+      } else return;
+
+      curEl=getEl(currentViewId);
+      // show adjacent view, no transition
+      adjEl.style.cssText='transition:none;opacity:1;pointer-events:none';
+      adjEl.className='view active';
+      dragging=true;
     }
+
+    if(!curEl||!adjEl)return;
+    const w=W();
+    const clamp=Math.max(-w,Math.min(w,dx));
+
+    curEl.style.cssText='transition:none;transform:translateX('+clamp+'px);opacity:'+(1-Math.abs(clamp/w)*0.4);
+    adjEl.style.cssText='transition:none;transform:translateX('+(clamp+(adjDir>0?w:-w))+'px);opacity:'+(0.3+Math.abs(clamp/w)*0.7)+';pointer-events:none';
   },{passive:false});
+
   document.addEventListener('touchend',e=>{
+    if(locked!=='h'||!dragging||!curEl||!adjEl){
+      dragging=false;return;
+    }
+    dragging=false;
     const dx=e.changedTouches[0].clientX-sx;
-    const dy=e.changedTouches[0].clientY-sy;
-    if(locked==='v')return;
-    if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5){
-      const idx=VIEW_ORDER.indexOf(currentViewId);
-      if(dx<0&&idx<VIEW_ORDER.length-1) switchView(VIEW_ORDER[idx+1]);
-      else if(dx>0&&idx>0) switchView(VIEW_ORDER[idx-1]);
+    const w=W();
+    const threshold=w*0.3;
+    const tr='transform .25s cubic-bezier(.4,0,.2,1),opacity .25s cubic-bezier(.4,0,.2,1)';
+    const idx=VIEW_ORDER.indexOf(currentViewId);
+    const targetId=adjDir>0?VIEW_ORDER[idx+1]:VIEW_ORDER[idx-1];
+
+    if(Math.abs(dx)>threshold){
+      // complete transition
+      const goRight=adjDir>0;
+      curEl.style.cssText='transition:'+tr+';transform:translateX('+(goRight?-w:w)+'px);opacity:0.3;pointer-events:none';
+      adjEl.style.cssText='transition:'+tr+';transform:translateX(0);opacity:1';
+      document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+      document.getElementById('tab-'+targetId).classList.add('active');
+      currentViewId=targetId;
+      setTimeout(()=>{
+        curEl.className='view';curEl.style.cssText='';
+        adjEl.className='view active';adjEl.style.cssText='';
+      },270);
+    } else {
+      // snap back
+      curEl.style.cssText='transition:'+tr+';transform:translateX(0);opacity:1';
+      adjEl.style.cssText='transition:'+tr+';transform:translateX('+(adjDir>0?w:-w)+'px);opacity:0.3';
+      setTimeout(()=>{
+        curEl.className='view active';curEl.style.cssText='';
+        adjEl.className='view';adjEl.style.cssText='';
+      },270);
     }
   },{passive:true});
 })();
