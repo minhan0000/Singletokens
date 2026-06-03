@@ -648,9 +648,9 @@ function switchView(id){
     }
   },{passive:false});
   document.addEventListener('touchend',e=>{
-    if(locked!=='h')return;
     const dx=e.changedTouches[0].clientX-sx;
     const dy=e.changedTouches[0].clientY-sy;
+    if(locked==='v')return;
     if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5){
       const idx=VIEW_ORDER.indexOf(currentViewId);
       if(dx<0&&idx<VIEW_ORDER.length-1) switchView(VIEW_ORDER[idx+1]);
