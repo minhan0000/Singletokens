@@ -593,39 +593,49 @@ function selectModel(name){
 /* NAVIGATION */
 const VIEW_ORDER=['chat','history','models','gpts','purchase','settings'];
 let currentViewId='chat';
+let _switching=false;
 
 function switchView(id){
-  const views=document.querySelectorAll('.view');
-  const oldIndex=VIEW_ORDER.indexOf(currentViewId);
+  if(id===currentViewId)return;
+  const oldId=currentViewId;
+  const oldIndex=VIEW_ORDER.indexOf(oldId);
   const newIndex=VIEW_ORDER.indexOf(id);
   const goRight=newIndex>oldIndex;
 
-  views.forEach(v=>{
-    v.classList.remove('active','slide-left');
-    if(v.id==='view-'+currentViewId){
-      v.style.transition='opacity .25s cubic-bezier(.4,0,.2,1),transform .25s cubic-bezier(.4,0,.2,1)';
-      v.classList.add(goRight?'slide-left':'');
-      if(!goRight) v.style.transform='translateX(40px)';
-      v.style.opacity='0';
-      v.style.pointerEvents='none';
-      setTimeout(()=>{v.style.cssText='';v.classList.remove('slide-left');},260);
-    } else if(v.id==='view-'+id){
-      v.style.transition='none';
-      v.style.transform=goRight?'translateX(40px)':'translateX(-40px)';
-      v.style.opacity='0';
-      requestAnimationFrame(()=>{
-        requestAnimationFrame(()=>{
-          v.style.transition='opacity .25s cubic-bezier(.4,0,.2,1),transform .25s cubic-bezier(.4,0,.2,1)';
-          v.classList.add('active');
-          v.style.cssText='';
-        });
-      });
-    }
-  });
-
+  // update nav immediately and reliably
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('tab-'+id).classList.add('active');
   currentViewId=id;
+
+  // reset all inactive views cleanly
+  document.querySelectorAll('.view').forEach(v=>{
+    if(v.id!=='view-'+oldId&&v.id!=='view-'+id){
+      v.className='view';
+      v.style.cssText='';
+    }
+  });
+
+  const outEl=document.getElementById('view-'+oldId);
+  const inEl=document.getElementById('view-'+id);
+
+  // prepare incoming view off-screen (no transition)
+  inEl.style.cssText='transition:none;opacity:0;transform:translateX('+(goRight?'40px':'-40px')+');pointer-events:none';
+
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>{
+      const t='opacity .25s cubic-bezier(.4,0,.2,1),transform .25s cubic-bezier(.4,0,.2,1)';
+      // animate out
+      outEl.style.cssText='transition:'+t+';opacity:0;transform:translateX('+(goRight?'-40px':'40px')+');pointer-events:none';
+      // animate in
+      inEl.className='view active';
+      inEl.style.cssText='transition:'+t;
+      // cleanup outgoing after animation
+      setTimeout(()=>{
+        outEl.className='view';
+        outEl.style.cssText='';
+      },280);
+    });
+  });
 }
 
 /* SWIPE TO SWITCH VIEWS */
