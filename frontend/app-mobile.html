@@ -332,19 +332,19 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
     <div class="view" id="view-purchase">
       <div class="view-header">
         <div class="view-title">Tokens kaufen</div>
-        <div class="view-sub">$3.00 / 1M Tokens · Verfallen nie</div>
+        <div class="view-sub">€1.00 / 1K Tokens · Verfallen nie</div>
       </div>
       <div class="view-scroll">
         <div class="p-scroll">
           <div class="amount-box">
             <div><div class="amount-big" id="amt-big">333K</div><div class="amount-label">Tokens</div></div>
-            <div><div class="amount-price" id="amt-price" style="color:var(--acc)">$1.00</div><div class="amount-rate">$3.00 / 1M</div></div>
+            <div><div class="amount-price" id="amt-price" style="color:var(--acc)">€1.00</div><div class="amount-rate">€1.00 / 1K</div></div>
           </div>
           <div class="preset-grid">
-            <div class="pbtn active" onclick="selPreset(333333,this)">333K</div>
-            <div class="pbtn" onclick="selPreset(1000000,this)">1M</div>
-            <div class="pbtn" onclick="selPreset(5000000,this)">5M</div>
-            <div class="pbtn" onclick="selPreset(10000000,this)">10M</div>
+            <div class="pbtn active" onclick="selPreset(1000,this)">1K</div>
+            <div class="pbtn" onclick="selPreset(5000,this)">5K</div>
+            <div class="pbtn" onclick="selPreset(10000,this)">10K</div>
+            <div class="pbtn" onclick="selPreset(50000,this)">50K</div>
           </div>
           <input type="range" id="tok-slider" min="0" max="100" value="0" step="1">
           <div class="est-box">
@@ -548,7 +548,7 @@ function renderModelCards(filter){
       <div class="mc-provider">${prov[m.cat]||m.cat}</div>
       <div class="mc-name">${m.name}</div>
       <div class="mc-mult">x${m.mult}</div>
-      <div class="mc-price">$${(3*m.mult).toFixed(2)} / 1M</div>
+      <div class="mc-price">€${(m.mult).toFixed(2)} / 1K</div>
       <span class="mc-tag ${m.tagClass}">${m.tag}</span>
     </div>`).join('');
 }
@@ -802,17 +802,17 @@ async function onMessageComplete(){
 }
 
 /* PURCHASE */
-const BASE=3.0,MIN=333333,AVG=500;
+const BASE=1000,MIN=1000,AVG=500;
 let tokAmt=MIN,curPay='card';
 function fmtTok(t){if(t>=1e6)return(t/1e6).toFixed(1).replace(/\.0$/,'')+'M';if(t>=1e3)return Math.round(t/1e3)+'K';return t.toLocaleString();}
 function fmtMsgs(n){if(n>=1e3)return Math.round(n/1e3)+'K Nachr.';return Math.round(n)+' Nachr.';}
 function calcPrice(t){return(t/1e6)*BASE;}
-function sliderToTok(v){const mn=Math.log(MIN),mx=Math.log(1e8);return Math.max(MIN,Math.round(Math.exp(mn+(mx-mn)*v/100)/1000)*1000);}
+function sliderToTok(v){const mn=Math.log(MIN),mx=Math.log(1e8);return Math.max(MIN,Math.round(Math.exp(mn+(mx-mn)*v/100)/100)*100);}
 function tokToSlider(t){if(t<=MIN)return 0;const mn=Math.log(MIN),mx=Math.log(1e8);return Math.round((Math.log(Math.min(t,1e8))-mn)/(mx-mn)*100);}
 function updatePurchaseUI(){
   const p=calcPrice(tokAmt);
   document.getElementById('amt-big').textContent=fmtTok(tokAmt);
-  document.getElementById('amt-price').textContent='$'+p.toFixed(p<0.1?4:2);
+  document.getElementById('amt-price').textContent='€'+p.toFixed(p<0.1?4:2);
   const sl=document.getElementById('tok-slider');
   sl.style.background=`linear-gradient(to right,#22D3EE ${sl.value}%,#1B2130 ${sl.value}%)`;
   document.getElementById('e-gpt5').textContent=fmtMsgs(tokAmt/(AVG*70));

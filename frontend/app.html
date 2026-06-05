@@ -617,16 +617,16 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
         <div class="p-sec-label">Token-Menge</div>
         <div class="amount-box">
           <div><div class="amount-big" id="amt-big">333K</div><div class="amount-label">Tokens</div></div>
-          <div><div class="amount-price" id="amt-price" style="color:var(--acc)">$1.00</div><div class="amount-rate">$3.00 / 1M Tokens</div></div>
+          <div><div class="amount-price" id="amt-price" style="color:var(--acc)">€1.00</div><div class="amount-rate">€1.00 / 1K Tokens</div></div>
         </div>
         <div class="preset-grid">
-          <div class="pbtn active" onclick="selPreset(333333,this)">333K</div>
+          <div class="pbtn active" onclick="selPreset(1000,this)">1K</div>
+          <div class="pbtn" onclick="selPreset(5000,this)">5K</div>
+          <div class="pbtn" onclick="selPreset(10000,this)">10K</div>
+          <div class="pbtn" onclick="selPreset(50000,this)">50K</div>
+          <div class="pbtn" onclick="selPreset(100000,this)">100K</div>
           <div class="pbtn" onclick="selPreset(500000,this)">500K</div>
           <div class="pbtn" onclick="selPreset(1000000,this)">1M</div>
-          <div class="pbtn" onclick="selPreset(5000000,this)">5M</div>
-          <div class="pbtn" onclick="selPreset(10000000,this)">10M</div>
-          <div class="pbtn" onclick="selPreset(50000000,this)">50M</div>
-          <div class="pbtn" onclick="selPreset(100000000,this)">100M</div>
           <div class="pbtn" id="custom-toggle" onclick="toggleCustom()">Custom</div>
         </div>
         <div style="display:none;margin-bottom:14px" id="custom-wrap">
@@ -636,7 +636,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
           </div>
         </div>
         <input type="range" id="tok-slider" min="0" max="100" value="0" step="1">
-        <div class="min-warn" id="min-warn"><span class="min-warn-text">&#x26A0; Mindestens $1.00 &middot; 333K Tokens erforderlich</span></div>
+        <div class="min-warn" id="min-warn"><span class="min-warn-text">&#x26A0; Mindestens €1.00 &middot; 1K Tokens erforderlich</span></div>
         <div class="est-box">
           <div class="est-title">Geschätzte Nachrichtenmenge</div>
           <div class="est-row"><span class="est-model">GPT-5 <span class="mult-badge">x70</span></span><span class="est-val" id="e-gpt5">&ndash;</span></div>
@@ -1353,7 +1353,7 @@ function getCardClass(m) {
 function renderModels(f) {
   const g = document.getElementById('model-grid');
   let list = f === 'all' ? ALL_MODELS : f === 'cheap' ? ALL_MODELS.filter(m => m.mult <= 0.5) : ALL_MODELS.filter(m => m.cat === f);
-  g.innerHTML = list.map((m,i) => `<div class="mc ${getCardClass(m)}" onclick="useModel('${m.name}')" style="animation-delay:${i*0.04}s">${m.isNew?'<div class="mc-new">NEU</div>':''}<div class="mc-provider">${m.provider}</div><div class="mc-name">${m.name}</div><div class="mc-mult">x${m.mult}</div><div class="mc-price">$${(3*m.mult).toFixed(2)} / 1M</div><span class="mc-tag ${m.tagClass}">${m.tag}</span></div>`).join('');
+  g.innerHTML = list.map((m,i) => `<div class="mc ${getCardClass(m)}" onclick="useModel('${m.name}')" style="animation-delay:${i*0.04}s">${m.isNew?'<div class="mc-new">NEU</div>':''}<div class="mc-provider">${m.provider}</div><div class="mc-name">${m.name}</div><div class="mc-mult">x${m.mult}</div><div class="mc-price">€${(m.mult).toFixed(2)} / 1K</div><span class="mc-tag ${m.tagClass}">${m.tag}</span></div>`).join('');
 }
 function filterM(f, btn) { document.querySelectorAll('.mfbtn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); renderModels(f); }
 function useModel(name) {
@@ -1370,14 +1370,14 @@ function useModel(name) {
 renderModels('all');
 
 /* ─── PURCHASE ─── */
-const BASE = 3.0, MIN = 333333, AVG = 500;
+const BASE = 1000, MIN = 1000, AVG = 500;
 let tokAmt = MIN, curPay = 'card';
 const payNames = { card:'Kreditkarte', paypal:'PayPal', gpay:'Google Pay', paysafe:'Paysafecard' };
 function fmtTok(t) { if (t >= 1e9) return (t/1e9).toFixed(1).replace(/\.0$/,'')+'B'; if (t >= 1e6) return (t/1e6).toFixed(1).replace(/\.0$/,'')+'M'; if (t >= 1e3) return Math.round(t/1e3)+'K'; return t.toLocaleString(); }
 function fmtMsgs(n) { if (n >= 1e6) return (n/1e6).toFixed(1).replace(/\.0$/,'')+'M Nachrichten'; if (n >= 1e3) return Math.round(n/1e3)+'K Nachrichten'; return Math.round(n)+' Nachrichten'; }
-function fmtP(p) { return '$' + p.toFixed(p < 0.1 ? 4 : 2); }
+function fmtP(p) { return '€' + p.toFixed(p < 0.1 ? 4 : 2); }
 function calcPrice(t) { return (t/1e6) * BASE; }
-function sliderToTok(v) { const mn = Math.log(MIN), mx = Math.log(1e8); return Math.max(MIN, Math.round(Math.exp(mn + (mx-mn)*v/100)/1000)*1000); }
+function sliderToTok(v) { const mn = Math.log(MIN), mx = Math.log(1e8); return Math.max(MIN, Math.round(Math.exp(mn + (mx-mn)*v/100)/100)*100); }
 function tokToSlider(t) { if (t <= MIN) return 0; const mn = Math.log(MIN), mx = Math.log(1e8); return Math.round((Math.log(Math.min(t,1e8))-mn)/(mx-mn)*100); }
 function updateEst(prefix) {
   const rows = [{id:'gpt5',mult:70},{id:'llama',mult:0.3},{id:'sonnet',mult:1},{id:'llama8b',mult:0.1}];
