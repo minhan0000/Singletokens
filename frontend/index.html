@@ -366,7 +366,7 @@ function goToApp() {
 </nav>
 
 <!-- SHADER BACKGROUND -->
-<canvas id="shader-bg" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.55"></canvas>
+<canvas id="shader-bg" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.45;filter:blur(6px)"></canvas>
 
 <!-- HERO -->
 <div class="hero">
@@ -918,9 +918,9 @@ function updateCalc(val) {
     precision highp float;
     uniform vec2 iResolution;
     uniform float iTime;
-    const float overallSpeed=0.2,gridSmoothWidth=0.015,axisWidth=0.05,majorLineWidth=0.025,minorLineWidth=0.0125,majorLineFrequency=5.0,minorLineFrequency=1.0,scale=5.0,minLineWidth=0.01,maxLineWidth=0.2,lineSpeed=1.0*overallSpeed,lineAmplitude=1.0,lineFrequency=0.2,warpSpeed=0.2*overallSpeed,warpFrequency=0.5,warpAmplitude=1.0,offsetFrequency=0.5,offsetSpeed=1.33*overallSpeed,minOffsetSpread=0.6,maxOffsetSpread=2.0;
+    const float overallSpeed=0.06,gridSmoothWidth=0.015,axisWidth=0.05,majorLineWidth=0.025,minorLineWidth=0.0125,majorLineFrequency=5.0,minorLineFrequency=1.0,scale=5.0,minLineWidth=0.01,maxLineWidth=0.25,lineSpeed=1.0*overallSpeed,lineAmplitude=1.0,lineFrequency=0.2,warpSpeed=0.2*overallSpeed,warpFrequency=0.5,warpAmplitude=1.0,offsetFrequency=0.5,offsetSpeed=1.33*overallSpeed,minOffsetSpread=0.6,maxOffsetSpread=2.0;
     const int linesPerGroup=16;
-    const vec4 lineColor=vec4(0.4,0.2,0.8,1.0);
+    const vec4 lineColor=vec4(0.133,0.827,0.933,1.0);
     #define drawCircle(pos,radius,coord) smoothstep(radius+gridSmoothWidth,radius,length(coord-(pos)))
     #define drawSmoothLine(pos,halfWidth,t) smoothstep(halfWidth,0.0,abs(pos-(t)))
     #define drawCrispLine(pos,halfWidth,t) smoothstep(halfWidth+gridSmoothWidth,halfWidth,abs(pos-(t)))
@@ -948,7 +948,7 @@ function updateCalc(val) {
         line+=drawCircle(cp,0.01,space)*4.0;
         lines+=line*lineColor*rand;
       }
-      vec4 col=mix(vec4(0.1,0.1,0.3,1.0),vec4(0.3,0.1,0.5,1.0),uv.x);
+      vec4 col=mix(vec4(0.027,0.031,0.039,1.0),vec4(0.05,0.03,0.12,1.0),uv.x);
       col*=vf;col.a=1.0;col+=lines;
       gl_FragColor=col;
     }
