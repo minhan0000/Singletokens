@@ -910,8 +910,10 @@ function updateCalc(val) {
 // ─── SHADER BACKGROUND ───
 (function(){
   const canvas = document.getElementById('shader-bg');
-  const gl = canvas.getContext('webgl');
+  const gl = canvas.getContext('webgl', {alpha: true, premultipliedAlpha: false});
   if(!gl) return;
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
   const vs = `attribute vec4 p;void main(){gl_Position=p;}`;
   const fs = `
@@ -948,8 +950,10 @@ function updateCalc(val) {
         line+=drawCircle(cp,0.01,space)*4.0;
         lines+=line*lineColor*rand;
       }
-      vec4 col=mix(vec4(0.027,0.031,0.039,1.0),vec4(0.05,0.03,0.12,1.0),uv.x);
-      col*=vf;col.a=1.0;col+=lines;
+      vec4 col=vec4(0.0);
+      col+=lines;
+      col.a=col.r*0.8+col.g*0.5+col.b*0.3;
+      col.a*=vf;
       gl_FragColor=col;
     }
   `;
@@ -982,6 +986,8 @@ function updateCalc(val) {
 
   const t0=Date.now();
   function render(){
+    gl.clearColor(0,0,0,0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
     gl.useProgram(prog);
     gl.bindBuffer(gl.ARRAY_BUFFER,buf);
     gl.vertexAttribPointer(posLoc,2,gl.FLOAT,false,0,0);
