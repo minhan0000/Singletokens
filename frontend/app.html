@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- TODO: Move inline scripts to external files to remove 'unsafe-inline' from script-src -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self'; img-src 'self' data: blob:;">
 <title>SingleTokens</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgc2hhcGUtcmVuZGVyaW5nPSJnZW9tZXRyaWNQcmVjaXNpb24iPgogIDxkZWZzPgogICAgPGNsaXBQYXRoIGlkPSJjaXJjbGUtY2xpcCI+CiAgICAgIDxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjUwIi8+CiAgICA8L2NsaXBQYXRoPgogIDwvZGVmcz4KICA8cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0ibm9uZSIvPgogIDxnIGNsaXAtcGF0aD0idXJsKCNjaXJjbGUtY2xpcCkiPgogICAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNTAiIGZpbGw9IiMwMENGRkYiLz4KICAgIDxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjQyIiBmaWxsPSIjMDAwMDAwIi8+CiAgICA8Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIzOCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIxLjIiLz4KICAgIDx0ZXh0IHg9IjUwIiB5PSI2MiIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLCBIZWx2ZXRpY2Esc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNCIgZm9udC13ZWlnaHQ9IjkwMCIgZm9udC1zdHlsZT0iaXRhbGljIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+U1Q8L3RleHQ+CiAgPC9nPgo8L3N2Zz4=">
 <script>
@@ -10,7 +12,8 @@
     window.location.replace("/index-mobile.html");
   }
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js" integrity="sha384-GfKRFGUMKEJ4YpJGMeTOSRfABDLHHGEMQGQJx9HolBXHRDtIW0KFX3UdkR3FKLS" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js" crossorigin="anonymous"></script>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -902,9 +905,13 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 if (typeof marked !== 'undefined') {
   marked.setOptions({ breaks: true, gfm: true });
 }
-function renderMarkdown(text) {
-  if (typeof marked === 'undefined') return text;
-  try { return marked.parse(text); } catch(e) { return text; }
+function escHtmlFallback(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+function renderMarkdown(t) {
+  if (typeof marked === 'undefined') return escHtmlFallback(t);
+  try {
+    const raw = marked.parse(t);
+    return typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(raw) : escHtmlFallback(t);
+  } catch(e) { return escHtmlFallback(t); }
 }
 
 /* ══════════════════════════════════════════
@@ -1097,8 +1104,8 @@ function addMsg(text, role, model) {
   const d = document.createElement('div');
   d.className = 'msg ' + role;
   const m = document.getElementById('chat-model-sel').value;
-  const rendered = role === 'ai' ? renderMarkdown(text) : text;
-  d.innerHTML = `<div class="msg-bubble">${rendered}</div><div class="msg-meta">${role === 'user' ? 'Du' : (model || m)}</div>`;
+  const rendered = role === 'ai' ? renderMarkdown(text) : escHtml(text);
+  d.innerHTML = `<div class="msg-bubble">${rendered}</div><div class="msg-meta">${role === 'user' ? 'Du' : escHtml(model || m)}</div>`;
   d.style.animation = 'msgIn .3s ease both';
   msgs.appendChild(d);
   msgs.scrollTop = msgs.scrollHeight;
@@ -1233,8 +1240,8 @@ function loadSavedChat(id) {
   chat.messages.forEach(m => {
     const d = document.createElement('div');
     d.className = 'msg ' + m.role;
-    const rendered = m.role === 'ai' ? renderMarkdown(m.text) : m.text;
-    d.innerHTML = `<div class="msg-bubble">${rendered}</div><div class="msg-meta">${m.meta}</div>`;
+    const rendered = m.role === 'ai' ? renderMarkdown(m.text) : escHtml(m.text);
+    d.innerHTML = `<div class="msg-bubble">${rendered}</div><div class="msg-meta">${escHtml(m.meta)}</div>`;
     msgs.appendChild(d);
   });
   msgs.scrollTop = msgs.scrollHeight;
@@ -1253,15 +1260,22 @@ function renderChatHistory() {
   const sorted = [...savedChats].sort((a,b) => (b.pinned?1:0) - (a.pinned?1:0));
   list.innerHTML = sorted.map(c => `
     <div class="chat-item${c.id === activeChatId ? ' active-chat' : ''}${c.pinned ? ' pinned' : ''}"
-         onclick="loadSavedChat('${c.id}')"
-         oncontextmenu="openCtxMenu(event,'${c.id}')">
+         data-chat-id="${escHtml(c.id)}"
+         data-ctx-id="${escHtml(c.id)}">
       <span class="chat-title">${escHtml(c.title)}</span>
-      <button class="chat-dots-btn" onclick="event.stopPropagation();openCtxMenuFromBtn(event,'${c.id}')" title="Optionen">
+      <button class="chat-dots-btn" data-dots-id="${escHtml(c.id)}" title="Optionen">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none">
           <circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/>
         </svg>
       </button>
     </div>`).join('');
+  list.querySelectorAll('[data-chat-id]').forEach(el => {
+    el.addEventListener('click', () => loadSavedChat(el.dataset.chatId));
+    el.addEventListener('contextmenu', e => openCtxMenu(e, el.dataset.ctxId));
+  });
+  list.querySelectorAll('[data-dots-id]').forEach(btn => {
+    btn.addEventListener('click', e => { e.stopPropagation(); openCtxMenuFromBtn(e, btn.dataset.dotsId); });
+  });
 }
 
 function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
