@@ -24,6 +24,18 @@ app.use((req, res, next) => {
   next();
 });
 
+// ── SECURITY HEADERS ──────────────────────────────────────────────────────────
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  if (process.env.NODE_ENV === 'production') {
+    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  }
+  next();
+});
+
 // ── RATE LIMITER ──────────────────────────────────────────────────────────────
 // Simple in-memory rate limiter; resets on server restart.
 function createRateLimiter({ windowMs, max }) {
@@ -133,10 +145,24 @@ app.delete('/api/keys/:id',     auth, async (req, res) => {
   res.json({ success: true });
 });
 app.post('/api/keys/validate', authRateLimit, async (req, res) => {
+  if (!req.body.key || typeof req.body.key !== 'string') return res.status(400).json({ error: 'Key fehlt' });
   const found = await db.apiKeys.getByKey(req.body.key);
   if (!found) return res.status(401).json({ valid: false });
-  res.json({ valid: true, userId: found.user_id });
+  // Do not expose userId to prevent user enumeration via key brute-force
+  res.json({ valid: true });
 });
+
+// ── MODELS ────────────────────────────────────────────────────────────────────
+
+const MODEL_MAP = {
+  'Llama 3.3 70B':    'llama-3.3-70b-versatile',
+  'Llama 3.1 8B':     'llama-3.1-8b-instant',
+  'Gemma 2 9B':       'gemma2-9b-it',
+  'Mixtral 8x7B':     'mixtral-8x7b-32768',
+  'DeepSeek R1 70B':  'deepseek-r1-distill-llama-70b',
+};
+
+const DEFAULT_SYSTEM_PROMPT = `Du bist SingleTokens AI. Antworte IMMER in maximal 2 Sätzen. Keine Gegenfragen. Keine Füllphrasen. Nur die Antwort, nichts mehr. Sprache: Deutsch.`;
 
 // ── CHATS ─────────────────────────────────────────────────────────────────────
 
@@ -149,6 +175,8 @@ app.get('/api/chats/:id',   auth, async (req, res) => {
 app.post('/api/chats',      auth, async (req, res) => {
   const { title, model, messages } = req.body;
   if (!title || !model) return res.status(400).json({ error: 'Felder fehlen' });
+  if (title.length > 200) return res.status(400).json({ error: 'Titel zu lang (max. 200 Zeichen)' });
+  if (!Object.keys(MODEL_MAP).includes(model)) return res.status(400).json({ error: 'Ungültiges Modell' });
   const id = uuidv4();
   await db.chats.create(id, req.user.id, title, model, JSON.stringify(messages || []));
   res.status(201).json({ id, title, model });
@@ -196,9 +224,23 @@ app.get('/api/gpts', auth, async (req, res) => {
   const gpts = await db.gpts.getAll(req.user.id);
   res.json({ gpts });
 });
+const ALLOWED_MODELS = Object.keys(MODEL_MAP);
+
+function validateGptFields({ name, description, model, prompt, temp, cap, icon }) {
+  if (name.length > 100)        return 'Name zu lang (max. 100 Zeichen)';
+  if ((description||'').length > 500) return 'Beschreibung zu lang (max. 500 Zeichen)';
+  if (prompt.length > 4000)     return 'Prompt zu lang (max. 4000 Zeichen)';
+  if (model && !ALLOWED_MODELS.includes(model)) return 'Ungültiges Modell';
+  if (temp !== undefined && temp !== null && (typeof temp !== 'number' || temp < 0 || temp > 2)) return 'Temperatur muss zwischen 0 und 2 liegen';
+  if (cap !== undefined && cap !== null && (typeof cap !== 'number' || cap < 1)) return 'Ungültiges Token-Limit';
+  return null;
+}
+
 app.post('/api/gpts', auth, async (req, res) => {
   const { name, description, model, prompt, temp, cap, icon } = req.body;
   if (!name || !prompt) return res.status(400).json({ error: 'Name und Prompt erforderlich' });
+  const validationError = validateGptFields({ name, description, model, prompt, temp, cap, icon });
+  if (validationError) return res.status(400).json({ error: validationError });
   const id = uuidv4();
   await db.gpts.create(id, req.user.id, name, description||'', model||'Llama 3.3 70B', prompt, temp||0.7, cap||null, icon||'🤖');
   res.status(201).json({ id, name, description, model, prompt, temp, cap, icon });
@@ -206,6 +248,8 @@ app.post('/api/gpts', auth, async (req, res) => {
 app.patch('/api/gpts/:id', auth, async (req, res) => {
   const { name, description, model, prompt, temp, cap, icon } = req.body;
   if (!name || !prompt) return res.status(400).json({ error: 'Name und Prompt erforderlich' });
+  const validationError = validateGptFields({ name, description, model, prompt, temp, cap, icon });
+  if (validationError) return res.status(400).json({ error: validationError });
   await db.gpts.update(name, description||'', model||'Llama 3.3 70B', prompt, temp||0.7, cap||null, icon||'🤖', req.params.id, req.user.id);
   res.json({ success: true });
 });
@@ -222,18 +266,6 @@ app.post('/api/payment/paypal/create-order',  (_, res) => res.status(503).json({
 app.post('/api/payment/paypal/capture-order', (_, res) => res.status(503).json({ error: 'Coming soon' }));
 
 // ── GROQ CHAT PROXY ───────────────────────────────────────────────────────────
-
-const MODEL_MAP = {
-  'Llama 3.3 70B':    'llama-3.3-70b-versatile',
-  'Llama 3.1 8B':     'llama-3.1-8b-instant',
-  'Gemma 2 9B':       'gemma2-9b-it',
-  'Mixtral 8x7B':     'mixtral-8x7b-32768',
-  'DeepSeek R1 70B':  'deepseek-r1-distill-llama-70b',
-};
-
-// ✅ Maximally direct system prompt
-
-const DEFAULT_SYSTEM_PROMPT = `Du bist SingleTokens AI. Antworte IMMER in maximal 2 Sätzen. Keine Gegenfragen. Keine Füllphrasen. Nur die Antwort, nichts mehr. Sprache: Deutsch.`;
 
 // NOTE: /api/keys/validate is intentionally public (used by external integrations).
 // Only active keys are accepted. In production, consider IP-allowlisting this endpoint.
@@ -261,8 +293,9 @@ app.post('/api/chat', auth, chatRateLimit, async (req, res) => {
       content: systemPrompt || DEFAULT_SYSTEM_PROMPT
     });
 
+    const validRoles = new Set(['user', 'assistant', 'model']);
     for (const msg of safeHistory) {
-      if (msg.role && msg.content)
+      if (msg.role && validRoles.has(msg.role) && msg.content && typeof msg.content === 'string' && msg.content.length <= 4000)
         messages.push({ role: msg.role === 'model' ? 'assistant' : msg.role, content: msg.content });
     }
 
