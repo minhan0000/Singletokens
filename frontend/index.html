@@ -333,7 +333,7 @@ footer{border-top:1px solid var(--border);padding:48px 40px 36px}
   .calc-results{grid-template-columns:1fr 1fr}
   .footer-top{grid-template-columns:1fr}
   .trust-item{flex-basis:100%}
-  #shader-bg{filter:blur(4px);opacity:0.5}
+  #shader-bg{filter:blur(2px);opacity:0.8}
 }
 </style>
 </head>
@@ -920,7 +920,7 @@ function updateCalc(val) {
     uniform float iTime;
     const float overallSpeed=0.06,gridSmoothWidth=0.015,axisWidth=0.05,majorLineWidth=0.025,minorLineWidth=0.0125,majorLineFrequency=5.0,minorLineFrequency=1.0,scale=5.0,minLineWidth=0.01,maxLineWidth=0.25,lineSpeed=1.0*overallSpeed,lineAmplitude=1.0,lineFrequency=0.2,warpSpeed=0.2*overallSpeed,warpFrequency=0.5,warpAmplitude=1.0,offsetFrequency=0.5,offsetSpeed=1.33*overallSpeed,minOffsetSpread=0.6,maxOffsetSpread=2.0;
     const int linesPerGroup=16;
-    const vec4 lineColor=vec4(0.133,0.827,0.933,1.0);
+    const vec4 lineColor=vec4(0.3,1.0,1.0,1.0);
     #define drawCircle(pos,radius,coord) smoothstep(radius+gridSmoothWidth,radius,length(coord-(pos)))
     #define drawSmoothLine(pos,halfWidth,t) smoothstep(halfWidth,0.0,abs(pos-(t)))
     #define drawCrispLine(pos,halfWidth,t) smoothstep(halfWidth+gridSmoothWidth,halfWidth,abs(pos-(t)))
