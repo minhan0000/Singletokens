@@ -94,8 +94,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:0 40px;height:64px;d
 
 /* ── SECTION BASE ── */
 section{padding:100px 40px;position:relative;z-index:1}
-body>*:not(#shader-bg){position:relative;z-index:1}
-nav{position:fixed;top:0;left:0;right:0;z-index:1000}
+body>*:not(#shader-bg):not(nav){position:relative;z-index:1}
 .section-inner{max-width:1140px;margin:0 auto}
 .section-eyebrow{font-family:'DM Mono',monospace;font-size:11px;color:var(--acc);letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px}
 .section-title{font-size:clamp(32px,4vw,54px);font-weight:800;letter-spacing:-.04em;line-height:1.05;margin-bottom:16px}
