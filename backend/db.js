@@ -95,7 +95,14 @@ module.exports = {
     get:           (id)                   => get('SELECT * FROM users WHERE id = $1', [id]),
     getByEmail:    (email)                => get('SELECT * FROM users WHERE email = $1', [email]),
     create:        (id, email, hash, name)=> run('INSERT INTO users (id,email,password_hash,name) VALUES ($1,$2,$3,$4)', [id, email, hash, name]),
-    updateBalance: (amount, id)           => run('UPDATE users SET balance = balance + $1, updated_at = NOW() WHERE id = $2', [amount, id]),
+    updateBalance:  (amount, id)          => run('UPDATE users SET balance = balance + $1, updated_at = NOW() WHERE id = $2', [amount, id]),
+    consumeBalance: async (amount, id) => {
+      const { rowCount, rows } = await pool.query(
+        'UPDATE users SET balance = balance - $1, updated_at = NOW() WHERE id = $2 AND balance >= $1 RETURNING balance',
+        [amount, id]
+      );
+      return rowCount > 0 ? rows[0].balance : null;
+    },
     update:        (name, id)             => run('UPDATE users SET name = $1, updated_at = NOW() WHERE id = $2', [name, id]),
     delete:        (id)                   => run('DELETE FROM users WHERE id = $1', [id]),
   },

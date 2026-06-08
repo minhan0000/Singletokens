@@ -226,7 +226,7 @@ async function _doSend() {
   try {
     const res = await fetch(`${API_BASE}/api/chat`, {
       method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: _authHeaders(),
       body: JSON.stringify({
         message:      text,
         model:        modelName,

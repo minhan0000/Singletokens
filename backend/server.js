@@ -58,7 +58,7 @@ app.post('/api/auth/register', authRateLimit, async (req, res) => {
   let { email, password, name } = req.body;
   if (!email || !password || !name) return res.status(400).json({ error: 'Felder fehlen' });
   email    = String(email).trim();
-  password = String(password).trim();
+  password = String(password);
   name     = String(name).trim();
   if (email.length > 254)    return res.status(400).json({ error: 'E-Mail zu lang (max. 254 Zeichen)' });
   if (password.length > 128) return res.status(400).json({ error: 'Passwort zu lang (max. 128 Zeichen)' });
@@ -78,7 +78,7 @@ app.post('/api/auth/login', authRateLimit, async (req, res) => {
   let { email, password } = req.body;
   if (!email || !password) return res.status(400).json({ error: 'Felder fehlen' });
   email    = String(email).trim();
-  password = String(password).trim();
+  password = String(password);
   if (email.length > 254)    return res.status(400).json({ error: 'E-Mail zu lang (max. 254 Zeichen)' });
   if (password.length > 128) return res.status(400).json({ error: 'Passwort zu lang (max. 128 Zeichen)' });
   if (!emailRegex.test(email)) return res.status(400).json({ error: 'Ungültige E-Mail-Adresse' });
@@ -132,11 +132,10 @@ app.delete('/api/keys/:id',     auth, async (req, res) => {
   await db.apiKeys.delete(req.params.id, req.user.id);
   res.json({ success: true });
 });
-app.post('/api/keys/validate',        async (req, res) => {
+app.post('/api/keys/validate', authRateLimit, async (req, res) => {
   const found = await db.apiKeys.getByKey(req.body.key);
   if (!found) return res.status(401).json({ valid: false });
-  const user = await db.users.get(found.user_id);
-  res.json({ valid: true, userId: found.user_id, balance: user?.balance || 0 });
+  res.json({ valid: true, userId: found.user_id });
 });
 
 // ── CHATS ─────────────────────────────────────────────────────────────────────
@@ -182,11 +181,12 @@ app.post('/api/consume', auth, async (req, res) => {
   const { amount } = req.body;
   if (!amount || amount <= 0) return res.status(400).json({ error: 'Ungültige Menge' });
   if (amount > CONSUME_MAX) return res.status(400).json({ error: `Menge überschreitet Maximum (${CONSUME_MAX})` });
-  const user = await db.users.get(req.user.id);
-  if (!user || user.balance < amount)
+  const newBalance = await db.users.consumeBalance(amount, req.user.id);
+  if (newBalance === null) {
+    const user = await db.users.get(req.user.id);
     return res.status(402).json({ error: 'Kein Guthaben', balance: user?.balance || 0 });
-  await db.users.updateBalance(-amount, req.user.id);
-  res.json({ success: true, balance: (await db.users.get(req.user.id)).balance });
+  }
+  res.json({ success: true, balance: newBalance });
 });
 app.get('/api/transactions', auth, async (req, res) => res.json({ transactions: [] }));
 
@@ -242,6 +242,8 @@ app.post('/api/chat', auth, chatRateLimit, async (req, res) => {
   try {
     const { message, model, history = [], systemPrompt } = req.body;
     if (!message) return res.status(400).json({ error: 'Nachricht fehlt' });
+    if (message.length > 4000) return res.status(400).json({ error: 'Nachricht zu lang (max. 4000 Zeichen)' });
+    if (systemPrompt && systemPrompt.length > 4000) return res.status(400).json({ error: 'System-Prompt zu lang (max. 4000 Zeichen)' });
 
     // Limit history to last 20 entries to prevent prompt-injection via huge payloads
     const safeHistory = (history || []).slice(-20);
@@ -280,7 +282,7 @@ app.post('/api/chat', auth, chatRateLimit, async (req, res) => {
 
   } catch (err) {
     console.error('Chat Error:', err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Interner Serverfehler' });
   }
 });
 
