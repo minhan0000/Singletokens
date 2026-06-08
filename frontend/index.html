@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- TODO: Move inline scripts to external files to remove 'unsafe-inline' from script-src -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self'; img-src 'self' data: blob:;">
 <title>SingleTokens – 30+ KI-Modelle. Kein Abo.</title>
 <meta name="description" content="Nutze Claude, GPT-5, Gemini, Flux & 30 weitere KI-Modelle – Text, Bilder, Sprache. Tokens kaufen, nie verfallen. Kein Monatsabo.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgc2hhcGUtcmVuZGVyaW5nPSJnZW9tZXRyaWNQcmVjaXNpb24iPgogIDxkZWZzPgogICAgPGNsaXBQYXRoIGlkPSJjaXJjbGUtY2xpcCI+CiAgICAgIDxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjUwIi8+CiAgICA8L2NsaXBQYXRoPgogIDwvZGVmcz4KICA8cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0ibm9uZSIvPgogIDxnIGNsaXAtcGF0aD0idXJsKCNjaXJjbGUtY2xpcCkiPgogICAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNTAiIGZpbGw9IiMwMENGRkYiLz4KICAgIDxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjQyIiBmaWxsPSIjMDAwMDAwIi8+CiAgICA8Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIzOCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLVdpZHRoPSIxLjIiLz4KICAgIDx0ZXh0IHg9IjUwIiB5PSI2MiIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzQiIGZvbnQtd2VpZ2h0PSI5MDAiIGZvbnQtc3R5bGU9Iml0YWxpYyIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlNUPC90ZXh0PgogIDwvZz4KPC9zdmc+">
@@ -848,16 +850,18 @@ function getMultClass(m) {
   return'';
 }
 
+function escHtml(s) { const d = document.createElement('div'); d.textContent = String(s); return d.innerHTML; }
+
 function renderModels(arr, containerId) {
   const g = document.getElementById(containerId);
   g.innerHTML = arr.map(m => `
     <div class="mc ${getMultClass(m)}">
       ${m.isNew ? '<div class="mc-new">NEU</div>' : ''}
-      <div class="mc-provider">${m.provider}</div>
-      <div class="mc-name">${m.name}</div>
+      <div class="mc-provider">${escHtml(m.provider)}</div>
+      <div class="mc-name">${escHtml(m.name)}</div>
       <div class="mc-mult">x${m.mult}</div>
       <div class="mc-price">€${(m.mult).toFixed(2)} / 1K</div>
-      <span class="mc-tag ${m.tagClass}">${m.tag}</span>
+      <span class="mc-tag ${m.tagClass}">${escHtml(m.tag)}</span>
     </div>
   `).join('');
 }

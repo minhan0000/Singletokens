@@ -12,14 +12,40 @@ const auth = require('./auth.middleware');
 
 const app = express();
 
-// ✅ CORS
+// ── CORS ──────────────────────────────────────────────────────────────────────
+// In production set ALLOWED_ORIGIN to your frontend domain (e.g. https://singletokens.com).
+// Falls back to localhost for local development.
+const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || 'http://localhost:3001';
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin',  '*');
+  res.setHeader('Access-Control-Allow-Origin',  ALLOWED_ORIGIN);
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
   if (req.method === 'OPTIONS') return res.sendStatus(204);
   next();
 });
+
+// ── RATE LIMITER ──────────────────────────────────────────────────────────────
+// Simple in-memory rate limiter; resets on server restart.
+function createRateLimiter({ windowMs, max }) {
+  const store = new Map(); // ip -> { count, resetAt }
+  return function rateLimiter(req, res, next) {
+    const ip  = req.ip || req.socket.remoteAddress || 'unknown';
+    const now = Date.now();
+    let entry = store.get(ip);
+    if (!entry || now > entry.resetAt) {
+      entry = { count: 0, resetAt: now + windowMs };
+      store.set(ip, entry);
+    }
+    entry.count++;
+    if (entry.count > max) {
+      return res.status(429).json({ error: 'Zu viele Anfragen. Bitte später erneut versuchen.' });
+    }
+    next();
+  };
+}
+
+const authRateLimit = createRateLimiter({ windowMs: 15 * 60 * 1000, max: 10 }); // 10/15 min
+const chatRateLimit = createRateLimiter({ windowMs: 60 * 1000,      max: 60 }); // 60/min
 
 app.use(express.json());
 app.use(express.static(require('path').join(__dirname, '../frontend')));
@@ -28,9 +54,15 @@ app.use(express.static(require('path').join(__dirname, '../frontend')));
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-app.post('/api/auth/register', async (req, res) => {
-  const { email, password, name } = req.body;
+app.post('/api/auth/register', authRateLimit, async (req, res) => {
+  let { email, password, name } = req.body;
   if (!email || !password || !name) return res.status(400).json({ error: 'Felder fehlen' });
+  email    = String(email).trim();
+  password = String(password).trim();
+  name     = String(name).trim();
+  if (email.length > 254)    return res.status(400).json({ error: 'E-Mail zu lang (max. 254 Zeichen)' });
+  if (password.length > 128) return res.status(400).json({ error: 'Passwort zu lang (max. 128 Zeichen)' });
+  if (name.length > 100)     return res.status(400).json({ error: 'Name zu lang (max. 100 Zeichen)' });
   if (!emailRegex.test(email)) return res.status(400).json({ error: 'Ungültige E-Mail-Adresse' });
   if (password.length < 6) return res.status(400).json({ error: 'Passwort zu kurz' });
   if (await db.users.getByEmail(email)) return res.status(409).json({ error: 'E-Mail vergeben' });
@@ -42,9 +74,13 @@ app.post('/api/auth/register', async (req, res) => {
   res.status(201).json({ token, user: safeUser(await db.users.get(id)) });
 });
 
-app.post('/api/auth/login', async (req, res) => {
-  const { email, password } = req.body;
+app.post('/api/auth/login', authRateLimit, async (req, res) => {
+  let { email, password } = req.body;
   if (!email || !password) return res.status(400).json({ error: 'Felder fehlen' });
+  email    = String(email).trim();
+  password = String(password).trim();
+  if (email.length > 254)    return res.status(400).json({ error: 'E-Mail zu lang (max. 254 Zeichen)' });
+  if (password.length > 128) return res.status(400).json({ error: 'Passwort zu lang (max. 128 Zeichen)' });
   if (!emailRegex.test(email)) return res.status(400).json({ error: 'Ungültige E-Mail-Adresse' });
   const user = await db.users.getByEmail(email);
   if (!user || !(await bcrypt.compare(password, user.password_hash)))
@@ -140,9 +176,12 @@ app.get('/api/balance',  auth, async (req, res) => {
   const user = await db.users.get(req.user.id);
   res.json({ balance: user?.balance || 0 });
 });
+const CONSUME_MAX = 10000; // prevent draining entire balance in one call
+
 app.post('/api/consume', auth, async (req, res) => {
   const { amount } = req.body;
   if (!amount || amount <= 0) return res.status(400).json({ error: 'Ungültige Menge' });
+  if (amount > CONSUME_MAX) return res.status(400).json({ error: `Menge überschreitet Maximum (${CONSUME_MAX})` });
   const user = await db.users.get(req.user.id);
   if (!user || user.balance < amount)
     return res.status(402).json({ error: 'Kein Guthaben', balance: user?.balance || 0 });
@@ -196,10 +235,16 @@ const MODEL_MAP = {
 
 const DEFAULT_SYSTEM_PROMPT = `Du bist SingleTokens AI. Antworte IMMER in maximal 2 Sätzen. Keine Gegenfragen. Keine Füllphrasen. Nur die Antwort, nichts mehr. Sprache: Deutsch.`;
 
-app.post('/api/chat', async (req, res) => {
+// NOTE: /api/keys/validate is intentionally public (used by external integrations).
+// Only active keys are accepted. In production, consider IP-allowlisting this endpoint.
+
+app.post('/api/chat', auth, chatRateLimit, async (req, res) => {
   try {
     const { message, model, history = [], systemPrompt } = req.body;
     if (!message) return res.status(400).json({ error: 'Nachricht fehlt' });
+
+    // Limit history to last 20 entries to prevent prompt-injection via huge payloads
+    const safeHistory = (history || []).slice(-20);
 
     const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) return res.status(500).json({ error: 'GROQ_API_KEY nicht gesetzt' });
@@ -214,7 +259,7 @@ app.post('/api/chat', async (req, res) => {
       content: systemPrompt || DEFAULT_SYSTEM_PROMPT
     });
 
-    for (const msg of history) {
+    for (const msg of safeHistory) {
       if (msg.role && msg.content)
         messages.push({ role: msg.role === 'model' ? 'assistant' : msg.role, content: msg.content });
     }

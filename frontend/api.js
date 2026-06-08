@@ -164,7 +164,14 @@ function _addMsg(text, role, model) {
   const msgs = _getMsgContainer();
   const d = document.createElement('div');
   d.className = 'msg ' + role;
-  d.innerHTML = `<div class="msg-bubble">${text}</div><div class="msg-meta">${role === 'user' ? 'Du' : (model || 'AI')}</div>`;
+  const bubble = document.createElement('div');
+  bubble.className = 'msg-bubble';
+  bubble.textContent = text;
+  const meta = document.createElement('div');
+  meta.className = 'msg-meta';
+  meta.textContent = role === 'user' ? 'Du' : (model || 'AI');
+  d.appendChild(bubble);
+  d.appendChild(meta);
   msgs.appendChild(d);
   msgs.scrollTop = msgs.scrollHeight;
   return d;
