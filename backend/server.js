@@ -26,9 +26,12 @@ app.use(express.static(require('path').join(__dirname, '../frontend')));
 
 // ── AUTH ──────────────────────────────────────────────────────────────────────
 
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 app.post('/api/auth/register', async (req, res) => {
   const { email, password, name } = req.body;
   if (!email || !password || !name) return res.status(400).json({ error: 'Felder fehlen' });
+  if (!emailRegex.test(email)) return res.status(400).json({ error: 'Ungültige E-Mail-Adresse' });
   if (password.length < 6) return res.status(400).json({ error: 'Passwort zu kurz' });
   if (await db.users.getByEmail(email)) return res.status(409).json({ error: 'E-Mail vergeben' });
   const hash = await bcrypt.hash(password, 12);
@@ -42,6 +45,7 @@ app.post('/api/auth/register', async (req, res) => {
 app.post('/api/auth/login', async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) return res.status(400).json({ error: 'Felder fehlen' });
+  if (!emailRegex.test(email)) return res.status(400).json({ error: 'Ungültige E-Mail-Adresse' });
   const user = await db.users.getByEmail(email);
   if (!user || !(await bcrypt.compare(password, user.password_hash)))
     return res.status(401).json({ error: 'E-Mail oder Passwort falsch' });
