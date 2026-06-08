@@ -15,28 +15,29 @@ let activeGptPrompt = null;
 
 /* ══ AUTH ══════════════════════════════════════════════════════════════════ */
 
-function _getToken() {
-  try { return localStorage.getItem('st_token') || null; } catch(e) { return null; }
-}
+const _JSON_HEADERS = { 'Content-Type': 'application/json' };
+const _FETCH_OPTS   = { credentials: 'include' };
 
 function _authHeaders() {
-  const t = _getToken();
-  return t
-    ? { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + t }
-    : { 'Content-Type': 'application/json' };
+  return _JSON_HEADERS;
 }
 
-function apiLogout() {
-  localStorage.removeItem('st_token');
+function _fetchOpts(extra = {}) {
+  return { ..._FETCH_OPTS, ...extra };
+}
+
+async function apiLogout() {
+  try {
+    await fetch(`${API_BASE}/api/auth/logout`, _fetchOpts({ method: 'POST' }));
+  } catch { }
   localStorage.removeItem('st_user');
   window.location.href = '/login.html';
 }
 
 async function apiGetUser() {
-  if (!_getToken()) return null;
   try {
-    const r = await fetch(`${API_BASE}/api/auth/me`, { headers: _authHeaders() });
-    if (r.status === 401) { apiLogout(); return null; }
+    const r = await fetch(`${API_BASE}/api/auth/me`, _fetchOpts({ headers: _authHeaders() }));
+    if (r.status === 401) { await apiLogout(); return null; }
     if (!r.ok) return null;
     const d = await r.json();
     return d.user || null;
@@ -46,9 +47,8 @@ async function apiGetUser() {
 /* ══ BALANCE ════════════════════════════════════════════════════════════════ */
 
 async function apiFetchBalance() {
-  if (!_getToken()) return 0;
   try {
-    const r = await fetch(`${API_BASE}/api/balance`, { headers: _authHeaders() });
+    const r = await fetch(`${API_BASE}/api/balance`, _fetchOpts({ headers: _authHeaders() }));
     if (!r.ok) return 0;
     const d = await r.json();
     return d.balance || 0;
@@ -58,9 +58,8 @@ async function apiFetchBalance() {
 /* ══ CHATS ══════════════════════════════════════════════════════════════════ */
 
 async function apiFetchChats() {
-  if (!_getToken()) return [];
   try {
-    const r = await fetch(`${API_BASE}/api/chats`, { headers: _authHeaders() });
+    const r = await fetch(`${API_BASE}/api/chats`, _fetchOpts({ headers: _authHeaders() }));
     if (!r.ok) return [];
     const d = await r.json();
     return d.chats || [];
@@ -68,9 +67,9 @@ async function apiFetchChats() {
 }
 
 async function apiFetchChat(id) {
-  if (!_getToken() || !id) return null;
+  if (!id) return null;
   try {
-    const r = await fetch(`${API_BASE}/api/chats/${id}`, { headers: _authHeaders() });
+    const r = await fetch(`${API_BASE}/api/chats/${id}`, _fetchOpts({ headers: _authHeaders() }));
     if (!r.ok) return null;
     const d = await r.json();
     return d.chat || null;
@@ -78,13 +77,12 @@ async function apiFetchChat(id) {
 }
 
 async function apiCreateChat(title, model, messages) {
-  if (!_getToken()) return null;
   try {
-    const r = await fetch(`${API_BASE}/api/chats`, {
+    const r = await fetch(`${API_BASE}/api/chats`, _fetchOpts({
       method:  'POST',
       headers: _authHeaders(),
       body:    JSON.stringify({ title, model, messages })
-    });
+    }));
     if (!r.ok) return null;
     const d = await r.json();
     return d.id || null;
@@ -92,35 +90,34 @@ async function apiCreateChat(title, model, messages) {
 }
 
 async function apiSaveChat(id, title, model, messages) {
-  if (!_getToken() || !id) return;
+  if (!id) return;
   try {
-    await fetch(`${API_BASE}/api/chats/${id}`, {
+    await fetch(`${API_BASE}/api/chats/${id}`, _fetchOpts({
       method:  'PATCH',
       headers: _authHeaders(),
       body:    JSON.stringify({ title, model, messages })
-    });
+    }));
   } catch { }
 }
 
 async function serverDeleteChat(serverId) {
-  if (!serverId || !_getToken()) return;
+  if (!serverId) return;
   try {
-    await fetch(`${API_BASE}/api/chats/${serverId}`, {
+    await fetch(`${API_BASE}/api/chats/${serverId}`, _fetchOpts({
       method:  'DELETE',
       headers: _authHeaders()
-    });
+    }));
   } catch(e) {
     console.warn('Chat konnte nicht vom Server gelöscht werden:', e.message);
   }
 }
 
 async function serverDeleteAllChats() {
-  if (!_getToken()) return;
   try {
-    await fetch(`${API_BASE}/api/chats`, {
+    await fetch(`${API_BASE}/api/chats`, _fetchOpts({
       method:  'DELETE',
       headers: _authHeaders()
-    });
+    }));
   } catch(e) {
     console.warn('Server-Verlauf konnte nicht gelöscht werden:', e.message);
   }
@@ -224,7 +221,7 @@ async function _doSend() {
   }
 
   try {
-    const res = await fetch(`${API_BASE}/api/chat`, {
+    const res = await fetch(`${API_BASE}/api/chat`, _fetchOpts({
       method:  'POST',
       headers: _authHeaders(),
       body: JSON.stringify({
@@ -233,7 +230,7 @@ async function _doSend() {
         history:      _apiConvHistory.slice(-20),
         systemPrompt: activeGptPrompt || null
       })
-    });
+    }));
 
     const data = await res.json();
     typingEl.remove();
@@ -274,13 +271,13 @@ sendMsg     = function() { _doSend(); };
 /* ══ ACCOUNT ════════════════════════════════════════════════════════════════ */
 
 async function apiUpdateName(name) {
-  if (!_getToken() || !name) return null;
+  if (!name) return null;
   try {
-    const r = await fetch(`${API_BASE}/api/auth/me`, {
+    const r = await fetch(`${API_BASE}/api/auth/me`, _fetchOpts({
       method:  'PATCH',
       headers: _authHeaders(),
       body:    JSON.stringify({ name })
-    });
+    }));
     if (!r.ok) return null;
     const d = await r.json();
     if (d.user) localStorage.setItem('st_user', JSON.stringify(d.user));
@@ -289,12 +286,11 @@ async function apiUpdateName(name) {
 }
 
 async function apiDeleteAccount() {
-  if (!_getToken()) return false;
   try {
-    const r = await fetch(`${API_BASE}/api/auth/me`, {
+    const r = await fetch(`${API_BASE}/api/auth/me`, _fetchOpts({
       method:  'DELETE',
       headers: _authHeaders()
-    });
+    }));
     return r.ok;
   } catch { return false; }
 }
@@ -302,9 +298,8 @@ async function apiDeleteAccount() {
 /* ══ API KEYS ═══════════════════════════════════════════════════════════════ */
 
 async function apiFetchApiKeys() {
-  if (!_getToken()) return [];
   try {
-    const r = await fetch(`${API_BASE}/api/keys`, { headers: _authHeaders() });
+    const r = await fetch(`${API_BASE}/api/keys`, _fetchOpts({ headers: _authHeaders() }));
     if (!r.ok) return [];
     const d = await r.json();
     return d.keys || [];
@@ -312,34 +307,32 @@ async function apiFetchApiKeys() {
 }
 
 async function apiCreateApiKey(name) {
-  if (!_getToken()) return null;
   try {
-    const r = await fetch(`${API_BASE}/api/keys`, {
+    const r = await fetch(`${API_BASE}/api/keys`, _fetchOpts({
       method:  'POST',
       headers: _authHeaders(),
       body:    JSON.stringify({ name })
-    });
+    }));
     if (!r.ok) return null;
-    return await r.json(); // { id, name, key (full!), active }
+    return await r.json();
   } catch { return null; }
 }
 
 async function apiRevokeApiKey(id) {
-  if (!_getToken() || !id) return;
+  if (!id) return;
   try {
-    await fetch(`${API_BASE}/api/keys/${id}/revoke`, {
+    await fetch(`${API_BASE}/api/keys/${id}/revoke`, _fetchOpts({
       method:  'PATCH',
       headers: _authHeaders()
-    });
+    }));
   } catch { }
 }
 
 /* ══ GPTS ═══════════════════════════════════════════════════════════════════ */
 
 async function apiFetchGpts() {
-  if (!_getToken()) return [];
   try {
-    const r = await fetch(`${API_BASE}/api/gpts`, { headers: _authHeaders() });
+    const r = await fetch(`${API_BASE}/api/gpts`, _fetchOpts({ headers: _authHeaders() }));
     if (!r.ok) return [];
     const d = await r.json();
     return d.gpts || [];
@@ -347,36 +340,35 @@ async function apiFetchGpts() {
 }
 
 async function apiCreateGpt(gpt) {
-  if (!_getToken()) return null;
   try {
-    const r = await fetch(`${API_BASE}/api/gpts`, {
+    const r = await fetch(`${API_BASE}/api/gpts`, _fetchOpts({
       method:  'POST',
       headers: _authHeaders(),
       body:    JSON.stringify(gpt)
-    });
+    }));
     if (!r.ok) return null;
-    return await r.json(); // { id, name, ... }
+    return await r.json();
   } catch { return null; }
 }
 
 async function apiUpdateGpt(id, gpt) {
-  if (!_getToken() || !id) return;
+  if (!id) return;
   try {
-    await fetch(`${API_BASE}/api/gpts/${id}`, {
+    await fetch(`${API_BASE}/api/gpts/${id}`, _fetchOpts({
       method:  'PATCH',
       headers: _authHeaders(),
       body:    JSON.stringify(gpt)
-    });
+    }));
   } catch { }
 }
 
 async function apiDeleteGpt(id) {
-  if (!_getToken() || !id) return;
+  if (!id) return;
   try {
-    await fetch(`${API_BASE}/api/gpts/${id}`, {
+    await fetch(`${API_BASE}/api/gpts/${id}`, _fetchOpts({
       method:  'DELETE',
       headers: _authHeaders()
-    });
+    }));
   } catch { }
 }
 

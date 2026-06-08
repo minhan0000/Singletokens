@@ -3,9 +3,10 @@ process.on('uncaughtException', (err) => { console.error('CRASH:', err.message);
 process.on('unhandledRejection', (err) => { console.error('UNHANDLED:', err); process.exit(1); });
 
 require('dotenv').config();
-const express = require('express');
-const bcrypt  = require('bcryptjs');
-const jwt     = require('jsonwebtoken');
+const express      = require('express');
+const bcrypt       = require('bcryptjs');
+const jwt          = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 const { v4: uuidv4 } = require('uuid');
 const db   = require('./db');
 const auth = require('./auth.middleware');
@@ -59,12 +60,24 @@ function createRateLimiter({ windowMs, max }) {
 const authRateLimit = createRateLimiter({ windowMs: 15 * 60 * 1000, max: 10 }); // 10/15 min
 const chatRateLimit = createRateLimiter({ windowMs: 60 * 1000,      max: 60 }); // 60/min
 
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.static(require('path').join(__dirname, '../frontend')));
 
 // ── AUTH ──────────────────────────────────────────────────────────────────────
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const COOKIE_OPTS = {
+  httpOnly: true,
+  secure:   process.env.NODE_ENV === 'production',
+  sameSite: 'Strict',
+  maxAge:   30 * 24 * 60 * 60 * 1000, // 30 days in ms
+};
+
+function setAuthCookie(res, token) {
+  res.cookie('st_token', token, COOKIE_OPTS);
+}
 
 app.post('/api/auth/register', authRateLimit, async (req, res) => {
   let { email, password, name } = req.body;
@@ -83,7 +96,8 @@ app.post('/api/auth/register', authRateLimit, async (req, res) => {
   await db.users.create(id, email, hash, name);
   await db.users.updateBalance(500, id);
   const token = jwt.sign({ id, email }, process.env.JWT_SECRET, { expiresIn: '30d' });
-  res.status(201).json({ token, user: safeUser(await db.users.get(id)) });
+  setAuthCookie(res, token);
+  res.status(201).json({ user: safeUser(await db.users.get(id)) });
 });
 
 app.post('/api/auth/login', authRateLimit, async (req, res) => {
@@ -98,7 +112,13 @@ app.post('/api/auth/login', authRateLimit, async (req, res) => {
   if (!user || !(await bcrypt.compare(password, user.password_hash)))
     return res.status(401).json({ error: 'E-Mail oder Passwort falsch' });
   const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '30d' });
-  res.json({ token, user: safeUser(user) });
+  setAuthCookie(res, token);
+  res.json({ user: safeUser(user) });
+});
+
+app.post('/api/auth/logout', (req, res) => {
+  res.clearCookie('st_token', COOKIE_OPTS);
+  res.json({ success: true });
 });
 
 app.get('/api/auth/me',   auth, async (req, res) => {

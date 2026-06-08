@@ -190,11 +190,11 @@ async function doLogin() {
     const r = await fetch(API + '/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify({ email, password })
     });
     const data = await r.json();
     if (!r.ok) { showError(data.error || 'Anmeldung fehlgeschlagen.'); return; }
-    localStorage.setItem('st_token', data.token);
     localStorage.setItem('st_user', JSON.stringify(data.user));
     showSuccess('Angemeldet! Weiterleitung...');
     setTimeout(redirectToApp, 600);
@@ -218,11 +218,11 @@ async function doRegister() {
     const r = await fetch(API + '/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify({ email, password, name })
     });
     const data = await r.json();
     if (!r.ok) { showError(data.error || 'Registrierung fehlgeschlagen.'); return; }
-    localStorage.setItem('st_token', data.token);
     localStorage.setItem('st_user', JSON.stringify(data.user));
     showSuccess('Konto erstellt! 500K Tokens wurden gutgeschrieben. Weiterleitung...');
     setTimeout(redirectToApp, 900);
@@ -240,22 +240,13 @@ document.addEventListener('keydown', e => {
   if (loginVisible) doLogin(); else doRegister();
 });
 
-/* ── Token expiration check ── */
-function isTokenExpired(token) {
+/* ── Already logged in? Check via server (cookie-based auth) ── */
+(async () => {
   try {
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    return payload.exp * 1000 < Date.now();
-  } catch { return true; }
-}
-
-/* ── Already logged in? ── */
-const _existingToken = localStorage.getItem('st_token');
-if (_existingToken && !isTokenExpired(_existingToken)) {
-  redirectToApp();
-} else if (_existingToken && isTokenExpired(_existingToken)) {
-  localStorage.removeItem('st_token');
-  localStorage.removeItem('st_user');
-}
+    const r = await fetch(API + '/api/auth/me', { credentials: 'include' });
+    if (r.ok) redirectToApp();
+  } catch { }
+})()
 </script>
 </body>
 </html>
