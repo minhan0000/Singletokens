@@ -333,6 +333,7 @@ footer{border-top:1px solid var(--border);padding:48px 40px 36px}
   .calc-results{grid-template-columns:1fr 1fr}
   .footer-top{grid-template-columns:1fr}
   .trust-item{flex-basis:100%}
+  #shader-bg{filter:blur(3px);opacity:0.3}
 }
 </style>
 </head>
@@ -977,9 +978,11 @@ function updateCalc(val) {
   const resLoc=gl.getUniformLocation(prog,'iResolution');
   const timeLoc=gl.getUniformLocation(prog,'iTime');
 
+  const isMobile=window.innerWidth<=768;
+  const pixelRatio=isMobile?0.5:1;
   function resize(){
-    canvas.width=window.innerWidth;
-    canvas.height=window.innerHeight;
+    canvas.width=Math.floor(window.innerWidth*pixelRatio);
+    canvas.height=Math.floor(window.innerHeight*pixelRatio);
     gl.viewport(0,0,canvas.width,canvas.height);
   }
   window.addEventListener('resize',resize);
