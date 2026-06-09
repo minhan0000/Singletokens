@@ -66,6 +66,11 @@ async function init() {
       created_at TIMESTAMPTZ DEFAULT NOW(),
       updated_at TIMESTAMPTZ DEFAULT NOW()
     );
+
+    CREATE INDEX IF NOT EXISTS idx_api_keys_user_id      ON api_keys(user_id);
+    CREATE INDEX IF NOT EXISTS idx_chat_history_user_id  ON chat_history(user_id);
+    CREATE INDEX IF NOT EXISTS idx_transactions_user_id  ON transactions(user_id);
+    CREATE INDEX IF NOT EXISTS idx_gpts_user_id          ON gpts(user_id);
   `);
   console.log('✓ Neon DB bereit');
 }
