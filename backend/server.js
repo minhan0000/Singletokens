@@ -26,9 +26,10 @@ if (process.env.NODE_ENV === 'production' && !process.env.ALLOWED_ORIGIN) {
   throw new Error('ALLOWED_ORIGIN must be set in production');
 }
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin',  ALLOWED_ORIGIN);
-  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+  res.setHeader('Access-Control-Allow-Origin',      ALLOWED_ORIGIN);
+  res.setHeader('Access-Control-Allow-Methods',     'GET,POST,PATCH,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers',     'Content-Type,Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
   if (req.method === 'OPTIONS') return res.sendStatus(204);
   next();
 });
@@ -307,7 +308,7 @@ function validateGptFields({ name, description, model, prompt, temp, cap, icon }
   if (prompt.length > 4000)     return 'Prompt zu lang (max. 4000 Zeichen)';
   if (model && !ALLOWED_MODELS.includes(model)) return 'Ungültiges Modell';
   if (temp !== undefined && temp !== null && (typeof temp !== 'number' || temp < 0 || temp > 2)) return 'Temperatur muss zwischen 0 und 2 liegen';
-  if (cap !== undefined && cap !== null && (typeof cap !== 'number' || cap < 1)) return 'Ungültiges Token-Limit';
+  if (cap !== undefined && cap !== null && (typeof cap !== 'number' || cap < 1 || cap > 100000)) return 'Ungültiges Token-Limit (1–100000)';
   if (icon !== undefined && icon !== null) {
     const iconStr = String(icon);
     if (iconStr.length > 10) return 'Icon ungültig (max. 10 Zeichen)';
@@ -344,7 +345,8 @@ app.delete('/api/gpts/:id', auth, async (req, res) => {
 // ── PAYMENTS ──────────────────────────────────────────────────────────────────
 
 app.post('/api/payment/stripe/create-intent', (_, res) => res.status(503).json({ error: 'Coming soon' }));
-app.post('/api/payment/stripe/webhook',       (_, res) => res.json({ received: true }));
+// express.raw() is required here so Stripe signature verification can read the raw body
+app.post('/api/payment/stripe/webhook', express.raw({ type: 'application/json' }), (_, res) => res.json({ received: true }));
 app.post('/api/payment/paypal/create-order',  (_, res) => res.status(503).json({ error: 'Coming soon' }));
 app.post('/api/payment/paypal/capture-order', (_, res) => res.status(503).json({ error: 'Coming soon' }));
 
@@ -409,7 +411,7 @@ app.get('/api/models', (_, res) => res.json({
 
 // ── HEALTH ────────────────────────────────────────────────────────────────────
 
-app.get('/health', (_, res) => res.json({ status: 'ok', version: '2.2.1' }));
+app.get('/health', (_, res) => res.json({ status: 'ok' }));
 
 // ── START ─────────────────────────────────────────────────────────────────────
 

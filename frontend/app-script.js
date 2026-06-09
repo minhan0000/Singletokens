@@ -580,7 +580,16 @@ function saveEmail(v) {
 function confirmDel() { showConfirm({title:'Konto löschen',msg:'Alle Daten werden <strong>unwiderruflich gelöscht</strong>.',okLabel:'Konto löschen',onOk:()=>showToast(T('deleted'))}); }
 function toggleTwoFA(el) { el.classList.toggle('on'); const on = el.classList.contains('on'); document.getElementById('twofa-desc').textContent = on ? T('two_fa_on') : T('two_fa_off'); showToast(on ? T('twofa_on') : T('twofa_off')); }
 function revokeKey(btn, name) { const i = btn.closest('.mem-item'); i.style.opacity = '0'; i.style.transition = 'opacity .2s'; setTimeout(() => i.remove(), 200); showToast(T('key_revoked')); }
-function addKey() { const chars = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqr23456789'; let k = 'sk-aizz-'; for (let i = 0; i < 10; i++) k += chars[Math.floor(Math.random()*chars.length)]; const d = document.createElement('div'); d.className = 'mem-item'; d.innerHTML = `<div style="flex:1"><div style="font-size:12px;color:var(--text);font-weight:600">New Key</div><div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);margin-top:2px">${k}••••</div></div><button class="s-dbtn" style="font-size:11px" onclick="revokeKey(this,'New Key')">${T('revoke')}</button>`; document.getElementById('api-keys').appendChild(d); showToast(T('key_added')); }
+function addKey() {
+  const chars = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqr23456789';
+  const buf = new Uint8Array(10);
+  crypto.getRandomValues(buf);
+  let k = 'sk-aizz-';
+  for (let i = 0; i < 10; i++) k += chars[buf[i] % chars.length];
+  const d = document.createElement('div'); d.className = 'mem-item';
+  d.innerHTML = `<div style="flex:1"><div style="font-size:12px;color:var(--text);font-weight:600">New Key</div><div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);margin-top:2px">${k}••••</div></div><button class="s-dbtn" style="font-size:11px" onclick="revokeKey(this,'New Key')">${T('revoke')}</button>`;
+  document.getElementById('api-keys').appendChild(d); showToast(T('key_added'));
+}
 function delMem(btn) { const i = btn.closest('.mem-item'); i.style.opacity = '0'; i.style.transition = 'opacity .2s'; setTimeout(() => i.remove(), 200); showToast(T('mem_deleted')); }
 function clearMem() { document.querySelectorAll('#mem-list .mem-item').forEach(m => { m.style.opacity = '0'; m.style.transition = 'opacity .2s'; setTimeout(() => m.remove(), 200); }); showToast(T('all_mem_deleted')); }
 
