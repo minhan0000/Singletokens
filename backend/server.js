@@ -265,8 +265,8 @@ app.get('/api/balance',  auth, async (req, res) => {
 const CONSUME_MAX = 10000; // prevent draining entire balance in one call
 
 app.post('/api/consume', auth, consumeRateLimit, async (req, res) => {
-  const { amount } = req.body;
-  if (!amount || !Number.isInteger(amount) || amount <= 0) return res.status(400).json({ error: 'Ungültige Menge' });
+  const amount = parseInt(req.body.amount, 10);
+  if (!Number.isInteger(amount) || amount <= 0) return res.status(400).json({ error: 'Ungültige Menge' });
   if (amount > CONSUME_MAX) return res.status(400).json({ error: `Menge überschreitet Maximum (${CONSUME_MAX})` });
   const newBalance = await db.users.consumeBalance(amount, req.user.id);
   if (newBalance === null) {
@@ -295,8 +295,8 @@ function validateGptFields({ name, description, model, prompt, temp, cap, icon }
   if (icon !== undefined && icon !== null) {
     const iconStr = String(icon);
     if (iconStr.length > 10) return 'Icon ungültig (max. 10 Zeichen)';
-    // Block HTML tags, data URIs and script-like content
-    if (/<|>|&|javascript:|data:/i.test(iconStr)) return 'Icon enthält ungültige Zeichen';
+    // Whitelist: only emoji and safe letters/numbers/spaces
+    if (!/^[\p{Emoji_Presentation}\p{Extended_Pictographic}\p{L}\p{N}\s\-_]+$/u.test(iconStr)) return 'Icon enthält ungültige Zeichen';
   }
   return null;
 }
@@ -311,6 +311,8 @@ app.post('/api/gpts', auth, async (req, res) => {
   res.status(201).json({ id, name, description, model, prompt, temp, cap, icon });
 });
 app.patch('/api/gpts/:id', auth, async (req, res) => {
+  const existing = await db.gpts.get(req.params.id, req.user.id);
+  if (!existing) return res.status(404).json({ error: 'Nicht gefunden' });
   const { name, description, model, prompt, temp, cap, icon } = req.body;
   if (!name || !prompt) return res.status(400).json({ error: 'Name und Prompt erforderlich' });
   const validationError = validateGptFields({ name, description, model, prompt, temp, cap, icon });
@@ -399,6 +401,9 @@ const PORT = process.env.PORT || 3001;
 async function start() {
   if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
     throw new Error('JWT_SECRET must be set and at least 32 characters long');
+  }
+  if (!process.env.GROQ_API_KEY) {
+    throw new Error('GROQ_API_KEY must be set');
   }
   await db.init();
   console.log('✓ DB bereit');
