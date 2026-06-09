@@ -1038,7 +1038,7 @@ function initCustomSelects() {
 let _confirmCallback = null;
 function showConfirm(opts) {
   document.getElementById("confirm-title").textContent = opts.title || "Bestätigen";
-  document.getElementById("confirm-msg").innerHTML = opts.msg || "";
+  document.getElementById("confirm-msg").textContent = opts.msg || "";
   document.getElementById("confirm-ok-btn").textContent = opts.okLabel || "OK";
   _confirmCallback = opts.onOk || null;
   document.getElementById("confirm-modal").classList.add("is-open");

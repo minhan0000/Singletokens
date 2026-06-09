@@ -114,7 +114,12 @@ app.post('/api/auth/register', authRateLimit, async (req, res) => {
   if (!/[A-Z]/.test(password)) return res.status(400).json({ error: 'Passwort muss mindestens einen Großbuchstaben enthalten' });
   if (!/[0-9]/.test(password)) return res.status(400).json({ error: 'Passwort muss mindestens eine Zahl enthalten' });
   if (!/[^A-Za-z0-9]/.test(password)) return res.status(400).json({ error: 'Passwort muss mindestens ein Sonderzeichen enthalten' });
-  if (await db.users.getByEmail(email)) return res.status(409).json({ error: 'E-Mail vergeben' });
+  const existing = await db.users.getByEmail(email);
+  if (existing) {
+    // Prevent email enumeration: consume similar time and return same success shape
+    await bcrypt.hash(password, 12);
+    return res.status(201).json({ enrolled: true });
+  }
   const hash = await bcrypt.hash(password, 12);
   const id = uuidv4();
   await db.users.create(id, email, hash, name);
