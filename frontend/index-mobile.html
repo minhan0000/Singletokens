@@ -561,7 +561,7 @@ function addMsg(text,role,model){
   const msgs=document.getElementById('chat-messages');
   const d=document.createElement('div');d.className='msg '+role;d.style.animation='msgIn .3s ease both';
   const m=document.getElementById('chat-model-sel').value;
-  d.innerHTML=`<div class="msg-bubble">${role==='ai'?renderMarkdown(text):escHtml(text)}</div><div class="msg-meta">${role==='user'?'Du':(model||m)}</div>`;
+  d.innerHTML=`<div class="msg-bubble">${role==='ai'?renderMarkdown(text):escHtml(text)}</div><div class="msg-meta">${role==='user'?'Du':escHtml(model||m)}</div>`;
   msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;return d;
 }
 function addTyping(){
@@ -589,7 +589,7 @@ function renderChatHistory(){
     <div class="chat-list-item${c.id===activeChatId?' active-chat':''}" onclick="loadSavedChat('${c.id}');switchView('chat')">
       <div class="chat-list-dot"></div>
       <div class="chat-list-title">${escHtml(c.title)}</div>
-      <div class="chat-list-meta">${c.model?c.model.split(' ')[0]:''}</div>
+      <div class="chat-list-meta">${escHtml(c.model?c.model.split(' ')[0]:'')}</div>
     </div>`).join('');
 }
 
@@ -616,7 +616,7 @@ async function loadSavedChat(id){
   let messages=(local?.messages?.length>0)?local.messages:null;
   if(!messages){const sc=await apiFetchChat(id);if(sc?.messages){messages=sc.messages.map(m=>({role:m.role==='user'?'user':'ai',text:m.content,meta:m.role==='user'?'Du':(sc.model||'')}));if(local)local.messages=messages;}}
   msgs.innerHTML='';
-  (messages||[]).forEach(m=>{const d=document.createElement('div');d.className='msg '+m.role;d.innerHTML=`<div class="msg-bubble">${m.role==='ai'?renderMarkdown(m.text):escHtml(m.text)}</div><div class="msg-meta">${m.meta}</div>`;msgs.appendChild(d);});
+  (messages||[]).forEach(m=>{const d=document.createElement('div');d.className='msg '+m.role;d.innerHTML=`<div class="msg-bubble">${m.role==='ai'?renderMarkdown(m.text):escHtml(m.text)}</div><div class="msg-meta">${escHtml(m.meta||'')}</div>`;msgs.appendChild(d);});
   msgs.scrollTop=msgs.scrollHeight;
   if(local?.model)selectModel(local.model);
   if(typeof apiLoadConversation==='function'&&messages)apiLoadConversation(messages);
