@@ -17,6 +17,9 @@ const app = express();
 // In production set ALLOWED_ORIGIN to your frontend domain (e.g. https://singletokens.com).
 // Falls back to localhost for local development.
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || 'http://localhost:3001';
+if (process.env.NODE_ENV === 'production' && !process.env.ALLOWED_ORIGIN) {
+  console.warn('WARNING: ALLOWED_ORIGIN not set — defaulting to localhost. Set this env var in production!');
+}
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin',  ALLOWED_ORIGIN);
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE,OPTIONS');
@@ -31,6 +34,17 @@ app.use((req, res, next) => {
   res.setHeader('X-Frame-Options', 'DENY');
   res.setHeader('X-XSS-Protection', '1; mode=block');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  res.setHeader('Content-Security-Policy',
+    "default-src 'self'; " +
+    "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://js.stripe.com https://www.paypal.com; " +
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
+    "font-src 'self' https://fonts.gstatic.com; " +
+    "img-src 'self' data: https:; " +
+    "connect-src 'self' https://api.groq.com; " +
+    "frame-src https://js.stripe.com https://www.paypal.com; " +
+    "object-src 'none'; base-uri 'self';"
+  );
   if (process.env.NODE_ENV === 'production') {
     res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
   }
@@ -57,8 +71,9 @@ function createRateLimiter({ windowMs, max }) {
   };
 }
 
-const authRateLimit = createRateLimiter({ windowMs: 15 * 60 * 1000, max: 10 }); // 10/15 min
-const chatRateLimit = createRateLimiter({ windowMs: 60 * 1000,      max: 60 }); // 60/min
+const authRateLimit    = createRateLimiter({ windowMs: 15 * 60 * 1000, max: 10 }); // 10/15 min
+const keyValidateLimit = createRateLimiter({ windowMs: 60 * 60 * 1000, max:  5 }); // 5/hour — brute-force protection
+const chatRateLimit    = createRateLimiter({ windowMs: 60 * 1000,      max: 60 }); // 60/min
 
 app.use(cookieParser());
 app.use(express.json());
@@ -89,7 +104,7 @@ app.post('/api/auth/register', authRateLimit, async (req, res) => {
   if (password.length > 128) return res.status(400).json({ error: 'Passwort zu lang (max. 128 Zeichen)' });
   if (name.length > 100)     return res.status(400).json({ error: 'Name zu lang (max. 100 Zeichen)' });
   if (!emailRegex.test(email)) return res.status(400).json({ error: 'Ungültige E-Mail-Adresse' });
-  if (password.length < 6) return res.status(400).json({ error: 'Passwort zu kurz' });
+  if (password.length < 12) return res.status(400).json({ error: 'Passwort zu kurz (min. 12 Zeichen)' });
   if (await db.users.getByEmail(email)) return res.status(409).json({ error: 'E-Mail vergeben' });
   const hash = await bcrypt.hash(password, 12);
   const id = uuidv4();
@@ -122,6 +137,7 @@ app.post('/api/auth/logout', (req, res) => {
 });
 
 app.get('/api/auth/me',   auth, async (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
   const user = await db.users.get(req.user.id);
   if (!user) return res.status(404).json({ error: 'Nicht gefunden' });
   res.json({ user: safeUser(user) });
@@ -146,6 +162,7 @@ function safeUser(u) {
 // ── API KEYS ──────────────────────────────────────────────────────────────────
 
 app.get('/api/keys',            auth, async (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
   const keys = await db.apiKeys.getAll(req.user.id);
   res.json({ keys: keys.map(k => ({ ...k, key: k.key.slice(0,12)+'••••'+k.key.slice(-4) })) });
 });
@@ -164,7 +181,7 @@ app.delete('/api/keys/:id',     auth, async (req, res) => {
   await db.apiKeys.delete(req.params.id, req.user.id);
   res.json({ success: true });
 });
-app.post('/api/keys/validate', authRateLimit, async (req, res) => {
+app.post('/api/keys/validate', keyValidateLimit, async (req, res) => {
   if (!req.body.key || typeof req.body.key !== 'string') return res.status(400).json({ error: 'Key fehlt' });
   const found = await db.apiKeys.getByKey(req.body.key);
   if (!found) return res.status(401).json({ valid: false });
@@ -220,6 +237,7 @@ app.delete('/api/chats',    auth, async (req, res) => {
 // ── BALANCE ───────────────────────────────────────────────────────────────────
 
 app.get('/api/balance',  auth, async (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
   const user = await db.users.get(req.user.id);
   res.json({ balance: user?.balance || 0 });
 });
@@ -352,6 +370,9 @@ app.get('/health', (_, res) => res.json({ status: 'ok', version: '2.2.1' }));
 
 const PORT = process.env.PORT || 3001;
 async function start() {
+  if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
+    throw new Error('JWT_SECRET must be set and at least 32 characters long');
+  }
   await db.init();
   console.log('✓ DB bereit');
   app.listen(PORT, '0.0.0.0', () => console.log(`✓ Server läuft auf Port ${PORT}`));
