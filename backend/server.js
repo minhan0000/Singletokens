@@ -124,7 +124,7 @@ app.post('/api/auth/register', authRateLimit, async (req, res) => {
   const id = uuidv4();
   await db.users.create(id, email, hash, name);
   await db.users.updateBalance(500, id);
-  const token = jwt.sign({ id, email }, process.env.JWT_SECRET, { expiresIn: '7d' });
+  const token = jwt.sign({ id, email }, process.env.JWT_SECRET, { expiresIn: '24h' });
   setAuthCookie(res, token);
   res.status(201).json({ user: safeUser(await db.users.get(id)) });
 });
@@ -138,9 +138,12 @@ app.post('/api/auth/login', authRateLimit, async (req, res) => {
   if (password.length > 128) return res.status(400).json({ error: 'Passwort zu lang (max. 128 Zeichen)' });
   if (!emailRegex.test(email)) return res.status(400).json({ error: 'Ungültige E-Mail-Adresse' });
   const user = await db.users.getByEmail(email);
-  if (!user || !(await bcrypt.compare(password, user.password_hash)))
+  // Always run bcrypt to prevent timing-based email enumeration
+  const dummyHash = '$2b$12$invalidhashfortimingattack00000000000000000000000000000';
+  const passwordMatch = await bcrypt.compare(password, user ? user.password_hash : dummyHash);
+  if (!user || !passwordMatch)
     return res.status(401).json({ error: 'E-Mail oder Passwort falsch' });
-  const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '7d' });
+  const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '24h' });
   setAuthCookie(res, token);
   res.json({ user: safeUser(user) });
 });
