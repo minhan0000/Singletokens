@@ -82,7 +82,7 @@ const chatRateLimit    = createRateLimiter({ windowMs: 60 * 1000,      max: 60 }
 const consumeRateLimit = createRateLimiter({ windowMs: 60 * 1000,      max: 30 }); // 30/min
 
 app.use(cookieParser());
-app.use(express.json());
+app.use(express.json({ limit: '50kb' }));
 app.use(express.static(require('path').join(__dirname, '../frontend')));
 
 // ── AUTH ──────────────────────────────────────────────────────────────────────
