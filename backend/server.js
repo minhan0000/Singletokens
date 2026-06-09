@@ -60,6 +60,15 @@ app.use((req, res, next) => {
 // Simple in-memory rate limiter; resets on server restart.
 function createRateLimiter({ windowMs, max }) {
   const store = new Map(); // ip -> { count, resetAt }
+  // Prune expired entries every windowMs to prevent unbounded memory growth (DoS).
+  const pruneInterval = setInterval(() => {
+    const now = Date.now();
+    for (const [key, entry] of store) {
+      if (now > entry.resetAt) store.delete(key);
+    }
+  }, windowMs);
+  if (pruneInterval.unref) pruneInterval.unref();
+
   return function rateLimiter(req, res, next) {
     const ip  = req.ip || req.socket.remoteAddress || 'unknown';
     const now = Date.now();
@@ -185,9 +194,13 @@ app.get('/api/keys',            auth, async (req, res) => {
   const keys = await db.apiKeys.getAll(req.user.id);
   res.json({ keys: keys.map(k => ({ ...k, key: k.key.slice(0,12)+'••••'+k.key.slice(-4) })) });
 });
+const API_KEY_LIMIT = 10;
 app.post('/api/keys',           auth, async (req, res) => {
   if (!req.body.name) return res.status(400).json({ error: 'Name fehlt' });
   if (String(req.body.name).length > 100) return res.status(400).json({ error: 'Name zu lang (max. 100 Zeichen)' });
+  const existing = await db.apiKeys.getAll(req.user.id);
+  if (existing.length >= API_KEY_LIMIT)
+    return res.status(400).json({ error: `Maximal ${API_KEY_LIMIT} API-Keys erlaubt` });
   const key = 'sk-st-' + crypto.randomBytes(24).toString('hex');
   const id  = uuidv4();
   await db.apiKeys.create(id, req.user.id, req.body.name, key);

@@ -1280,7 +1280,7 @@ function renderChatHistory() {
   });
 }
 
-function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function escHtml(s) { return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function deleteChat(id) { savedChats = savedChats.filter(c => c.id !== id); persistChats(); if (activeChatId === id) { activeChatId = null; newChat(); } renderChatHistory(); }
 
 const ctxEl = document.getElementById('ctx-menu');

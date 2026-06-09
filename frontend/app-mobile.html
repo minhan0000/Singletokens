@@ -875,7 +875,7 @@ function renderGpts(){
   cards.innerHTML=gpts.map(g=>`
     <div class="gpt-card">
       <div class="gpt-card-top"><div class="gpt-emoji">${g.icon||'🤖'}</div><div class="gpt-name">${escHtml(g.name)}</div></div>
-      <div class="gpt-meta">${g.model}</div>
+      <div class="gpt-meta">${escHtml(g.model)}</div>
       <div class="gpt-desc">${escHtml(g.description||g.desc||'Keine Beschreibung')}</div>
       <div class="gpt-actions">
         <button class="gpt-use" onclick="useGpt('${g.id}')">Chatten →</button>
