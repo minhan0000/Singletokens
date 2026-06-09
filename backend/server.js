@@ -89,7 +89,7 @@ app.post('/api/auth/register', authRateLimit, async (req, res) => {
   if (password.length > 128) return res.status(400).json({ error: 'Passwort zu lang (max. 128 Zeichen)' });
   if (name.length > 100)     return res.status(400).json({ error: 'Name zu lang (max. 100 Zeichen)' });
   if (!emailRegex.test(email)) return res.status(400).json({ error: 'Ungültige E-Mail-Adresse' });
-  if (password.length < 6) return res.status(400).json({ error: 'Passwort zu kurz' });
+  if (password.length < 8) return res.status(400).json({ error: 'Passwort zu kurz (min. 8 Zeichen)' });
   if (await db.users.getByEmail(email)) return res.status(409).json({ error: 'E-Mail vergeben' });
   const hash = await bcrypt.hash(password, 12);
   const id = uuidv4();
@@ -270,6 +270,8 @@ app.patch('/api/gpts/:id', auth, async (req, res) => {
   if (!name || !prompt) return res.status(400).json({ error: 'Name und Prompt erforderlich' });
   const validationError = validateGptFields({ name, description, model, prompt, temp, cap, icon });
   if (validationError) return res.status(400).json({ error: validationError });
+  const existing = await db.gpts.get(req.params.id, req.user.id);
+  if (!existing) return res.status(404).json({ error: 'GPT nicht gefunden' });
   await db.gpts.update(name, description||'', model||'Llama 3.3 70B', prompt, temp||0.7, cap||null, icon||'🤖', req.params.id, req.user.id);
   res.json({ success: true });
 });
