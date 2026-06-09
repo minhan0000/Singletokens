@@ -1370,7 +1370,10 @@ function getCardClass(m) {
 function renderModels(f) {
   const g = document.getElementById('model-grid');
   let list = f === 'all' ? ALL_MODELS : f === 'cheap' ? ALL_MODELS.filter(m => m.mult <= 0.5) : ALL_MODELS.filter(m => m.cat === f);
-  g.innerHTML = list.map((m,i) => `<div class="mc ${getCardClass(m)}" onclick="useModel('${m.name}')" style="animation-delay:${i*0.04}s">${m.isNew?'<div class="mc-new">NEU</div>':''}<div class="mc-provider">${m.provider}</div><div class="mc-name">${m.name}</div><div class="mc-mult">x${m.mult}</div><div class="mc-price">€${(m.mult).toFixed(2)} / 1K</div><span class="mc-tag ${m.tagClass}">${m.tag}</span></div>`).join('');
+  g.innerHTML = list.map((m,i) => `<div class="mc ${getCardClass(m)}" data-model-name="${escHtml(m.name)}" style="animation-delay:${i*0.04}s">${m.isNew?'<div class="mc-new">NEU</div>':''}<div class="mc-provider">${escHtml(m.provider)}</div><div class="mc-name">${escHtml(m.name)}</div><div class="mc-mult">x${m.mult}</div><div class="mc-price">€${(m.mult).toFixed(2)} / 1K</div><span class="mc-tag ${m.tagClass}">${escHtml(m.tag)}</span></div>`).join('');
+  g.querySelectorAll('.mc[data-model-name]').forEach(el => {
+    el.addEventListener('click', () => useModel(el.dataset.modelName));
+  });
 }
 function filterM(f, btn) { document.querySelectorAll('.mfbtn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); renderModels(f); }
 function useModel(name) {
