@@ -341,9 +341,12 @@ footer{border-top:1px solid var(--border);padding:48px 40px 36px}
 </head>
 
 <script>
-function goToApp() {
-  const token = localStorage.getItem('st_token');
-  if (!token) { window.location.href = '/login.html'; return; }
+async function goToApp() {
+  // Auth state via HttpOnly cookie – cannot read from JS, so verify via API
+  try {
+    const r = await fetch('/api/auth/me', { credentials: 'include' });
+    if (!r.ok) { window.location.href = '/login.html'; return; }
+  } catch { window.location.href = '/login.html'; return; }
   if (/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) || window.innerWidth <= 768) {
     window.location.href = '/app-mobile.html';
   } else {
