@@ -574,7 +574,7 @@ function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMe
 
 /* CHAT HISTORY */
 let savedChats=[],activeChatId=null;
-function genId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+function genId(){const a=new Uint32Array(2);crypto.getRandomValues(a);return Date.now().toString(36)+a[0].toString(36)+a[1].toString(36);}
 function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function _readBubbles(){return[...document.getElementById('chat-messages').querySelectorAll('.msg')].map(m=>({role:m.classList.contains('user')?'user':'ai',text:m.querySelector('.msg-bubble')?.textContent||'',meta:m.querySelector('.msg-meta')?.textContent||''}));}
 function _chatMsgsToApi(b){return b.map(x=>({role:x.role==='user'?'user':'assistant',content:x.text}));}

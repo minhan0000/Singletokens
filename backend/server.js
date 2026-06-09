@@ -18,7 +18,7 @@ const app = express();
 // Falls back to localhost for local development.
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || 'http://localhost:3001';
 if (process.env.NODE_ENV === 'production' && !process.env.ALLOWED_ORIGIN) {
-  console.warn('WARNING: ALLOWED_ORIGIN not set — defaulting to localhost. Set this env var in production!');
+  throw new Error('ALLOWED_ORIGIN must be set in production');
 }
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin',  ALLOWED_ORIGIN);
@@ -143,8 +143,10 @@ app.get('/api/auth/me',   auth, async (req, res) => {
   res.json({ user: safeUser(user) });
 });
 app.patch('/api/auth/me', auth, async (req, res) => {
-  if (!req.body.name) return res.status(400).json({ error: 'Name fehlt' });
-  await db.users.update(req.body.name, req.user.id);
+  const name = String(req.body.name || '').trim();
+  if (!name) return res.status(400).json({ error: 'Name fehlt' });
+  if (name.length > 100) return res.status(400).json({ error: 'Name zu lang (max. 100 Zeichen)' });
+  await db.users.update(name, req.user.id);
   res.json({ user: safeUser(await db.users.get(req.user.id)) });
 });
 
@@ -271,6 +273,10 @@ function validateGptFields({ name, description, model, prompt, temp, cap, icon }
   if (model && !ALLOWED_MODELS.includes(model)) return 'Ungültiges Modell';
   if (temp !== undefined && temp !== null && (typeof temp !== 'number' || temp < 0 || temp > 2)) return 'Temperatur muss zwischen 0 und 2 liegen';
   if (cap !== undefined && cap !== null && (typeof cap !== 'number' || cap < 1)) return 'Ungültiges Token-Limit';
+  if (icon !== undefined && icon !== null) {
+    const iconStr = String(icon);
+    if (iconStr.length > 10) return 'Icon ungültig (max. 10 Zeichen)';
+  }
   return null;
 }
 

@@ -212,7 +212,7 @@ async function doRegister() {
   const password = document.getElementById('reg-password').value;
   if (!name) { showError('Bitte einen Namen eingeben.'); return; }
   if (!email) { showError('Bitte eine E-Mail eingeben.'); return; }
-  if (password.length < 6) { showError('Passwort muss mindestens 6 Zeichen haben.'); return; }
+  if (password.length < 12) { showError('Passwort muss mindestens 12 Zeichen haben.'); return; }
   setLoading('btn-register', true, 'Konto erstellen →');
   try {
     const r = await fetch(API + '/api/auth/register', {
