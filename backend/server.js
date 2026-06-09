@@ -47,7 +47,7 @@ app.use((req, res, next) => {
     "object-src 'none'; base-uri 'self';"
   );
   if (process.env.NODE_ENV === 'production') {
-    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
   }
   next();
 });
@@ -75,6 +75,7 @@ function createRateLimiter({ windowMs, max }) {
 const authRateLimit    = createRateLimiter({ windowMs: 15 * 60 * 1000, max: 10 }); // 10/15 min
 const keyValidateLimit = createRateLimiter({ windowMs: 60 * 60 * 1000, max:  5 }); // 5/hour — brute-force protection
 const chatRateLimit    = createRateLimiter({ windowMs: 60 * 1000,      max: 60 }); // 60/min
+const consumeRateLimit = createRateLimiter({ windowMs: 60 * 1000,      max: 30 }); // 30/min
 
 app.use(cookieParser());
 app.use(express.json());
@@ -106,6 +107,9 @@ app.post('/api/auth/register', authRateLimit, async (req, res) => {
   if (name.length > 100)     return res.status(400).json({ error: 'Name zu lang (max. 100 Zeichen)' });
   if (!emailRegex.test(email)) return res.status(400).json({ error: 'Ungültige E-Mail-Adresse' });
   if (password.length < 12) return res.status(400).json({ error: 'Passwort zu kurz (min. 12 Zeichen)' });
+  if (!/[A-Z]/.test(password)) return res.status(400).json({ error: 'Passwort muss mindestens einen Großbuchstaben enthalten' });
+  if (!/[0-9]/.test(password)) return res.status(400).json({ error: 'Passwort muss mindestens eine Zahl enthalten' });
+  if (!/[^A-Za-z0-9]/.test(password)) return res.status(400).json({ error: 'Passwort muss mindestens ein Sonderzeichen enthalten' });
   if (await db.users.getByEmail(email)) return res.status(409).json({ error: 'E-Mail vergeben' });
   const hash = await bcrypt.hash(password, 12);
   const id = uuidv4();
@@ -251,7 +255,7 @@ app.get('/api/balance',  auth, async (req, res) => {
 });
 const CONSUME_MAX = 10000; // prevent draining entire balance in one call
 
-app.post('/api/consume', auth, async (req, res) => {
+app.post('/api/consume', auth, consumeRateLimit, async (req, res) => {
   const { amount } = req.body;
   if (!amount || !Number.isInteger(amount) || amount <= 0) return res.status(400).json({ error: 'Ungültige Menge' });
   if (amount > CONSUME_MAX) return res.status(400).json({ error: `Menge überschreitet Maximum (${CONSUME_MAX})` });
@@ -331,7 +335,7 @@ app.post('/api/chat', auth, chatRateLimit, async (req, res) => {
     const safeHistory = (history || []).slice(-20);
 
     const apiKey = process.env.GROQ_API_KEY;
-    if (!apiKey) return res.status(500).json({ error: 'GROQ_API_KEY nicht gesetzt' });
+    if (!apiKey) return res.status(500).json({ error: 'KI-Service momentan nicht verfügbar' });
 
     const modelId = MODEL_MAP[model] || 'llama-3.3-70b-versatile';
 

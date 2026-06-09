@@ -213,6 +213,9 @@ async function doRegister() {
   if (!name) { showError('Bitte einen Namen eingeben.'); return; }
   if (!email) { showError('Bitte eine E-Mail eingeben.'); return; }
   if (password.length < 12) { showError('Passwort muss mindestens 12 Zeichen haben.'); return; }
+  if (!/[A-Z]/.test(password)) { showError('Passwort muss mindestens einen Großbuchstaben enthalten.'); return; }
+  if (!/[0-9]/.test(password)) { showError('Passwort muss mindestens eine Zahl enthalten.'); return; }
+  if (!/[^A-Za-z0-9]/.test(password)) { showError('Passwort muss mindestens ein Sonderzeichen enthalten.'); return; }
   setLoading('btn-register', true, 'Konto erstellen →');
   try {
     const r = await fetch(API + '/api/auth/register', {

@@ -179,7 +179,10 @@ function _addTyping() {
   const msgs = _getMsgContainer();
   const d = document.createElement('div');
   d.className = 'msg ai';
-  d.innerHTML = '<div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>';
+  const indicator = document.createElement('div');
+  indicator.className = 'typing-indicator';
+  for (let i = 0; i < 3; i++) { const dot = document.createElement('div'); dot.className = 'typing-dot'; indicator.appendChild(dot); }
+  d.appendChild(indicator);
   msgs.appendChild(d);
   msgs.scrollTop = msgs.scrollHeight;
   return d;
