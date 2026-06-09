@@ -1128,7 +1128,7 @@ function autoResize(el) { el.style.height = '22px'; el.style.height = Math.min(e
 let savedChats = JSON.parse(localStorage.getItem('st_chats') || '[]');
 let activeChatId = null;
 let ctxTargetId = null;
-function genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+function genId() { const a=new Uint32Array(2);crypto.getRandomValues(a);return Date.now().toString(36)+a[0].toString(36)+a[1].toString(36); }
 function persistChats() { localStorage.setItem('st_chats', JSON.stringify(savedChats.slice(0,50))); }
 
 function _getCurrentUserName() {
