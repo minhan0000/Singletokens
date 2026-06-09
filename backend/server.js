@@ -14,6 +14,10 @@ const auth = require('./auth.middleware');
 
 const app = express();
 
+// Trust reverse proxy (nginx/etc.) so req.ip reflects the real client IP
+// instead of the proxy IP, preventing rate limit bypass via proxy.
+app.set('trust proxy', 1);
+
 // ── CORS ──────────────────────────────────────────────────────────────────────
 // In production set ALLOWED_ORIGIN to your frontend domain (e.g. https://singletokens.com).
 // Falls back to localhost for local development.
@@ -286,6 +290,8 @@ function validateGptFields({ name, description, model, prompt, temp, cap, icon }
   if (icon !== undefined && icon !== null) {
     const iconStr = String(icon);
     if (iconStr.length > 10) return 'Icon ungültig (max. 10 Zeichen)';
+    // Block HTML tags, data URIs and script-like content
+    if (/<|>|&|javascript:|data:/i.test(iconStr)) return 'Icon enthält ungültige Zeichen';
   }
   return null;
 }
