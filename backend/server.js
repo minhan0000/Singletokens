@@ -8,6 +8,7 @@ const bcrypt       = require('bcryptjs');
 const jwt          = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const { v4: uuidv4 } = require('uuid');
+const crypto = require('crypto');
 const db   = require('./db');
 const auth = require('./auth.middleware');
 
@@ -87,7 +88,7 @@ const COOKIE_OPTS = {
   httpOnly: true,
   secure:   process.env.NODE_ENV === 'production',
   sameSite: 'Strict',
-  maxAge:   30 * 24 * 60 * 60 * 1000, // 30 days in ms
+  maxAge:   7 * 24 * 60 * 60 * 1000, // 7 days in ms
 };
 
 function setAuthCookie(res, token) {
@@ -110,7 +111,7 @@ app.post('/api/auth/register', authRateLimit, async (req, res) => {
   const id = uuidv4();
   await db.users.create(id, email, hash, name);
   await db.users.updateBalance(500, id);
-  const token = jwt.sign({ id, email }, process.env.JWT_SECRET, { expiresIn: '30d' });
+  const token = jwt.sign({ id, email }, process.env.JWT_SECRET, { expiresIn: '7d' });
   setAuthCookie(res, token);
   res.status(201).json({ user: safeUser(await db.users.get(id)) });
 });
@@ -126,7 +127,7 @@ app.post('/api/auth/login', authRateLimit, async (req, res) => {
   const user = await db.users.getByEmail(email);
   if (!user || !(await bcrypt.compare(password, user.password_hash)))
     return res.status(401).json({ error: 'E-Mail oder Passwort falsch' });
-  const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '30d' });
+  const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '7d' });
   setAuthCookie(res, token);
   res.json({ user: safeUser(user) });
 });
@@ -170,7 +171,8 @@ app.get('/api/keys',            auth, async (req, res) => {
 });
 app.post('/api/keys',           auth, async (req, res) => {
   if (!req.body.name) return res.status(400).json({ error: 'Name fehlt' });
-  const key = 'sk-st-' + uuidv4().replace(/-/g,'');
+  if (String(req.body.name).length > 100) return res.status(400).json({ error: 'Name zu lang (max. 100 Zeichen)' });
+  const key = 'sk-st-' + crypto.randomBytes(24).toString('hex');
   const id  = uuidv4();
   await db.apiKeys.create(id, req.user.id, req.body.name, key);
   res.status(201).json({ id, name: req.body.name, key, active: true });
@@ -209,7 +211,9 @@ app.get('/api/chats',       auth, async (req, res) => res.json({ chats: await db
 app.get('/api/chats/:id',   auth, async (req, res) => {
   const chat = await db.chats.get(req.params.id, req.user.id);
   if (!chat) return res.status(404).json({ error: 'Nicht gefunden' });
-  res.json({ chat: { ...chat, messages: JSON.parse(chat.messages) } });
+  let messages;
+  try { messages = JSON.parse(chat.messages); } catch { messages = []; }
+  res.json({ chat: { ...chat, messages } });
 });
 app.post('/api/chats',      auth, async (req, res) => {
   const { title, model, messages } = req.body;
@@ -224,7 +228,9 @@ app.patch('/api/chats/:id', auth, async (req, res) => {
   const chat = await db.chats.get(req.params.id, req.user.id);
   if (!chat) return res.status(404).json({ error: 'Nicht gefunden' });
   const { title, messages, model } = req.body;
-  await db.chats.update(title||chat.title, JSON.stringify(messages||JSON.parse(chat.messages)), model||chat.model, req.params.id, req.user.id);
+  let existingMessages;
+  try { existingMessages = JSON.parse(chat.messages); } catch { existingMessages = []; }
+  await db.chats.update(title||chat.title, JSON.stringify(messages||existingMessages), model||chat.model, req.params.id, req.user.id);
   res.json({ success: true });
 });
 app.delete('/api/chats/:id', auth, async (req, res) => {
@@ -247,7 +253,7 @@ const CONSUME_MAX = 10000; // prevent draining entire balance in one call
 
 app.post('/api/consume', auth, async (req, res) => {
   const { amount } = req.body;
-  if (!amount || amount <= 0) return res.status(400).json({ error: 'Ungültige Menge' });
+  if (!amount || !Number.isInteger(amount) || amount <= 0) return res.status(400).json({ error: 'Ungültige Menge' });
   if (amount > CONSUME_MAX) return res.status(400).json({ error: `Menge überschreitet Maximum (${CONSUME_MAX})` });
   const newBalance = await db.users.consumeBalance(amount, req.user.id);
   if (newBalance === null) {
