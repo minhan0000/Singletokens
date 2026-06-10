@@ -12,7 +12,7 @@ body{font-family:'Syne',sans-serif;color:var(--text);background:transparent;over
 /* NOISE */
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.35}
 
-#shader-bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.45;filter:blur(6px)}
+#shader-bg{position:fixed!important;top:0!important;left:0!important;width:100%!important;height:100%!important;z-index:0!important;pointer-events:none;opacity:0.45;filter:blur(6px)}
 
 /* ── NAV ── */
 nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(7,8,10,0.7);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
