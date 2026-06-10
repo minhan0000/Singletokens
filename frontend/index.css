@@ -12,6 +12,8 @@ body{font-family:'Syne',sans-serif;color:var(--text);background:transparent;over
 /* NOISE */
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.35}
 
+#shader-bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.45;filter:blur(6px)}
+
 /* ── NAV ── */
 nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(7,8,10,0.7);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
 .nav-logo{font-size:18px;font-weight:800;letter-spacing:-.03em;display:flex;align-items:center;gap:3px;text-decoration:none;color:var(--text)}
@@ -291,6 +293,33 @@ footer{border-top:1px solid var(--border);padding:48px 40px 36px}
 .reveal{opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease}
 .reveal.visible{opacity:1;transform:translateY(0)}
 
+/* ── SAVINGS TABLE OVERRIDES ── */
+.ct-row-savings{background:rgba(16,185,129,.08);border-left:2px solid var(--green)}
+.ct-cell-savings{color:#6EE7B7;font-weight:700}
+.ct-cell-savings.right{text-align:right}
+
+/* ── MODEL PANEL DESCRIPTIONS ── */
+.model-panel-desc{font-size:13px;color:var(--muted);margin-bottom:24px;font-family:'DM Mono',monospace}
+
+/* ── FEATURES SECTION ── */
+#features{border-top:1px solid var(--border)}
+
+/* ── BENTO MODEL MINI MULT COLORS ── */
+.mmp-mult-cyan{color:var(--acc)}
+.mmp-mult-blue{color:#93C5FD}
+.mmp-mult-pink{color:#F9A8D4}
+.mmp-mult-red{color:#F87171}
+
+/* ── IMG THUMB GRADIENTS ── */
+.img-thumb-flux{background:linear-gradient(135deg,#1a0a2e,#2d1b69,#0d1b4b)}
+.img-thumb-dalle{background:linear-gradient(135deg,#0a1628,#1a3a5c,#0d2a1e)}
+.img-thumb-sd{background:linear-gradient(135deg,#2a0a1e,#5c1a3a,#2a0a1e)}
+
+/* ── UTILITIES ── */
+.text-center{text-align:center}
+.mx-auto{margin:0 auto}
+.btn-cta-lg{font-size:16px;padding:16px 44px}
+
 /* ── RESPONSIVE ── */
 @media(max-width:900px){
   nav{padding:0 20px;gap:16px}
@@ -324,35 +353,3 @@ footer{border-top:1px solid var(--border);padding:48px 40px 36px}
   .trust-item{flex-basis:100%}
   #shader-bg{filter:blur(2px);opacity:0.8}
 }
-
-/* ── SHADER CANVAS ── */
-#shader-bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.45;filter:blur(6px)}
-
-/* ── SAVINGS TABLE OVERRIDES ── */
-.ct-row-savings{background:rgba(16,185,129,.08);border-left:2px solid var(--green)}
-.ct-cell-savings{color:#6EE7B7;font-weight:700}
-.ct-cell-savings.right{text-align:right}
-
-/* ── MODEL PANEL DESCRIPTIONS ── */
-.model-panel-desc{font-size:13px;color:var(--muted);margin-bottom:24px;font-family:'DM Mono',monospace}
-
-/* ── FEATURES SECTION ── */
-#features{border-top:1px solid var(--border)}
-
-/* ── BENTO MODEL MINI MULT COLORS ── */
-.mmp-mult-cyan{color:var(--acc)}
-.mmp-mult-blue{color:#93C5FD}
-.mmp-mult-pink{color:#F9A8D4}
-.mmp-mult-red{color:#F87171}
-
-/* ── IMG THUMB GRADIENTS ── */
-.img-thumb-flux{background:linear-gradient(135deg,#1a0a2e,#2d1b69,#0d1b4b)}
-.img-thumb-dalle{background:linear-gradient(135deg,#0a1628,#1a3a5c,#0d2a1e)}
-.img-thumb-sd{background:linear-gradient(135deg,#2a0a1e,#5c1a3a,#2a0a1e)}
-
-/* ── TEXT CENTER UTILITIES ── */
-.text-center{text-align:center}
-.mx-auto{margin:0 auto}
-
-/* ── CTA LARGE BUTTONS ── */
-.btn-cta-lg{font-size:16px;padding:16px 44px}
