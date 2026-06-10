@@ -461,8 +461,8 @@ const ALL_MODELS = [
 function getCardClass(m) {
   if (m.cat === 'image') return 'img-card';
   if (m.cat === 'voice') return 'voice-card';
-  if (m.mult >= 10) return 'expensive';
-  if (m.mult <= 0.5) return 'cheap';
+  if (m.mult >= 2) return 'expensive';
+  if (m.mult <= 0.3) return 'cheap';
   if (m.mult === 1) return 'reference';
   return '';
 }

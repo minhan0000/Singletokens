@@ -53,8 +53,8 @@ const VOICE_MODELS = [
 
 function getMultClass(m) {
   if(m.cls) return m.cls;
-  if(m.mult>=10) return'expensive';
-  if(m.mult<=0.5) return'cheap';
+  if(m.mult>=2) return'expensive';
+  if(m.mult<=0.3) return'cheap';
   if(m.mult===1) return'reference';
   return'';
 }
