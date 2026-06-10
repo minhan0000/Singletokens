@@ -87,10 +87,10 @@ function switchTab(tab, btn) {
 function updateCalc(val) {
   document.getElementById('calc-val').textContent = val;
   const tokens = val * 1000;
-  document.getElementById('cr-sonnet').textContent = '~' + Math.round(tokens / 1 / 500).toLocaleString('de');
-  document.getElementById('cr-llama').textContent  = '~' + Math.round(tokens / 0.13 / 500).toLocaleString('de');
-  document.getElementById('cr-img').textContent    = '~' + Math.round(tokens / 3 / 1000).toLocaleString('de');
-  document.getElementById('cr-voice').textContent  = '~' + Math.round(tokens / 2.5 / 250).toLocaleString('de');
+  document.getElementById('cr-sonnet').textContent = '~' + Math.round(tokens / 1.5).toLocaleString('de');
+  document.getElementById('cr-llama').textContent  = '~' + Math.round(tokens / 0.196).toLocaleString('de');
+  document.getElementById('cr-img').textContent    = '~' + Math.round(tokens / 3).toLocaleString('de');
+  document.getElementById('cr-voice').textContent  = '~' + Math.round(tokens / 0.75).toLocaleString('de');
 }
 
 // ─── PROVIDER MARQUEE ───
@@ -214,6 +214,7 @@ document.addEventListener('DOMContentLoaded', function() {
   ).join('');
   track.innerHTML = chips;
 
+  updateCalc(document.getElementById('calc-slider').value);
   initShader();
 
   // scroll reveal
