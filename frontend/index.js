@@ -85,12 +85,16 @@ function switchTab(tab, btn) {
 
 // ─── CALCULATOR ───
 function updateCalc(val) {
+  val = Number(val);
   document.getElementById('calc-val').textContent = val;
   const tokens = val * 1000;
   document.getElementById('cr-sonnet').textContent = '~' + Math.round(tokens / 1.5).toLocaleString('de');
   document.getElementById('cr-llama').textContent  = '~' + Math.round(tokens / 0.196).toLocaleString('de');
   document.getElementById('cr-img').textContent    = '~' + Math.round(tokens / 3).toLocaleString('de');
   document.getElementById('cr-voice').textContent  = '~' + Math.round(tokens / 0.75).toLocaleString('de');
+  const sl = document.getElementById('calc-slider');
+  const pct = ((val - sl.min) / (sl.max - sl.min)) * 100;
+  sl.style.background = `linear-gradient(to right, #22D3EE ${pct}%, var(--dark4) ${pct}%)`;
 }
 
 // ─── PROVIDER MARQUEE ───
@@ -214,7 +218,9 @@ document.addEventListener('DOMContentLoaded', function() {
   ).join('');
   track.innerHTML = chips;
 
-  updateCalc(document.getElementById('calc-slider').value);
+  const calcSlider = document.getElementById('calc-slider');
+  calcSlider.addEventListener('input', function() { updateCalc(this.value); });
+  updateCalc(calcSlider.value);
   initShader();
 
   // scroll reveal
