@@ -88,10 +88,11 @@ function updateCalc(val) {
   val = Number(val);
   document.getElementById('calc-val').textContent = val;
   const tokens = val * 1000;
-  document.getElementById('cr-sonnet').textContent = '~' + Math.round(tokens / 1.5).toLocaleString('de');
-  document.getElementById('cr-llama').textContent  = '~' + Math.round(tokens / 0.196).toLocaleString('de');
-  document.getElementById('cr-img').textContent    = '~' + Math.round(tokens / 3).toLocaleString('de');
-  document.getElementById('cr-voice').textContent  = '~' + Math.round(tokens / 0.75).toLocaleString('de');
+  const r = v => Math.round(v / 100) * 100;
+  document.getElementById('cr-sonnet').textContent = '~' + r(tokens / 1.5).toLocaleString('de');
+  document.getElementById('cr-llama').textContent  = '~' + r(tokens / 0.196).toLocaleString('de');
+  document.getElementById('cr-img').textContent    = '~' + r(tokens / 3).toLocaleString('de');
+  document.getElementById('cr-voice').textContent  = '~' + r(tokens / 0.75).toLocaleString('de');
   const sl = document.getElementById('calc-slider');
   const pct = ((val - sl.min) / (sl.max - sl.min)) * 100;
   sl.style.background = `linear-gradient(to right, #22D3EE ${pct}%, var(--dark4) ${pct}%)`;
