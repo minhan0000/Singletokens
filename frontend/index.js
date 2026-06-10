@@ -87,12 +87,22 @@ function switchTab(tab, btn) {
 function updateCalc(val) {
   val = Number(val);
   document.getElementById('calc-val').textContent = val;
-  const tokens = val * 1000;
-  const r = v => Math.round(v / 100) * 100;
-  document.getElementById('cr-sonnet').textContent = '~' + r(tokens / 1.5).toLocaleString('de');
-  document.getElementById('cr-llama').textContent  = '~' + r(tokens / 0.196).toLocaleString('de');
-  document.getElementById('cr-img').textContent    = '~' + r(tokens / 3).toLocaleString('de');
-  document.getElementById('cr-voice').textContent  = '~' + r(tokens / 0.75).toLocaleString('de');
+  const budget = val; // euros
+  // rounding to nearest sensible step
+  const r = v => {
+    if (v >= 10000) return Math.round(v / 1000) * 1000;
+    if (v >= 1000)  return Math.round(v / 100) * 100;
+    return Math.round(v / 10) * 10;
+  };
+  // costs per unit derived from real API pricing
+  // Sonnet: $0.003 input + $0.015 output per 1K tokens, avg 1K tokens/msg → ~€0.0083/msg
+  // Llama 11B: $0.18/MTok, avg 1K tokens/msg → ~€0.00017/msg
+  // Flux 1.1 Pro: $0.04/image → ~€0.037/image
+  // ElevenLabs: $0.30/1K chars, avg 750 chars/min → ~€0.21/min
+  document.getElementById('cr-sonnet').textContent = '~' + r(budget / 0.0083).toLocaleString('de');
+  document.getElementById('cr-llama').textContent  = '~' + r(budget / 0.00017).toLocaleString('de');
+  document.getElementById('cr-img').textContent    = '~' + r(budget / 0.037).toLocaleString('de');
+  document.getElementById('cr-voice').textContent  = '~' + r(budget / 0.21).toLocaleString('de');
   const sl = document.getElementById('calc-slider');
   const pct = ((val - sl.min) / (sl.max - sl.min)) * 100;
   sl.style.background = `linear-gradient(to right, #22D3EE ${pct}%, var(--dark4) ${pct}%)`;
