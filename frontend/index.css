@@ -324,3 +324,35 @@ footer{border-top:1px solid var(--border);padding:48px 40px 36px}
   .trust-item{flex-basis:100%}
   #shader-bg{filter:blur(2px);opacity:0.8}
 }
+
+/* ── SHADER CANVAS ── */
+#shader-bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.45;filter:blur(6px)}
+
+/* ── SAVINGS TABLE OVERRIDES ── */
+.ct-row-savings{background:rgba(16,185,129,.08);border-left:2px solid var(--green)}
+.ct-cell-savings{color:#6EE7B7;font-weight:700}
+.ct-cell-savings.right{text-align:right}
+
+/* ── MODEL PANEL DESCRIPTIONS ── */
+.model-panel-desc{font-size:13px;color:var(--muted);margin-bottom:24px;font-family:'DM Mono',monospace}
+
+/* ── FEATURES SECTION ── */
+#features{border-top:1px solid var(--border)}
+
+/* ── BENTO MODEL MINI MULT COLORS ── */
+.mmp-mult-cyan{color:var(--acc)}
+.mmp-mult-blue{color:#93C5FD}
+.mmp-mult-pink{color:#F9A8D4}
+.mmp-mult-red{color:#F87171}
+
+/* ── IMG THUMB GRADIENTS ── */
+.img-thumb-flux{background:linear-gradient(135deg,#1a0a2e,#2d1b69,#0d1b4b)}
+.img-thumb-dalle{background:linear-gradient(135deg,#0a1628,#1a3a5c,#0d2a1e)}
+.img-thumb-sd{background:linear-gradient(135deg,#2a0a1e,#5c1a3a,#2a0a1e)}
+
+/* ── TEXT CENTER UTILITIES ── */
+.text-center{text-align:center}
+.mx-auto{margin:0 auto}
+
+/* ── CTA LARGE BUTTONS ── */
+.btn-cta-lg{font-size:16px;padding:16px 44px}

@@ -32,7 +32,7 @@
 </nav>
 
 <!-- SHADER BACKGROUND -->
-<canvas id="shader-bg" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.45;filter:blur(6px)"></canvas>
+<canvas id="shader-bg"></canvas>
 
 <!-- HERO -->
 <div class="hero">
@@ -134,10 +134,10 @@
           <div class="ct-cell val green">~$8 Ø / Monat</div>
           <div class="ct-cell val green">~$96 Ø / Jahr</div>
         </div>
-        <div class="ct-row" style="background:rgba(16,185,129,.08);border-left:2px solid var(--green)">
-          <div class="ct-cell label" style="color:#6EE7B7;font-weight:700">Deine Ersparnis</div>
-          <div class="ct-cell val" style="color:#6EE7B7;font-weight:700;text-align:right">~$52 / Monat</div>
-          <div class="ct-cell val" style="color:#6EE7B7;font-weight:700;text-align:right">~$624 / Jahr</div>
+        <div class="ct-row ct-row-savings">
+          <div class="ct-cell label ct-cell-savings">Deine Ersparnis</div>
+          <div class="ct-cell val ct-cell-savings right">~$52 / Monat</div>
+          <div class="ct-cell val ct-cell-savings right">~$624 / Jahr</div>
         </div>
       </div>
     </div>
@@ -201,18 +201,18 @@
       <div class="models-grid" id="models-text"></div>
     </div>
     <div class="model-panel" id="panel-img">
-      <p style="font-size:13px;color:var(--muted);margin-bottom:24px;font-family:'DM Mono',monospace;">Generiere hochauflösende Bilder mit State-of-the-Art Diffusionsmodellen. Token-Kosten pro Bild.</p>
+      <p class="model-panel-desc">Generiere hochauflösende Bilder mit State-of-the-Art Diffusionsmodellen. Token-Kosten pro Bild.</p>
       <div class="models-grid" id="models-img"></div>
     </div>
     <div class="model-panel" id="panel-voice">
-      <p style="font-size:13px;color:var(--muted);margin-bottom:24px;font-family:'DM Mono',monospace;">Natürliche Sprachausgabe und Transkription. Token-Kosten pro 1000 Zeichen / Sekunde.</p>
+      <p class="model-panel-desc">Natürliche Sprachausgabe und Transkription. Token-Kosten pro 1000 Zeichen / Sekunde.</p>
       <div class="models-grid" id="models-voice"></div>
     </div>
   </div>
 </section>
 
 <!-- FEATURES BENTO -->
-<section id="features" style="border-top:1px solid var(--border)">
+<section id="features">
   <div class="section-inner">
     <div class="reveal">
       <div class="section-eyebrow">Features</div>
@@ -241,10 +241,10 @@
         <div class="bento-title">30 Modelle, ein System</div>
         <div class="bento-desc">Jedes Modell hat einen Multiplier – kleiner = günstiger.</div>
         <div class="model-mini-grid">
-          <div class="mmp"><div class="mmp-provider">Meta</div><div class="mmp-name">Llama 11B</div><div class="mmp-mult" style="color:var(--acc)">x0.13</div></div>
-          <div class="mmp"><div class="mmp-provider">Anthropic</div><div class="mmp-name">Sonnet 4.5</div><div class="mmp-mult" style="color:#93C5FD">x1</div></div>
-          <div class="mmp"><div class="mmp-provider">Black Forest</div><div class="mmp-name">Flux 1.1 Pro</div><div class="mmp-mult" style="color:#F9A8D4">x3</div></div>
-          <div class="mmp"><div class="mmp-provider">OpenAI</div><div class="mmp-name">GPT-5</div><div class="mmp-mult" style="color:#F87171">x70</div></div>
+          <div class="mmp"><div class="mmp-provider">Meta</div><div class="mmp-name">Llama 11B</div><div class="mmp-mult mmp-mult-cyan">x0.13</div></div>
+          <div class="mmp"><div class="mmp-provider">Anthropic</div><div class="mmp-name">Sonnet 4.5</div><div class="mmp-mult mmp-mult-blue">x1</div></div>
+          <div class="mmp"><div class="mmp-provider">Black Forest</div><div class="mmp-name">Flux 1.1 Pro</div><div class="mmp-mult mmp-mult-pink">x3</div></div>
+          <div class="mmp"><div class="mmp-provider">OpenAI</div><div class="mmp-name">GPT-5</div><div class="mmp-mult mmp-mult-red">x70</div></div>
         </div>
       </div>
 
@@ -254,9 +254,9 @@
         <div class="bento-title">Bilder mit KI erstellen</div>
         <div class="bento-desc">Flux 1.1 Pro, DALL·E 3, Stable Diffusion 3.5 &amp; Ideogram 2.0 – direkt im Chat.</div>
         <div class="img-preview">
-          <div class="img-thumb" style="background:linear-gradient(135deg,#1a0a2e,#2d1b69,#0d1b4b)">🌆<div class="img-thumb-label">Flux 1.1 Pro</div></div>
-          <div class="img-thumb" style="background:linear-gradient(135deg,#0a1628,#1a3a5c,#0d2a1e)">🌿<div class="img-thumb-label">DALL·E 3</div></div>
-          <div class="img-thumb" style="background:linear-gradient(135deg,#2a0a1e,#5c1a3a,#2a0a1e)">🎨<div class="img-thumb-label">SD 3.5</div></div>
+          <div class="img-thumb img-thumb-flux">🌆<div class="img-thumb-label">Flux 1.1 Pro</div></div>
+          <div class="img-thumb img-thumb-dalle">🌿<div class="img-thumb-label">DALL·E 3</div></div>
+          <div class="img-thumb img-thumb-sd">🎨<div class="img-thumb-label">SD 3.5</div></div>
         </div>
       </div>
 
@@ -321,9 +321,9 @@
 <section class="calc-section" id="calculator">
   <div class="section-inner">
     <div class="calc-inner reveal">
-      <div class="section-eyebrow" style="text-align:center">Token-Rechner</div>
-      <h2 class="section-title" style="text-align:center">Wie viel bekommst du?</h2>
-      <p class="section-sub" style="text-align:center;margin:0 auto">Berechne wie viele Nachrichten, Bilder oder Minuten du für dein Budget bekommst.</p>
+      <div class="section-eyebrow text-center">Token-Rechner</div>
+      <h2 class="section-title text-center">Wie viel bekommst du?</h2>
+      <p class="section-sub text-center mx-auto">Berechne wie viele Nachrichten, Bilder oder Minuten du für dein Budget bekommst.</p>
       <div class="calc-box">
         <div class="calc-label">Mein Budget</div>
         <div class="calc-amount">€<em id="calc-val">10</em></div>
@@ -355,10 +355,10 @@
 <!-- PRICING -->
 <section id="pricing" class="pricing-section">
   <div class="section-inner">
-    <div class="reveal" style="text-align:center">
+    <div class="reveal text-center">
       <div class="section-eyebrow">Preise</div>
       <h2 class="section-title">Kauf einmal. Nutze immer.</h2>
-      <p class="section-sub" style="margin:0 auto">Kein Abo. Tokens verfallen nie. Alle 30+ Modelle inbegriffen.</p>
+      <p class="section-sub mx-auto">Kein Abo. Tokens verfallen nie. Alle 30+ Modelle inbegriffen.</p>
     </div>
     <div class="pricing-grid reveal">
       <div class="plan">
@@ -415,8 +415,8 @@
     <h2 class="cta-title">Bereit?<br><span>Starte heute gratis.</span></h2>
     <p class="cta-sub">Kein Abo, kein Risiko. Einfach Tokens kaufen und alle 30+ KI-Modelle nutzen. Tokens verfallen nie.</p>
     <div class="cta-btns">
-      <a class="btn-primary" href="#" onclick="goToApp();return false;" style="font-size:16px;padding:16px 44px">App jetzt öffnen →</a>
-      <a class="btn-secondary" href="#calculator" style="font-size:16px;padding:16px 44px">Token-Rechner</a>
+      <a class="btn-primary btn-cta-lg" href="#" onclick="goToApp();return false;">App jetzt öffnen →</a>
+      <a class="btn-secondary btn-cta-lg" href="#calculator">Token-Rechner</a>
     </div>
   </div>
 </section>
