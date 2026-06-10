@@ -351,7 +351,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
           <input type="range" id="tok-slider" min="0" max="100" value="0" step="1">
           <div class="est-box">
             <div class="est-title">Geschätzte Nachrichten</div>
-            <div class="est-row"><span class="est-model">GPT-5 <span class="mult-badge">x70</span></span><span class="est-val" id="e-gpt5">–</span></div>
+            <div class="est-row"><span class="est-model">GPT-5 <span class="mult-badge">x2</span></span><span class="est-val" id="e-gpt5">–</span></div>
             <div class="est-row"><span class="est-model">Llama 3.3 70B <span class="mult-badge">x0.3</span></span><span class="est-val" id="e-llama">–</span></div>
             <div class="est-row"><span class="est-model">Claude Sonnet 4.5 <span class="mult-badge">x1</span></span><span class="est-val" id="e-sonnet">–</span></div>
           </div>
@@ -509,25 +509,25 @@ const MOBILE_MODELS=[
   {name:'Claude 3.7 Sonnet',   icon:'◆',color:'#F97316',mult:2,   cat:'anthropic',tag:'Thinking',        tagClass:'tag-blue',isNew:true},
   {name:'Claude Opus 4.5',     icon:'◆',color:'#F97316',mult:5,   cat:'anthropic',tag:'Leistungsstark',  tagClass:'tag-blue'},
   {name:'GPT-4o',              icon:'⬡',color:'#4ADE80',mult:0.85,cat:'openai',   tag:'Vielseitig',      tagClass:'tag-green'},
-  {name:'GPT-5',               icon:'⬡',color:'#4ADE80',mult:70,  cat:'openai',   tag:'Neuestes',        tagClass:'tag-red'},
-  {name:'OpenAI o1',           icon:'⬡',color:'#4ADE80',mult:20,  cat:'openai',   tag:'Reasoning',       tagClass:'tag-red'},
-  {name:'OpenAI o1 Mini',      icon:'⬡',color:'#4ADE80',mult:4,   cat:'openai',   tag:'Reasoning',       tagClass:'tag-muted'},
-  {name:'Gemini 2.5 Pro',      icon:'✦',color:'#FBBF24',mult:4,   cat:'google',   tag:'Thinking',        tagClass:'tag-blue',isNew:true},
-  {name:'Gemini Pro 2.0',      icon:'✦',color:'#FBBF24',mult:2.33,cat:'google',   tag:'Multimodal',      tagClass:'tag-blue'},
-  {name:'Gemini Flash 2.0',    icon:'✦',color:'#FBBF24',mult:0.5, cat:'google',   tag:'Günstig',         tagClass:'tag-cyan'},
+  {name:'GPT-5',               icon:'⬡',color:'#4ADE80',mult:2,   cat:'openai',   tag:'Neuestes',        tagClass:'tag-red'},
+  {name:'OpenAI o1',           icon:'⬡',color:'#4ADE80',mult:5,   cat:'openai',   tag:'Reasoning',       tagClass:'tag-red'},
+  {name:'OpenAI o1 Mini',      icon:'⬡',color:'#4ADE80',mult:0.5, cat:'openai',   tag:'Reasoning',       tagClass:'tag-muted'},
+  {name:'Gemini 2.5 Pro',      icon:'✦',color:'#FBBF24',mult:0.5, cat:'google',   tag:'Thinking',        tagClass:'tag-blue',isNew:true},
+  {name:'Gemini Pro 2.0',      icon:'✦',color:'#FBBF24',mult:0.3, cat:'google',   tag:'Multimodal',      tagClass:'tag-blue'},
+  {name:'Gemini Flash 2.0',    icon:'✦',color:'#FBBF24',mult:0.08,cat:'google',   tag:'Günstig',         tagClass:'tag-cyan'},
   {name:'Llama 3.3 70B',       icon:'🦙',color:'#22D3EE',mult:0.3, cat:'open',    tag:'Open Source',     tagClass:'tag-cyan'},
   {name:'Llama 11B',           icon:'🦙',color:'#22D3EE',mult:0.13,cat:'open',    tag:'Kleinst',         tagClass:'tag-cyan'},
   {name:'Llama 3.2 Vision 11B',icon:'🦙',color:'#22D3EE',mult:0.3, cat:'open',    tag:'Multimodal',      tagClass:'tag-green',isNew:true},
-  {name:'Mistral Large 2',     icon:'▲',color:'#F472B6',mult:2.67,cat:'open',     tag:'Europäisch',      tagClass:'tag-muted'},
-  {name:'Mistral Small',       icon:'▲',color:'#F472B6',mult:0.67,cat:'open',     tag:'Effizient',       tagClass:'tag-green'},
-  {name:'DeepSeek V3',         icon:'🔍',color:'#60A5FA',mult:0.9, cat:'open',    tag:'Open Source',     tagClass:'tag-green'},
-  {name:'Qwen 2.5 72B',        icon:'☰',color:'#FCA5A5',mult:0.3, cat:'open',    tag:'Open Source',     tagClass:'tag-cyan'},
-  {name:'Grok 2',              icon:'✕',color:'#E5E7EB',mult:1.67,cat:'open',    tag:'Von xAI',         tagClass:'tag-muted'},
-  {name:'Perplexity Sonar Pro',icon:'◎',color:'#86EFAC',mult:2.5, cat:'open',    tag:'Web-Suche',       tagClass:'tag-green',isNew:true},
-  {name:'Command R+',          icon:'◈',color:'#93C5FD',mult:0.8, cat:'open',    tag:'RAG',             tagClass:'tag-green',isNew:true},
-  {name:'Phi-4 Mini',          icon:'Φ',color:'#93C5FD',mult:0.2, cat:'open',    tag:'Kompakt',         tagClass:'tag-cyan',isNew:true},
-  {name:'Amazon Nova Lite',    icon:'◇',color:'#FCD34D',mult:0.15,cat:'open',    tag:'Günstig',         tagClass:'tag-cyan',isNew:true},
-  {name:'Gemma 2 27B',         icon:'💎',color:'#34D399',mult:0.35,cat:'open',   tag:'Open Source',     tagClass:'tag-cyan'},
+  {name:'Mistral Large 2',     icon:'▲',color:'#F472B6',mult:0.7, cat:'open',     tag:'Europäisch',      tagClass:'tag-muted'},
+  {name:'Mistral Small',       icon:'▲',color:'#F472B6',mult:0.12,cat:'open',     tag:'Effizient',       tagClass:'tag-green'},
+  {name:'DeepSeek V3',         icon:'🔍',color:'#60A5FA',mult:0.15,cat:'open',    tag:'Open Source',     tagClass:'tag-green'},
+  {name:'Qwen 2.5 72B',        icon:'☰',color:'#FCA5A5',mult:0.15,cat:'open',    tag:'Open Source',     tagClass:'tag-cyan'},
+  {name:'Grok 2',              icon:'✕',color:'#E5E7EB',mult:0.5, cat:'open',    tag:'Von xAI',         tagClass:'tag-muted'},
+  {name:'Perplexity Sonar Pro',icon:'◎',color:'#86EFAC',mult:1.5, cat:'open',    tag:'Web-Suche',       tagClass:'tag-green',isNew:true},
+  {name:'Command R+',          icon:'◈',color:'#93C5FD',mult:0.3, cat:'open',    tag:'RAG',             tagClass:'tag-green',isNew:true},
+  {name:'Phi-4 Mini',          icon:'Φ',color:'#93C5FD',mult:0.05,cat:'open',    tag:'Kompakt',         tagClass:'tag-cyan',isNew:true},
+  {name:'Amazon Nova Lite',    icon:'◇',color:'#FCD34D',mult:0.05,cat:'open',    tag:'Günstig',         tagClass:'tag-cyan',isNew:true},
+  {name:'Gemma 2 27B',         icon:'💎',color:'#34D399',mult:0.1, cat:'open',   tag:'Open Source',     tagClass:'tag-cyan'},
   {name:'Flux 1.1 Pro',        icon:'🖼',color:'#F9A8D4',mult:3,   cat:'image',   tag:'Scharf',          tagClass:'tag-pink',isNew:true},
   {name:'DALL·E 3',            icon:'🖼',color:'#F9A8D4',mult:6,   cat:'image',   tag:'Kreativ',         tagClass:'tag-pink',isNew:true},
   {name:'Stable Diffusion 3.5',icon:'🖼',color:'#F9A8D4',mult:2,   cat:'image',   tag:'Open Source',     tagClass:'tag-pink',isNew:true},

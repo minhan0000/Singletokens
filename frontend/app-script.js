@@ -169,11 +169,11 @@ let balance = 0;
 const MODELS_MULT = {
   'Llama 3.3 70B':0.3,'Llama 11B':0.13,'Llama 3.2 Vision 11B':0.3,
   'Claude Haiku 4.5':0.27,'Claude Sonnet 4.5':1,'Claude 3.7 Sonnet':2,'Claude Opus 4.5':5,
-  'GPT-4o':0.85,'GPT-5':70,'OpenAI o1':20,'OpenAI o1 Mini':4,
-  'Gemini 2.5 Pro':4,'Gemini Pro 2.0':2.33,'Gemini Flash 2.0':0.5,
-  'Mistral Large 2':2.67,'Mistral Small':0.67,'DeepSeek V3':0.9,
-  'Qwen 2.5 72B':0.3,'Grok 2':1.67,'Perplexity Sonar Pro':2.5,
-  'Command R+':0.8,'Phi-4 Mini':0.2,'Amazon Nova Lite':0.15,'Gemma 2 27B':0.35,
+  'GPT-4o':0.85,'GPT-5':2,'OpenAI o1':5,'OpenAI o1 Mini':0.5,
+  'Gemini 2.5 Pro':0.5,'Gemini Pro 2.0':0.3,'Gemini Flash 2.0':0.08,
+  'Mistral Large 2':0.7,'Mistral Small':0.12,'DeepSeek V3':0.15,
+  'Qwen 2.5 72B':0.15,'Grok 2':0.5,'Perplexity Sonar Pro':1.5,
+  'Command R+':0.3,'Phi-4 Mini':0.05,'Amazon Nova Lite':0.05,'Gemma 2 27B':0.1,
   'Flux 1.1 Pro':3,'DALL·E 3':6,'Stable Diffusion 3.5':2,'Ideogram 2.0':4,
   'Multilingual v2':2.5,'Whisper Large v3':0.5
 };
@@ -432,25 +432,25 @@ const ALL_MODELS = [
   {name:'Claude 3.7 Sonnet',   provider:'Anthropic',         cat:'anthropic', mult:2,    tag:'Thinking',       tagClass:'tag-blue', isNew:true},
   {name:'Claude Opus 4.5',     provider:'Anthropic',         cat:'anthropic', mult:5,    tag:'Leistungsstark', tagClass:'tag-blue'},
   {name:'GPT-4o',              provider:'OpenAI',            cat:'openai',    mult:0.85, tag:'Vielseitig',     tagClass:'tag-green'},
-  {name:'GPT-5',               provider:'OpenAI',            cat:'openai',    mult:70,   tag:'Neuestes',       tagClass:'tag-red'},
-  {name:'OpenAI o1',           provider:'OpenAI',            cat:'openai',    mult:20,   tag:'Reasoning',      tagClass:'tag-red'},
-  {name:'OpenAI o1 Mini',      provider:'OpenAI',            cat:'openai',    mult:4,    tag:'Reasoning',      tagClass:'tag-muted'},
-  {name:'Gemini 2.5 Pro',      provider:'Google',            cat:'google',    mult:4,    tag:'Thinking',       tagClass:'tag-blue', isNew:true},
-  {name:'Gemini Pro 2.0',      provider:'Google',            cat:'google',    mult:2.33, tag:'Multimodal',     tagClass:'tag-blue'},
-  {name:'Gemini Flash 2.0',    provider:'Google',            cat:'google',    mult:0.5,  tag:'Günstig',        tagClass:'tag-cyan'},
+  {name:'GPT-5',               provider:'OpenAI',            cat:'openai',    mult:2,    tag:'Neuestes',       tagClass:'tag-red'},
+  {name:'OpenAI o1',           provider:'OpenAI',            cat:'openai',    mult:5,    tag:'Reasoning',      tagClass:'tag-red'},
+  {name:'OpenAI o1 Mini',      provider:'OpenAI',            cat:'openai',    mult:0.5,  tag:'Reasoning',      tagClass:'tag-muted'},
+  {name:'Gemini 2.5 Pro',      provider:'Google',            cat:'google',    mult:0.5,  tag:'Thinking',       tagClass:'tag-blue', isNew:true},
+  {name:'Gemini Pro 2.0',      provider:'Google',            cat:'google',    mult:0.3,  tag:'Multimodal',     tagClass:'tag-blue'},
+  {name:'Gemini Flash 2.0',    provider:'Google',            cat:'google',    mult:0.08, tag:'Günstig',        tagClass:'tag-cyan'},
   {name:'Llama 3.3 70B',       provider:'Meta',              cat:'open',      mult:0.3,  tag:'Open Source',    tagClass:'tag-cyan'},
   {name:'Llama 11B',           provider:'Meta',              cat:'open',      mult:0.13, tag:'Kleinst',        tagClass:'tag-cyan'},
   {name:'Llama 3.2 Vision 11B',provider:'Meta',              cat:'open',      mult:0.3,  tag:'Multimodal',     tagClass:'tag-green', isNew:true},
-  {name:'Mistral Large 2',     provider:'Mistral',           cat:'open',      mult:2.67, tag:'Europäisch',     tagClass:'tag-muted'},
-  {name:'Mistral Small',       provider:'Mistral',           cat:'open',      mult:0.67, tag:'Effizient',      tagClass:'tag-green'},
-  {name:'DeepSeek V3',         provider:'DeepSeek',          cat:'open',      mult:0.9,  tag:'Open Source',    tagClass:'tag-green'},
-  {name:'Qwen 2.5 72B',        provider:'Alibaba',           cat:'open',      mult:0.3,  tag:'Open Source',    tagClass:'tag-cyan'},
-  {name:'Grok 2',              provider:'xAI',               cat:'open',      mult:1.67, tag:'Von xAI',        tagClass:'tag-muted'},
-  {name:'Perplexity Sonar Pro',provider:'Perplexity',        cat:'open',      mult:2.5,  tag:'Web-Suche',      tagClass:'tag-green', isNew:true},
-  {name:'Command R+',          provider:'Cohere',            cat:'open',      mult:0.8,  tag:'RAG',            tagClass:'tag-green', isNew:true},
-  {name:'Phi-4 Mini',          provider:'Microsoft',         cat:'open',      mult:0.2,  tag:'Kompakt',        tagClass:'tag-cyan', isNew:true},
-  {name:'Amazon Nova Lite',    provider:'Amazon',            cat:'open',      mult:0.15, tag:'Günstig',        tagClass:'tag-cyan', isNew:true},
-  {name:'Gemma 2 27B',         provider:'Google',            cat:'open',      mult:0.35, tag:'Open Source',    tagClass:'tag-cyan'},
+  {name:'Mistral Large 2',     provider:'Mistral',           cat:'open',      mult:0.7,  tag:'Europäisch',     tagClass:'tag-muted'},
+  {name:'Mistral Small',       provider:'Mistral',           cat:'open',      mult:0.12, tag:'Effizient',      tagClass:'tag-green'},
+  {name:'DeepSeek V3',         provider:'DeepSeek',          cat:'open',      mult:0.15, tag:'Open Source',    tagClass:'tag-green'},
+  {name:'Qwen 2.5 72B',        provider:'Alibaba',           cat:'open',      mult:0.15, tag:'Open Source',    tagClass:'tag-cyan'},
+  {name:'Grok 2',              provider:'xAI',               cat:'open',      mult:0.5,  tag:'Von xAI',        tagClass:'tag-muted'},
+  {name:'Perplexity Sonar Pro',provider:'Perplexity',        cat:'open',      mult:1.5,  tag:'Web-Suche',      tagClass:'tag-green', isNew:true},
+  {name:'Command R+',          provider:'Cohere',            cat:'open',      mult:0.3,  tag:'RAG',            tagClass:'tag-green', isNew:true},
+  {name:'Phi-4 Mini',          provider:'Microsoft',         cat:'open',      mult:0.05, tag:'Kompakt',        tagClass:'tag-cyan', isNew:true},
+  {name:'Amazon Nova Lite',    provider:'Amazon',            cat:'open',      mult:0.05, tag:'Günstig',        tagClass:'tag-cyan', isNew:true},
+  {name:'Gemma 2 27B',         provider:'Google',            cat:'open',      mult:0.1,  tag:'Open Source',    tagClass:'tag-cyan'},
   {name:'Flux 1.1 Pro',        provider:'Black Forest Labs', cat:'image',     mult:3,    tag:'Scharf',         tagClass:'tag-pink', isNew:true},
   {name:'DALL·E 3',            provider:'OpenAI',            cat:'image',     mult:6,    tag:'Kreativ',        tagClass:'tag-pink', isNew:true},
   {name:'Stable Diffusion 3.5',provider:'Stability AI',      cat:'image',     mult:2,    tag:'Open Source',    tagClass:'tag-pink', isNew:true},
@@ -499,7 +499,7 @@ function calcPrice(t) { return (t/1e6) * BASE; }
 function sliderToTok(v) { const mn = Math.log(MIN), mx = Math.log(1e8); return Math.max(MIN, Math.round(Math.exp(mn + (mx-mn)*v/100)/100)*100); }
 function tokToSlider(t) { if (t <= MIN) return 0; const mn = Math.log(MIN), mx = Math.log(1e8); return Math.round((Math.log(Math.min(t,1e8))-mn)/(mx-mn)*100); }
 function updateEst(prefix) {
-  const rows = [{id:'gpt5',mult:70},{id:'llama',mult:0.3},{id:'sonnet',mult:1},{id:'llama8b',mult:0.1}];
+  const rows = [{id:'gpt5',mult:2},{id:'llama',mult:0.3},{id:'sonnet',mult:1},{id:'llama8b',mult:0.1}];
   rows.forEach(m => { const el = document.getElementById(prefix+'-'+m.id); if (el) el.textContent = fmtMsgs(tokAmt/(AVG*m.mult)); });
 }
 function updatePurchase() {
