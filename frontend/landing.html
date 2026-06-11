@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SingleTokens – 30+ KI-Modelle. Kein Abo.</title>
+<meta name="description" content="Nutze Claude, GPT-5, Gemini, Flux & 30 weitere KI-Modelle – Text, Bilder, Sprache. Tokens kaufen, nie verfallen. Kein Monatsabo.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgc2hhcGUtcmVuZGVyaW5nPSJnZW9tZXRyaWNQcmVjaXNpb24iPgogIDxkZWZzPgogICAgPGNsaXBQYXRoIGlkPSJjaXJjbGUtY2xpcCI+CiAgICAgIDxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjUwIi8+CiAgICA8L2NsaXBQYXRoPgogIDwvZGVmcz4KICA8cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0ibm9uZSIvPgogIDxnIGNsaXAtcGF0aD0idXJsKCNjaXJjbGUtY2xpcCkiPgogICAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNTAiIGZpbGw9IiMwMENGRkYiLz4KICAgIDxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjQyIiBmaWxsPSIjMDAwMDAwIi8+CiAgICA8Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIzOCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLVdpZHRoPSIxLjIiLz4KICAgIDx0ZXh0IHg9IjUwIiB5PSI2MiIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzQiIGZvbnQtd2VpZ2h0PSI5MDAiIGZvbnQtc3R5bGU9Iml0YWxpYyIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlNUPC90ZXh0PgogIDwvZz4KPC9zdmc+">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --paper:#FFFFFF;
+  --paper2:#F5F5F2;
+  --ink:#141413;
+  --ink2:#5C5C58;
+  --line:#E2E2DD;
+  --line2:#141413;
+  --accent:#0A2FFF;
+  --green:#0B7A3B;
+  --red:#B42318;
+}
+body{font-family:'Archivo',Helvetica,Arial,sans-serif;background:var(--paper);color:var(--ink);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+em{font-style:normal}
+.num{font-variant-numeric:tabular-nums}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:100;background:var(--paper);border-bottom:1px solid var(--line2);height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 32px}
+.nav-logo{font-weight:800;font-size:17px;letter-spacing:-.02em;text-decoration:none}
+.nav-logo span{color:var(--accent)}
+.nav-links{display:flex;gap:28px}
+.nav-link{font-size:14px;font-weight:500;text-decoration:none;color:var(--ink2)}
+.nav-link:hover{color:var(--ink);text-decoration:underline;text-underline-offset:4px}
+.nav-cta{font-size:14px;font-weight:600;text-decoration:none;background:var(--ink);color:var(--paper);padding:9px 20px}
+.nav-cta:hover{background:var(--accent)}
+
+/* ── BUTTONS ── */
+.btn{display:inline-block;padding:14px 28px;font-size:15px;font-weight:600;text-decoration:none;border:1px solid var(--ink)}
+.btn-solid{background:var(--ink);color:var(--paper)}
+.btn-solid:hover{background:var(--accent);border-color:var(--accent)}
+.btn-line{background:transparent;color:var(--ink)}
+.btn-line:hover{background:var(--paper2)}
+
+/* ── HERO ── */
+.hero{border-bottom:1px solid var(--line2)}
+.hero-inner{max-width:1180px;margin:0 auto;padding:88px 32px 72px;display:grid;grid-template-columns:7fr 5fr;gap:72px;align-items:center}
+.hero-kicker{font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:22px}
+.hero h1{font-size:clamp(44px,6vw,76px);font-weight:800;line-height:1.02;letter-spacing:-.035em;margin-bottom:24px}
+.hero h1 .u{box-shadow:inset 0 -.14em 0 0 rgba(10,47,255,.22)}
+.hero-sub{font-size:18px;color:var(--ink2);max-width:520px;margin-bottom:36px}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:44px}
+.hero-facts{display:flex;gap:0;border-top:1px solid var(--line);padding-top:20px}
+.fact{padding-right:36px;margin-right:36px;border-right:1px solid var(--line)}
+.fact:last-child{border-right:none;margin-right:0;padding-right:0}
+.fact-val{font-size:26px;font-weight:800;letter-spacing:-.02em}
+.fact-label{font-size:12px;color:var(--ink2);margin-top:2px}
+
+/* hero price board */
+.board{border:1px solid var(--line2)}
+.board-head{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid var(--line2);background:var(--paper2)}
+.board-title{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.board-live{font-size:11px;font-weight:600;color:var(--green);display:flex;align-items:center;gap:6px}
+.board-live::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--green)}
+.board-row{display:flex;align-items:baseline;justify-content:space-between;padding:11px 18px;border-bottom:1px solid var(--line);font-size:14px}
+.board-row:last-child{border-bottom:none}
+.board-name{font-weight:600}
+.board-prov{color:var(--ink2);font-size:12px;margin-left:8px}
+.board-mult{font-weight:700}
+.board-mult.lo{color:var(--green)}
+.board-mult.hi{color:var(--red)}
+.board-foot{padding:11px 18px;border-top:1px solid var(--line2);font-size:12px;color:var(--ink2)}
+.board-foot a{color:var(--accent);font-weight:600}
+
+/* ── PROVIDER STRIP ── */
+.providers{border-bottom:1px solid var(--line2);background:var(--paper2)}
+.providers-inner{max-width:1180px;margin:0 auto;padding:18px 32px;display:flex;flex-wrap:wrap;gap:8px 0;align-items:center}
+.providers-label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);margin-right:24px}
+.prov{font-size:13px;font-weight:500;color:var(--ink2)}
+.prov::after{content:'/';margin:0 12px;color:var(--line)}
+.prov:last-child::after{content:''}
+
+/* ── SECTIONS ── */
+section{border-bottom:1px solid var(--line2)}
+.section-inner{max-width:1180px;margin:0 auto;padding:88px 32px}
+.sec-head{display:grid;grid-template-columns:1fr 2fr;gap:48px;margin-bottom:56px}
+.sec-no{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.sec-title{font-size:clamp(30px,3.6vw,46px);font-weight:800;letter-spacing:-.03em;line-height:1.08;margin-bottom:14px}
+.sec-sub{font-size:16px;color:var(--ink2);max-width:560px}
+
+/* ── SAVINGS ── */
+.savings-grid{display:grid;grid-template-columns:5fr 7fr;gap:64px;align-items:start}
+.savings-note{font-size:16px;color:var(--ink2);margin-bottom:24px}
+.savings-tag{display:inline-block;border:1px solid var(--green);color:var(--green);font-size:13px;font-weight:600;padding:8px 16px}
+table.cmp{width:100%;border-collapse:collapse;border:1px solid var(--line2);font-size:15px}
+table.cmp th{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;text-align:left;padding:12px 18px;background:var(--paper2);border-bottom:1px solid var(--line2);color:var(--ink2)}
+table.cmp td{padding:14px 18px;border-bottom:1px solid var(--line)}
+table.cmp tr:last-child td{border-bottom:none}
+table.cmp td.r,table.cmp th.r{text-align:right}
+table.cmp .strike{color:var(--ink2)}
+table.cmp tr.hl td{font-weight:700;border-top:1px solid var(--line2)}
+table.cmp tr.sum td{background:var(--ink);color:var(--paper);font-weight:700}
+
+/* ── HOW ── */
+.how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--line2)}
+.how-card{padding:36px 30px;border-right:1px solid var(--line2)}
+.how-card:last-child{border-right:none}
+.how-no{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:48px}
+.how-title{font-size:20px;font-weight:700;letter-spacing:-.01em;margin-bottom:10px}
+.how-desc{font-size:15px;color:var(--ink2)}
+
+/* ── MODELS ── */
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--line2);margin-bottom:0}
+.tab-btn{appearance:none;background:none;border:none;font-family:inherit;font-size:15px;font-weight:600;color:var(--ink2);padding:12px 22px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px}
+.tab-btn:hover{color:var(--ink)}
+.tab-btn.active{color:var(--ink);border-bottom-color:var(--accent)}
+.tab-btn .tab-count{font-size:12px;color:var(--ink2);margin-left:6px}
+.model-panel{display:none}
+.model-panel.active{display:block}
+.model-panel-desc{font-size:14px;color:var(--ink2);padding:18px 0 0}
+table.models{width:100%;border-collapse:collapse;margin-top:24px;border:1px solid var(--line2);font-size:15px}
+table.models th{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;text-align:left;padding:12px 18px;background:var(--paper2);border-bottom:1px solid var(--line2);color:var(--ink2)}
+table.models td{padding:12px 18px;border-bottom:1px solid var(--line)}
+table.models tr:last-child td{border-bottom:none}
+table.models td.r,table.models th.r{text-align:right}
+table.models .m-name{font-weight:600}
+table.models .m-prov{color:var(--ink2)}
+.pill{display:inline-block;font-size:11px;font-weight:600;border:1px solid var(--line);color:var(--ink2);padding:2px 9px;margin-left:10px;vertical-align:1px}
+.pill.new{border-color:var(--accent);color:var(--accent)}
+.mult{font-weight:700}
+.mult.lo{color:var(--green)}
+.mult.hi{color:var(--red)}
+
+/* ── FEATURES ── */
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line2);border-left:1px solid var(--line2)}
+.feat{padding:30px;border-right:1px solid var(--line2);border-bottom:1px solid var(--line2)}
+.feat-no{font-size:12px;font-weight:700;color:var(--accent);margin-bottom:14px}
+.feat-title{font-size:18px;font-weight:700;margin-bottom:8px}
+.feat-title .new-flag{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-left:8px}
+.feat-desc{font-size:14px;color:var(--ink2)}
+
+/* ── CALCULATOR ── */
+.calc-wrap{max-width:760px;margin:0 auto}
+.calc-box{border:1px solid var(--line2);padding:40px}
+.calc-label{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);margin-bottom:8px}
+.calc-amount{font-size:54px;font-weight:800;letter-spacing:-.03em;margin-bottom:24px}
+.calc-slider{width:100%;appearance:none;-webkit-appearance:none;height:4px;background:var(--line);outline:none;cursor:pointer}
+.calc-slider::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--paper);border:2px solid var(--ink);cursor:grab}
+.calc-slider::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--paper);border:2px solid var(--ink);cursor:grab}
+.calc-range{display:flex;justify-content:space-between;font-size:12px;color:var(--ink2);margin-top:10px}
+.calc-results{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line2);margin-top:32px}
+.calc-result{padding:20px 18px;border-right:1px solid var(--line2);text-align:left}
+.calc-result:last-child{border-right:none}
+.calc-result-val{font-size:24px;font-weight:800;letter-spacing:-.02em}
+.calc-result-label{font-size:12px;color:var(--ink2);margin-top:4px}
+
+/* ── PRICING ── */
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--line2)}
+.plan{padding:36px 30px;border-right:1px solid var(--line2);display:flex;flex-direction:column}
+.plan:last-child{border-right:none}
+.plan.pop{background:var(--paper2)}
+.plan-flag{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;min-height:16px}
+.plan-name{font-size:14px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:18px}
+.plan-price{font-size:52px;font-weight:800;letter-spacing:-.03em;line-height:1}
+.plan-per{font-size:13px;color:var(--ink2);margin:6px 0 18px}
+.plan-tokens{font-size:15px;font-weight:600;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:12px 0;margin-bottom:18px}
+.plan ul{list-style:none;margin-bottom:28px;flex:1}
+.plan li{font-size:14px;color:var(--ink2);padding:7px 0 7px 22px;position:relative}
+.plan li::before{content:'—';position:absolute;left:0;color:var(--accent);font-weight:700}
+.plan-btn{display:block;text-align:center;padding:13px;font-size:15px;font-weight:600;text-decoration:none;border:1px solid var(--ink);color:var(--ink)}
+.plan-btn:hover{background:var(--paper2)}
+.plan.pop .plan-btn{background:var(--ink);color:var(--paper)}
+.plan.pop .plan-btn:hover{background:var(--accent);border-color:var(--accent)}
+
+/* ── CTA ── */
+.cta{background:var(--ink);color:var(--paper);border-bottom:none}
+.cta .section-inner{padding:96px 32px;text-align:center}
+.cta h2{font-size:clamp(34px,4.4vw,58px);font-weight:800;letter-spacing:-.03em;line-height:1.05;margin-bottom:18px}
+.cta p{font-size:17px;color:#A8A8A2;max-width:520px;margin:0 auto 36px}
+.cta .btn-solid{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+.cta .btn-solid:hover{background:var(--accent);color:var(--paper);border-color:var(--accent)}
+.cta .btn-line{color:var(--paper);border-color:#4A4A46}
+.cta .btn-line:hover{background:#262624}
+
+/* ── FOOTER ── */
+footer{background:var(--ink);color:#A8A8A2;border-top:1px solid #33332F}
+.footer-inner{max-width:1180px;margin:0 auto;padding:56px 32px 32px}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;padding-bottom:40px;border-bottom:1px solid #33332F}
+.footer-logo{font-weight:800;font-size:17px;color:var(--paper);margin-bottom:12px}
+.footer-logo span{color:#6E8BFF}
+.footer-brand p{font-size:13px;max-width:260px}
+.footer-col h4{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--paper);margin-bottom:14px}
+.footer-col a{display:block;font-size:13px;color:#A8A8A2;text-decoration:none;padding:4px 0}
+.footer-col a:hover{color:var(--paper)}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:24px;font-size:12px;flex-wrap:wrap;gap:12px}
+.footer-badges span{margin-left:18px}
+
+/* ── RESPONSIVE ── */
+@media(max-width:960px){
+  .hero-inner{grid-template-columns:1fr;gap:48px}
+  .sec-head{grid-template-columns:1fr;gap:12px}
+  .savings-grid{grid-template-columns:1fr;gap:36px}
+  .how-grid{grid-template-columns:1fr}
+  .how-card{border-right:none;border-bottom:1px solid var(--line2)}
+  .how-card:last-child{border-bottom:none}
+  .feat-grid{grid-template-columns:1fr}
+  .calc-results{grid-template-columns:1fr 1fr}
+  .calc-result{border-bottom:1px solid var(--line2)}
+  .calc-result:nth-child(2n){border-right:none}
+  .calc-result:nth-child(n+3){border-bottom:none}
+  .pricing-grid{grid-template-columns:1fr}
+  .plan{border-right:none;border-bottom:1px solid var(--line2)}
+  .plan:last-child{border-bottom:none}
+  .footer-top{grid-template-columns:1fr 1fr}
+  .nav-links{display:none}
+}
+@media(max-width:640px){
+  .section-inner{padding:64px 20px}
+  .hero-inner{padding:56px 20px}
+  nav{padding:0 20px}
+  .providers-inner{padding:16px 20px}
+  .hero-facts{flex-wrap:wrap;gap:16px}
+  .fact{padding-right:20px;margin-right:20px}
+  .calc-box{padding:24px}
+  .models-scroll{overflow-x:auto}
+  table.models{min-width:640px}
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="/">Single<span>Tokens</span></a>
+  <div class="nav-links">
+    <a class="nav-link" href="#how">Wie es funktioniert</a>
+    <a class="nav-link" href="#models">Modelle</a>
+    <a class="nav-link" href="#features">Features</a>
+    <a class="nav-link" href="#pricing">Preise</a>
+  </div>
+  <a class="nav-cta" href="#" onclick="goToApp();return false;">App öffnen</a>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-kicker">30+ KI-Modelle · Text · Bild · Sprache</div>
+      <h1>Alle KIs.<br><span class="u">Kein Abo.</span></h1>
+      <p class="hero-sub">Tokens einmal kaufen – und damit Claude, GPT-5, Gemini, Flux, ElevenLabs und 25 weitere Top-Modelle nutzen. Tokens verfallen nie.</p>
+      <div class="hero-btns">
+        <a class="btn btn-solid" href="#" onclick="goToApp();return false;">Kostenlos starten</a>
+        <a class="btn btn-line" href="#models">Alle Modelle ansehen</a>
+      </div>
+      <div class="hero-facts">
+        <div class="fact"><div class="fact-val num">30+</div><div class="fact-label">KI-Modelle</div></div>
+        <div class="fact"><div class="fact-val num">€0</div><div class="fact-label">Monatsgebühr</div></div>
+        <div class="fact"><div class="fact-val num">∞</div><div class="fact-label">Token-Laufzeit</div></div>
+      </div>
+    </div>
+    <aside class="board" aria-label="Modellübersicht">
+      <div class="board-head">
+        <span class="board-title">Token-Kurs</span>
+        <span class="board-live">Live</span>
+      </div>
+      <div class="board-row"><span><span class="board-name">Phi-4 Mini</span><span class="board-prov">Microsoft</span></span><span class="board-mult lo num">×0.05</span></div>
+      <div class="board-row"><span><span class="board-name">Gemini Flash 2.0</span><span class="board-prov">Google</span></span><span class="board-mult lo num">×0.08</span></div>
+      <div class="board-row"><span><span class="board-name">Llama 11B</span><span class="board-prov">Meta</span></span><span class="board-mult lo num">×0.13</span></div>
+      <div class="board-row"><span><span class="board-name">Claude Sonnet 4.5</span><span class="board-prov">Anthropic</span></span><span class="board-mult num">×1</span></div>
+      <div class="board-row"><span><span class="board-name">Flux 1.1 Pro</span><span class="board-prov">Black Forest Labs</span></span><span class="board-mult num">×3</span></div>
+      <div class="board-row"><span><span class="board-name">Claude Opus 4.5</span><span class="board-prov">Anthropic</span></span><span class="board-mult hi num">×5</span></div>
+      <div class="board-foot">Multiplikator = Token-Verbrauch pro Nachricht. <a href="#models">Alle 30+ Modelle →</a></div>
+    </aside>
+  </div>
+</header>
+
+<!-- PROVIDER STRIP -->
+<div class="providers">
+  <div class="providers-inner" id="provider-strip">
+    <span class="providers-label">Anbieter</span>
+  </div>
+</div>
+
+<!-- SAVINGS -->
+<section id="savings">
+  <div class="section-inner">
+    <div class="sec-head">
+      <div class="sec-no">01 — Ersparnis</div>
+      <div>
+        <h2 class="sec-title">Bis zu $624 pro Jahr sparen</h2>
+        <p class="sec-sub">ChatGPT Plus, Claude Pro und Gemini Advanced kosten zusammen $60 im Monat. SingleTokens-Nutzer zahlen im Schnitt nur ~$8 – ausschließlich für das, was sie wirklich nutzen.</p>
+      </div>
+    </div>
+    <div class="savings-grid">
+      <div>
+        <p class="savings-note">Drei Abos durch ein einziges Token-Guthaben ersetzen: Du bekommst Zugriff auf dieselben Modelle, zahlst aber nur den tatsächlichen Verbrauch.</p>
+        <span class="savings-tag">Ø $52 pro Monat gespart</span>
+      </div>
+      <table class="cmp">
+        <thead>
+          <tr><th>Anbieter</th><th class="r">Pro Monat</th><th class="r">Pro Jahr</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="strike">ChatGPT Plus</td><td class="r strike num">$20.00</td><td class="r strike num">$240.00</td></tr>
+          <tr><td class="strike">Claude Pro</td><td class="r strike num">$20.00</td><td class="r strike num">$240.00</td></tr>
+          <tr><td class="strike">Gemini Advanced</td><td class="r strike num">$20.00</td><td class="r strike num">$240.00</td></tr>
+          <tr class="hl"><td>SingleTokens</td><td class="r num">~$8 Ø</td><td class="r num">~$96 Ø</td></tr>
+          <tr class="sum"><td>Deine Ersparnis</td><td class="r num">~$52</td><td class="r num">~$624</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="section-inner">
+    <div class="sec-head">
+      <div class="sec-no">02 — Ablauf</div>
+      <div>
+        <h2 class="sec-title">Drei Schritte, fertig</h2>
+        <p class="sec-sub">Kein Abo-Dschungel, kein Kleingedrucktes. Einfach kaufen und loschatten.</p>
+      </div>
+    </div>
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-no num">1</div>
+        <div class="how-title">Tokens kaufen</div>
+        <div class="how-desc">Wähle dein Paket – von 1K bis 100M Tokens. Einmalig bezahlen, nie wieder Monatsgebühren. Tokens verfallen nie.</div>
+      </div>
+      <div class="how-card">
+        <div class="how-no num">2</div>
+        <div class="how-title">Modell wählen</div>
+        <div class="how-desc">30+ Modelle für Text, Bilder und Sprache. Von ultraschnell und günstig bis hin zu den mächtigsten KI-Modellen der Welt.</div>
+      </div>
+      <div class="how-card">
+        <div class="how-no num">3</div>
+        <div class="how-title">Loslegen</div>
+        <div class="how-desc">Pro Nachricht, Bild oder Sekunde werden nur so viele Tokens verbraucht wie nötig. Sieh live, wie viel du verbrauchst.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODELS -->
+<section id="models">
+  <div class="section-inner">
+    <div class="sec-head">
+      <div class="sec-no">03 — Modelle</div>
+      <div>
+        <h2 class="sec-title">30+ Modelle. Deine Wahl.</h2>
+        <p class="sec-sub">Alle Modelle in einem Token-System – Text, Bildgenerierung und Sprachausgabe. Kleiner Multiplikator = günstiger.</p>
+      </div>
+    </div>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('text',this)">Text <span class="tab-count num" id="tc-text">24</span></button>
+      <button class="tab-btn" onclick="switchTab('img',this)">Bild <span class="tab-count num" id="tc-img">4</span></button>
+      <button class="tab-btn" onclick="switchTab('voice',this)">Sprache <span class="tab-count num" id="tc-voice">2</span></button>
+    </div>
+    <div class="model-panel active" id="panel-text">
+      <div class="models-scroll"><table class="models">
+        <thead><tr><th>Modell</th><th>Anbieter</th><th>Stärke</th><th class="r">Multiplikator</th><th class="r">Preis / 1K</th></tr></thead>
+        <tbody id="models-text"></tbody>
+      </table></div>
+    </div>
+    <div class="model-panel" id="panel-img">
+      <p class="model-panel-desc">Hochauflösende Bilder mit State-of-the-Art-Diffusionsmodellen. Token-Kosten pro Bild.</p>
+      <div class="models-scroll"><table class="models">
+        <thead><tr><th>Modell</th><th>Anbieter</th><th>Stärke</th><th class="r">Multiplikator</th><th class="r">Preis / 1K</th></tr></thead>
+        <tbody id="models-img"></tbody>
+      </table></div>
+    </div>
+    <div class="model-panel" id="panel-voice">
+      <p class="model-panel-desc">Natürliche Sprachausgabe und Transkription. Token-Kosten pro 1000 Zeichen / Sekunde.</p>
+      <div class="models-scroll"><table class="models">
+        <thead><tr><th>Modell</th><th>Anbieter</th><th>Stärke</th><th class="r">Multiplikator</th><th class="r">Preis / 1K</th></tr></thead>
+        <tbody id="models-voice"></tbody>
+      </table></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-inner">
+    <div class="sec-head">
+      <div class="sec-no">04 — Features</div>
+      <div>
+        <h2 class="sec-title">Alles, was du brauchst</h2>
+        <p class="sec-sub">Eine Plattform für Chat, Bildgenerierung, Sprachausgabe und API-Zugang – komplett anpassbar.</p>
+      </div>
+    </div>
+    <div class="feat-grid">
+      <div class="feat">
+        <div class="feat-no num">4.1</div>
+        <div class="feat-title">Flexibler Token-Kauf</div>
+        <div class="feat-desc">Von 1K bis 100M Tokens – bestimme selbst per Slider. Der Preis wird live berechnet, kein starres Paket.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-no num">4.2</div>
+        <div class="feat-title">30 Modelle, ein System</div>
+        <div class="feat-desc">Jedes Modell hat einen Multiplikator – von ×0.05 (Phi-4 Mini) bis ×70 (GPT-5). Kleiner heißt günstiger.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-no num">4.3</div>
+        <div class="feat-title">Bildgenerierung<span class="new-flag">Neu</span></div>
+        <div class="feat-desc">Flux 1.1 Pro, DALL·E 3, Stable Diffusion 3.5 und Ideogram 2.0 – direkt im Chat.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-no num">4.4</div>
+        <div class="feat-title">Memory</div>
+        <div class="feat-desc">SingleTokens merkt sich wichtige Infos aus vergangenen Gesprächen – die KI kennt deinen Kontext.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-no num">4.5</div>
+        <div class="feat-title">API-Zugang</div>
+        <div class="feat-desc">API-Keys erstellen und alle 30 Modelle über einen Endpunkt in eigene Apps integrieren.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-no num">4.6</div>
+        <div class="feat-title">Eigene Assistenten</div>
+        <div class="feat-desc">Erstelle KI-Assistenten mit eigenem Prompt, Temperature und Modell – wiederverwendbar in jedem Chat.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-no num">4.7</div>
+        <div class="feat-title">Web-Suche<span class="new-flag">Neu</span></div>
+        <div class="feat-desc">Perplexity Sonar Pro durchsucht das Web in Echtzeit – direkt im Chat, mit Quellenangaben.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-no num">4.8</div>
+        <div class="feat-title">Sprachausgabe &amp; Transkription<span class="new-flag">Neu</span></div>
+        <div class="feat-desc">ElevenLabs verwandelt Text in natürliche Sprache, Whisper Large v3 transkribiert in über 50 Sprachen.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CALCULATOR -->
+<section id="calculator">
+  <div class="section-inner">
+    <div class="sec-head">
+      <div class="sec-no">05 — Token-Rechner</div>
+      <div>
+        <h2 class="sec-title">Wie viel bekommst du?</h2>
+        <p class="sec-sub">Berechne, wie viele Nachrichten, Bilder oder Minuten du für dein Budget bekommst.</p>
+      </div>
+    </div>
+    <div class="calc-wrap">
+      <div class="calc-box">
+        <div class="calc-label">Mein Budget</div>
+        <div class="calc-amount num">€<em id="calc-val">10</em></div>
+        <input type="range" class="calc-slider" id="calc-slider" min="1" max="100" value="10" aria-label="Budget in Euro">
+        <div class="calc-range num"><span>€1</span><span>€25</span><span>€50</span><span>€100</span></div>
+        <div class="calc-results">
+          <div class="calc-result"><div class="calc-result-val num" id="cr-sonnet">~1.200</div><div class="calc-result-label">Nachrichten (Claude Sonnet)</div></div>
+          <div class="calc-result"><div class="calc-result-val num" id="cr-llama">~59.000</div><div class="calc-result-label">Nachrichten (Llama 11B)</div></div>
+          <div class="calc-result"><div class="calc-result-val num" id="cr-img">~270</div><div class="calc-result-label">Bilder (Flux 1.1 Pro)</div></div>
+          <div class="calc-result"><div class="calc-result-val num" id="cr-voice">~50</div><div class="calc-result-label">Minuten (ElevenLabs)</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="section-inner">
+    <div class="sec-head">
+      <div class="sec-no">06 — Preise</div>
+      <div>
+        <h2 class="sec-title">Kauf einmal. Nutze immer.</h2>
+        <p class="sec-sub">Kein Abo. Tokens verfallen nie. Alle 30+ Modelle inbegriffen.</p>
+      </div>
+    </div>
+    <div class="pricing-grid">
+      <div class="plan">
+        <div class="plan-flag"></div>
+        <div class="plan-name">Starter</div>
+        <div class="plan-price num">€1</div>
+        <div class="plan-per">einmalig</div>
+        <div class="plan-tokens num">1.000 Tokens</div>
+        <ul>
+          <li>~2 Nachrichten (Sonnet)</li>
+          <li>Alle 30+ Modelle</li>
+          <li>Text, Bild &amp; Sprache</li>
+          <li>Tokens verfallen nie</li>
+        </ul>
+        <a class="plan-btn" href="#" onclick="goToApp();return false;">Starten</a>
+      </div>
+      <div class="plan pop">
+        <div class="plan-flag">Beliebteste Wahl</div>
+        <div class="plan-name">Standard</div>
+        <div class="plan-price num">€3</div>
+        <div class="plan-per">einmalig</div>
+        <div class="plan-tokens num">3.000 Tokens</div>
+        <ul>
+          <li>~6 Nachrichten (Sonnet)</li>
+          <li>Custom GPTs</li>
+          <li>API-Zugang</li>
+          <li>Memory-Funktion</li>
+          <li>Tokens verfallen nie</li>
+        </ul>
+        <a class="plan-btn" href="#" onclick="goToApp();return false;">Kaufen</a>
+      </div>
+      <div class="plan">
+        <div class="plan-flag"></div>
+        <div class="plan-name">Power</div>
+        <div class="plan-price num">€30</div>
+        <div class="plan-per">einmalig</div>
+        <div class="plan-tokens num">30.000 Tokens</div>
+        <ul>
+          <li>~60 Nachrichten (Sonnet)</li>
+          <li>Alles aus Standard</li>
+          <li>~20 Bilder (Flux)</li>
+          <li>Priorität-Support</li>
+          <li>Tokens verfallen nie</li>
+        </ul>
+        <a class="plan-btn" href="#" onclick="goToApp();return false;">Kaufen</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="section-inner">
+    <h2>Starte heute gratis.</h2>
+    <p>Kein Abo, kein Risiko. Einfach Tokens kaufen und alle 30+ KI-Modelle nutzen. Tokens verfallen nie.</p>
+    <div class="hero-btns" style="justify-content:center">
+      <a class="btn btn-solid" href="#" onclick="goToApp();return false;">App jetzt öffnen</a>
+      <a class="btn btn-line" href="#calculator">Token-Rechner</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo">Single<span>Tokens</span></div>
+        <p>30+ KI-Modelle für Text, Bild und Sprache. Pay-per-use, kein Abo, Tokens verfallen nie.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Produkt</h4>
+        <a href="#models">Modelle</a>
+        <a href="#features">Features</a>
+        <a href="#pricing">Preise</a>
+        <a href="#calculator">Token-Rechner</a>
+      </div>
+      <div class="footer-col">
+        <h4>Entwickler</h4>
+        <a href="#features">API-Docs</a>
+        <a href="#" onclick="goToApp();return false;">API-Keys</a>
+        <a href="#" onclick="goToApp();return false;">Dashboard</a>
+      </div>
+      <div class="footer-col">
+        <h4>Rechtliches</h4>
+        <a href="#">Datenschutz</a>
+        <a href="#">AGB</a>
+        <a href="#">Impressum</a>
+        <a href="#">Kontakt</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>© 2026 SingleTokens. Alle Rechte vorbehalten.</div>
+      <div class="footer-badges"><span>256-bit SSL</span><span>DSGVO-konform</span><span>Made in Germany</span></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ─── AUTH ───
+async function goToApp() {
+  try {
+    const r = await fetch('/api/auth/me', { credentials: 'include' });
+    if (!r.ok) { window.location.href = '/login.html'; return; }
+  } catch { window.location.href = '/login.html'; return; }
+  if (/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) || window.innerWidth <= 768) {
+    window.location.href = '/app-mobile.html';
+  } else {
+    window.location.href = '/app.html';
+  }
+}
+
+// ─── MODELS DATA ───
+const TEXT_MODELS = [
+  {name:'Claude Sonnet 4.5',provider:'Anthropic',mult:1,tag:'Empfohlen'},
+  {name:'Claude Opus 4.5',provider:'Anthropic',mult:5,tag:'Leistungsstark'},
+  {name:'Claude Haiku 4.5',provider:'Anthropic',mult:0.27,tag:'Ultraschnell'},
+  {name:'Claude 3.7 Sonnet',provider:'Anthropic',mult:2,tag:'Thinking',isNew:true},
+  {name:'GPT-4o',provider:'OpenAI',mult:0.85,tag:'Vielseitig'},
+  {name:'GPT-5',provider:'OpenAI',mult:2,tag:'Neuestes'},
+  {name:'OpenAI o1',provider:'OpenAI',mult:5,tag:'Reasoning'},
+  {name:'OpenAI o1 Mini',provider:'OpenAI',mult:0.5,tag:'Reasoning'},
+  {name:'Gemini 2.5 Pro',provider:'Google',mult:0.5,tag:'Thinking',isNew:true},
+  {name:'Gemini Pro 2.0',provider:'Google',mult:0.3,tag:'Multimodal'},
+  {name:'Gemini Flash 2.0',provider:'Google',mult:0.08,tag:'Günstig'},
+  {name:'Llama 3.3 70B',provider:'Meta',mult:0.3,tag:'Open Source'},
+  {name:'Llama 11B',provider:'Meta',mult:0.13,tag:'Kleinst'},
+  {name:'Llama 3.2 Vision 11B',provider:'Meta',mult:0.3,tag:'Multimodal',isNew:true},
+  {name:'Mistral Large 2',provider:'Mistral',mult:0.7,tag:'Europäisch'},
+  {name:'Mistral Small',provider:'Mistral',mult:0.12,tag:'Effizient'},
+  {name:'DeepSeek V3',provider:'DeepSeek',mult:0.15,tag:'Open Source'},
+  {name:'Qwen 2.5 72B',provider:'Alibaba',mult:0.15,tag:'Open Source'},
+  {name:'Grok 2',provider:'xAI',mult:0.5,tag:'Von xAI'},
+  {name:'Perplexity Sonar Pro',provider:'Perplexity',mult:1.5,tag:'Web-Suche',isNew:true},
+  {name:'Command R+',provider:'Cohere',mult:0.3,tag:'RAG',isNew:true},
+  {name:'Phi-4 Mini',provider:'Microsoft',mult:0.05,tag:'Kompakt',isNew:true},
+  {name:'Amazon Nova Lite',provider:'Amazon',mult:0.05,tag:'Günstig',isNew:true},
+  {name:'Gemma 2 27B',provider:'Google',mult:0.1,tag:'Open Source'},
+];
+const IMG_MODELS = [
+  {name:'Flux 1.1 Pro',provider:'Black Forest Labs',mult:3,tag:'Scharf',isNew:true},
+  {name:'DALL·E 3',provider:'OpenAI',mult:6,tag:'Kreativ',isNew:true},
+  {name:'Stable Diffusion 3.5',provider:'Stability AI',mult:2,tag:'Open Source',isNew:true},
+  {name:'Ideogram 2.0',provider:'Ideogram',mult:4,tag:'Text in Bild',isNew:true},
+];
+const VOICE_MODELS = [
+  {name:'Multilingual v2',provider:'ElevenLabs',mult:2.5,tag:'Natürlich',isNew:true},
+  {name:'Whisper Large v3',provider:'OpenAI',mult:0.5,tag:'Transkription',isNew:true},
+];
+
+function escHtml(s) { const d = document.createElement('div'); d.textContent = String(s); return d.innerHTML; }
+
+function multClass(m) {
+  if (m >= 2) return 'hi';
+  if (m <= 0.3) return 'lo';
+  return '';
+}
+
+function renderModels(arr, containerId) {
+  document.getElementById(containerId).innerHTML = arr.map(m => `
+    <tr>
+      <td class="m-name">${escHtml(m.name)}${m.isNew ? '<span class="pill new">Neu</span>' : ''}</td>
+      <td class="m-prov">${escHtml(m.provider)}</td>
+      <td><span class="pill">${escHtml(m.tag)}</span></td>
+      <td class="r num"><span class="mult ${multClass(m.mult)}">×${m.mult}</span></td>
+      <td class="r num">€${m.mult.toFixed(2)}</td>
+    </tr>
+  `).join('');
+}
+
+// ─── TAB SWITCHING ───
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.model-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('panel-' + tab).classList.add('active');
+}
+
+// ─── CALCULATOR ───
+function updateCalc(val) {
+  val = Number(val);
+  document.getElementById('calc-val').textContent = val;
+  const r = v => {
+    if (v >= 10000) return Math.round(v / 1000) * 1000;
+    if (v >= 1000)  return Math.round(v / 100) * 100;
+    return Math.round(v / 10) * 10;
+  };
+  // costs per unit derived from real API pricing (see index.js)
+  document.getElementById('cr-sonnet').textContent = '~' + r(val / 0.0083).toLocaleString('de');
+  document.getElementById('cr-llama').textContent  = '~' + r(val / 0.00017).toLocaleString('de');
+  document.getElementById('cr-img').textContent    = '~' + r(val / 0.037).toLocaleString('de');
+  document.getElementById('cr-voice').textContent  = '~' + r(val / 0.21).toLocaleString('de');
+  const sl = document.getElementById('calc-slider');
+  const pct = ((val - sl.min) / (sl.max - sl.min)) * 100;
+  sl.style.background = `linear-gradient(to right, #141413 ${pct}%, #E2E2DD ${pct}%)`;
+}
+
+// ─── PROVIDER STRIP ───
+const PROVIDERS = ['Anthropic','OpenAI','Google','Meta','Mistral','DeepSeek','xAI','Alibaba','Black Forest Labs','Stability AI','Ideogram','ElevenLabs','Perplexity','Cohere','Microsoft','Amazon'];
+
+// ─── INIT ───
+document.addEventListener('DOMContentLoaded', function() {
+  renderModels(TEXT_MODELS, 'models-text');
+  renderModels(IMG_MODELS,  'models-img');
+  renderModels(VOICE_MODELS,'models-voice');
+
+  document.getElementById('tc-text').textContent  = TEXT_MODELS.length;
+  document.getElementById('tc-img').textContent   = IMG_MODELS.length;
+  document.getElementById('tc-voice').textContent = VOICE_MODELS.length;
+
+  const strip = document.getElementById('provider-strip');
+  strip.insertAdjacentHTML('beforeend', PROVIDERS.map(p => `<span class="prov">${p}</span>`).join(''));
+
+  const calcSlider = document.getElementById('calc-slider');
+  calcSlider.addEventListener('input', function() { updateCalc(this.value); });
+  updateCalc(calcSlider.value);
+});
+</script>
+
+</body>
+</html>
