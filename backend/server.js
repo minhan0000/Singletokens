@@ -88,8 +88,35 @@ function createRateLimiter({ windowMs, max }) {
 
 const authRateLimit    = createRateLimiter({ windowMs: 15 * 60 * 1000, max: 10 }); // 10/15 min
 const keyValidateLimit = createRateLimiter({ windowMs: 60 * 60 * 1000, max:  5 }); // 5/hour — brute-force protection
-const chatRateLimit    = createRateLimiter({ windowMs: 60 * 1000,      max: 60 }); // 60/min
+const chatRateLimit    = createRateLimiter({ windowMs: 60 * 1000,      max: 20 }); // 20/min per IP
 const consumeRateLimit = createRateLimiter({ windowMs: 60 * 1000,      max: 30 }); // 30/min
+
+// Per-user rate limiter (keyed by user ID, applied after auth middleware)
+function createUserRateLimiter({ windowMs, max }) {
+  const store = new Map();
+  const pruneInterval = setInterval(() => {
+    const now = Date.now();
+    for (const [key, entry] of store) {
+      if (now > entry.resetAt) store.delete(key);
+    }
+  }, windowMs);
+  if (pruneInterval.unref) pruneInterval.unref();
+  return function userRateLimiter(req, res, next) {
+    const key = req.user?.id || req.ip;
+    const now = Date.now();
+    let entry = store.get(key);
+    if (!entry || now > entry.resetAt) {
+      entry = { count: 0, resetAt: now + windowMs };
+      store.set(key, entry);
+    }
+    entry.count++;
+    if (entry.count > max) {
+      return res.status(429).json({ error: 'Zu viele Anfragen. Bitte später erneut versuchen.' });
+    }
+    next();
+  };
+}
+const chatUserRateLimit = createUserRateLimiter({ windowMs: 60 * 1000, max: 20 }); // 20/min per user
 
 app.use(cookieParser());
 app.use(express.json({ limit: '50kb' }));
@@ -233,6 +260,15 @@ const MODEL_MAP = {
   'DeepSeek R1 70B':  'deepseek-r1-distill-llama-70b',
 };
 
+// Token cost multiplier per model (tokens_used × multiplier = balance deducted)
+const MODEL_COST = {
+  'Llama 3.3 70B':   0.3,
+  'Llama 3.1 8B':    0.13,
+  'Gemma 2 9B':      0.13,
+  'Mixtral 8x7B':    0.3,
+  'DeepSeek R1 70B': 0.5,
+};
+
 const DEFAULT_SYSTEM_PROMPT = `Du bist SingleTokens AI. Antworte IMMER in maximal 2 Sätzen. Keine Gegenfragen. Keine Füllphrasen. Nur die Antwort, nichts mehr. Sprache: Deutsch.`;
 
 // ── CHATS ─────────────────────────────────────────────────────────────────────
@@ -245,13 +281,21 @@ app.get('/api/chats/:id',   auth, async (req, res) => {
   try { messages = JSON.parse(chat.messages); } catch { messages = []; }
   res.json({ chat: { ...chat, messages } });
 });
+const CHAT_LIMIT = 100;     // max chats per user
+const MSG_LIMIT  = 200;     // max messages per chat
+const MSG_MAX_BYTES = 500_000; // max total JSON size per chat (~500 KB)
+
 app.post('/api/chats',      auth, async (req, res) => {
   const { title, model, messages } = req.body;
   if (!title || !model) return res.status(400).json({ error: 'Felder fehlen' });
   if (title.length > 200) return res.status(400).json({ error: 'Titel zu lang (max. 200 Zeichen)' });
   if (!Object.keys(MODEL_MAP).includes(model)) return res.status(400).json({ error: 'Ungültiges Modell' });
+  const chatCount = await db.chats.countByUser(req.user.id);
+  if (chatCount >= CHAT_LIMIT) return res.status(400).json({ error: `Maximal ${CHAT_LIMIT} Chats erlaubt. Bitte alte Chats löschen.` });
+  const msgsJson = JSON.stringify(messages || []);
+  if (msgsJson.length > MSG_MAX_BYTES) return res.status(400).json({ error: 'Chat-Daten zu groß' });
   const id = uuidv4();
-  await db.chats.create(id, req.user.id, title, model, JSON.stringify(messages || []));
+  await db.chats.create(id, req.user.id, title, model, msgsJson);
   res.status(201).json({ id, title, model });
 });
 app.patch('/api/chats/:id', auth, async (req, res) => {
@@ -260,7 +304,11 @@ app.patch('/api/chats/:id', auth, async (req, res) => {
   const { title, messages, model } = req.body;
   let existingMessages;
   try { existingMessages = JSON.parse(chat.messages); } catch { existingMessages = []; }
-  await db.chats.update(title||chat.title, JSON.stringify(messages||existingMessages), model||chat.model, req.params.id, req.user.id);
+  const finalMessages = messages || existingMessages;
+  if (finalMessages.length > MSG_LIMIT) return res.status(400).json({ error: `Maximal ${MSG_LIMIT} Nachrichten pro Chat erlaubt` });
+  const msgsJson = JSON.stringify(finalMessages);
+  if (msgsJson.length > MSG_MAX_BYTES) return res.status(400).json({ error: 'Chat-Daten zu groß' });
+  await db.chats.update(title||chat.title, msgsJson, model||chat.model, req.params.id, req.user.id);
   res.json({ success: true });
 });
 app.delete('/api/chats/:id', auth, async (req, res) => {
@@ -355,12 +403,18 @@ app.post('/api/payment/paypal/capture-order', (_, res) => res.status(503).json({
 // NOTE: /api/keys/validate is intentionally public (used by external integrations).
 // Only active keys are accepted. In production, consider IP-allowlisting this endpoint.
 
-app.post('/api/chat', auth, chatRateLimit, async (req, res) => {
+app.post('/api/chat', auth, chatRateLimit, chatUserRateLimit, async (req, res) => {
   try {
     const { message, model, history = [], systemPrompt } = req.body;
     if (!message) return res.status(400).json({ error: 'Nachricht fehlt' });
     if (message.length > 4000) return res.status(400).json({ error: 'Nachricht zu lang (max. 4000 Zeichen)' });
     if (systemPrompt && systemPrompt.length > 4000) return res.status(400).json({ error: 'System-Prompt zu lang (max. 4000 Zeichen)' });
+
+    // Server-side balance check before calling Groq
+    const userRecord = await db.users.get(req.user.id);
+    if (!userRecord || userRecord.balance < 1) {
+      return res.status(402).json({ error: 'Kein Guthaben', balance: userRecord?.balance || 0 });
+    }
 
     // Limit history to last 20 entries to prevent prompt-injection via huge payloads
     const safeHistory = (history || []).slice(-20);
@@ -396,7 +450,18 @@ app.post('/api/chat', auth, chatRateLimit, async (req, res) => {
     const data = await groqRes.json();
     if (!groqRes.ok) return res.status(500).json({ error: data.error?.message || 'Groq Fehler' });
 
-    res.json({ reply: data.choices?.[0]?.message?.content || 'Keine Antwort.', model: modelId });
+    // Deduct tokens server-side using actual usage from Groq response
+    const totalTokens = data.usage?.total_tokens || 100;
+    const costMultiplier = MODEL_COST[model] || 0.3;
+    const tokenCost = Math.max(1, Math.ceil(totalTokens * costMultiplier));
+    const newBalance = await db.users.consumeBalance(tokenCost, req.user.id);
+
+    res.json({
+      reply: data.choices?.[0]?.message?.content || 'Keine Antwort.',
+      model: modelId,
+      tokensUsed: tokenCost,
+      balance: newBalance ?? 0,
+    });
 
   } catch (err) {
     console.error('Chat Error:', err);
