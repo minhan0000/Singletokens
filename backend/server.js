@@ -245,13 +245,22 @@ app.get('/api/chats/:id',   auth, async (req, res) => {
   try { messages = JSON.parse(chat.messages); } catch { messages = []; }
   res.json({ chat: { ...chat, messages } });
 });
+const CHAT_LIMIT_PER_USER = 100;
+const MESSAGES_SIZE_LIMIT = 50 * 1024; // 50 KB per chat
+
 app.post('/api/chats',      auth, async (req, res) => {
   const { title, model, messages } = req.body;
   if (!title || !model) return res.status(400).json({ error: 'Felder fehlen' });
   if (title.length > 200) return res.status(400).json({ error: 'Titel zu lang (max. 200 Zeichen)' });
   if (!Object.keys(MODEL_MAP).includes(model)) return res.status(400).json({ error: 'Ungültiges Modell' });
+  const existing = await db.chats.getAll(req.user.id);
+  if (existing.length >= CHAT_LIMIT_PER_USER)
+    return res.status(400).json({ error: `Maximale Anzahl an Chats erreicht (${CHAT_LIMIT_PER_USER})` });
+  const msgsJson = JSON.stringify(messages || []);
+  if (Buffer.byteLength(msgsJson) > MESSAGES_SIZE_LIMIT)
+    return res.status(400).json({ error: 'Nachrichten zu groß' });
   const id = uuidv4();
-  await db.chats.create(id, req.user.id, title, model, JSON.stringify(messages || []));
+  await db.chats.create(id, req.user.id, title, model, msgsJson);
   res.status(201).json({ id, title, model });
 });
 app.patch('/api/chats/:id', auth, async (req, res) => {
@@ -260,7 +269,10 @@ app.patch('/api/chats/:id', auth, async (req, res) => {
   const { title, messages, model } = req.body;
   let existingMessages;
   try { existingMessages = JSON.parse(chat.messages); } catch { existingMessages = []; }
-  await db.chats.update(title||chat.title, JSON.stringify(messages||existingMessages), model||chat.model, req.params.id, req.user.id);
+  const msgsJson = JSON.stringify(messages || existingMessages);
+  if (Buffer.byteLength(msgsJson) > MESSAGES_SIZE_LIMIT)
+    return res.status(400).json({ error: 'Nachrichten zu groß' });
+  await db.chats.update(title||chat.title, msgsJson, model||chat.model, req.params.id, req.user.id);
   res.json({ success: true });
 });
 app.delete('/api/chats/:id', auth, async (req, res) => {
