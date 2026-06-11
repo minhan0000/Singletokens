@@ -121,6 +121,7 @@ module.exports = {
   },
 
   chats: {
+    countByUser: (userId)                         => get('SELECT COUNT(*)::int AS count FROM chat_history WHERE user_id = $1', [userId]).then(r => r?.count ?? 0),
     getAll:    (userId)                          => all('SELECT id,title,model,created_at,updated_at FROM chat_history WHERE user_id = $1 ORDER BY updated_at DESC', [userId]),
     get:       (id, userId)                      => get('SELECT * FROM chat_history WHERE id = $1 AND user_id = $2', [id, userId]),
     create:    (id, userId, title, model, msgs)  => run('INSERT INTO chat_history (id,user_id,title,model,messages) VALUES ($1,$2,$3,$4,$5)', [id, userId, title, model, msgs]),
