@@ -6,17 +6,19 @@
 <title>SingleTokens – 30+ KI-Modelle. Kein Abo.</title>
 <meta name="description" content="Nutze Claude, GPT-5, Gemini, Flux & 30 weitere KI-Modelle – Text, Bilder, Sprache. Tokens kaufen, nie verfallen. Kein Monatsabo.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgc2hhcGUtcmVuZGVyaW5nPSJnZW9tZXRyaWNQcmVjaXNpb24iPgogIDxkZWZzPgogICAgPGNsaXBQYXRoIGlkPSJjaXJjbGUtY2xpcCI+CiAgICAgIDxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjUwIi8+CiAgICA8L2NsaXBQYXRoPgogIDwvZGVmcz4KICA8cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0ibm9uZSIvPgogIDxnIGNsaXAtcGF0aD0idXJsKCNjaXJjbGUtY2xpcCkiPgogICAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNTAiIGZpbGw9IiMwMENGRkYiLz4KICAgIDxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjQyIiBmaWxsPSIjMDAwMDAwIi8+CiAgICA8Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIzOCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLVdpZHRoPSIxLjIiLz4KICAgIDx0ZXh0IHg9IjUwIiB5PSI2MiIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzQiIGZvbnQtd2VpZ2h0PSI5MDAiIGZvbnQtc3R5bGU9Iml0YWxpYyIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlNUPC90ZXh0PgogIDwvZz4KPC9zdmc+">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="index.css?v=4">
-<script src="index.js?v=7"></script>
+<link rel="stylesheet" href="index.css?v=5">
+<script src="index.js?v=8"></script>
 </head>
 
 <body>
 
 <!-- NAV -->
 <nav id="main-nav">
-  <a class="nav-logo" href="/">Single<span>Tokens</span></a>
+  <a class="nav-logo" href="/">SINGLE<span>TOKENS</span><sup>®</sup></a>
   <div class="nav-links">
     <a class="nav-link" href="#how">Wie es funktioniert</a>
     <a class="nav-link" href="#models">Modelle</a>
@@ -25,119 +27,80 @@
   </div>
   <div class="nav-right">
     <span class="nav-new">Neu: Bildgenerierung</span>
-    <a class="nav-cta" href="#" onclick="goToApp();return false;">App öffnen →</a>
+    <a class="nav-cta" href="#" onclick="goToApp();return false;">App öffnen&nbsp;→</a>
   </div>
 </nav>
 
-<!-- SHADER BACKGROUND -->
-<canvas id="shader-bg"></canvas>
-
 <!-- HERO -->
-<div class="hero">
-  <div class="hero-grid"></div>
-  <div class="orb orb1"></div>
-  <div class="orb orb2"></div>
-  <div class="orb orb3"></div>
-  <div class="orb orb4"></div>
+<header class="hero">
   <div class="hero-inner">
-    <div class="hero-badges">
-      <div class="hero-new-badge"><div class="badge-pulse pink"></div>Neu: Bildgenerierung mit Flux &amp; DALL·E 3</div>
+    <div class="hero-copy">
+      <div class="hero-kicker">30+ KI-Modelle&nbsp;&nbsp;·&nbsp;&nbsp;Text / Bild / Sprache&nbsp;&nbsp;·&nbsp;&nbsp;Pay-per-Use</div>
+      <h1 class="hero-title">Alle KIs.<br><mark>Kein&nbsp;Abo.</mark></h1>
+      <p class="hero-sub">Tokens einmal kaufen – und damit Claude, GPT-5, Gemini, Flux, ElevenLabs &amp; 25 weitere Top-Modelle nutzen. Tokens verfallen nie.</p>
+      <div class="hero-btns">
+        <a class="btn-ink" href="#" onclick="goToApp();return false;">Kostenlos starten&nbsp;→</a>
+        <a class="btn-line" href="#models">30+ Modelle ansehen</a>
+      </div>
+      <dl class="hero-facts">
+        <div class="fact"><dt>30+</dt><dd>KI-Modelle</dd></div>
+        <div class="fact"><dt>x0.05</dt><dd>günstigstes Modell</dd></div>
+        <div class="fact"><dt>€0</dt><dd>Monatsgebühr</dd></div>
+        <div class="fact"><dt>∞</dt><dd>Tokens-Laufzeit</dd></div>
+      </dl>
     </div>
-    <div class="hero-badge"><div class="badge-pulse"></div>30+ KI-Modelle · Text · Bild · Sprache · Kein Abo</div>
-    <h1 class="hero-title">
-      Alle KIs.<br>
-      <span class="grad">Kein Abo.</span>
-    </h1>
-    <p class="hero-sub">Tokens einmal kaufen – und damit Claude, GPT-5, Gemini, Flux, ElevenLabs &amp; 25 weitere Top-Modelle nutzen. Tokens verfallen nie.</p>
-    <div class="hero-btns">
-      <a class="btn-primary" href="#" onclick="goToApp();return false;">Kostenlos starten →</a>
-      <a class="btn-secondary" href="#models">30+ Modelle ansehen</a>
-    </div>
-    <div class="hero-stats">
-      <div class="stat"><div class="stat-val"><em>30</em>+</div><div class="stat-label">KI-Modelle</div></div>
-      <div class="stat"><div class="stat-val">x<em>0.13</em></div><div class="stat-label">günstigstes Modell</div></div>
-      <div class="stat"><div class="stat-val"><em>$0</em></div><div class="stat-label">Monatsgebühr</div></div>
-      <div class="stat"><div class="stat-val"><em>∞</em></div><div class="stat-label">Tokens-Laufzeit</div></div>
+
+    <div class="hero-receipt">
+      <div class="receipt">
+        <div class="receipt-head">
+          <div class="receipt-title">SINGLETOKENS</div>
+          <div class="receipt-meta">QUITTUNG&nbsp;·&nbsp;Nr.&nbsp;000001</div>
+        </div>
+        <div class="receipt-rule"></div>
+        <div class="receipt-row"><span>10.000 TOKENS</span><span>€10.00</span></div>
+        <div class="receipt-row"><span>MONATSGEBÜHR</span><span>€0.00</span></div>
+        <div class="receipt-row"><span>VERFALLSDATUM</span><span>NIE</span></div>
+        <div class="receipt-row"><span>ABO</span><span>KEINS</span></div>
+        <div class="receipt-rule"></div>
+        <div class="receipt-row total"><span>GESAMT</span><span>€10.00</span></div>
+        <div class="receipt-rule"></div>
+        <div class="receipt-row small"><span>GÜLTIG</span><span>FÜR IMMER</span></div>
+        <div class="receipt-row small"><span>MODELLE</span><span>ALLE 30+</span></div>
+        <div class="receipt-foot">***&nbsp;DANKE FÜR DEINEN EINKAUF&nbsp;***</div>
+        <div class="receipt-edge"></div>
+      </div>
+      <div class="receipt-stamp">TOKENS<br>VERFALLEN<br>NIE</div>
     </div>
   </div>
+</header>
+
+<!-- PROVIDER TICKER -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track" id="marquee"></div>
 </div>
 
-<!-- PROVIDER MARQUEE -->
-<div class="provider-bar">
-  <div class="marquee-track" id="marquee"></div>
-</div>
-
-<!-- TRUST BAR -->
-<div class="trust-bar">
-  <div class="trust-inner">
-    <div class="trust-item">
-      <div class="trust-icon"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg></div>
-      <div><div class="trust-text-main">256-bit SSL</div><div class="trust-text-sub">Verschlüsselt &amp; sicher</div></div>
-    </div>
-    <div class="trust-item">
-      <div class="trust-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
-      <div><div class="trust-text-main">Tokens verfallen nie</div><div class="trust-text-sub">Kauf einmal, nutze immer</div></div>
-    </div>
-    <div class="trust-item">
-      <div class="trust-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
-      <div><div class="trust-text-main">30+ Modelle</div><div class="trust-text-sub">Text, Bild &amp; Sprache</div></div>
-    </div>
-    <div class="trust-item">
-      <div class="trust-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-      <div><div class="trust-text-main">Kein Abo</div><div class="trust-text-sub">Nur zahlen was du nutzt</div></div>
-    </div>
-    <div class="trust-item">
-      <div class="trust-icon"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
-      <div><div class="trust-text-main">Sofort verfügbar</div><div class="trust-text-sub">Keine Wartezeit</div></div>
-    </div>
-  </div>
-</div>
-
-<!-- SAVINGS SECTION -->
+<!-- SAVINGS -->
 <section class="savings-section" id="savings">
-  <div class="savings-inner reveal">
-    <div class="savings-text">
-      <div class="section-eyebrow">Kein Abo-Dschungel</div>
-      <h2 class="section-title">Spare <span>bis zu $624</span> pro Jahr</h2>
-      <p class="section-sub">ChatGPT Plus, Claude Pro und Gemini Advanced kosten zusammen $60/Monat. SingleTokens-Nutzer zahlen im Schnitt nur ~$8/Monat – ausschließlich für das, was sie wirklich nutzen.</p>
-      <div class="savings-badge">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-        Durchschnittlich $52/Monat gespart
+  <div class="section-inner">
+    <div class="savings-grid reveal">
+      <div class="savings-text">
+        <div class="section-eyebrow">01 — Die Rechnung</div>
+        <h2 class="section-title">Spare bis zu <mark>$624</mark> pro Jahr</h2>
+        <p class="section-sub">ChatGPT Plus, Claude Pro und Gemini Advanced kosten zusammen $60/Monat. SingleTokens-Nutzer zahlen im Schnitt nur ~$8/Monat – ausschließlich für das, was sie wirklich nutzen.</p>
+        <div class="savings-note">Ø&nbsp;$52/Monat gespart</div>
       </div>
-    </div>
-    <div>
-      <div class="compare-table">
-        <div class="ct-row head">
-          <div class="ct-cell head-label">Anbieter</div>
-          <div class="ct-cell head-label center">Pro Monat</div>
-          <div class="ct-cell head-label center">Pro Jahr</div>
-        </div>
-        <div class="ct-row">
-          <div class="ct-cell label">ChatGPT Plus</div>
-          <div class="ct-cell val red">$20.00</div>
-          <div class="ct-cell val red">$240.00</div>
-        </div>
-        <div class="ct-row">
-          <div class="ct-cell label">Claude Pro</div>
-          <div class="ct-cell val red">$20.00</div>
-          <div class="ct-cell val red">$240.00</div>
-        </div>
-        <div class="ct-row">
-          <div class="ct-cell label">Gemini Advanced</div>
-          <div class="ct-cell val red">$20.00</div>
-          <div class="ct-cell val red">$240.00</div>
-        </div>
-        <div class="ct-row highlight">
-          <div class="ct-cell label">SingleTokens</div>
-          <div class="ct-cell val green">~$8 Ø / Monat</div>
-          <div class="ct-cell val green">~$96 Ø / Jahr</div>
-        </div>
-        <div class="ct-row ct-row-savings">
-          <div class="ct-cell label ct-cell-savings">Deine Ersparnis</div>
-          <div class="ct-cell val ct-cell-savings right">~$52 / Monat</div>
-          <div class="ct-cell val ct-cell-savings right">~$624 / Jahr</div>
-        </div>
-      </div>
+      <table class="ledger">
+        <thead>
+          <tr><th>Anbieter</th><th>pro Monat</th><th>pro Jahr</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>ChatGPT Plus</td><td>$20.00</td><td>$240.00</td></tr>
+          <tr><td>Claude Pro</td><td>$20.00</td><td>$240.00</td></tr>
+          <tr><td>Gemini Advanced</td><td>$20.00</td><td>$240.00</td></tr>
+          <tr class="ledger-us"><td>SingleTokens</td><td>~$8 Ø</td><td>~$96 Ø</td></tr>
+          <tr class="ledger-sum"><td>Deine Ersparnis</td><td>~$52</td><td>~$624</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </section>
@@ -146,52 +109,43 @@
 <section id="how">
   <div class="section-inner">
     <div class="reveal">
-      <div class="section-eyebrow">Wie es funktioniert</div>
-      <h2 class="section-title">3 Schritte, fertig</h2>
+      <div class="section-eyebrow">02 — Wie es funktioniert</div>
+      <h2 class="section-title">Drei Schritte, fertig.</h2>
       <p class="section-sub">Kein Abo-Dschungel, kein Kleingedrucktes. Einfach kaufen und loschatten.</p>
     </div>
-    <div class="how-grid reveal">
-      <div class="how-card">
-        <div class="how-num">01</div>
-        <div class="how-icon"><svg viewBox="0 0 24 24"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg></div>
-        <div class="how-title">Tokens kaufen</div>
-        <div class="how-desc">Wähle dein Paket – von 1K bis 100M Tokens. Einmalig bezahlen, nie wieder Monatsgebühren. Tokens verfallen nie.</div>
+    <div class="steps reveal">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-title">Tokens kaufen</div>
+        <div class="step-desc">Wähle dein Paket – von 1K bis 100M Tokens. Einmalig bezahlen, nie wieder Monatsgebühren. Tokens verfallen nie.</div>
       </div>
-      <div class="how-card">
-        <div class="how-num">02</div>
-        <div class="how-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
-        <div class="how-title">Modell wählen</div>
-        <div class="how-desc">30+ Modelle für Text, Bilder &amp; Sprache. Von ultraschnell und günstig bis hin zu den mächtigsten KI-Modellen der Welt.</div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-title">Modell wählen</div>
+        <div class="step-desc">30+ Modelle für Text, Bilder &amp; Sprache. Von ultraschnell und günstig bis hin zu den mächtigsten KI-Modellen der Welt.</div>
       </div>
-      <div class="how-card">
-        <div class="how-num">03</div>
-        <div class="how-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
-        <div class="how-title">Loslegen</div>
-        <div class="how-desc">Pro Nachricht / Bild / Sekunde werden nur so viele Tokens verbraucht wie nötig. Sieh live wie viel du verbrauchst.</div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-title">Loslegen</div>
+        <div class="step-desc">Pro Nachricht, Bild oder Sekunde werden nur so viele Tokens verbraucht wie nötig. Sieh live, wie viel du verbrauchst.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- MODELS SECTION -->
+<!-- MODELS -->
 <section id="models" class="models-section">
   <div class="section-inner">
     <div class="reveal">
-      <div class="section-eyebrow">Modelle</div>
+      <div class="section-eyebrow">03 — Der Katalog</div>
       <h2 class="section-title">30+ Modelle. Deine Wahl.</h2>
-      <p class="section-sub">Alle Modelle in einem Token-System – Text, Bildgenerierung und Sprachausgabe.</p>
+      <p class="section-sub">Alle Modelle in einem Token-System – Text, Bildgenerierung und Sprachausgabe. Jedes Modell hat einen Multiplikator: kleiner&nbsp;=&nbsp;günstiger.</p>
     </div>
     <div class="reveal">
-      <div class="model-tabs">
-        <button class="tab-btn active" onclick="switchTab('text',this)">
-          Textmodelle <span class="tab-count" id="tc-text">24</span>
-        </button>
-        <button class="tab-btn tab-img" onclick="switchTab('img',this)">
-          Bildgenerierung <span class="tab-count" id="tc-img">4</span>
-        </button>
-        <button class="tab-btn tab-voice" onclick="switchTab('voice',this)">
-          Sprachausgabe <span class="tab-count" id="tc-voice">2</span>
-        </button>
+      <div class="model-tabs" role="tablist">
+        <button class="tab-btn active" onclick="switchTab('text',this)">Text&nbsp;<span class="tab-count" id="tc-text">24</span></button>
+        <button class="tab-btn" onclick="switchTab('img',this)">Bild&nbsp;<span class="tab-count" id="tc-img">4</span></button>
+        <button class="tab-btn" onclick="switchTab('voice',this)">Sprache&nbsp;<span class="tab-count" id="tc-voice">2</span></button>
       </div>
     </div>
 
@@ -199,7 +153,7 @@
       <div class="models-grid" id="models-text"></div>
     </div>
     <div class="model-panel" id="panel-img">
-      <p class="model-panel-desc">Generiere hochauflösende Bilder mit State-of-the-Art Diffusionsmodellen. Token-Kosten pro Bild.</p>
+      <p class="model-panel-desc">Hochauflösende Bilder mit State-of-the-Art-Diffusionsmodellen. Token-Kosten pro Bild.</p>
       <div class="models-grid" id="models-img"></div>
     </div>
     <div class="model-panel" id="panel-voice">
@@ -209,108 +163,59 @@
   </div>
 </section>
 
-<!-- FEATURES BENTO -->
+<!-- FEATURES -->
 <section id="features">
   <div class="section-inner">
     <div class="reveal">
-      <div class="section-eyebrow">Features</div>
-      <h2 class="section-title">Alles was du brauchst</h2>
+      <div class="section-eyebrow">04 — Das Inventar</div>
+      <h2 class="section-title">Alles, was du brauchst.</h2>
     </div>
-    <div class="bento-grid reveal">
-
-      <!-- 1: Token Slider (wide) -->
-      <div class="bento wide">
-        <div class="bento-eyebrow">Token-Kauf</div>
-        <div class="bento-title">Flexibler Slider, kein starres Paket</div>
-        <div class="bento-desc">Von 1K bis 100M Tokens – bestimme selbst. Preis wird live berechnet.</div>
-        <div class="preview-slider">
-          <div class="preview-slider-row">
-            <div class="preview-big">4.200 Tokens</div>
-            <div class="preview-price">€4.20</div>
-          </div>
-          <div class="fake-slider"><div class="fake-slider-fill"></div><div class="fake-slider-thumb"></div></div>
-          <div class="preview-labels"><span>1K · €1</span><span>10K · €10</span><span>100K · €100</span></div>
-        </div>
+    <div class="feature-index reveal">
+      <div class="feat">
+        <div class="feat-no">4.1</div>
+        <div class="feat-title">Flexibler Token-Kauf</div>
+        <div class="feat-desc">Von 1K bis 100M Tokens per Slider – kein starres Paket. Der Preis wird live berechnet.</div>
       </div>
-
-      <!-- 2: Models -->
-      <div class="bento">
-        <div class="bento-eyebrow">Multi-Provider</div>
-        <div class="bento-title">30 Modelle, ein System</div>
-        <div class="bento-desc">Jedes Modell hat einen Multiplier – kleiner = günstiger.</div>
-        <div class="model-mini-grid">
-          <div class="mmp"><div class="mmp-provider">Meta</div><div class="mmp-name">Llama 11B</div><div class="mmp-mult mmp-mult-cyan">x0.13</div></div>
-          <div class="mmp"><div class="mmp-provider">Anthropic</div><div class="mmp-name">Sonnet 4.5</div><div class="mmp-mult mmp-mult-blue">x1</div></div>
-          <div class="mmp"><div class="mmp-provider">Black Forest</div><div class="mmp-name">Flux 1.1 Pro</div><div class="mmp-mult mmp-mult-pink">x3</div></div>
-          <div class="mmp"><div class="mmp-provider">OpenAI</div><div class="mmp-name">GPT-5</div><div class="mmp-mult mmp-mult-red">x70</div></div>
-        </div>
+      <div class="feat">
+        <div class="feat-no">4.2</div>
+        <div class="feat-title">30 Modelle, ein System</div>
+        <div class="feat-desc">Von Llama 11B (x0.13) über Sonnet 4.5 (x1) bis GPT-5 (x70) – ein Token-Konto für alles.</div>
       </div>
-
-      <!-- 3: Bildgenerierung (NEU) -->
-      <div class="bento">
-        <div class="bento-eyebrow pink">Neu: Bildgenerierung</div>
-        <div class="bento-title">Bilder mit KI erstellen</div>
-        <div class="bento-desc">Flux 1.1 Pro, DALL·E 3, Stable Diffusion 3.5 &amp; Ideogram 2.0 – direkt im Chat.</div>
-        <div class="img-preview">
-          <div class="img-thumb img-thumb-flux">🌆<div class="img-thumb-label">Flux 1.1 Pro</div></div>
-          <div class="img-thumb img-thumb-dalle">🌿<div class="img-thumb-label">DALL·E 3</div></div>
-          <div class="img-thumb img-thumb-sd">🎨<div class="img-thumb-label">SD 3.5</div></div>
-        </div>
+      <div class="feat">
+        <div class="feat-no">4.3</div>
+        <div class="feat-title">Bildgenerierung <span class="feat-new">NEU</span></div>
+        <div class="feat-desc">Flux 1.1 Pro, DALL·E 3, Stable Diffusion 3.5 &amp; Ideogram 2.0 – direkt im Chat.</div>
       </div>
-
-      <!-- 4: Memory -->
-      <div class="bento">
-        <div class="bento-eyebrow purple">Memory</div>
-        <div class="bento-title">KI die dich kennt</div>
-        <div class="bento-desc">SingleTokens merkt sich wichtige Infos aus vergangenen Gesprächen.</div>
-        <div class="memory-chips">
-          <div class="mem-chip">Bevorzugte Sprache: Deutsch</div>
-          <div class="mem-chip">Stack: React, TypeScript, Node.js</div>
-          <div class="mem-chip">Beruf: Softwareentwickler</div>
-        </div>
+      <div class="feat">
+        <div class="feat-no">4.4</div>
+        <div class="feat-title">Memory</div>
+        <div class="feat-desc">SingleTokens merkt sich wichtige Infos aus vergangenen Gesprächen – die KI kennt dich.</div>
       </div>
-
-      <!-- 5: API Access -->
-      <div class="bento">
-        <div class="bento-eyebrow green">API-Zugang</div>
-        <div class="bento-title">Für Entwickler</div>
-        <div class="bento-desc">API-Keys erstellen und alle 30 Modelle in eigene Apps integrieren.</div>
-        <div class="api-code">
-<span class="k">POST</span> /api/v1/chat<br>
-<span class="c">Authorization:</span> Bearer <span class="s">sk-st-...</span><br><br>
-<span class="c">// 30+ Modelle, ein Endpunkt</span><br>
-<span class="k">"model"</span>: <span class="s">"claude-sonnet-4-5"</span>
-        </div>
+      <div class="feat">
+        <div class="feat-no">4.5</div>
+        <div class="feat-title">API-Zugang</div>
+        <div class="feat-desc">API-Keys erstellen und alle 30 Modelle über einen Endpunkt in eigene Apps integrieren.</div>
       </div>
-
-      <!-- 6: Custom GPTs -->
-      <div class="bento">
-        <div class="bento-eyebrow">Custom GPTs</div>
-        <div class="bento-title">Eigene Assistenten</div>
-        <div class="bento-desc">Erstelle KI-Assistenten mit eigenem Prompt, Temperature und Modell.</div>
+      <div class="feat">
+        <div class="feat-no">4.6</div>
+        <div class="feat-title">Custom GPTs</div>
+        <div class="feat-desc">Erstelle eigene KI-Assistenten mit eigenem Prompt, Temperature und Modell.</div>
       </div>
-
-      <!-- 7: Perplexity / Websuche -->
-      <div class="bento">
-        <div class="bento-eyebrow pink">Neu: Web-Suche</div>
-        <div class="bento-title">Aktuelle Infos per KI</div>
-        <div class="bento-desc">Perplexity Sonar Pro durchsucht das Web in Echtzeit – direkt im Chat, mit Quellenangaben.</div>
+      <div class="feat">
+        <div class="feat-no">4.7</div>
+        <div class="feat-title">Web-Suche <span class="feat-new">NEU</span></div>
+        <div class="feat-desc">Perplexity Sonar Pro durchsucht das Web in Echtzeit – mit Quellenangaben im Chat.</div>
       </div>
-
-      <!-- 8: Settings -->
-      <div class="bento">
-        <div class="bento-eyebrow">Einstellungen</div>
-        <div class="bento-title">Komplett anpassbar</div>
-        <div class="bento-desc">Dark/Light Mode, Akzentfarbe, Schriftgröße, 6 Sprachen – alles nach deinem Geschmack.</div>
+      <div class="feat">
+        <div class="feat-no">4.8</div>
+        <div class="feat-title">Sprachausgabe &amp; Transkription <span class="feat-new">NEU</span></div>
+        <div class="feat-desc">ElevenLabs verwandelt Text in natürliche Sprache, Whisper transkribiert in 50+ Sprachen.</div>
       </div>
-
-      <!-- 9: Sprache (NEU) (wide) -->
-      <div class="bento wide">
-        <div class="bento-eyebrow purple">Neu: Sprachausgabe &amp; Transkription</div>
-        <div class="bento-title">Hör zu &amp; sprich mit KI</div>
-        <div class="bento-desc">ElevenLabs Multilingual v2 verwandelt Text in natürliche Sprache. Whisper Large v3 transkribiert deine Sprachnachrichten blitzschnell – in über 50 Sprachen.</div>
+      <div class="feat">
+        <div class="feat-no">4.9</div>
+        <div class="feat-title">Komplett anpassbar</div>
+        <div class="feat-desc">Dark/Light Mode, Akzentfarbe, Schriftgröße, 6 Sprachen – alles nach deinem Geschmack.</div>
       </div>
-
     </div>
   </div>
 </section>
@@ -318,32 +223,34 @@
 <!-- CALCULATOR -->
 <section class="calc-section" id="calculator">
   <div class="section-inner">
-    <div class="calc-inner reveal">
-      <div class="section-eyebrow text-center">Token-Rechner</div>
-      <h2 class="section-title text-center">Wie viel bekommst du?</h2>
-      <p class="section-sub text-center mx-auto">Berechne wie viele Nachrichten, Bilder oder Minuten du für dein Budget bekommst.</p>
-      <div class="calc-box">
+    <div class="reveal">
+      <div class="section-eyebrow">05 — Der Rechner</div>
+      <h2 class="section-title">Wie viel bekommst du?</h2>
+      <p class="section-sub">Berechne, wie viele Nachrichten, Bilder oder Minuten du für dein Budget bekommst.</p>
+    </div>
+    <div class="calc-box reveal">
+      <div class="calc-top">
         <div class="calc-label">Mein Budget</div>
         <div class="calc-amount">€<em id="calc-val">10</em></div>
-        <input type="range" class="calc-slider" id="calc-slider" min="1" max="100" value="10">
-        <div class="calc-range"><span>€1</span><span>€25</span><span>€50</span><span>€100</span></div>
-        <div class="calc-results">
-          <div class="calc-result">
-            <div class="calc-result-val" id="cr-sonnet">~1.200</div>
-            <div class="calc-result-label">Nachrichten (Claude Sonnet)</div>
-          </div>
-          <div class="calc-result">
-            <div class="calc-result-val" id="cr-llama">~59.000</div>
-            <div class="calc-result-label">Nachrichten (Llama 11B)</div>
-          </div>
-          <div class="calc-result">
-            <div class="calc-result-val" id="cr-img">~270</div>
-            <div class="calc-result-label">Bilder (Flux 1.1 Pro)</div>
-          </div>
-          <div class="calc-result">
-            <div class="calc-result-val" id="cr-voice">~50</div>
-            <div class="calc-result-label">Minuten (ElevenLabs)</div>
-          </div>
+      </div>
+      <input type="range" class="calc-slider" id="calc-slider" min="1" max="100" value="10" aria-label="Budget in Euro">
+      <div class="calc-range"><span>€1</span><span>€25</span><span>€50</span><span>€100</span></div>
+      <div class="calc-results">
+        <div class="calc-result">
+          <div class="calc-result-val" id="cr-sonnet">~1.200</div>
+          <div class="calc-result-label">Nachrichten (Claude Sonnet)</div>
+        </div>
+        <div class="calc-result">
+          <div class="calc-result-val" id="cr-llama">~59.000</div>
+          <div class="calc-result-label">Nachrichten (Llama 11B)</div>
+        </div>
+        <div class="calc-result">
+          <div class="calc-result-val" id="cr-img">~270</div>
+          <div class="calc-result-label">Bilder (Flux 1.1 Pro)</div>
+        </div>
+        <div class="calc-result">
+          <div class="calc-result-val" id="cr-voice">~50</div>
+          <div class="calc-result-label">Minuten (ElevenLabs)</div>
         </div>
       </div>
     </div>
@@ -353,54 +260,50 @@
 <!-- PRICING -->
 <section id="pricing" class="pricing-section">
   <div class="section-inner">
-    <div class="reveal text-center">
-      <div class="section-eyebrow">Preise</div>
+    <div class="reveal">
+      <div class="section-eyebrow">06 — Die Preisliste</div>
       <h2 class="section-title">Kauf einmal. Nutze immer.</h2>
-      <p class="section-sub mx-auto">Kein Abo. Tokens verfallen nie. Alle 30+ Modelle inbegriffen.</p>
+      <p class="section-sub">Kein Abo. Tokens verfallen nie. Alle 30+ Modelle inbegriffen.</p>
     </div>
     <div class="pricing-grid reveal">
       <div class="plan">
         <div class="plan-name">Starter</div>
-        <div class="plan-price">€1</div>
-        <div class="plan-per">einmalig</div>
-        <div class="plan-tokens"><em>1K</em> Tokens</div>
-        <ul>
-          <li><span class="check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>~2 Nachrichten (Sonnet)</li>
-          <li><span class="check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>Alle 30+ Modelle</li>
-          <li><span class="check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>Text, Bild &amp; Sprache</li>
-          <li><span class="check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>Tokens verfallen nie</li>
+        <div class="plan-price">€1<span class="plan-per">&nbsp;einmalig</span></div>
+        <div class="plan-tokens">1.000 Tokens</div>
+        <ul class="plan-list">
+          <li>~2 Nachrichten (Sonnet)</li>
+          <li>Alle 30+ Modelle</li>
+          <li>Text, Bild &amp; Sprache</li>
+          <li>Tokens verfallen nie</li>
         </ul>
-        <a class="plan-btn" href="#" onclick="goToApp();return false;">Starten</a>
+        <a class="plan-btn" href="#" onclick="goToApp();return false;">Starten&nbsp;→</a>
       </div>
       <div class="plan pop">
-        <div class="plan-glow"></div>
-        <span class="plan-badge">★ Beliebteste Wahl</span>
+        <div class="plan-flag">Beliebteste Wahl</div>
         <div class="plan-name">Standard</div>
-        <div class="plan-price">€3</div>
-        <div class="plan-per">einmalig</div>
-        <div class="plan-tokens"><em>3K</em> Tokens</div>
-        <ul>
-          <li><span class="check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>~6 Nachrichten (Sonnet)</li>
-          <li><span class="check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>Custom GPTs</li>
-          <li><span class="check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>API-Zugang</li>
-          <li><span class="check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>Memory-Funktion</li>
-          <li><span class="check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>Tokens verfallen nie</li>
+        <div class="plan-price">€3<span class="plan-per">&nbsp;einmalig</span></div>
+        <div class="plan-tokens">3.000 Tokens</div>
+        <ul class="plan-list">
+          <li>~6 Nachrichten (Sonnet)</li>
+          <li>Custom GPTs</li>
+          <li>API-Zugang</li>
+          <li>Memory-Funktion</li>
+          <li>Tokens verfallen nie</li>
         </ul>
-        <a class="plan-btn" href="#" onclick="goToApp();return false;">Kaufen</a>
+        <a class="plan-btn solid" href="#" onclick="goToApp();return false;">Kaufen&nbsp;→</a>
       </div>
       <div class="plan">
         <div class="plan-name">Power</div>
-        <div class="plan-price">€30</div>
-        <div class="plan-per">einmalig</div>
-        <div class="plan-tokens"><em>30K</em> Tokens</div>
-        <ul>
-          <li><span class="check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>~60 Nachrichten (Sonnet)</li>
-          <li><span class="check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>Alles aus Standard</li>
-          <li><span class="check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>~20 Bilder (Flux)</li>
-          <li><span class="check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>Priorität-Support</li>
-          <li><span class="check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>Tokens verfallen nie</li>
+        <div class="plan-price">€30<span class="plan-per">&nbsp;einmalig</span></div>
+        <div class="plan-tokens">30.000 Tokens</div>
+        <ul class="plan-list">
+          <li>~60 Nachrichten (Sonnet)</li>
+          <li>Alles aus Standard</li>
+          <li>~20 Bilder (Flux)</li>
+          <li>Priorität-Support</li>
+          <li>Tokens verfallen nie</li>
         </ul>
-        <a class="plan-btn" href="#" onclick="goToApp();return false;">Kaufen</a>
+        <a class="plan-btn" href="#" onclick="goToApp();return false;">Kaufen&nbsp;→</a>
       </div>
     </div>
   </div>
@@ -408,13 +311,12 @@
 
 <!-- CTA -->
 <section class="cta-section">
-  <div class="cta-orb"></div>
   <div class="cta-inner reveal">
-    <h2 class="cta-title">Bereit?<br><span>Starte heute gratis.</span></h2>
-    <p class="cta-sub">Kein Abo, kein Risiko. Einfach Tokens kaufen und alle 30+ KI-Modelle nutzen. Tokens verfallen nie.</p>
+    <h2 class="cta-title">Bereit? Starte heute gratis.</h2>
+    <p class="cta-sub">Kein Abo, kein Risiko. Einfach Tokens kaufen und alle 30+ KI-Modelle nutzen.</p>
     <div class="cta-btns">
-      <a class="btn-primary btn-cta-lg" href="#" onclick="goToApp();return false;">App jetzt öffnen →</a>
-      <a class="btn-secondary btn-cta-lg" href="#calculator">Token-Rechner</a>
+      <a class="btn-paper" href="#" onclick="goToApp();return false;">App jetzt öffnen&nbsp;→</a>
+      <a class="btn-ghost" href="#calculator">Token-Rechner</a>
     </div>
   </div>
 </section>
@@ -424,8 +326,8 @@
   <div class="footer-inner">
     <div class="footer-top">
       <div class="footer-brand">
-        <div class="footer-logo">Single<span>Tokens</span></div>
-        <p>30+ KI-Modelle für Text, Bild und Sprache. Pay-per-use, kein Abo, Tokens verfallen nie.</p>
+        <div class="footer-logo">SINGLE<span>TOKENS</span><sup>®</sup></div>
+        <p>30+ KI-Modelle für Text, Bild und Sprache. Pay-per-Use, kein Abo, Tokens verfallen nie.</p>
       </div>
       <div class="footer-col">
         <h4>Produkt</h4>
