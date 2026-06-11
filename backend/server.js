@@ -355,6 +355,8 @@ app.post('/api/payment/paypal/capture-order', (_, res) => res.status(503).json({
 // NOTE: /api/keys/validate is intentionally public (used by external integrations).
 // Only active keys are accepted. In production, consider IP-allowlisting this endpoint.
 
+const CHAT_TOKEN_COST = 10; // tokens deducted per chat request
+
 app.post('/api/chat', auth, chatRateLimit, async (req, res) => {
   try {
     const { message, model, history = [], systemPrompt } = req.body;
@@ -362,11 +364,22 @@ app.post('/api/chat', auth, chatRateLimit, async (req, res) => {
     if (message.length > 4000) return res.status(400).json({ error: 'Nachricht zu lang (max. 4000 Zeichen)' });
     if (systemPrompt && systemPrompt.length > 4000) return res.status(400).json({ error: 'System-Prompt zu lang (max. 4000 Zeichen)' });
 
+    // Check and deduct balance server-side before calling the AI
+    const newBalance = await db.users.consumeBalance(CHAT_TOKEN_COST, req.user.id);
+    if (newBalance === null) {
+      const user = await db.users.get(req.user.id);
+      return res.status(402).json({ error: 'Kein Guthaben', balance: user?.balance || 0 });
+    }
+
     // Limit history to last 20 entries to prevent prompt-injection via huge payloads
     const safeHistory = (history || []).slice(-20);
 
     const apiKey = process.env.GROQ_API_KEY;
-    if (!apiKey) return res.status(500).json({ error: 'KI-Service momentan nicht verfügbar' });
+    if (!apiKey) {
+      // Refund on misconfiguration
+      await db.users.updateBalance(CHAT_TOKEN_COST, req.user.id);
+      return res.status(500).json({ error: 'KI-Service momentan nicht verfügbar' });
+    }
 
     const modelId = MODEL_MAP[model] || 'llama-3.3-70b-versatile';
 
@@ -394,12 +407,16 @@ app.post('/api/chat', auth, chatRateLimit, async (req, res) => {
     });
 
     const data = await groqRes.json();
-    if (!groqRes.ok) return res.status(500).json({ error: data.error?.message || 'Groq Fehler' });
+    if (!groqRes.ok) {
+      await db.users.updateBalance(CHAT_TOKEN_COST, req.user.id);
+      return res.status(500).json({ error: data.error?.message || 'Groq Fehler' });
+    }
 
-    res.json({ reply: data.choices?.[0]?.message?.content || 'Keine Antwort.', model: modelId });
+    res.json({ reply: data.choices?.[0]?.message?.content || 'Keine Antwort.', model: modelId, balance: newBalance });
 
   } catch (err) {
     console.error('Chat Error:', err);
+    await db.users.updateBalance(CHAT_TOKEN_COST, req.user.id).catch(() => {});
     res.status(500).json({ error: 'Interner Serverfehler' });
   }
 });
