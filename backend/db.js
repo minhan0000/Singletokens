@@ -108,6 +108,14 @@ module.exports = {
       );
       return rowCount > 0 ? rows[0].balance : null;
     },
+    // Deducts up to `amount`, clamping at 0 (for post-hoc output costs).
+    consumeBalanceClamp: async (amount, id) => {
+      const { rows } = await pool.query(
+        'UPDATE users SET balance = GREATEST(balance - $1, 0), updated_at = NOW() WHERE id = $2 RETURNING balance',
+        [amount, id]
+      );
+      return rows[0] ? rows[0].balance : null;
+    },
     update:        (name, id)             => run('UPDATE users SET name = $1, updated_at = NOW() WHERE id = $2', [name, id]),
     delete:        (id)                   => run('DELETE FROM users WHERE id = $1', [id]),
   },
@@ -123,6 +131,7 @@ module.exports = {
   chats: {
     getAll:    (userId)                          => all('SELECT id,title,model,created_at,updated_at FROM chat_history WHERE user_id = $1 ORDER BY updated_at DESC', [userId]),
     get:       (id, userId)                      => get('SELECT * FROM chat_history WHERE id = $1 AND user_id = $2', [id, userId]),
+    count:     (userId)                          => get('SELECT COUNT(*) as count FROM chat_history WHERE user_id = $1', [userId]),
     create:    (id, userId, title, model, msgs)  => run('INSERT INTO chat_history (id,user_id,title,model,messages) VALUES ($1,$2,$3,$4,$5)', [id, userId, title, model, msgs]),
     update:    (title, msgs, model, id, userId)  => run('UPDATE chat_history SET title=$1,messages=$2,model=$3,updated_at=NOW() WHERE id=$4 AND user_id=$5', [title, msgs, model, id, userId]),
     delete:    (id, userId)                      => run('DELETE FROM chat_history WHERE id = $1 AND user_id = $2', [id, userId]),

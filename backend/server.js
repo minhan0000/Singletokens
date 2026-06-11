@@ -59,8 +59,10 @@ app.use((req, res, next) => {
 
 // ── RATE LIMITER ──────────────────────────────────────────────────────────────
 // Simple in-memory rate limiter; resets on server restart.
-function createRateLimiter({ windowMs, max }) {
-  const store = new Map(); // ip -> { count, resetAt }
+// keyFn lets authenticated endpoints limit per user instead of per IP,
+// so the limit can't be bypassed via proxies/VPNs.
+function createRateLimiter({ windowMs, max, keyFn }) {
+  const store = new Map(); // key -> { count, resetAt }
   // Prune expired entries every windowMs to prevent unbounded memory growth (DoS).
   const pruneInterval = setInterval(() => {
     const now = Date.now();
@@ -71,12 +73,12 @@ function createRateLimiter({ windowMs, max }) {
   if (pruneInterval.unref) pruneInterval.unref();
 
   return function rateLimiter(req, res, next) {
-    const ip  = req.ip || req.socket.remoteAddress || 'unknown';
+    const key = (keyFn && keyFn(req)) || req.ip || req.socket.remoteAddress || 'unknown';
     const now = Date.now();
-    let entry = store.get(ip);
+    let entry = store.get(key);
     if (!entry || now > entry.resetAt) {
       entry = { count: 0, resetAt: now + windowMs };
-      store.set(ip, entry);
+      store.set(key, entry);
     }
     entry.count++;
     if (entry.count > max) {
@@ -88,8 +90,10 @@ function createRateLimiter({ windowMs, max }) {
 
 const authRateLimit    = createRateLimiter({ windowMs: 15 * 60 * 1000, max: 10 }); // 10/15 min
 const keyValidateLimit = createRateLimiter({ windowMs: 60 * 60 * 1000, max:  5 }); // 5/hour — brute-force protection
-const chatRateLimit    = createRateLimiter({ windowMs: 60 * 1000,      max: 60 }); // 60/min
-const consumeRateLimit = createRateLimiter({ windowMs: 60 * 1000,      max: 30 }); // 30/min
+const perUserKey       = (req) => req.user && ('u:' + req.user.id);
+const chatRateLimit    = createRateLimiter({ windowMs: 60 * 1000, max: 20, keyFn: perUserKey }); // 20/min per user
+const consumeRateLimit = createRateLimiter({ windowMs: 60 * 1000, max: 30, keyFn: perUserKey }); // 30/min per user
+const writeRateLimit   = createRateLimiter({ windowMs: 60 * 1000, max: 30, keyFn: perUserKey }); // 30/min per user — chat/gpt writes
 
 app.use(cookieParser());
 app.use(express.json({ limit: '50kb' }));
@@ -233,6 +237,19 @@ const MODEL_MAP = {
   'DeepSeek R1 70B':  'deepseek-r1-distill-llama-70b',
 };
 
+// Token cost multipliers per model — must match MODELS_MULT in the frontend.
+// Billing is enforced server-side; the frontend values are display-only.
+const MODEL_COST_MULT = {
+  'Llama 3.3 70B':   0.3,
+  'Llama 3.1 8B':    0.13,
+  'Gemma 2 9B':      0.1,
+  'Mixtral 8x7B':    0.3,
+  'DeepSeek R1 70B': 0.5,
+};
+
+function inputCost(text, mult)  { return Math.floor(text.length * mult * 1.5 + 20); }
+function outputCost(text, mult) { return Math.floor(text.length * mult + 10); }
+
 const DEFAULT_SYSTEM_PROMPT = `Du bist SingleTokens AI. Antworte IMMER in maximal 2 Sätzen. Keine Gegenfragen. Keine Füllphrasen. Nur die Antwort, nichts mehr. Sprache: Deutsch.`;
 
 // ── CHATS ─────────────────────────────────────────────────────────────────────
@@ -245,19 +262,37 @@ app.get('/api/chats/:id',   auth, async (req, res) => {
   try { messages = JSON.parse(chat.messages); } catch { messages = []; }
   res.json({ chat: { ...chat, messages } });
 });
-app.post('/api/chats',      auth, async (req, res) => {
+const CHAT_LIMIT         = 100; // max stored chats per user
+const CHAT_MESSAGE_LIMIT = 200; // max messages per stored chat
+
+function validateChatMessages(messages) {
+  if (messages === undefined || messages === null) return null;
+  if (!Array.isArray(messages)) return 'Ungültiges Nachrichtenformat';
+  if (messages.length > CHAT_MESSAGE_LIMIT) return `Zu viele Nachrichten (max. ${CHAT_MESSAGE_LIMIT})`;
+  return null;
+}
+
+app.post('/api/chats',      auth, writeRateLimit, async (req, res) => {
   const { title, model, messages } = req.body;
   if (!title || !model) return res.status(400).json({ error: 'Felder fehlen' });
   if (title.length > 200) return res.status(400).json({ error: 'Titel zu lang (max. 200 Zeichen)' });
   if (!Object.keys(MODEL_MAP).includes(model)) return res.status(400).json({ error: 'Ungültiges Modell' });
+  const msgError = validateChatMessages(messages);
+  if (msgError) return res.status(400).json({ error: msgError });
+  const { count } = await db.chats.count(req.user.id);
+  if (Number(count) >= CHAT_LIMIT)
+    return res.status(400).json({ error: `Maximal ${CHAT_LIMIT} gespeicherte Chats erlaubt. Bitte alte Chats löschen.` });
   const id = uuidv4();
   await db.chats.create(id, req.user.id, title, model, JSON.stringify(messages || []));
   res.status(201).json({ id, title, model });
 });
-app.patch('/api/chats/:id', auth, async (req, res) => {
+app.patch('/api/chats/:id', auth, writeRateLimit, async (req, res) => {
   const chat = await db.chats.get(req.params.id, req.user.id);
   if (!chat) return res.status(404).json({ error: 'Nicht gefunden' });
   const { title, messages, model } = req.body;
+  if (title && title.length > 200) return res.status(400).json({ error: 'Titel zu lang (max. 200 Zeichen)' });
+  const msgError = validateChatMessages(messages);
+  if (msgError) return res.status(400).json({ error: msgError });
   let existingMessages;
   try { existingMessages = JSON.parse(chat.messages); } catch { existingMessages = []; }
   await db.chats.update(title||chat.title, JSON.stringify(messages||existingMessages), model||chat.model, req.params.id, req.user.id);
@@ -318,11 +353,16 @@ function validateGptFields({ name, description, model, prompt, temp, cap, icon }
   return null;
 }
 
-app.post('/api/gpts', auth, async (req, res) => {
+const GPT_LIMIT = 50; // max custom GPTs per user
+
+app.post('/api/gpts', auth, writeRateLimit, async (req, res) => {
   const { name, description, model, prompt, temp, cap, icon } = req.body;
   if (!name || !prompt) return res.status(400).json({ error: 'Name und Prompt erforderlich' });
   const validationError = validateGptFields({ name, description, model, prompt, temp, cap, icon });
   if (validationError) return res.status(400).json({ error: validationError });
+  const existing = await db.gpts.getAll(req.user.id);
+  if (existing.length >= GPT_LIMIT)
+    return res.status(400).json({ error: `Maximal ${GPT_LIMIT} GPTs erlaubt` });
   const id = uuidv4();
   await db.gpts.create(id, req.user.id, name, description||'', model||'Llama 3.3 70B', prompt, temp||0.7, cap||null, icon||'🤖');
   res.status(201).json({ id, name, description, model, prompt, temp, cap, icon });
@@ -369,6 +409,16 @@ app.post('/api/chat', auth, chatRateLimit, async (req, res) => {
     if (!apiKey) return res.status(500).json({ error: 'KI-Service momentan nicht verfügbar' });
 
     const modelId = MODEL_MAP[model] || 'llama-3.3-70b-versatile';
+    const mult    = MODEL_COST_MULT[model] || 0.3;
+
+    // Server-side billing: deduct input cost atomically BEFORE calling Groq.
+    // Client-side balance display is cosmetic only — this is the enforcement.
+    const msgCost = inputCost(message, mult);
+    const balanceAfterInput = await db.users.consumeBalance(msgCost, req.user.id);
+    if (balanceAfterInput === null) {
+      const user = await db.users.get(req.user.id);
+      return res.status(402).json({ error: 'Kein Guthaben. Bitte Tokens aufladen.', balance: user?.balance || 0 });
+    }
 
     const messages = [];
 
@@ -387,16 +437,28 @@ app.post('/api/chat', auth, chatRateLimit, async (req, res) => {
     if (messages[messages.length - 1]?.content !== message)
       messages.push({ role: 'user', content: message });
 
-    const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: modelId, messages, temperature: 0.7, max_tokens: 250 })
-    });
+    let groqRes, data;
+    try {
+      groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model: modelId, messages, temperature: 0.7, max_tokens: 250 })
+      });
+      data = await groqRes.json();
+    } catch (err) {
+      // Groq unreachable — refund the input cost
+      await db.users.updateBalance(msgCost, req.user.id);
+      throw err;
+    }
+    if (!groqRes.ok) {
+      await db.users.updateBalance(msgCost, req.user.id);
+      return res.status(500).json({ error: data.error?.message || 'Groq Fehler' });
+    }
 
-    const data = await groqRes.json();
-    if (!groqRes.ok) return res.status(500).json({ error: data.error?.message || 'Groq Fehler' });
+    const reply = data.choices?.[0]?.message?.content || 'Keine Antwort.';
+    const finalBalance = await db.users.consumeBalanceClamp(outputCost(reply, mult), req.user.id);
 
-    res.json({ reply: data.choices?.[0]?.message?.content || 'Keine Antwort.', model: modelId });
+    res.json({ reply, model: modelId, balance: finalBalance });
 
   } catch (err) {
     console.error('Chat Error:', err);

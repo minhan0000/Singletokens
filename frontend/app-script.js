@@ -167,7 +167,9 @@ function openView(id) {
 /* ─── CHAT CORE ─── */
 let balance = 0;
 const MODELS_MULT = {
-  'Llama 3.3 70B':0.3,'Llama 11B':0.13,'Llama 3.2 Vision 11B':0.3,
+  // Live-Modelle — Werte müssen MODEL_COST_MULT im Backend entsprechen (Anzeige only)
+  'Llama 3.3 70B':0.3,'Llama 3.1 8B':0.13,'Gemma 2 9B':0.1,'Mixtral 8x7B':0.3,'DeepSeek R1 70B':0.5,
+  'Llama 11B':0.13,'Llama 3.2 Vision 11B':0.3,
   'Claude Haiku 4.5':0.27,'Claude Sonnet 4.5':1,'Claude 3.7 Sonnet':2,'Claude Opus 4.5':5,
   'GPT-4o':0.85,'GPT-5':2,'OpenAI o1':5,'OpenAI o1 Mini':0.5,
   'Gemini 2.5 Pro':0.5,'Gemini Pro 2.0':0.3,'Gemini Flash 2.0':0.08,

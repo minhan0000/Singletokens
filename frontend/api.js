@@ -193,6 +193,13 @@ function _updateBalance(used) {
   if (typeof updateBal    === 'function') { updateBal(used); }
 }
 
+/* Übernimmt den autoritativen Balance-Wert vom Server. Die Abrechnung passiert
+   ausschließlich im Backend — die Anzeige hier ist nur kosmetisch. */
+function _setBalance(value) {
+  if (typeof value !== 'number') return;
+  if (typeof balance !== 'undefined') { balance = value; _updateBalance(0); }
+}
+
 function _getMultiplier(modelName) {
   if (typeof MODELS_MULT !== 'undefined' && MODELS_MULT[modelName]) return MODELS_MULT[modelName];
   return 1;
@@ -240,13 +247,20 @@ async function _doSend() {
 
     if (!res.ok || data.error) {
       _apiConvHistory.pop();
-      _addMsg('⚠ ' + (data.error || 'Server-Fehler'), 'ai', modelName);
+      if (typeof data.balance === 'number') _setBalance(data.balance);
+      if (res.status === 402) {
+        _addMsg('⚠ Kein Guthaben mehr. Bitte lade Tokens auf, um weiterzuchatten.', 'ai', modelName);
+      } else {
+        _addMsg('⚠ ' + (data.error || 'Server-Fehler'), 'ai', modelName);
+      }
       return;
     }
 
     const reply = data.reply || 'Keine Antwort erhalten.';
     _apiConvHistory.push({ role: 'assistant', content: reply });
-    _updateBalance(Math.floor(reply.length * mult + 10));
+    // Server liefert den tatsächlichen Kontostand nach Abrechnung
+    if (typeof data.balance === 'number') _setBalance(data.balance);
+    else _updateBalance(Math.floor(reply.length * mult + 10));
     _addMsg(reply, 'ai', modelName);
 
     if (typeof onMessageComplete === 'function') onMessageComplete();
