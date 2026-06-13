@@ -556,10 +556,31 @@ function sGo(id, el) { document.querySelectorAll('.s-pg').forEach(p => p.classLi
 function sTog(el, key) { el.classList.toggle('on'); const on = el.classList.contains('on'); if (key === 'compact') { document.getElementById('app').classList.toggle('compact-mode', on); showToast(on ? T('compact_on') : T('compact_off')); } else showToast(T('saved')); }
 function setTheme(v) {
   const app = document.getElementById('app');
-  app.classList.toggle('light-mode', v === 'light');
-  document.body.classList.toggle('light-mode', v === 'light');
-  app.classList.toggle('dark-mode', v === 'dark');
-  document.body.classList.toggle('dark-mode', v === 'dark');
+  const dark = v === 'dark', light = v === 'light';
+  app.classList.toggle('light-mode', light);
+  document.body.classList.toggle('light-mode', light);
+  app.classList.toggle('dark-mode', dark);
+  document.body.classList.toggle('dark-mode', dark);
+  const r = document.documentElement.style;
+  if (dark) {
+    r.setProperty('--dark','#0D0D0D'); r.setProperty('--dark2','#141414');
+    r.setProperty('--dark3','#1A1A1A'); r.setProperty('--dark4','#222222');
+    r.setProperty('--text','#F0F0F0'); r.setProperty('--muted','#666666');
+    r.setProperty('--muted2','#9CA3AF'); r.setProperty('--border','rgba(255,255,255,0.1)');
+    r.setProperty('--bhard','3px solid #E0E0E0');
+    r.setProperty('--shadow','4px 4px 0 #E0E0E0');
+    r.setProperty('--shadow-sm','3px 3px 0 #E0E0E0');
+  } else if (light) {
+    r.setProperty('--dark','#EEEBD8'); r.setProperty('--dark2','#F8F5E8');
+    r.setProperty('--dark3','#E8E5D0'); r.setProperty('--dark4','#E0DCC8');
+    r.setProperty('--text','#111111'); r.setProperty('--muted','#888888');
+    r.setProperty('--muted2','#555555'); r.setProperty('--border','rgba(17,17,17,0.1)');
+    r.setProperty('--bhard','3px solid #111111');
+    r.setProperty('--shadow','4px 4px 0 #111111');
+    r.setProperty('--shadow-sm','3px 3px 0 #111111');
+  } else {
+    ['--dark','--dark2','--dark3','--dark4','--text','--muted','--muted2','--border','--bhard','--shadow','--shadow-sm'].forEach(p => r.removeProperty(p));
+  }
   localStorage.setItem('st_pref_theme', v);
   showToast(T('saved'));
 }
