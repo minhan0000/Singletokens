@@ -525,6 +525,49 @@ input[type=range]::-moz-range-thumb{background:var(--acc);border:2px solid var(-
 /* light-mode sidebar overrides become no-op in our scheme */
 .light-mode .sidebar{background:var(--dark2);border-right:var(--bhard)}
 .light-mode .nav-item:hover{background:#FFD93D}
+
+/* ── DARK MODE ── */
+.dark-mode{
+  --dark:#0D0D0D;--dark2:#141414;--dark3:#1A1A1A;--dark4:#222222;
+  --text:#F0F0F0;--muted:#666666;--muted2:#9CA3AF;--border:rgba(255,255,255,0.1);
+  --bhard:3px solid #E0E0E0;--shadow:4px 4px 0 #E0E0E0;--shadow-sm:3px 3px 0 #E0E0E0;
+}
+.dark-mode .model-grid .mc.cheap{background:#061810;border-color:#E0E0E0}
+.dark-mode .model-grid .mc.expensive{background:#1A0505;border-color:#E0E0E0}
+.dark-mode .model-grid .mc.reference{background:#04111E;border-color:#E0E0E0}
+.dark-mode .model-grid .mc.img-card{background:#1A060E;border-color:#E0E0E0}
+.dark-mode .model-grid .mc.voice-card{background:#0E0620;border-color:#E0E0E0}
+.dark-mode .model-grid .mc.cheap .mc-mult{color:#34D399}
+.dark-mode .model-grid .mc.expensive .mc-mult{color:#F87171}
+.dark-mode .model-grid .mc.reference .mc-mult{color:#60A5FA}
+.dark-mode .model-grid .mc.img-card .mc-mult{color:#F9A8D4}
+.dark-mode .model-grid .mc.voice-card .mc-mult{color:#C4B5FD}
+.dark-mode .modal-box{background:var(--dark2);border-color:#E0E0E0;box-shadow:8px 8px 0 #E0E0E0}
+.dark-mode .ctx-menu{background:var(--dark2);border-color:#E0E0E0;box-shadow:var(--shadow)}
+.dark-mode .ctx-item:hover{background:#FFD93D;color:#111}
+.dark-mode .ctx-item.ctx-danger:hover{background:#FFECEA;color:#B42318}
+.dark-mode .ctx-item.ctx-accent:hover{background:#E3F8FF;color:#0A73A8}
+.dark-mode .nav-item:hover{background:#FFD93D;color:#111}
+.dark-mode .nav-item.active{background:var(--acc);color:#111}
+.dark-mode .new-chat-btn:hover{background:#FFD93D;color:#111}
+.dark-mode .account-btn:hover{background:#FFD93D;color:#111}
+.dark-mode .send-btn:hover{background:var(--acc)}
+.dark-mode .pbtn:hover{background:#FFD93D;color:#111}
+.dark-mode .pay-btn.active{background:var(--acc);color:#111}
+.dark-mode .s-nav:hover{background:#FFD93D;color:#111}
+.dark-mode .s-nbtn:hover{background:#FFD93D;color:#111;border-color:#E0E0E0}
+.dark-mode .chat-item:hover{background:#FFD93D;color:#111}
+.dark-mode .chat-item.active-chat{background:var(--acc);color:#111}
+.dark-mode .secondary-btn:hover{background:#FFD93D;border-color:#E0E0E0;color:#111}
+.dark-mode .msg-bubble code{background:rgba(255,255,255,.08)}
+.dark-mode .msg-bubble pre{background:rgba(0,0,0,.6);border-color:rgba(255,255,255,.12)}
+.dark-mode .msg-bubble th{background:rgba(255,255,255,.06)}
+.dark-mode .sidebar-toggle:hover{background:#FFD93D;color:#111;border-color:#E0E0E0}
+.dark-mode .mfbtn:hover:not(.active){background:#FFD93D;color:#111}
+.dark-mode .modal-cancel:hover{background:#FFD93D;color:#111;border-color:#E0E0E0}
+.dark-mode .csel-trigger:hover{background:#FFD93D;color:#111}
+.dark-mode .csel-opt:hover{background:#FFD93D;color:#111}
+.dark-mode .co-total-box{border-color:#E0E0E0}
 </style>
 </head>
 <body>

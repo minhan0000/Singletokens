@@ -554,7 +554,15 @@ function setLang(l) { lang = l; applyLang(); showToast(T('saved')); }
 /* ─── SETTINGS ─── */
 function sGo(id, el) { document.querySelectorAll('.s-pg').forEach(p => p.classList.remove('active')); document.querySelectorAll('.s-nav').forEach(n => n.classList.remove('active')); document.getElementById('s-'+id).classList.add('active'); el.classList.add('active'); }
 function sTog(el, key) { el.classList.toggle('on'); const on = el.classList.contains('on'); if (key === 'compact') { document.getElementById('app').classList.toggle('compact-mode', on); showToast(on ? T('compact_on') : T('compact_off')); } else showToast(T('saved')); }
-function setTheme(v) { const on = v === 'light'; document.getElementById('app').classList.toggle('light-mode', on); document.body.classList.toggle('light-mode', on); showToast(T('saved')); }
+function setTheme(v) {
+  const app = document.getElementById('app');
+  app.classList.toggle('light-mode', v === 'light');
+  document.body.classList.toggle('light-mode', v === 'light');
+  app.classList.toggle('dark-mode', v === 'dark');
+  document.body.classList.toggle('dark-mode', v === 'dark');
+  localStorage.setItem('st_pref_theme', v);
+  showToast(T('saved'));
+}
 function setAccent(c, el) { document.querySelectorAll('.sw').forEach(s => s.classList.remove('active')); el.classList.add('active'); document.documentElement.style.setProperty('--acc', c); showToast(T('saved')); }
 function setFontSize(s) { document.documentElement.style.setProperty('--font-size', s); document.getElementById('s-preview').style.fontSize = s; showToast(T('saved')); }
 function saveName(v) {
@@ -690,6 +698,16 @@ function _applyUserToUI(user) {
 /* ─── BOOT ─── */
 initCustomSelects();
 applyLang();
+
+// Theme aus localStorage laden
+(function() {
+  const theme = localStorage.getItem('st_pref_theme');
+  if (theme === 'dark' || theme === 'light') setTheme(theme);
+  const themeEl = document.getElementById('theme-sel');
+  if (themeEl && theme) themeEl.value = theme;
+  const accent = localStorage.getItem('st_pref_accent');
+  if (accent) { document.documentElement.style.setProperty('--acc', accent); document.querySelectorAll('.sw').forEach(s => { s.classList.toggle('active', s.style.background === accent); }); }
+})();
 
 // Sofort aus localStorage füllen (bevor api.js geladen ist)
 (function() {
