@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self'; img-src 'self' data: blob:;">
 <title>SingleTokens</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgc2hhcGUtcmVuZGVyaW5nPSJnZW9tZXRyaWNQcmVjaXNpb24iPgogIDxkZWZzPgogICAgPGNsaXBQYXRoIGlkPSJjaXJjbGUtY2xpcCI+CiAgICAgIDxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjUwIi8+CiAgICA8L2NsaXBQYXRoPgogIDwvZGVmcz4KICA8cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0ibm9uZSIvPgogIDxnIGNsaXAtcGF0aD0idXJsKCNjaXJjbGUtY2xpcCkiPgogICAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNTAiIGZpbGw9IiMwMENGRkYiLz4KICAgIDxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjQyIiBmaWxsPSIjMDAwMDAwIi8+CiAgICA8Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIzOCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIxLjIiLz4KICAgIDx0ZXh0IHg9IjUwIiB5PSI2MiIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLCBIZWx2ZXRpY2Esc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNCIgZm9udC13ZWlnaHQ9IjkwMCIgZm9udC1zdHlsZT0iaXRhbGljIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+U1Q8L3RleHQ+CiAgPC9nPgo8L3N2Zz4=">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js" integrity="sha384-GfKRFGUMKEJ4YpJGMeTOSRfABDLHHGEMQGQJx9HolBXHRDtIW0KFX3UdkR3FKLS" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js" integrity="sha384-rRoXxn2yHlrZYB587Ki9RO1tONhLdM6XfORg7Rw4uwH4/Fh/5nP7IUX91bkaKUgs" crossorigin="anonymous"></script>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -467,7 +469,13 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 
 <script>
 if(typeof marked!=='undefined')marked.setOptions({breaks:true,gfm:true});
-function renderMarkdown(t){if(typeof marked==='undefined')return t;try{return marked.parse(t);}catch(e){return t;}}
+function renderMarkdown(t){
+  if(typeof marked==='undefined')return escHtml(t);
+  try{
+    const raw=marked.parse(t);
+    return typeof DOMPurify!=='undefined'?DOMPurify.sanitize(raw):escHtml(t);
+  }catch(e){return escHtml(t);}
+}
 
 const MOBILE_MODELS=[
   {name:'Llama 3.3 70B',   icon:'🦙',color:'#22D3EE',mult:0.3, cat:'open',     tag:'Standard',     tagClass:'tag-cyan'},
@@ -553,7 +561,7 @@ function addMsg(text,role,model){
   const msgs=document.getElementById('chat-messages');
   const d=document.createElement('div');d.className='msg '+role;d.style.animation='msgIn .3s ease both';
   const m=document.getElementById('chat-model-sel').value;
-  d.innerHTML=`<div class="msg-bubble">${role==='ai'?renderMarkdown(text):escHtml(text)}</div><div class="msg-meta">${role==='user'?'Du':(model||m)}</div>`;
+  d.innerHTML=`<div class="msg-bubble">${role==='ai'?renderMarkdown(text):escHtml(text)}</div><div class="msg-meta">${role==='user'?'Du':escHtml(model||m)}</div>`;
   msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;return d;
 }
 function addTyping(){
@@ -567,7 +575,7 @@ function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMe
 
 /* CHAT HISTORY */
 let savedChats=[],activeChatId=null;
-function genId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+function genId(){const a=new Uint32Array(2);crypto.getRandomValues(a);return Date.now().toString(36)+a[0].toString(36)+a[1].toString(36);}
 function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function _readBubbles(){return[...document.getElementById('chat-messages').querySelectorAll('.msg')].map(m=>({role:m.classList.contains('user')?'user':'ai',text:m.querySelector('.msg-bubble')?.textContent||'',meta:m.querySelector('.msg-meta')?.textContent||''}));}
 function _chatMsgsToApi(b){return b.map(x=>({role:x.role==='user'?'user':'assistant',content:x.text}));}
@@ -581,7 +589,7 @@ function renderChatHistory(){
     <div class="chat-list-item${c.id===activeChatId?' active-chat':''}" onclick="loadSavedChat('${c.id}');switchView('chat')">
       <div class="chat-list-dot"></div>
       <div class="chat-list-title">${escHtml(c.title)}</div>
-      <div class="chat-list-meta">${c.model?c.model.split(' ')[0]:''}</div>
+      <div class="chat-list-meta">${escHtml(c.model?c.model.split(' ')[0]:'')}</div>
     </div>`).join('');
 }
 
@@ -608,7 +616,7 @@ async function loadSavedChat(id){
   let messages=(local?.messages?.length>0)?local.messages:null;
   if(!messages){const sc=await apiFetchChat(id);if(sc?.messages){messages=sc.messages.map(m=>({role:m.role==='user'?'user':'ai',text:m.content,meta:m.role==='user'?'Du':(sc.model||'')}));if(local)local.messages=messages;}}
   msgs.innerHTML='';
-  (messages||[]).forEach(m=>{const d=document.createElement('div');d.className='msg '+m.role;d.innerHTML=`<div class="msg-bubble">${m.role==='ai'?renderMarkdown(m.text):escHtml(m.text)}</div><div class="msg-meta">${m.meta}</div>`;msgs.appendChild(d);});
+  (messages||[]).forEach(m=>{const d=document.createElement('div');d.className='msg '+m.role;d.innerHTML=`<div class="msg-bubble">${m.role==='ai'?renderMarkdown(m.text):escHtml(m.text)}</div><div class="msg-meta">${escHtml(m.meta||'')}</div>`;msgs.appendChild(d);});
   msgs.scrollTop=msgs.scrollHeight;
   if(local?.model)selectModel(local.model);
   if(typeof apiLoadConversation==='function'&&messages)apiLoadConversation(messages);
@@ -687,7 +695,7 @@ function renderGpts(){
   cards.innerHTML=gpts.map(g=>`
     <div class="gpt-card">
       <div class="gpt-card-top"><div class="gpt-emoji">${g.icon||'🤖'}</div><div class="gpt-name">${escHtml(g.name)}</div></div>
-      <div class="gpt-meta">${g.model}</div>
+      <div class="gpt-meta">${escHtml(g.model)}</div>
       <div class="gpt-desc">${escHtml(g.description||g.desc||'Keine Beschreibung')}</div>
       <div class="gpt-actions">
         <button class="gpt-use" onclick="useGpt('${g.id}')">Chatten →</button>

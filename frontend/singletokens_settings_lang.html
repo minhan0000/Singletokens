@@ -311,7 +311,8 @@ function revokeKey(btn,name){
 }
 function addKey(){
   const chars='ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqr23456789';
-  let k='sk-aizz-new-';for(let i=0;i<8;i++)k+=chars[Math.floor(Math.random()*chars.length)];
+  const rnd=new Uint8Array(8);crypto.getRandomValues(rnd);
+  let k='sk-aizz-new-';for(let i=0;i<8;i++)k+=chars[rnd[i]%chars.length];
   const d=document.createElement('div');d.className='mem-item';
   d.innerHTML=`<div style="flex:1"><div style="font-size:12px;color:var(--text);font-weight:600">New Key</div><div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);margin-top:2px">${k}••••</div></div><button class="dbtn" style="font-size:11px" onclick="revokeKey(this,'New Key')">${T('revoke')}</button>`;
   document.getElementById('api-keys').appendChild(d);
