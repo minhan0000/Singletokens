@@ -567,9 +567,9 @@ function setTheme(v) {
     r.setProperty('--dark3','#1A1A1A'); r.setProperty('--dark4','#222222');
     r.setProperty('--text','#F0F0F0'); r.setProperty('--muted','#666666');
     r.setProperty('--muted2','#9CA3AF'); r.setProperty('--border','rgba(255,255,255,0.1)');
-    r.setProperty('--bhard','3px solid #E0E0E0');
-    r.setProperty('--shadow','4px 4px 0 #E0E0E0');
-    r.setProperty('--shadow-sm','3px 3px 0 #E0E0E0');
+    r.setProperty('--bhard','3px solid #2A2A2A');
+    r.setProperty('--shadow','4px 4px 0 #222222');
+    r.setProperty('--shadow-sm','3px 3px 0 #1E1E1E');
   } else if (light) {
     r.setProperty('--dark','#EEEBD8'); r.setProperty('--dark2','#F8F5E8');
     r.setProperty('--dark3','#E8E5D0'); r.setProperty('--dark4','#E0DCC8');
