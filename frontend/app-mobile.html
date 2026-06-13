@@ -1124,9 +1124,9 @@ async function initApp(){
 (function(){
   const cached=JSON.parse(localStorage.getItem('st_user')||'null');
   if(cached){const n=cached.name||'';const wb=document.getElementById('welcome-greeting-bubble');if(wb)wb.textContent=_getWelcomeGreeting();}
-  // Theme laden
-  const theme=localStorage.getItem('st_pref_theme');
-  if(theme)setTheme(theme);
+  // Theme laden (Standard: dark)
+  const theme=localStorage.getItem('st_pref_theme')||'dark';
+  setTheme(theme);
   // Accent laden
   const accent=localStorage.getItem('st_pref_accent');
   if(accent){document.documentElement.style.setProperty('--acc',accent);document.querySelectorAll('.sw').forEach(s=>{s.classList.toggle('active',s.style.background===accent);});}

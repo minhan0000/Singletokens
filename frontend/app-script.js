@@ -720,12 +720,12 @@ function _applyUserToUI(user) {
 initCustomSelects();
 applyLang();
 
-// Theme aus localStorage laden
+// Theme aus localStorage laden (Standard: dark)
 (function() {
-  const theme = localStorage.getItem('st_pref_theme');
-  if (theme === 'dark' || theme === 'light') setTheme(theme);
+  const theme = localStorage.getItem('st_pref_theme') || 'dark';
+  setTheme(theme);
   const themeEl = document.getElementById('theme-sel');
-  if (themeEl && theme) themeEl.value = theme;
+  if (themeEl) themeEl.value = theme;
   const accent = localStorage.getItem('st_pref_accent');
   if (accent) { document.documentElement.style.setProperty('--acc', accent); document.querySelectorAll('.sw').forEach(s => { s.classList.toggle('active', s.style.background === accent); }); }
 })();
