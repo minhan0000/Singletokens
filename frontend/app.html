@@ -449,16 +449,14 @@ body,.app{font-family:'Archivo','Syne',Helvetica,sans-serif}
 .account-btn:hover{background:#FFD93D;transform:translate(-1px,-1px);box-shadow:var(--shadow)}
 .avatar{background:var(--acc);border:2px solid var(--text);color:var(--text)}
 
-/* TOPBAR */
-.chat-header{border-bottom:var(--bhard);background:#F8F6F0}
+/* CHAT FLÄCHE — einheitliches helles Beige + Punkteraster überall */
+--dot-bg: #F8F6F0;
+.chat-header,.chat-messages,.welcome-area,.chat-input-area{background-image:radial-gradient(rgba(17,17,17,.15) 1.2px,transparent 1.2px);background-size:26px 26px;background-color:#F8F6F0}
+.chat-header{border-bottom:var(--bhard)}
 
 /* TOKEN-COUNTER als gelber Sticker */
 .token-counter{background:#FFD93D;border:3px solid var(--text);box-shadow:4px 4px 0 var(--text);color:var(--text);font-weight:800;border-radius:0;transform:rotate(-1deg);display:inline-block}
 .token-counter:hover{background:var(--acc);transform:rotate(0deg) translate(-1px,-1px);box-shadow:5px 5px 0 var(--text)}
-
-/* CHAT FLÄCHE — einheitliches helles Beige + Punkteraster */
-#view-chat{background-image:radial-gradient(rgba(17,17,17,.15) 1.2px,transparent 1.2px);background-size:26px 26px;background-color:#F8F6F0}
-.chat-messages,.welcome-area,.chat-input-area,.chat-header{background-color:transparent;background-image:none}
 
 /* NACHRICHTEN als Comic-Karten */
 .msg.user .msg-bubble{background:#FFD93D;border:2.5px solid var(--text);box-shadow:3px 3px 0 var(--text);color:var(--text);border-radius:10px 10px 2px 10px}
