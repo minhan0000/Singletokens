@@ -669,16 +669,16 @@ input[type=range]::-moz-range-thumb{background:var(--acc);border:2px solid var(-
 .dark-mode .mfbtn.active{background:#111111;color:#facc15;box-shadow:none}
 
 /* ═══ MOBILE LAYOUT ═══ */
-.mob-app{flex-direction:column !important}
-.mob-topbar{height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:var(--bhard);background:var(--dark2);flex-shrink:0;z-index:10}
+.mob-app{display:grid !important;grid-template-rows:auto 1fr auto;height:100dvh;overflow:hidden}
+.mob-topbar{display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:var(--bhard);background:var(--dark2);z-index:10}
 .mob-logo{font-family:'Archivo Black',sans-serif;font-size:16px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:2px}
 .mob-logo span{color:var(--acc)}
-.mob-views{flex:1;overflow:hidden;display:flex;flex-direction:column;min-height:0}
+.mob-views{overflow:hidden;display:flex;flex-direction:column;min-height:0}
 .mob-model-bar{padding:10px 12px;border-bottom:var(--bhard);background:var(--dark2);flex-shrink:0}
 .mob-model-bar .csel-wrap{width:100%}
 .mob-model-bar .csel-trigger{width:100%;justify-content:space-between}
 .mob-model-bar .csel-panel{left:0;right:0;min-width:unset}
-.mob-bottom-nav{flex-shrink:0;height:calc(62px + env(safe-area-inset-bottom,0px));padding-bottom:env(safe-area-inset-bottom,0px);border-top:var(--bhard);background:var(--dark2);display:flex;z-index:100}
+.mob-bottom-nav{padding-bottom:env(safe-area-inset-bottom,0px);border-top:var(--bhard);background:var(--dark2);display:flex;z-index:100}
 .mob-nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:var(--muted2);font-size:10px;font-weight:700;font-family:'Archivo',sans-serif;border:none;border-radius:0;background:transparent;padding:8px 2px;transition:background .1s;margin:0;line-height:1}
 .mob-nav-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
 .mob-nav-btn.active,.mob-nav-btn.nav-item.active{background:var(--acc) !important;color:var(--text) !important;font-weight:800;transform:none !important;box-shadow:none !important;animation:none !important}
