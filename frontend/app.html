@@ -332,7 +332,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--dark3);border:1px solid rgba(34,211,238,.3);color:var(--acc);font-family:'DM Mono',monospace;font-size:12px;padding:10px 20px;border-radius:8px;transition:transform .3s;z-index:9998;white-space:nowrap;pointer-events:none}
 .toast.show{transform:translateX(-50%) translateY(0)}
 .light-mode{--dark:#EEEBD8;--dark2:#F8F5E8;--dark3:#E8E5D0;--dark4:#E0DCC8;--text:#111111;--muted:#888888;--muted2:#555555;--border:rgba(17,17,17,0.1)}
-.light-mode .slogo{color:#111827 !important}.light-mode .slogo span{color:var(--acc) !important}
+.light-mode .slogo{color:#111827 !important}
 .light-mode .sidebar{background:#F8F9FA;border-right-color:#E5E7EB}
 .light-mode .sidebar-toggle{border-color:#E5E7EB;color:#9CA3AF}
 .light-mode .sidebar-toggle:hover{background:#F0F2F5;color:#374151}
@@ -677,7 +677,7 @@ input[type=range]::-moz-range-thumb{background:var(--acc);border:2px solid var(-
 <div class="sidebar" id="sidebar">
   <div class="sidebar-top">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-      <div class="slogo sidebar-text" onclick="window.location.href='/index.html'" style="font-size:15px;font-weight:800;letter-spacing:-.02em;cursor:pointer;display:flex;align-items:center;gap:3px">Single<span style="color:var(--acc)">Tokens</span></div>
+      <div class="slogo sidebar-text" onclick="window.location.href='/index.html'" style="font-size:15px;font-weight:800;letter-spacing:-.02em;cursor:pointer;display:flex;align-items:center;gap:3px">Single<span style="background:var(--acc);color:#03060F;padding:1px 5px;border:2px solid var(--text);display:inline-block;transform:rotate(-2deg)">Tokens</span></div>
       <button class="sidebar-toggle" onclick="toggleSidebar()"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
     </div>
     <button class="new-chat-btn" onclick="openView('chat');newChat()">

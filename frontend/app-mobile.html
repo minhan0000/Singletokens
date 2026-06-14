@@ -331,7 +331,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--dark3);border:1px solid rgba(34,211,238,.3);color:var(--acc);font-family:'DM Mono',monospace;font-size:12px;padding:10px 20px;border-radius:8px;transition:transform .3s;z-index:9998;white-space:nowrap;pointer-events:none}
 .toast.show{transform:translateX(-50%) translateY(0)}
 .light-mode{--dark:#EEEBD8;--dark2:#F8F5E8;--dark3:#E8E5D0;--dark4:#E0DCC8;--text:#111111;--muted:#888888;--muted2:#555555;--border:rgba(17,17,17,0.1)}
-.light-mode .slogo{color:#111827 !important}.light-mode .slogo span{color:var(--acc) !important}
+.light-mode .slogo{color:#111827 !important}
 .light-mode .sidebar{background:#F8F9FA;border-right-color:#E5E7EB}
 .light-mode .sidebar-toggle{border-color:#E5E7EB;color:#9CA3AF}
 .light-mode .sidebar-toggle:hover{background:#F0F2F5;color:#374151}
@@ -672,7 +672,7 @@ input[type=range]::-moz-range-thumb{background:var(--acc);border:2px solid var(-
 .mob-app{display:grid !important;grid-template-rows:auto 1fr auto;height:100dvh;overflow:hidden}
 .mob-topbar{display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:var(--bhard);background:var(--dark2);z-index:10}
 .mob-logo{font-family:'Archivo Black',sans-serif;font-size:16px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:2px}
-.mob-logo span{color:var(--acc)}
+.mob-logo span{background:var(--acc);color:#03060F;padding:1px 5px;border:2px solid var(--text);display:inline-block;transform:rotate(-2deg)}
 .mob-views{overflow:hidden;display:flex;flex-direction:column;min-height:0}
 .mob-model-bar{padding:10px 12px;border-bottom:var(--bhard);background:var(--dark2);flex-shrink:0}
 .mob-model-bar .csel-wrap{width:100%}
@@ -717,7 +717,7 @@ input[type=range]::-moz-range-thumb{background:var(--acc);border:2px solid var(-
 
 <!-- ═══ TOP BAR ═══ -->
 <div class="mob-topbar">
-  <div class="mob-logo" onclick="window.location.href='/index.html'">Single<span>Tokens</span></div>
+  <div class="mob-logo" onclick="window.location.href='/index.html'">Single<span style="background:var(--acc);color:#03060F;padding:1px 5px;border:2px solid var(--text);display:inline-block;transform:rotate(-2deg)">Tokens</span></div>
   <div class="token-counter" id="token-counter" onclick="mobNav('purchase')">716K Tokens</div>
 </div>
 
