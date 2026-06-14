@@ -80,8 +80,8 @@ html,body{height:100%;overflow:hidden;background:var(--dark);font-family:'Archiv
 .ctx-sep{height:1px;background:var(--border);margin:3px 0}
 
 /* ── SIDEBAR FOOTER ── */
-.sidebar-footer{flex-shrink:0;border-top:1px solid var(--border);padding:15px 12px}
-.account-btn{width:100%;padding:9px 12px;background:transparent;border:1px solid var(--border);border-radius:9px;color:var(--text);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .15s;font-family:'Syne',sans-serif;text-align:left}
+.sidebar-footer{flex-shrink:0;border-top:1px solid var(--border);padding:8px 12px}
+.account-btn{width:100%;padding:7px 12px;background:transparent;border:1px solid var(--border);border-radius:9px;color:var(--text);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .15s;font-family:'Syne',sans-serif;text-align:left;min-height:unset}
 .account-btn:hover{background:var(--dark3)}
 .sidebar-user-info{flex:1;min-width:0;overflow:hidden}
 .sidebar-user-name{font-size:12px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
@@ -677,7 +677,7 @@ input[type=range]::-moz-range-thumb{background:var(--acc);border:2px solid var(-
 <div class="sidebar" id="sidebar">
   <div class="sidebar-top">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <div class="slogo sidebar-text" onclick="window.location.href='/index.html'" style="font-size:15px;font-weight:800;letter-spacing:-.02em;cursor:pointer;display:flex;align-items:center;gap:3px">Single<span style="background:var(--acc);color:#03060F;padding:1px 5px;border:2px solid var(--text);display:inline-block;transform:rotate(-2deg)">Tokens</span></div>
+      <div class="slogo sidebar-text" onclick="window.location.href='/index.html'" style="font-size:20px;font-weight:800;letter-spacing:-.02em;cursor:pointer;display:flex;align-items:center;gap:3px">Single<span style="background:var(--acc);color:#03060F;padding:1px 6px;border:2px solid var(--text);display:inline-block;transform:rotate(-2deg)">Tokens</span></div>
       <button class="sidebar-toggle" onclick="toggleSidebar()"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
     </div>
     <button class="new-chat-btn" onclick="openView('chat');newChat()">
