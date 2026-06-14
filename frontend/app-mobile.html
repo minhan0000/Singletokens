@@ -673,7 +673,7 @@ input[type=range]::-moz-range-thumb{background:var(--acc);border:2px solid var(-
 .mob-topbar{height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:var(--bhard);background:var(--dark2);flex-shrink:0;z-index:10}
 .mob-logo{font-family:'Archivo Black',sans-serif;font-size:16px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:2px}
 .mob-logo span{color:var(--acc)}
-.mob-views{flex:1;overflow:hidden;display:flex;flex-direction:column;min-height:0;padding-bottom:calc(62px + env(safe-area-inset-bottom,0px))}
+.mob-views{overflow:hidden;display:flex;flex-direction:column;min-height:0;height:calc(100vh - 52px - 62px - env(safe-area-inset-bottom,0px))}
 .mob-model-bar{padding:10px 12px;border-bottom:var(--bhard);background:var(--dark2);flex-shrink:0}
 .mob-model-bar .csel-wrap{width:100%}
 .mob-model-bar .csel-trigger{width:100%;justify-content:space-between}
