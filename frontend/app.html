@@ -42,7 +42,7 @@ html,body{height:100%;overflow:hidden;background:var(--dark);font-family:'Archiv
 .sidebar-toggle:hover{background:var(--dark3);color:var(--text)}
 .sidebar-toggle svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;transition:transform .25s}
 .sidebar.collapsed .sidebar-toggle svg{transform:rotate(180deg)}
-.sidebar-top{padding:12px}
+.sidebar-top{padding:16px 12px 12px}
 .new-chat-btn{width:100%;padding:10px 14px;background:var(--dark3);border:1px solid var(--border);border-radius:9px;color:var(--text);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .15s;font-family:'Syne',sans-serif}
 .new-chat-btn:hover{background:var(--dark4);border-color:rgba(255,255,255,.12)}
 .plus-icon{width:18px;height:18px;border-radius:5px;background:var(--acc);display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -80,7 +80,7 @@ html,body{height:100%;overflow:hidden;background:var(--dark);font-family:'Archiv
 .ctx-sep{height:1px;background:var(--border);margin:3px 0}
 
 /* ── SIDEBAR FOOTER ── */
-.sidebar-footer{flex-shrink:0;border-top:1px solid var(--border);padding:10px 12px}
+.sidebar-footer{flex-shrink:0;border-top:1px solid var(--border);padding:15px 12px}
 .account-btn{width:100%;padding:9px 12px;background:transparent;border:1px solid var(--border);border-radius:9px;color:var(--text);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .15s;font-family:'Syne',sans-serif;text-align:left}
 .account-btn:hover{background:var(--dark3)}
 .sidebar-user-info{flex:1;min-width:0;overflow:hidden}
@@ -676,7 +676,7 @@ input[type=range]::-moz-range-thumb{background:var(--acc);border:2px solid var(-
 <!-- ═══ SIDEBAR ═══ -->
 <div class="sidebar" id="sidebar">
   <div class="sidebar-top">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
       <div class="slogo sidebar-text" onclick="window.location.href='/index.html'" style="font-size:15px;font-weight:800;letter-spacing:-.02em;cursor:pointer;display:flex;align-items:center;gap:3px">Single<span style="background:var(--acc);color:#03060F;padding:1px 5px;border:2px solid var(--text);display:inline-block;transform:rotate(-2deg)">Tokens</span></div>
       <button class="sidebar-toggle" onclick="toggleSidebar()"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
     </div>
