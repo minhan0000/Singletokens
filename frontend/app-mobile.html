@@ -668,61 +668,70 @@ input[type=range]::-moz-range-thumb{background:var(--acc);border:2px solid var(-
 .dark-mode .mfbtn{border:2px solid #2a2a2a;color:#9ca3af;background:#1a1a1a}
 .dark-mode .mfbtn:hover:not(.active){background:#facc15;color:#111111}
 .dark-mode .mfbtn.active{background:#111111;color:#facc15;box-shadow:none}
+
+/* ═══ MOBILE LAYOUT ═══ */
+.mob-app{flex-direction:column !important}
+.mob-topbar{height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:var(--bhard);background:var(--dark2);flex-shrink:0;z-index:10}
+.mob-logo{font-family:'Archivo Black',sans-serif;font-size:16px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:2px}
+.mob-logo span{color:var(--acc)}
+.mob-views{flex:1;overflow:hidden;display:flex;flex-direction:column;min-height:0}
+.mob-model-bar{padding:10px 12px;border-bottom:var(--bhard);background:var(--dark2);flex-shrink:0}
+.mob-model-bar .csel-wrap{width:100%}
+.mob-model-bar .csel-trigger{width:100%;justify-content:space-between}
+.mob-model-bar .csel-panel{left:0;right:0;min-width:unset}
+.mob-new-chat-btn{position:absolute;bottom:80px;right:16px;width:48px;height:48px;border-radius:50%;background:var(--acc);border:2px solid var(--text);box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:50;transition:transform .1s,box-shadow .1s}
+.mob-new-chat-btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--text)}
+.mob-new-chat-btn svg{width:20px;height:20px;stroke:var(--text);fill:none;stroke-width:2.5;stroke-linecap:round}
+.mob-bottom-nav{height:62px;border-top:var(--bhard);background:var(--dark2);display:flex;flex-shrink:0;padding-bottom:env(safe-area-inset-bottom,0)}
+.mob-nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:var(--muted2);font-size:10px;font-weight:700;font-family:'Archivo',sans-serif;border:none;border-radius:0;background:transparent;padding:8px 2px;transition:background .1s;margin:0;line-height:1}
+.mob-nav-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.mob-nav-btn.active,.mob-nav-btn.nav-item.active{background:var(--acc) !important;color:var(--text) !important;font-weight:800;transform:none !important;box-shadow:none !important;animation:none !important}
+.mob-nav-btn.active svg,.mob-nav-btn.nav-item.active svg{stroke:var(--text)}
+.mob-nav-btn:hover:not(.active),.mob-nav-btn.nav-item:hover:not(.active){background:#FFD93D;color:var(--text)}
+.mob-view-header{padding:16px 16px 10px;font-family:'Archivo Black',sans-serif;font-size:18px;font-weight:800;border-bottom:var(--bhard);flex-shrink:0;background:var(--dark2);display:flex;align-items:center;justify-content:space-between}
+/* Override desktop layout */
+.sidebar{display:none !important}
+.main{flex:1 !important;overflow:hidden !important}
+.view{height:100%;max-height:100%}
+#welcome-screen{padding:40px 8% !important}
+#welcome-greeting{font-size:28px !important}
+.msg{max-width:88% !important}
+.chat-messages{padding:16px !important}
+.chat-input-area{padding:12px !important}
+.models-view-inner{padding:16px !important}
+.purchase-wrap{padding:16px 16px !important}
+.settings-wrap{flex-direction:column}
+.settings-sidebar{width:100%;border-right:none;border-bottom:var(--bhard);padding:8px 0;overflow-x:auto;overflow-y:hidden;white-space:nowrap;display:flex;flex-direction:row}
+.s-nav{display:inline-flex;border-left:none;border-bottom:3px solid transparent;padding:8px 14px}
+.s-nav.active{border-left:none !important;border-bottom:3px solid var(--text);background:var(--dark3)}
+.settings-main{padding:16px}
+/* Dark mode mobile */
+.dark-mode .mob-topbar{background:#111111;border-bottom:3px solid #262626}
+.dark-mode .mob-bottom-nav{background:#111111;border-top:3px solid #262626}
+.dark-mode .mob-nav-btn{color:#9ca3af}
+.dark-mode .mob-nav-btn.active,.dark-mode .mob-nav-btn.nav-item.active{background:#22d3ee !important;color:#0a0a0a !important}
+.dark-mode .mob-nav-btn:hover:not(.active){background:#facc15;color:#111111}
+.dark-mode .mob-model-bar{background:#111111;border-bottom:3px solid #262626}
+.dark-mode .mob-view-header{background:#111111;border-bottom:3px solid #262626;color:#ffffff}
+.dark-mode .mob-new-chat-btn{background:#22d3ee;border-color:#2a2a2a;box-shadow:4px 4px 0 #2a2a2a}
 </style>
 </head>
 <body>
-<div class="app" id="app">
+<div class="app mob-app" id="app">
 
-<!-- ═══ SIDEBAR ═══ -->
-<div class="sidebar" id="sidebar">
-  <div class="sidebar-top">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-      <div class="slogo sidebar-text" onclick="window.location.href='/index.html'" style="font-size:15px;font-weight:800;letter-spacing:-.02em;cursor:pointer;display:flex;align-items:center;gap:3px">Single<span style="color:var(--acc)">Tokens</span></div>
-      <button class="sidebar-toggle" onclick="toggleSidebar()"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
-    </div>
-    <button class="new-chat-btn" onclick="openView('chat');newChat()">
-      <div class="plus-icon"><svg viewBox="0 0 12 12"><path d="M6 1v10M1 6h10"/></svg></div>
-      <span class="new-chat-label">New chat</span>
-    </button>
-  </div>
-  <div class="sec-label">Explore</div>
-  <div class="nav-item" id="nav-models" onclick="openView('models')">
-    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-    <span class="sidebar-text">Your models</span>
-  </div>
-  <div class="nav-item" id="nav-gpts" onclick="openView('gpts')">
-    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-    <span class="sidebar-text">Your GPTs</span>
-  </div>
-  <div class="sidebar-divider"></div>
-  <div class="nav-item" id="nav-purchase" onclick="openView('purchase')">
-    <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H5a2 2 0 00-2 2v2"/><path d="M22 12h-4a2 2 0 000 4h4"/></svg>
-    <span class="sidebar-text">Purchase tokens</span>
-  </div>
-  <div class="sidebar-divider"></div>
-  <div class="recent-area" id="recent-area">
-    <div class="sec-label">Recent</div>
-    <div id="chat-history-list"></div>
-  </div>
-  <div class="sidebar-footer">
-    <button class="account-btn" onclick="openView('settings')">
-      <div class="avatar" id="sidebar-av">G</div>
-      <div class="sidebar-user-info sidebar-text">
-        <div class="sidebar-user-name" id="sidebar-name">Account</div>
-        <div class="sidebar-user-email" id="sidebar-email"></div>
-      </div>
-    </button>
-  </div>
+<!-- ═══ TOP BAR ═══ -->
+<div class="mob-topbar">
+  <div class="mob-logo" onclick="window.location.href='/index.html'">Single<span>Tokens</span></div>
+  <div class="token-counter" id="token-counter" onclick="mobNav('purchase')">716K Tokens</div>
 </div>
 
-<!-- ═══ MAIN ═══ -->
-<div class="main">
+<!-- ═══ VIEWS ═══ -->
+<div class="mob-views">
 
 <!-- ── CHAT ── -->
 <div class="view active" id="view-chat">
-  <div class="chat-header">
+  <div class="mob-model-bar">
     <div id="chat-model-sel-wrap"></div>
-    <div class="token-counter" id="token-counter" onclick="openView('purchase')">716K Tokens</div>
   </div>
   <select id="chat-model-sel" style="display:none">
     <option value="Llama 3.3 70B" selected>Llama 3.3 70B</option>
@@ -751,9 +760,8 @@ input[type=range]::-moz-range-thumb{background:var(--acc);border:2px solid var(-
     <option value="Gemma 2 27B">Gemma 2 27B</option>
   </select>
   <div class="chat-messages" id="chat-messages">
-    <!-- Welcome screen shown until first message is sent -->
     <div id="welcome-screen">
-      <div id="welcome-greeting">Guten Tag!</div>
+      <div id="welcome-greeting">Hallo!</div>
       <div id="welcome-sub">Wie kann ich dir heute helfen?</div>
     </div>
   </div>
@@ -764,6 +772,18 @@ input[type=range]::-moz-range-thumb{background:var(--acc);border:2px solid var(-
         <svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
       </button>
     </div>
+  </div>
+</div>
+
+<!-- ── VERLAUF ── -->
+<div class="view" id="view-history">
+  <div class="mob-view-header">
+    <span>Verlauf</span>
+    <button onclick="mobNav('chat');newChat()" style="padding:6px 14px;background:var(--acc);border:2px solid var(--text);box-shadow:var(--shadow-sm);font-family:'Archivo Black',sans-serif;font-size:12px;font-weight:800;cursor:pointer;color:var(--text)">+ New Chat</button>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:8px 0">
+    <div id="chat-history-list"></div>
+    <div id="recent-area" style="display:none"></div>
   </div>
 </div>
 
@@ -1086,7 +1106,46 @@ input[type=range]::-moz-range-thumb{background:var(--acc);border:2px solid var(-
   </div>
 </div>
 
-</div><!-- end main -->
+</div><!-- end mob-views -->
+
+<!-- ── FLOATING NEW CHAT BTN ── -->
+<button class="mob-new-chat-btn" onclick="mobNav('chat');newChat()" title="Neuer Chat">
+  <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+</button>
+
+<!-- ═══ BOTTOM NAV ═══ -->
+<div class="mob-bottom-nav">
+  <button class="mob-nav-btn active" id="mob-nav-chat" onclick="mobNav('chat')">
+    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+    <span>Chat</span>
+  </button>
+  <button class="mob-nav-btn" id="mob-nav-history" onclick="mobNav('history')">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    <span>Verlauf</span>
+  </button>
+  <button class="mob-nav-btn nav-item" id="nav-models" onclick="mobNav('models')">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    <span>Modelle</span>
+  </button>
+  <button class="mob-nav-btn nav-item" id="nav-gpts" onclick="mobNav('gpts')">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+    <span>GPTs</span>
+  </button>
+  <button class="mob-nav-btn nav-item" id="nav-purchase" onclick="mobNav('purchase')">
+    <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H5a2 2 0 00-2 2v2"/><path d="M22 12h-4a2 2 0 000 4h4"/></svg>
+    <span>Tokens</span>
+  </button>
+  <button class="mob-nav-btn" id="mob-nav-settings" onclick="mobNav('settings')">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v2m0 16v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M2 12h2m16 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    <span>Settings</span>
+  </button>
+</div>
+
+<!-- Hidden stubs needed by app-script.js -->
+<div id="sidebar-av" style="display:none">G</div>
+<div id="sidebar-name" style="display:none">Account</div>
+<div id="sidebar-email" style="display:none"></div>
+
 </div><!-- end app -->
 
 <!-- ═══ CUSTOM CONFIRM MODAL ═══ -->
@@ -1143,5 +1202,27 @@ input[type=range]::-moz-range-thumb{background:var(--acc);border:2px solid var(-
 
 <script src="app-script.js?v=3"></script>
 <script src="api.js"></script>
+<script>
+/* Mobile nav helper - wraps openView and syncs bottom-nav active state */
+function mobNav(id) {
+  if (id === 'history') {
+    // view-history not in desktop JS, handle manually
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById('view-history').classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  } else {
+    openView(id);
+  }
+  // sync bottom nav buttons
+  document.querySelectorAll('.mob-nav-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById('mob-nav-' + id) || document.getElementById('nav-' + id);
+  if (btn) btn.classList.add('active');
+}
+// Override token-counter click to use mobNav
+document.addEventListener('DOMContentLoaded', function() {
+  var tc = document.getElementById('token-counter');
+  if (tc) tc.onclick = function() { mobNav('purchase'); };
+});
+</script>
 </body>
 </html>
