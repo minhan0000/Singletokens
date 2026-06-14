@@ -449,8 +449,9 @@ body,.app{font-family:'Archivo','Syne',Helvetica,sans-serif}
 .account-btn:hover{background:#FFD93D;transform:translate(-1px,-1px);box-shadow:var(--shadow)}
 .avatar{background:var(--acc);border:2px solid var(--text);color:var(--text)}
 
-/* CHAT FLÄCHE — einheitliches helles Beige + Punkteraster überall */
-.chat-header,.chat-messages,.welcome-area,.chat-input-area{background-image:radial-gradient(rgba(17,17,17,.15) 1.2px,transparent 1.2px);background-size:26px 26px;background-color:#F8F6F0}
+/* CHAT FLÄCHE — Punkte nur im mittleren Bereich */
+.chat-messages,.welcome-area{background-image:radial-gradient(rgba(17,17,17,.15) 1.2px,transparent 1.2px);background-size:26px 26px;background-color:#F8F6F0}
+.chat-header,.chat-input-area{background-color:#F8F6F0;background-image:none}
 .chat-header{border-bottom:var(--bhard)}
 
 /* TOKEN-COUNTER als gelber Sticker */
