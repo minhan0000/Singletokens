@@ -196,12 +196,12 @@ function _getMultiplier(modelName) {
 async function _doSend() {
   const input     = _getInputEl();
   const modelName = _getModelName();
-  const text      = input?.value?.trim();
+  const text      = (input?.value !== undefined ? input.value : input?.innerText)?.trim();
   if (!text) return;
 
   _addMsg(text, 'user', modelName);
-  input.value = '';
-  if (input) input.style.height = 'auto';
+  if (input.value !== undefined) { input.value = ''; input.style.height = 'auto'; }
+  else { input.innerHTML = ''; }
 
   const mult = _getMultiplier(modelName);
   _updateBalance(Math.floor(text.length * mult * 1.5 + 20));
