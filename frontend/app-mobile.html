@@ -149,7 +149,7 @@ html,body{height:100%;overflow:hidden;background:var(--dark);font-family:'Archiv
 .chat-input-area{padding:16px 24px;border-top:1px solid var(--border);flex-shrink:0}
 .chat-input-wrap{display:flex;gap:10px;background:var(--dark2);border:1px solid var(--border);border-radius:12px;padding:10px 14px;transition:border-color .15s}
 .chat-input-wrap:focus-within{border-color:rgba(34,211,238,.3)}
-.chat-input{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:var(--font-size);font-family:'Syne',sans-serif;resize:none;height:22px;line-height:1.5;overflow:hidden}
+.chat-input{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:var(--font-size);font-family:'Syne',sans-serif;resize:none;height:22px;line-height:1.5;overflow:hidden;overscroll-behavior:none;-webkit-overflow-scrolling:auto}
 .chat-input::placeholder{color:var(--muted2)}
 .send-btn{width:32px;height:32px;border-radius:8px;background:var(--acc);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:-2px;transition:all .15s}
 .send-btn:hover{background:#67E8F9}
@@ -449,7 +449,7 @@ body,.app{font-family:'Archivo','Syne',Helvetica,sans-serif}
 .avatar{background:var(--acc);border:2px solid var(--text);color:var(--text)}
 
 /* CHAT FLÄCHE — Punkte nur im mittleren Bereich */
-.chat-messages,.welcome-area{background-image:radial-gradient(rgba(17,17,17,.15) 1.2px,transparent 1.2px);background-size:26px 26px;background-color:#F8F6F0}
+.chat-messages,.welcome-area{background-image:radial-gradient(rgba(17,17,17,.15) 1.2px,transparent 1.2px);background-size:26px 26px;background-position:13px 13px;background-color:#F8F6F0}
 .chat-header,.chat-input-area{background-color:#F8F6F0;background-image:none}
 .chat-header{border-bottom:var(--bhard)}
 
