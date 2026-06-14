@@ -678,10 +678,7 @@ input[type=range]::-moz-range-thumb{background:var(--acc);border:2px solid var(-
 .mob-model-bar .csel-wrap{width:100%}
 .mob-model-bar .csel-trigger{width:100%;justify-content:space-between}
 .mob-model-bar .csel-panel{left:0;right:0;min-width:unset}
-.mob-new-chat-btn{position:absolute;bottom:80px;right:16px;width:48px;height:48px;border-radius:50%;background:var(--acc);border:2px solid var(--text);box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:50;transition:transform .1s,box-shadow .1s}
-.mob-new-chat-btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--text)}
-.mob-new-chat-btn svg{width:20px;height:20px;stroke:var(--text);fill:none;stroke-width:2.5;stroke-linecap:round}
-.mob-bottom-nav{height:62px;border-top:var(--bhard);background:var(--dark2);display:flex;flex-shrink:0;padding-bottom:env(safe-area-inset-bottom,0)}
+.mob-bottom-nav{height:calc(62px + env(safe-area-inset-bottom,0px));border-top:var(--bhard);background:var(--dark2);display:flex;flex-shrink:0;padding-bottom:env(safe-area-inset-bottom,0px)}
 .mob-nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:var(--muted2);font-size:10px;font-weight:700;font-family:'Archivo',sans-serif;border:none;border-radius:0;background:transparent;padding:8px 2px;transition:background .1s;margin:0;line-height:1}
 .mob-nav-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
 .mob-nav-btn.active,.mob-nav-btn.nav-item.active{background:var(--acc) !important;color:var(--text) !important;font-weight:800;transform:none !important;box-shadow:none !important;animation:none !important}
@@ -712,7 +709,7 @@ input[type=range]::-moz-range-thumb{background:var(--acc);border:2px solid var(-
 .dark-mode .mob-nav-btn:hover:not(.active){background:#facc15;color:#111111}
 .dark-mode .mob-model-bar{background:#111111;border-bottom:3px solid #262626}
 .dark-mode .mob-view-header{background:#111111;border-bottom:3px solid #262626;color:#ffffff}
-.dark-mode .mob-new-chat-btn{background:#22d3ee;border-color:#2a2a2a;box-shadow:4px 4px 0 #2a2a2a}
+
 </style>
 </head>
 <body>
@@ -1106,11 +1103,6 @@ input[type=range]::-moz-range-thumb{background:var(--acc);border:2px solid var(-
 </div>
 
 </div><!-- end mob-views -->
-
-<!-- ── FLOATING NEW CHAT BTN ── -->
-<button class="mob-new-chat-btn" onclick="mobNav('chat');newChat()" title="Neuer Chat">
-  <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-</button>
 
 <!-- ═══ BOTTOM NAV ═══ -->
 <div class="mob-bottom-nav">
