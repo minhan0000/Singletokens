@@ -149,7 +149,8 @@ html,body{height:100%;overflow:hidden;background:var(--dark);font-family:'Archiv
 .chat-input-area{padding:16px 24px;border-top:1px solid var(--border);flex-shrink:0}
 .chat-input-wrap{display:flex;gap:10px;background:var(--dark2);border:1px solid var(--border);border-radius:12px;padding:10px 14px;transition:border-color .15s}
 .chat-input-wrap:focus-within{border-color:rgba(34,211,238,.3)}
-.chat-input{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:var(--font-size);font-family:'Syne',sans-serif;resize:none;height:22px;line-height:1.5;overflow:hidden;overscroll-behavior:none;-webkit-overflow-scrolling:auto}
+.chat-input{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:var(--font-size);font-family:'Syne',sans-serif;line-height:1.5;max-height:120px;overflow-y:auto;word-break:break-word;white-space:pre-wrap;cursor:text}
+.chat-input:empty::before{content:attr(data-placeholder);color:var(--muted2);pointer-events:none}
 .chat-input::placeholder{color:var(--muted2)}
 .send-btn{width:32px;height:32px;border-radius:8px;background:var(--acc);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:-2px;transition:all .15s}
 .send-btn:hover{background:#67E8F9}
@@ -449,7 +450,8 @@ body,.app{font-family:'Archivo','Syne',Helvetica,sans-serif}
 .avatar{background:var(--acc);border:2px solid var(--text);color:var(--text)}
 
 /* CHAT FLÄCHE — Punkte nur im mittleren Bereich */
-.chat-messages,.welcome-area{background-image:radial-gradient(rgba(17,17,17,.15) 1.2px,transparent 1.2px);background-size:26px 26px;background-position:13px 13px;background-color:#F8F6F0}
+.chat-messages{background-image:radial-gradient(rgba(17,17,17,.15) 1.2px,transparent 1.2px);background-size:26px 26px;background-position:13px 13px;background-color:#F8F6F0}
+.welcome-area{background:transparent}
 .chat-header,.chat-input-area{background-color:#F8F6F0;background-image:none}
 .chat-header{border-bottom:var(--bhard)}
 
@@ -594,6 +596,7 @@ input[type=range]::-moz-range-thumb{background:var(--acc);border:2px solid var(-
 .dark-mode .chat-input-wrap:focus-within{border-color:#22d3ee;box-shadow:6px 6px 0 #2a2a2a}
 .dark-mode .chat-input{color:#ffffff}
 .dark-mode .chat-input::placeholder{color:#9ca3af}
+.dark-mode .chat-input:empty::before{color:#9ca3af}
 .dark-mode .send-btn{background:#facc15;border:2px solid #2a2a2a;box-shadow:3px 3px 0 #2a2a2a}
 .dark-mode .send-btn svg{stroke:#111111}
 .dark-mode .send-btn:hover{background:#fde047;transform:translate(-1px,-1px);box-shadow:4px 4px 0 #2a2a2a}
@@ -784,7 +787,7 @@ input[type=range]::-moz-range-thumb{background:var(--acc);border:2px solid var(-
   </div>
   <div class="chat-input-area">
     <div class="chat-input-wrap">
-      <textarea class="chat-input" id="chat-input" placeholder="Nachricht schreiben..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+      <div class="chat-input" id="chat-input" contenteditable="true" data-placeholder="Nachricht schreiben..." onkeydown="handleKey(event)"></div>
       <button class="send-btn" onclick="sendMessage()">
         <svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
       </button>
