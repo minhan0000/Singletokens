@@ -1,0 +1,32 @@
+name: MinigamePlugin
+version: ${project.version}
+main: de.minigames.MinigamePlugin
+api-version: 1.20
+description: SkyWars, TNT Wars und Arrow Wars auf einem Server
+authors: [MinigamesDev]
+
+depend:
+  - WorldGuard
+  - WorldEdit
+
+softdepend: []
+
+commands:
+  arena:
+    description: Arena-Verwaltung
+    usage: /arena <create|delete|setspawn|list|info> [...]
+    permission: minigames.admin
+  join:
+    description: Einer Arena beitreten
+    usage: /join <arena-name>
+  leave:
+    description: Arena verlassen
+    usage: /leave
+
+permissions:
+  minigames.admin:
+    description: Zugriff auf Admin-Befehle
+    default: op
+  minigames.join:
+    description: Arenen beitreten
+    default: true
