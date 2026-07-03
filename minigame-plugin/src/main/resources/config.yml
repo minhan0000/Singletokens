@@ -1,57 +1,86 @@
 # Globale Plugin-Einstellungen
 settings:
-  lobby-world: world
+  lobby-world: merged_world
   lobby-spawn:
+    world: merged_world
     x: 0.5
-    y: 64.0
-    z: 0.5
+    y: 100.0
+    z: -200.0
     yaw: 0.0
     pitch: 0.0
   countdown-seconds: 30
-  min-players: 2
-  max-players: 8
 
+# ─────────────────────────────────────────────────────────────────────────────
 # Arena-Definitionen
-# Arenen werden hier definiert; Spawnpunkte werden via /arena setspawn gesetzt
+#
+# Welt-Layout (alle Arenen in "merged_world"):
+#
+#   SkyWars   (world_4)     →  X≈   0,  Z≈      0   (Original-Position)
+#   ArrowWars (world_3)     →  X≈   0,  Z≈ +25600   (Offset +50 Regionen)
+#   ArrowWars (Arrow Fight) →  X≈   0,  Z≈ +51200   (Offset +100 Regionen)
+#   TNT Wars                →  X≈   0,  Z≈+102400   (Offset +200 Regionen)
+#
+# Spawnpunkte: via /arena setspawn <id> in-game setzen.
+# Schematic-Paste-Origin: linke-untere-vordere Ecke der Arena in der Welt.
+# ─────────────────────────────────────────────────────────────────────────────
 arenas:
+
   skywars_1:
-    display-name: "SkyWars Arena 1"
+    display-name: "§bSkyWars"
     gamemode: SKYWARS
     worldguard-region: skywars_1
     schematic-file: schematics/skywars_1.schem
+    # Paste-Origin = grob Mittelpunkt der world_4-Arena (bitte anpassen nach Bedarf)
     schematic-paste-origin:
-      world: world
-      x: 100
-      y: 100
-      z: 100
-    min-players: 2
-    max-players: 8
-    spawns: []   # wird automatisch via /arena setspawn befüllt
-
-  tntwars_1:
-    display-name: "TNT Wars Arena 1"
-    gamemode: TNTWARS
-    worldguard-region: tntwars_1
-    schematic-file: schematics/tntwars_1.schem
-    schematic-paste-origin:
-      world: world
-      x: 500
+      world: merged_world
+      x: 0
       y: 64
-      z: 100
+      z: 0
     min-players: 2
-    max-players: 8
-    spawns: []
+    max-players: 12
+    spawns: []   # via /arena setspawn skywars_1
 
   arrowwars_1:
-    display-name: "Arrow Wars Arena 1"
+    display-name: "§aArrow Wars 1 (Classic)"
     gamemode: ARROWWARS
     worldguard-region: arrowwars_1
     schematic-file: schematics/arrowwars_1.schem
+    # world_3: originale Position war ~0,0 → nach Z+25600 verschoben
     schematic-paste-origin:
-      world: world
-      x: 900
+      world: merged_world
+      x: 0
       y: 64
-      z: 100
+      z: 25600
     min-players: 2
     max-players: 8
-    spawns: []
+    spawns: []   # via /arena setspawn arrowwars_1
+
+  arrowwars_2:
+    display-name: "§aArrow Wars 2 (Fight)"
+    gamemode: ARROWWARS
+    worldguard-region: arrowwars_2
+    schematic-file: schematics/arrowwars_2.schem
+    # Arrow Fight: originale Position war ~0,0 → nach Z+51200 verschoben
+    schematic-paste-origin:
+      world: merged_world
+      x: 0
+      y: 64
+      z: 51200
+    min-players: 2
+    max-players: 8
+    spawns: []   # via /arena setspawn arrowwars_2
+
+  tntwars_1:
+    display-name: "§cTNT Wars"
+    gamemode: TNTWARS
+    worldguard-region: tntwars_1
+    schematic-file: schematics/tntwars_1.schem
+    # TNT Wars: originale Position war ~0,0 → nach Z+102400 verschoben
+    schematic-paste-origin:
+      world: merged_world
+      x: 0
+      y: 64
+      z: 102400
+    min-players: 2
+    max-players: 8
+    spawns: []   # via /arena setspawn tntwars_1
