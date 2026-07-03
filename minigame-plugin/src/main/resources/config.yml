@@ -1,0 +1,57 @@
+# Globale Plugin-Einstellungen
+settings:
+  lobby-world: world
+  lobby-spawn:
+    x: 0.5
+    y: 64.0
+    z: 0.5
+    yaw: 0.0
+    pitch: 0.0
+  countdown-seconds: 30
+  min-players: 2
+  max-players: 8
+
+# Arena-Definitionen
+# Arenen werden hier definiert; Spawnpunkte werden via /arena setspawn gesetzt
+arenas:
+  skywars_1:
+    display-name: "SkyWars Arena 1"
+    gamemode: SKYWARS
+    worldguard-region: skywars_1
+    schematic-file: schematics/skywars_1.schem
+    schematic-paste-origin:
+      world: world
+      x: 100
+      y: 100
+      z: 100
+    min-players: 2
+    max-players: 8
+    spawns: []   # wird automatisch via /arena setspawn befüllt
+
+  tntwars_1:
+    display-name: "TNT Wars Arena 1"
+    gamemode: TNTWARS
+    worldguard-region: tntwars_1
+    schematic-file: schematics/tntwars_1.schem
+    schematic-paste-origin:
+      world: world
+      x: 500
+      y: 64
+      z: 100
+    min-players: 2
+    max-players: 8
+    spawns: []
+
+  arrowwars_1:
+    display-name: "Arrow Wars Arena 1"
+    gamemode: ARROWWARS
+    worldguard-region: arrowwars_1
+    schematic-file: schematics/arrowwars_1.schem
+    schematic-paste-origin:
+      world: world
+      x: 900
+      y: 64
+      z: 100
+    min-players: 2
+    max-players: 8
+    spawns: []
