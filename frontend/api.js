@@ -2,12 +2,10 @@
 
 const API_BASE = '';
 
+// Models the server can run right now. The full catalog comes in step 2.
 const MODEL_MAP = {
-  'Llama 3.3 70B':   'llama-3.3-70b-versatile',
-  'Llama 3.1 8B':    'llama-3.1-8b-instant',
-  'Gemma 2 9B':      'gemma2-9b-it',
-  'Mixtral 8x7B':    'mixtral-8x7b-32768',
-  'DeepSeek R1 70B': 'deepseek-r1-distill-llama-70b',
+  'Claude Sonnet 4.5': 'anthropic/claude-sonnet-4.5',
+  'Llama 3.3 70B':     'meta-llama/llama-3.3-70b-instruct',
 };
 
 let _apiConvHistory = [];
@@ -186,9 +184,10 @@ function _updateBalance(used) {
   if (typeof updateBal    === 'function') { updateBal(used); }
 }
 
-function _getMultiplier(modelName) {
-  if (typeof MODELS_MULT !== 'undefined' && MODELS_MULT[modelName]) return MODELS_MULT[modelName];
-  return 1;
+// The server decides the balance; the page only shows it.
+function _setBalance(value) {
+  if (typeof balance !== 'undefined') balance = value;
+  _updateBalance(0);
 }
 
 /* ══ CORE SEND ══════════════════════════════════════════════════════════════ */
@@ -203,23 +202,20 @@ async function _doSend() {
   if (input.value !== undefined) { input.value = ''; input.style.height = 'auto'; }
   else { input.innerHTML = ''; }
 
-  const mult = _getMultiplier(modelName);
-  _updateBalance(Math.floor(text.length * mult * 1.5 + 20));
-
   const typingEl = _addTyping();
   _apiConvHistory.push({ role: 'user', content: text });
 
   if (!MODEL_MAP[modelName]) {
     typingEl.remove();
     _apiConvHistory.pop();
-    _addMsg(`⚠ "${modelName}" ist noch nicht live. Bitte wähle Llama, Gemma, Mixtral oder DeepSeek R1.`, 'ai', modelName);
+    _addMsg(`⚠ "${modelName}" isn't available yet. Pick Claude Sonnet 4.5 or Llama 3.3 70B.`, 'ai', modelName);
     return;
   }
 
   try {
     const res = await fetch(`${API_BASE}/api/chat`, {
       method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: _authHeaders(),
       body: JSON.stringify({
         message:      text,
         model:        modelName,
@@ -231,15 +227,17 @@ async function _doSend() {
     const data = await res.json();
     typingEl.remove();
 
+    if (res.status === 401) { apiLogout(); return; }
+    if (typeof data.balance === 'number') _setBalance(data.balance);
+
     if (!res.ok || data.error) {
       _apiConvHistory.pop();
-      _addMsg('⚠ ' + (data.error || 'Server-Fehler'), 'ai', modelName);
+      _addMsg('⚠ ' + (data.error || 'Server error'), 'ai', modelName);
       return;
     }
 
-    const reply = data.reply || 'Keine Antwort erhalten.';
+    const reply = data.reply || 'No reply.';
     _apiConvHistory.push({ role: 'assistant', content: reply });
-    _updateBalance(Math.floor(reply.length * mult + 10));
     _addMsg(reply, 'ai', modelName);
 
     if (typeof onMessageComplete === 'function') onMessageComplete();
@@ -247,8 +245,8 @@ async function _doSend() {
   } catch (err) {
     typingEl.remove();
     _apiConvHistory.pop();
-    _addMsg('⚠ Server nicht erreichbar: ' + err.message, 'ai', modelName);
-    console.error('api.js Fehler:', err);
+    _addMsg('⚠ Server unreachable: ' + err.message, 'ai', modelName);
+    console.error('api.js error:', err);
   }
 }
 
@@ -290,41 +288,6 @@ async function apiDeleteAccount() {
     });
     return r.ok;
   } catch { return false; }
-}
-
-/* ══ API KEYS ═══════════════════════════════════════════════════════════════ */
-
-async function apiFetchApiKeys() {
-  if (!_getToken()) return [];
-  try {
-    const r = await fetch(`${API_BASE}/api/keys`, { headers: _authHeaders() });
-    if (!r.ok) return [];
-    const d = await r.json();
-    return d.keys || [];
-  } catch { return []; }
-}
-
-async function apiCreateApiKey(name) {
-  if (!_getToken()) return null;
-  try {
-    const r = await fetch(`${API_BASE}/api/keys`, {
-      method:  'POST',
-      headers: _authHeaders(),
-      body:    JSON.stringify({ name })
-    });
-    if (!r.ok) return null;
-    return await r.json(); // { id, name, key (full!), active }
-  } catch { return null; }
-}
-
-async function apiRevokeApiKey(id) {
-  if (!_getToken() || !id) return;
-  try {
-    await fetch(`${API_BASE}/api/keys/${id}/revoke`, {
-      method:  'PATCH',
-      headers: _authHeaders()
-    });
-  } catch { }
 }
 
 /* ══ GPTS ═══════════════════════════════════════════════════════════════════ */

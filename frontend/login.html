@@ -112,10 +112,6 @@ input::placeholder{color:#999}
 
   <!-- REGISTER FORM -->
   <div id="form-register" style="display:none">
-    <div class="bonus-badge">
-      <span class="bonus-icon">🎁</span>
-      <span>Du bekommst <strong>500K Tokens gratis</strong> beim Registrieren – kein Abo, kein Risiko.</span>
-    </div>
     <div class="form-group">
       <label>Name</label>
       <input type="text" id="reg-name" placeholder="Dein Name" autocomplete="name">
@@ -125,8 +121,8 @@ input::placeholder{color:#999}
       <input type="email" id="reg-email" placeholder="deine@email.com" autocomplete="email">
     </div>
     <div class="form-group">
-      <label>Passwort <span style="color:var(--muted);font-weight:400">(min. 6 Zeichen)</span></label>
-      <input type="password" id="reg-password" placeholder="••••••••" autocomplete="new-password">
+      <label>Passwort <span style="color:var(--muted);font-weight:400">(min. 12 Zeichen)</span></label>
+      <input type="password" id="reg-password" placeholder="••••••••" minlength="12" autocomplete="new-password">
     </div>
     <button class="btn-submit" id="btn-register" onclick="doRegister()">Konto erstellen →</button>
   </div>
@@ -214,7 +210,7 @@ async function doRegister() {
   const password = document.getElementById('reg-password').value;
   if (!name) { showError('Bitte einen Namen eingeben.'); return; }
   if (!email) { showError('Bitte eine E-Mail eingeben.'); return; }
-  if (password.length < 6) { showError('Passwort muss mindestens 6 Zeichen haben.'); return; }
+  if (password.length < 12) { showError('Passwort muss mindestens 12 Zeichen haben.'); return; }
   setLoading('btn-register', true, 'Konto erstellen →');
   try {
     const r = await fetch(API + '/api/auth/register', {
@@ -226,7 +222,7 @@ async function doRegister() {
     if (!r.ok) { showError(data.error || 'Registrierung fehlgeschlagen.'); return; }
     localStorage.setItem('st_token', data.token);
     localStorage.setItem('st_user', JSON.stringify(data.user));
-    showSuccess('Konto erstellt! 500K Tokens wurden gutgeschrieben. Weiterleitung...');
+    showSuccess('Konto erstellt! Weiterleitung...');
     setTimeout(redirectToApp, 900);
   } catch (e) {
     showError('Server nicht erreichbar. Bitte später nochmal versuchen.');
