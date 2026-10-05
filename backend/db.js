@@ -67,7 +67,7 @@ async function init() {
       updated_at TIMESTAMPTZ DEFAULT NOW()
     );
   `);
-  console.log('✓ Neon DB bereit');
+  console.log('✓ Database ready');
 }
 
 // ── HELPERS ───────────────────────────────────────────────────────────────────
@@ -97,15 +97,24 @@ module.exports = {
     create:        (id, email, hash, name)=> run('INSERT INTO users (id,email,password_hash,name) VALUES ($1,$2,$3,$4)', [id, email, hash, name]),
     updateBalance: (amount, id)           => run('UPDATE users SET balance = balance + $1, updated_at = NOW() WHERE id = $2', [amount, id]),
     update:        (name, id)             => run('UPDATE users SET name = $1, updated_at = NOW() WHERE id = $2', [name, id]),
-    delete:        (id)                   => run('DELETE FROM users WHERE id = $1', [id]),
-  },
-
-  apiKeys: {
-    getAll:    (userId)       => all('SELECT id,name,key,active,created_at FROM api_keys WHERE user_id = $1', [userId]),
-    getByKey:  (key)          => get('SELECT * FROM api_keys WHERE key = $1 AND active = 1', [key]),
-    create:    (id, userId, name, key) => run('INSERT INTO api_keys (id,user_id,name,key) VALUES ($1,$2,$3,$4)', [id, userId, name, key]),
-    revoke:    (id, userId)   => run('UPDATE api_keys SET active = 0 WHERE id = $1 AND user_id = $2', [id, userId]),
-    delete:    (id, userId)   => run('DELETE FROM api_keys WHERE id = $1 AND user_id = $2', [id, userId]),
+    // Subtracts a charge in one step and never goes below 0. Returns the new balance.
+    charge:        async (amount, id)     => (await get('UPDATE users SET balance = GREATEST(balance - $1, 0), updated_at = NOW() WHERE id = $2 RETURNING balance', [amount, id]))?.balance ?? 0,
+    // Removes the user and everything they own. All or nothing.
+    deleteEverything: async (id) => {
+      const client = await pool.connect();
+      try {
+        await client.query('BEGIN');
+        for (const table of ['api_keys', 'chat_history', 'gpts', 'transactions'])
+          await client.query(`DELETE FROM ${table} WHERE user_id = $1`, [id]);
+        await client.query('DELETE FROM users WHERE id = $1', [id]);
+        await client.query('COMMIT');
+      } catch (err) {
+        await client.query('ROLLBACK');
+        throw err;
+      } finally {
+        client.release();
+      }
+    },
   },
 
   chats: {
