@@ -1,4 +1,4 @@
-# SingleTokens
+# SingleTokens *by Minh-An Le*
 
 Pay for AI per use, with no subscription, on any model.
 
