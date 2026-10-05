@@ -187,7 +187,8 @@ export async function renderChat(main, ctx) {
 // ── Picker dropdown ─────────────────────────────────────────────────────────
 
 async function openPicker(anchor, recents, onPick) {
-  const [models, gpts] = await Promise.all([api.getCatalog(), api.getGpts()]);
+  const [catalog, mine, gpts] = await Promise.all([api.getCatalog(), api.getMyModels(), api.getGpts()]);
+  const mineIds = new Set(mine.map(m => m.id));
   const pop = el(`<div class="picker" role="dialog" aria-label="Pick a model">
     <input class="input" placeholder="Search models and GPTs" aria-label="Search models and GPTs">
     <div class="picker-list" role="listbox"></div></div>`);
@@ -209,7 +210,9 @@ async function openPicker(anchor, recents, onPick) {
     const groups = [
       ['Recent', q ? [] : recents],
       ['Your GPTs', gpts.map(g => ({ kind: 'gpt', id: g.id })).filter(match)],
-      ['All models', models.map(m => ({ kind: 'model', id: m.id })).filter(match)],
+      ['Your models', mine.map(m => ({ kind: 'model', id: m.id })).filter(match)],
+      // The rest of the catalog only shows up while searching.
+      ['All models', q ? catalog.filter(m => !mineIds.has(m.id)).map(m => ({ kind: 'model', id: m.id })).filter(match) : []],
     ];
     list.innerHTML = '';
     rows = [];

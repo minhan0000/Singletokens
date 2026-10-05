@@ -25,6 +25,12 @@ for (const m of MODELS) m.mult = (m.promptUsd + m.completionUsd) / (BASE.promptU
 export const getModel = id => MODELS.find(m => m.id === id);
 export async function getCatalog() { return MODELS; }
 
+// The user's own models ("Your models"), in the order they added them.
+let myModelIds = ['anthropic/claude-sonnet-4.5', 'openai/gpt-5', 'meta-llama/llama-3.3-70b-instruct', 'google/gemini-2.5-pro'];
+export async function getMyModels() { return myModelIds.map(getModel); }
+export async function addMyModel(id) { if (!myModelIds.includes(id)) myModelIds.push(id); }
+export async function removeMyModel(id) { myModelIds = myModelIds.filter(x => x !== id); }
+
 // ── User ────────────────────────────────────────────────────────────────────
 
 const user = { name: 'Edo', email: 'edo@example.com', openrouterConnected: true, creditTokens: 750000 };

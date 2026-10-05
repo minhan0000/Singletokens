@@ -3,6 +3,7 @@
 import { $, el, toast, closePopovers } from './ui.js';
 import { renderSidebar } from './sidebar.js';
 import { renderChat } from './chat.js';
+import { renderModels } from './models.js';
 import * as api from './api.js';
 
 // Theme: saved choice, dark by default.
@@ -60,6 +61,8 @@ async function render() {
       onChatsChanged: refreshChats,
       onCreditChanged: credit => { state.user.creditTokens = credit; paintSidebar(); },
     });
+  } else if (route === 'models') {
+    await renderModels(main, { user: state.user, openDrawer });
   } else {
     // Screens built in later steps.
     main.innerHTML = `<div class="topbar"><button class="icon-btn only-phone" data-drawer aria-label="Open menu"><i data-lucide="menu"></i></button></div>
