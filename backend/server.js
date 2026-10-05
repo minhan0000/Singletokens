@@ -1,6 +1,7 @@
 console.log('=== SERVER STARTING ===');
-process.on('uncaughtException', (err) => { console.error('CRASH:', err.message); process.exit(1); });
-process.on('unhandledRejection', (err) => { console.error('UNHANDLED:', err); process.exit(1); });
+// An unexpected error is logged with its full details, and the server keeps running for everyone else.
+process.on('uncaughtException', (err) => { console.error('CRASH (server kept running):', err); });
+process.on('unhandledRejection', (err) => { console.error('UNHANDLED (server kept running):', err); });
 
 require('dotenv').config();
 for (const name of ['JWT_SECRET', 'ENCRYPTION_KEY'])
@@ -353,6 +354,7 @@ app.post('/api/chats/:id/messages', auth, chatLimit, wrap(async (req, res) => {
   try {
     json = await openrouter.complete({ apiKey, modelId, messages, settings });
   } catch (err) {
+    console.error(`OpenRouter error for ${modelId}:`, err.status, err.message);
     if (await providerError(err, req.user.id, res)) return;
     throw err;
   }
@@ -439,7 +441,8 @@ app.get('/health', (_, res) => res.json({ status: 'ok', version: '3.0.0' }));
 
 app.use('/api', (req, res) => res.status(404).json({ error: 'Not found' }));
 app.use((err, req, res, next) => {
-  console.error('Error:', err);
+  console.error(`Error in ${req.method} ${req.path}:`, err);
+  if (res.headersSent) return next(err);
   res.status(500).json({ error: 'Something went wrong on our side. Try again.' });
 });
 

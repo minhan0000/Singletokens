@@ -28,7 +28,9 @@ async function request(path, { method = 'GET', body } = {}) {
   }
   const data = await r.json().catch(() => ({}));
   if (r.status === 401) { logout(); throw new Error('Logged out'); }
-  if (!r.ok) throw Object.assign(new Error(data.error || 'Something went wrong. Try again.'), { status: r.status, data });
+  // Without a message from our server (e.g. the host's own error page), say what happened.
+  const fallback = r.status >= 500 ? `Server error (${r.status}). Try again in a moment.` : `Request failed (${r.status}). Try again.`;
+  if (!r.ok) throw Object.assign(new Error(data.error || fallback), { status: r.status, data });
   return data;
 }
 
