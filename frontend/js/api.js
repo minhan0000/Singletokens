@@ -48,6 +48,17 @@ export async function getUser() { return { ...user }; }
 export async function connectOpenRouter() { await wait(600); user.openrouterConnected = true; user.creditTokens = 750000; }
 export async function disconnectOpenRouter() { user.openrouterConnected = false; user.creditTokens = 0; }
 
+// ── Account ─────────────────────────────────────────────────────────────────
+// Fake: the password for the fake account is "correct horse battery".
+const FAKE_PASSWORD = 'correct horse battery';
+const checkPassword = pw => { if (pw !== FAKE_PASSWORD) throw new Error('Wrong password.'); };
+
+export async function updateName(name) { await wait(300); user.name = name; }
+export async function updateEmail(email, password) { await wait(300); checkPassword(password); user.email = email; }
+export async function updatePassword(current, next) { await wait(300); checkPassword(current); if (next.length < 12) throw new Error('Password must be at least 12 characters.'); }
+// Deletes everything: chats, GPTs, models, the OpenRouter connection and the account.
+export async function deleteAccount() { await wait(500); }
+
 // The model the user sends the most messages with (Claude Sonnet 4.5 for new users).
 export async function getMostUsedModel() {
   const counts = {};

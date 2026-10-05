@@ -585,3 +585,30 @@ button.role-tag { padding: 0; border: 0; background: none; cursor: pointer; }
 .or-steps b { font-weight: 600; color: var(--text-strong); }
 .step-num { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; flex-shrink: 0; margin-top: 1px; border-radius: var(--r-pill); background: var(--accent); color: var(--white); font-size: var(--fs-12); font-weight: 700; }
 .purchase .page-sub { margin-bottom: var(--sp-32); }
+
+/* ── Settings extras ──────────────────────────────────────────────────────── */
+.settings-nav .nav-item { margin: 0 0 2px; width: 100%; }
+.settings-content { position: relative; }
+.settings-content .modal-close { top: var(--sp-16); right: var(--sp-16); }
+.settings-content .field-label { margin-bottom: var(--sp-12); }
+.acct-edit { align-items: flex-start; }
+.acct-edit .field + .field { margin-top: var(--sp-12); }
+.acct-edit .field-error { margin-top: var(--sp-8); }
+.acct-edit-actions { display: flex; gap: var(--sp-8); padding-top: 28px; }
+.login-foot { margin: var(--sp-24) 0 0; text-align: center; font-size: var(--fs-13); }
+.login-foot a { color: var(--text-muted); text-decoration: none; }
+.login-foot a:hover { color: var(--text); text-decoration: underline; }
+.login-card .field-error { font-size: var(--fs-13); }
+@media (max-width: 767px) {
+  .settings-backdrop { padding: 0; }
+  .settings { flex-direction: column; width: 100%; height: 100%; max-height: none; border-radius: 0; }
+  .settings-nav { display: flex; align-items: center; gap: var(--sp-4); width: auto; padding: var(--sp-8) 56px var(--sp-8) var(--sp-8); }
+  .settings-nav .section-label { display: none; }
+  .settings-nav .nav-item { width: auto; margin: 0; }
+  .settings-content { padding: var(--sp-20) var(--sp-16); }
+  .settings-content .modal-close { position: fixed; top: var(--sp-8); right: var(--sp-8); }
+  .acct-edit { flex-direction: column; align-items: stretch; }
+  .acct-edit-actions { padding-top: 0; justify-content: flex-end; }
+  .danger-zone { flex-direction: column; align-items: flex-start; }
+  .theme-tiles { flex-wrap: wrap; }
+}

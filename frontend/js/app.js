@@ -1,11 +1,12 @@
 // App entry: theme, routing between screens, sidebar + phone drawer.
 
-import { $, el, toast, closePopovers } from './ui.js';
+import { $, closePopovers } from './ui.js';
 import { renderSidebar } from './sidebar.js';
 import { renderChat } from './chat.js';
 import { renderModels } from './models.js';
 import { renderGpts, renderGptEditor } from './gpts.js';
 import { renderOpenRouter } from './openrouter.js';
+import { openSettings } from './settings.js';
 import * as api from './api.js';
 
 // Theme: saved choice, dark by default.
@@ -35,8 +36,11 @@ function paintSidebar() {
     chatId: state.chatId,
     go: hash => { closeDrawer(); go(hash); },
     onChatsChanged: refreshChats,
-    onSettings: () => toast('Settings are built in a later step.'),
-    onLogout: () => toast('Log out gets connected with the backend.'),
+    onSettings: () => openSettings({ onUserChanged: async () => { state.user = await api.getUser(); paintSidebar(); } }),
+    onLogout: () => {
+      try { localStorage.removeItem('st_token'); localStorage.removeItem('st_user'); } catch {}
+      location.href = '/login.html';
+    },
   });
 }
 
