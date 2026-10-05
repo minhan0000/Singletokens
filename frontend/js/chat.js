@@ -76,6 +76,7 @@ export async function renderChat(main, ctx) {
     if (chat) await api.setChatTarget(chat.id, t);
     paintModelBtn();
     paintHint();
+    if (!chat || !chat.messages.length) paintEmpty();  // the highlighted pill follows the dropdown
     input.focus();
   }));
 
@@ -91,7 +92,9 @@ export async function renderChat(main, ctx) {
 
   function paintEmpty() {
     const box = el(`<div class="empty-chat"><h1>What do you want to ask?</h1><div class="pills"></div></div>`);
-    for (const t of recents) {
+    // The current choice always shows: if it isn't one of the 3 shortcuts, it takes the last spot.
+    const pills = recents.some(t => sameTarget(t, target)) ? recents.slice(0, 3) : [...recents.slice(0, 2), target];
+    for (const t of pills) {
       const d = describeTarget(t);
       const p = el(`<button class="pill${sameTarget(t, target) ? ' is-active' : ''}"><span class="prov-dot p-${d.p}"></span>${esc(d.name)}</button>`);
       p.addEventListener('click', () => { target = t; paintModelBtn(); paintHint(); paintEmpty(); input.focus(); });

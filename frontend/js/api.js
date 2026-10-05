@@ -150,6 +150,7 @@ export async function getRecentTargets() {
   const seen = new Set(), out = [];
   for (const c of chatList) {
     if (c.target.kind === 'gpt' && !getGpt(c.target.id)) continue;
+    if (c.target.kind === 'model' && !catalogById.has(c.target.id)) continue;  // left the catalog (e.g. batch models)
     const key = c.target.kind + ':' + c.target.id;
     if (!seen.has(key)) { seen.add(key); out.push(c.target); }
     if (out.length === 3) break;

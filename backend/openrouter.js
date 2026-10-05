@@ -56,7 +56,9 @@ async function getCatalog() {
   const textModels = data.filter(m => {
     const arch = m.architecture || {};
     const outputs = arch.output_modalities || [(arch.modality || 'text').split('->')[1] || 'text'];
-    return outputs.includes('text') && Number(m.pricing?.prompt) >= 0 && Number(m.pricing?.completion) >= 0;
+    // Batch versions answer hours later and can't be used in a live chat.
+    const batch = /:batch$/.test(m.id) || /\(batch\)/i.test(m.name);
+    return outputs.includes('text') && !batch && Number(m.pricing?.prompt) >= 0 && Number(m.pricing?.completion) >= 0;
   }).map(toModel);
   const base = textModels.find(m => m.id === BASE_MODEL) || { promptUsd: 3e-6, completionUsd: 15e-6 };
   for (const m of textModels) m.mult = (m.promptUsd + m.completionUsd) / (base.promptUsd + base.completionUsd);
