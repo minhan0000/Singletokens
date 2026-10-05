@@ -180,7 +180,7 @@ export async function openCustom({ chat, target, draft, onCreditChanged }) {
         <button class="resp-tab${view === 'rendered' ? ' is-active' : ''}" data-view="rendered" role="tab">rendered</button>
         <button class="resp-tab${view === 'raw' ? ' is-active' : ''}" data-view="raw" role="tab">raw</button>
       </div>
-      <div class="resp-stats"><span><span class="${ok ? 'ok' : 'err'}">${r.status} ${esc(r.statusText)}</span> · ${fmtInt(r.cost)} ST · $${(r.cost / 100000).toFixed(4)} · ${(r.ms / 1000).toFixed(1)}s</span>
+      <div class="resp-stats"><span><span class="${ok ? 'ok' : 'err'}">${r.status} ${esc(r.statusText)}</span> · ${fmtInt(r.cost)} ST · $${usdText(r.cost / 100000)} · ${(r.ms / 1000).toFixed(1)}s</span>
         <button class="term-btn" data-curl>Copy as curl</button></div>
       ${view === 'rendered' ? `<div class="resp-rendered md">${renderMarkdown(text)}</div>` : `<div class="json-view"><pre class="json-code" style="padding-left:var(--sp-16)">${highlightJson(r.raw)}</pre></div>`}`;
     $$('[data-view]', respBody).forEach(b => b.addEventListener('click', () => paintResponse(b.dataset.view)));
@@ -188,7 +188,13 @@ export async function openCustom({ chat, target, draft, onCreditChanged }) {
     icons(respBody);
   }
 
-  // The same request as a terminal command. The key stays a placeholder: users fill in their own.
+  // Dollars with enough digits that tiny costs never read as zero: $0.0121, $0.000020.
+function usdText(usd) {
+  if (!usd) return '0';
+  return usd >= 0.01 ? usd.toFixed(4) : usd.toPrecision(2);
+}
+
+// The same request as a terminal command. The key stays a placeholder: users fill in their own.
   function curl(b) {
     const json = JSON.stringify(b, null, 2).replace(/'/g, `'\\''`);
     return `curl ${ENDPOINT} \\\n  -H "Authorization: Bearer $OPENROUTER_API_KEY" \\\n  -H "Content-Type: application/json" \\\n  -d '${json}'`;
