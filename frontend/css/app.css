@@ -569,3 +569,19 @@ button.role-tag { padding: 0; border: 0; background: none; cursor: pointer; }
   .term-path { font-size: var(--fs-12); }
   .term .kbd { display: none; }
 }
+
+/* ── OpenRouter credit page ───────────────────────────────────────────────── */
+.or-card { display: flex; flex-direction: column; }
+.or-status { display: inline-flex; align-items: center; gap: var(--sp-8); align-self: flex-start; height: 28px; margin-bottom: var(--sp-24); padding: 0 var(--sp-12); border-radius: var(--r-pill); background: var(--bg-hover); font-size: var(--fs-13); font-weight: 600; color: var(--text-strong); }
+.status-dot { width: 8px; height: 8px; border-radius: var(--r-pill); background: var(--text-muted); }
+.status-dot.is-on { background: var(--green); }
+.or-title { margin: 0 0 var(--sp-12); font-size: var(--fs-18); font-weight: 600; color: var(--text-strong); }
+.or-text { margin: 0; font-size: var(--fs-15); line-height: 1.6; color: var(--text-muted); }
+.or-actions { display: flex; flex-direction: column; align-items: center; gap: var(--sp-12); margin-top: auto; padding-top: var(--sp-32); }
+.or-actions .checkout-btn { margin: 0; text-decoration: none; }
+.or-actions .checkout-btn:disabled { opacity: .5; cursor: wait; }
+.or-steps { display: flex; flex-direction: column; gap: var(--sp-16); margin: 0; padding: 0; list-style: none; }
+.or-steps li { display: flex; gap: var(--sp-12); font-size: var(--fs-14); line-height: 1.6; color: var(--text-muted); }
+.or-steps b { font-weight: 600; color: var(--text-strong); }
+.step-num { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; flex-shrink: 0; margin-top: 1px; border-radius: var(--r-pill); background: var(--accent); color: var(--white); font-size: var(--fs-12); font-weight: 700; }
+.purchase .page-sub { margin-bottom: var(--sp-32); }

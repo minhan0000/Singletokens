@@ -5,6 +5,7 @@ import { renderSidebar } from './sidebar.js';
 import { renderChat } from './chat.js';
 import { renderModels } from './models.js';
 import { renderGpts, renderGptEditor } from './gpts.js';
+import { renderOpenRouter } from './openrouter.js';
 import * as api from './api.js';
 
 // Theme: saved choice, dark by default.
@@ -67,6 +68,8 @@ async function render() {
     await renderModels(main, { user: state.user, openDrawer });
   } else if (route === 'gpts') {
     await renderGpts(main, { go, openDrawer, onChatsChanged: refreshChats });
+  } else if (route === 'openrouter') {
+    await renderOpenRouter(main, { openDrawer, onUserChanged: async () => { state.user = await api.getUser(); paintSidebar(); } });
   } else if (route === 'gpt') {
     await renderGptEditor(main, { id, go, openDrawer, onChatsChanged: refreshChats });
   } else {

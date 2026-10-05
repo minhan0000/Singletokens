@@ -44,6 +44,21 @@ export async function removeMyModel(id) { myModelIds = myModelIds.filter(x => x 
 const user = { name: 'Edo', email: 'edo@example.com', openrouterConnected: true, creditTokens: 750000 };
 export async function getUser() { return { ...user }; }
 
+// "Connect OpenRouter": the real version sends the user to openrouter.ai and back (see connect.html).
+export async function connectOpenRouter() { await wait(600); user.openrouterConnected = true; user.creditTokens = 750000; }
+export async function disconnectOpenRouter() { user.openrouterConnected = false; user.creditTokens = 0; }
+
+// The model the user sends the most messages with (Claude Sonnet 4.5 for new users).
+export async function getMostUsedModel() {
+  const counts = {};
+  for (const c of chats) for (const m of c.messages) if (m.modelId) counts[m.modelId] = (counts[m.modelId] || 0) + 1;
+  const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+  return getModel(top ? top[0] : BASE.id);
+}
+
+// What a typical message (500 tokens in, 500 out) costs with a model, in SingleTokens.
+export const typicalMessageCost = m => Math.ceil((500 * m.promptUsd + 500 * m.completionUsd) * TOKENS_PER_USD);
+
 // ── GPTs ────────────────────────────────────────────────────────────────────
 
 const DEFAULT_SETTINGS = { temperature: 0.7, max_tokens: null, top_p: null, top_k: null, frequency_penalty: null, presence_penalty: null, stop: [] };
