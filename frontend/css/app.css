@@ -645,36 +645,75 @@ button.role-tag { padding: 0; border: 0; background: none; cursor: pointer; }
 @media (max-width: 767px) { .settings-legal { display: none; } }
 
 /* ── Motion ───────────────────────────────────────────────────────────────── */
-/* Subtle, Apple-like: 120–150 ms, opacity and transform only. */
-@keyframes st-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-@keyframes st-pop  { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: none; } }
+/* Apple-like: things spring into place with a touch of overshoot, blur clears as they land,
+   groups arrive one after another. Opacity, transform and filter only. */
+@keyframes st-rise { from { opacity: 0; transform: translateY(16px) scale(.96); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes st-pop  { from { opacity: 0; transform: scale(.92); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
 @keyframes st-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes st-enter { from { opacity: 0; transform: translateY(6px); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes st-item { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+@keyframes st-modal { from { opacity: 0; transform: translateY(20px) scale(.94); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes st-toast-in  { from { opacity: 0; transform: translateY(24px) scale(.9); } to { opacity: 1; transform: none; } }
+@keyframes st-toast-out { to { opacity: 0; transform: translateY(8px) scale(.94); filter: blur(4px); } }
+@keyframes st-bounce { 0%, 60%, 100% { transform: none; opacity: .4; } 30% { transform: translateY(-5px); opacity: 1; } }
+@keyframes st-send { 0% { transform: scale(.8); } 100% { transform: none; } }
 
-/* New messages float up; switching screens fades the content in */
-.anim-rise { animation: st-rise var(--dur) var(--ease-out) both; }
-.anim-fade { animation: st-fade var(--dur) var(--ease-out) both; }
+/* New messages float up: yours from the bottom right, answers from the bottom left */
+.anim-rise { animation: st-rise var(--dur) var(--spring) both; }
+.msg-user-wrap.anim-rise { transform-origin: bottom right; }
+.msg-ai-wrap.anim-rise { transform-origin: bottom left; }
 
-/* Menus, picker, dialogs, toasts */
-.menu[data-popover], .picker[data-popover] { animation: st-pop var(--dur-fast) var(--ease-out) both; transform-origin: top left; }
-.modal-backdrop { animation: st-fade var(--dur) var(--ease-out) both; }
-.modal-backdrop > .modal, .lightbox img { animation: st-pop var(--dur) var(--ease-out) both; }
-.toast { animation: st-rise var(--dur) var(--ease-out) both; }
-.term { animation: st-fade var(--dur) var(--ease-out) both; }
+/* Switching screens: content rises in and comes into focus */
+.anim-fade { animation: st-enter var(--dur) var(--ease-smooth) both; }
 
-/* Cards lift a little on hover */
-.model-card, .add-card, .add-btn, .lp-card { transition: border-color var(--dur) var(--ease-out), transform var(--dur) var(--ease-out); }
-.model-card:hover, .add-card:hover, .add-btn:hover, .lp-card:hover { transform: translateY(-2px); }
+/* Typing dots bounce one after another */
+.typing span { animation: st-bounce 1.2s var(--ease-smooth) infinite; }
 
-/* Buttons give way slightly while pressed */
+/* Menus and the model picker spring open; menu items arrive one after another */
+.menu[data-popover], .picker[data-popover] { animation: st-pop var(--dur) var(--spring) both; transform-origin: top left; }
+.menu[data-popover] .menu-item { animation: st-item var(--dur) var(--ease-smooth) backwards; }
+.menu[data-popover] .menu-item:nth-child(2) { animation-delay: 20ms; }
+.menu[data-popover] .menu-item:nth-child(3) { animation-delay: 40ms; }
+.menu[data-popover] .menu-item:nth-child(4) { animation-delay: 60ms; }
+.menu[data-popover] .menu-item:nth-child(5) { animation-delay: 80ms; }
+.menu[data-popover] .menu-item:nth-child(n+6) { animation-delay: 100ms; }
+
+/* Dialogs: frosted backdrop, the dialog springs up */
+.modal-backdrop { -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); animation: st-fade var(--dur) var(--ease-smooth) both; }
+.modal-backdrop > .modal, .lightbox img { animation: st-modal var(--dur) var(--spring) both; }
+
+/* Toasts spring up from below and sink away */
+.toast { animation: st-toast-in var(--dur) var(--spring) both; }
+.toast.is-leaving { animation: st-toast-out var(--dur-fast) var(--ease-smooth) forwards; }
+.term { animation: st-enter var(--dur) var(--ease-smooth) both; }
+
+/* Phone drawer glides in like an iOS sheet; the page behind blurs */
+@media (max-width: 767px) {
+  .app .sidebar { transition: transform var(--dur-slow) var(--ease-smooth); }
+  .app.drawer-open .drawer-backdrop { -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); animation: st-fade var(--dur) var(--ease-smooth) both; }
+}
+
+/* Cards lift on hover with a growing shadow */
+.model-card, .add-card, .add-btn, .lp-card {
+  transition: border-color var(--dur-fast) var(--ease-smooth), transform var(--dur) var(--spring), box-shadow var(--dur) var(--ease-smooth);
+}
+.model-card:hover, .add-card:hover, .add-btn:hover, .lp-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-pop); }
+
+/* Buttons give way when pressed and spring back on release */
 .btn, .icon-btn, .send-btn, .pill, .chip, .amount-pill, .checkout-btn, .new-chat, .model-btn, .pay-tile, .theme-tile {
   transition-property: background-color, color, border-color, opacity, transform;
-  transition-duration: var(--dur-fast);
-  transition-timing-function: var(--ease-out);
+  transition-duration: var(--dur-fast), var(--dur-fast), var(--dur-fast), var(--dur-fast), var(--dur);
+  transition-timing-function: var(--ease-smooth), var(--ease-smooth), var(--ease-smooth), var(--ease-smooth), var(--spring);
 }
 .btn:active:not(:disabled), .icon-btn:active:not(:disabled), .send-btn:active:not(:disabled), .pill:active, .chip:active,
 .amount-pill:active:not(:disabled), .checkout-btn:active, .new-chat:active, .model-btn:active, .pay-tile:active, .theme-tile:active {
-  transform: scale(.97);
+  transform: scale(.95);
+  transition-duration: 80ms;
+  transition-timing-function: var(--ease-smooth);
 }
+
+/* The send button pops when it becomes usable */
+.send-btn:not(:disabled) { animation: st-send var(--dur) var(--spring) backwards; }
 
 /* Anyone who asked their system for less motion gets none */
 @media (prefers-reduced-motion: reduce) {

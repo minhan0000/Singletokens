@@ -40,11 +40,14 @@
   --r-16: 16px;   /* big cards, message bubbles */
   --r-pill: 999px;
 
-  /* Motion: short and soft — starts quick, settles gently (no bounce) */
+  /* Motion: Apple-like — a soft curve for fades and slides, a spring with a touch of overshoot for things that pop */
   --ease: 150ms ease;
   --ease-out: cubic-bezier(.2, .8, .2, 1);
-  --dur-fast: 120ms;
-  --dur: 150ms;
+  --ease-smooth: cubic-bezier(.32, .72, 0, 1);
+  --spring: cubic-bezier(.34, 1.4, .64, 1);
+  --dur-fast: 220ms;
+  --dur: 380ms;
+  --dur-slow: 600ms;
 
   /* Same in both themes */
   --accent: #5865f2;

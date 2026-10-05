@@ -103,10 +103,21 @@ html { scroll-behavior: smooth; }
   .lp-foot nav { margin-left: 0; }
 }
 
-/* Motion: the hero rises in on load, sections fade in as they scroll into view */
-.lp-hero h1 { animation: st-rise var(--dur) var(--ease-out) both; }
-.lp-hero p, .lp-hero .lp-cta { animation: st-rise var(--dur) var(--ease-out) 40ms both; }
-.lp-hero .lp-note, .lp-shot { animation: st-rise var(--dur) var(--ease-out) 80ms both; }
-.js-reveal .lp-section .lp-wrap { opacity: 0; transform: translateY(12px); transition: opacity var(--dur) var(--ease-out), transform var(--dur) var(--ease-out); }
-.js-reveal .lp-section .lp-wrap.is-visible { opacity: 1; transform: none; }
-@media (prefers-reduced-motion: reduce) { .js-reveal .lp-section .lp-wrap { opacity: 1; transform: none; } }
+/* Motion: the hero comes in line by line, sections and their cards rise into focus as they scroll into view */
+@keyframes lp-zoom { from { opacity: 0; transform: translateY(24px) scale(.96); } to { opacity: 1; transform: none; } }
+.lp-hero h1, .lp-hero p, .lp-hero .lp-cta, .lp-hero .lp-note { animation: st-enter var(--dur-slow) var(--ease-smooth) backwards; }
+.lp-hero h1 { animation-duration: 800ms; }
+.lp-hero p { animation-delay: 120ms; }
+.lp-hero .lp-cta { animation-delay: 240ms; }
+.lp-hero .lp-note { animation-delay: 360ms; }
+.lp-shot { animation: lp-zoom 1s var(--ease-smooth) 450ms backwards; }
+
+.js-reveal .lp-section .lp-wrap { opacity: 0; transform: translateY(32px); filter: blur(6px); transition: opacity 800ms var(--ease-smooth), transform 800ms var(--ease-smooth), filter 800ms var(--ease-smooth); }
+.js-reveal .lp-section .lp-wrap.is-visible { opacity: 1; transform: none; filter: none; }
+.js-reveal .lp-wrap.is-visible .lp-card, .js-reveal .lp-wrap.is-visible .lp-steps li { animation: lp-zoom var(--dur-slow) var(--ease-smooth) backwards; }
+.js-reveal .lp-wrap.is-visible :is(.lp-card, .lp-steps li):nth-child(2) { animation-delay: 70ms; }
+.js-reveal .lp-wrap.is-visible :is(.lp-card, .lp-steps li):nth-child(3) { animation-delay: 140ms; }
+.js-reveal .lp-wrap.is-visible :is(.lp-card, .lp-steps li):nth-child(4) { animation-delay: 210ms; }
+.js-reveal .lp-wrap.is-visible :is(.lp-card, .lp-steps li):nth-child(5) { animation-delay: 280ms; }
+.js-reveal .lp-wrap.is-visible :is(.lp-card, .lp-steps li):nth-child(6) { animation-delay: 350ms; }
+@media (prefers-reduced-motion: reduce) { .js-reveal .lp-section .lp-wrap { opacity: 1; transform: none; filter: none; } }

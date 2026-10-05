@@ -69,6 +69,7 @@ export function toast(message, { error = false } = {}) {
   if (!stack) stack = document.body.appendChild(el('<div class="toast-stack" role="status" aria-live="polite"></div>'));
   const t = el(`<div class="toast${error ? ' is-error' : ''}">${esc(message)}</div>`);
   stack.appendChild(t);
+  setTimeout(() => t.classList.add('is-leaving'), 2750);
   setTimeout(() => t.remove(), 3000);
 }
 
@@ -108,10 +109,12 @@ function position(pop, anchor) {
   const a = anchor.getBoundingClientRect();
   pop.style.position = 'fixed';
   pop.style.zIndex = 45;
-  const p = pop.getBoundingClientRect();
+  // offsetWidth/Height ignore the opening animation's scale, so the size is the real one.
+  const p = { width: pop.offsetWidth, height: pop.offsetHeight };
   const below = a.bottom + 8 + p.height <= window.innerHeight;
   pop.style.top = (below ? a.bottom + 8 : Math.max(8, a.top - 8 - p.height)) + 'px';
   pop.style.left = Math.max(8, Math.min(a.left, window.innerWidth - p.width - 8)) + 'px';
+  pop.style.transformOrigin = below ? 'top left' : 'bottom left';  // grow out of the button
 }
 
 // A simple menu: items = [{ icon, label, danger, onClick }]
