@@ -14,7 +14,9 @@ export async function renderChat(main, ctx) {
   const { chatId, user, go, onChatsChanged, onCreditChanged, openDrawer } = ctx;
   let chat = chatId ? await api.getChat(chatId) : null;
   if (chatId && !chat) return go('#/new');
-  const recents = await api.getRecentTargets();
+  // Shortcuts: the 3 most recent models/GPTs, or the user's own models before they have chats.
+  let recents = await api.getRecentTargets();
+  if (!recents.length) recents = (await api.getMyModels()).slice(0, 3).map(m => ({ kind: 'model', id: m.id }));
   let target = chat ? chat.target : (ctx.initialTarget || recents[0] || DEFAULT_TARGET);
   let sending = false;
 
@@ -106,14 +108,17 @@ export async function renderChat(main, ctx) {
   }
 
   // ── Composer ──
+  // Credit we can't read (OpenRouter didn't share it) doesn't block sending.
+  const hasCredit = () => user.creditKnown === false || user.creditTokens > 0;
+
   function canSend() {
-    return !sending && input.value.trim() && user.openrouterConnected && user.creditTokens > 0;
+    return !sending && input.value.trim() && user.openrouterConnected && hasCredit();
   }
 
   function paintHint() {
     if (!user.openrouterConnected) {
       hint.innerHTML = `Connect OpenRouter to send messages. <a href="#/openrouter">Connect</a>`;
-    } else if (user.creditTokens <= 0) {
+    } else if (!hasCredit()) {
       hint.innerHTML = `Your OpenRouter credit is empty. <a href="#/openrouter">Top up</a>`;
     } else {
       const g = target.kind === 'gpt' ? api.getGpt(target.id) : null;
@@ -152,9 +157,7 @@ export async function renderChat(main, ctx) {
   async function deliver(text) {
     sending = true;
     paintHint();
-    const pending = chat.messages.length;
     const p = api.sendMessage(chat.id, text);
-    if (chat.messages.length === pending) chat.messages.push({ role: 'user', content: text });
     paint();
     const typing = el(`<div class="msg-ai-wrap"><div class="typing" aria-label="Typing"><span></span><span></span><span></span></div></div>`);
     list.appendChild(typing);
@@ -163,8 +166,18 @@ export async function renderChat(main, ctx) {
     try {
       const { creditTokens } = await p;
       onCreditChanged(creditTokens);
+      onChatsChanged(chat.id);
     } catch (err) {
       toast(err.message || 'Something went wrong', { error: true });
+      // Give the text back so nothing is lost.
+      if (!input.value.trim()) { input.value = text; autosize(); }
+      // A brand-new chat whose first message failed shouldn't stay in RECENT.
+      if (!chat.messages.length) {
+        await api.deleteChat(chat.id).catch(() => {});
+        chat = null;
+        history.replaceState(null, '', '#/new');
+        onChatsChanged();
+      }
     }
     sending = false;
     paint();

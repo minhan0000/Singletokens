@@ -55,7 +55,7 @@ function confirmDelete(g, done) {
     body: `<p style="margin:0;color:var(--text)">Delete <b>${esc(g.name)}</b>? Its chats stay and continue with ${esc(api.getModel(g.modelId).name)}. This can't be undone.</p>`,
     actions: [
       { label: 'Cancel', kind: 'ghost', onClick: c => c() },
-      { label: 'Delete', kind: 'danger', onClick: async c => { await api.deleteGpt(g.id); c(); toast(`${g.name} deleted`); done(); } },
+      { label: 'Delete', kind: 'danger', onClick: async c => { try { await api.deleteGpt(g.id); } catch (err) { return toast(err.message, { error: true }); } c(); toast(`${g.name} deleted`); done(); } },
     ],
   });
 }
@@ -259,7 +259,9 @@ export async function renderGptEditor(main, { id, go, openDrawer, onChatsChanged
     if (jsonError(mem.value)) firstBad ||= mem;
     if (firstBad) { firstBad.focus(); return; }
     Object.assign(g, { name: name.value.trim(), icon: firstGrapheme(iconIn.value), description: desc.value.trim(), instructions: instr.value.trim(), memory: mem.value.trim() });
-    await api.saveGpt(g);
+    const btn = $('[data-save]', main);
+    btn.disabled = true;
+    try { await api.saveGpt(g); } catch (err) { btn.disabled = false; return toast(err.message, { error: true }); }
     toast(existing ? 'GPT saved' : `${g.name} created`);
     onChatsChanged();
     go('#/gpts');

@@ -66,7 +66,7 @@ async function render() {
       go,
       openDrawer,
       onChatsChanged: refreshChats,
-      onCreditChanged: credit => { state.user.creditTokens = credit; paintSidebar(); },
+      onCreditChanged: credit => { if (typeof credit === 'number') { state.user.creditTokens = credit; state.user.creditKnown = true; paintSidebar(); } },
     });
   } else if (route === 'models') {
     await renderModels(main, { user: state.user, openDrawer });
@@ -92,6 +92,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && app.classL
 window.addEventListener('hashchange', render);
 
 (async () => {
+  await api.init();
   [state.user, state.chats] = await Promise.all([api.getUser(), api.getChats()]);
   await render();
 })();

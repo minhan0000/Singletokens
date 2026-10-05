@@ -1,70 +1,87 @@
-// Data layer. Right now everything is FAKE data kept in memory, so screens can be built and
-// reviewed first. When a screen is approved, its functions here get swapped for real
-// requests to the backend. Function names and return shapes stay the same.
+// Data layer: every screen gets its data through these functions, which talk to the backend.
+// Models and GPTs are also kept in memory, so screens can look them up instantly (getModel, getGpt).
 
 const TOKENS_PER_USD = 100000;
-const wait = ms => new Promise(r => setTimeout(r, ms));
+
+// ── Requests ────────────────────────────────────────────────────────────────
+
+const token = () => { try { return localStorage.getItem('st_token'); } catch { return null; } };
+
+function logout() {
+  try { localStorage.removeItem('st_token'); localStorage.removeItem('st_user'); } catch {}
+  location.href = '/login.html';
+}
+
+// Calls the backend. Throws an Error with the server's message (and .status, .data) on failure.
+async function request(path, { method = 'GET', body } = {}) {
+  let r;
+  try {
+    r = await fetch(path, {
+      method,
+      headers: { 'Content-Type': 'application/json', ...(token() ? { Authorization: 'Bearer ' + token() } : {}) },
+      body: body === undefined ? undefined : JSON.stringify(body),
+    });
+  } catch {
+    throw new Error('Server unreachable. Check your connection and try again.');
+  }
+  const data = await r.json().catch(() => ({}));
+  if (r.status === 401) { logout(); throw new Error('Logged out'); }
+  if (!r.ok) throw Object.assign(new Error(data.error || 'Something went wrong. Try again.'), { status: r.status, data });
+  return data;
+}
+
+// ── Startup ─────────────────────────────────────────────────────────────────
+
+let catalog = [], catalogById = new Map(), gpts = [], chatList = [];
+const chatCache = new Map();
+
+// Loads everything the app needs before the first screen. Sends logged-out visitors to the login page.
+export async function init() {
+  if (!token()) { logout(); return new Promise(() => {}); }
+  const [models] = await Promise.all([request('/api/models'), getGpts(), getChats()]);
+  catalog = models.models;
+  catalogById = new Map(catalog.map(m => [m.id, m]));
+}
 
 // ── Models ──────────────────────────────────────────────────────────────────
-// Prices are dollars per token, as OpenRouter reports them.
 
-const MODELS = [
-  { id: 'anthropic/claude-sonnet-4.5', name: 'Claude Sonnet 4.5', provider: 'Anthropic', p: 'anthropic', promptUsd: 3e-6, completionUsd: 15e-6, context: 1000000, images: true, files: true },
-  { id: 'anthropic/claude-haiku-4.5', name: 'Claude Haiku 4.5', provider: 'Anthropic', p: 'anthropic', promptUsd: 1e-6, completionUsd: 5e-6, context: 200000, images: true, files: true },
-  { id: 'openai/gpt-5', name: 'GPT-5', provider: 'OpenAI', p: 'openai', promptUsd: 1.25e-6, completionUsd: 10e-6, context: 400000, images: true, files: true },
-  { id: 'google/gemini-2.5-pro', name: 'Gemini 2.5 Pro', provider: 'Google', p: 'google', promptUsd: 1.25e-6, completionUsd: 10e-6, context: 1000000, images: true, files: true },
-  { id: 'meta-llama/llama-3.3-70b-instruct', name: 'Llama 3.3 70B', provider: 'Meta', p: 'meta', promptUsd: 0.1e-6, completionUsd: 0.25e-6, context: 131000, images: false, files: true },
-  { id: 'deepseek/deepseek-chat-v3', name: 'DeepSeek V3', provider: 'DeepSeek', p: 'deepseek', promptUsd: 0.27e-6, completionUsd: 1.1e-6, context: 164000, images: false, files: true },
-  { id: 'mistralai/mistral-large', name: 'Mistral Large', provider: 'Mistral', p: 'mistral', promptUsd: 2e-6, completionUsd: 6e-6, context: 128000, images: false, files: true },
-];
+// A model that left OpenRouter still needs a name and a color for old chats.
+const missingModel = id => ({ id, name: id.split('/').pop(), provider: id.split('/')[0], p: 'other', promptUsd: 0, completionUsd: 0, context: 0, images: false, files: true, params: [], mult: 0 });
 
-// Settings each model accepts. Temperature and max tokens work everywhere.
-const ALL_PARAMS = ['top_p', 'top_k', 'frequency_penalty', 'presence_penalty', 'stop'];
-const PARAMS_BY_PROVIDER = {
-  anthropic: ['top_p', 'top_k', 'stop'],
-  openai: ['top_p', 'frequency_penalty', 'presence_penalty', 'stop'],
-};
-for (const m of MODELS) m.params = PARAMS_BY_PROVIDER[m.p] || ALL_PARAMS;
+export const getModel = id => catalogById.get(id) || missingModel(id);
+export async function getCatalog() { return catalog; }
 
-// Multiplier = this model's price ÷ Claude Sonnet 4.5's price (input + output per token).
-const BASE = MODELS[0];
-for (const m of MODELS) m.mult = (m.promptUsd + m.completionUsd) / (BASE.promptUsd + BASE.completionUsd);
+export async function getMyModels() { return (await request('/api/my-models')).ids.map(getModel); }
+export async function addMyModel(id) { await request('/api/my-models', { method: 'POST', body: { id } }); }
+export async function removeMyModel(id) { await request('/api/my-models/' + encodeURIComponent(id), { method: 'DELETE' }); }
 
-export const getModel = id => MODELS.find(m => m.id === id);
-export async function getCatalog() { return MODELS; }
+// ── User + OpenRouter ───────────────────────────────────────────────────────
 
-// The user's own models ("Your models"), in the order they added them.
-let myModelIds = ['anthropic/claude-sonnet-4.5', 'openai/gpt-5', 'meta-llama/llama-3.3-70b-instruct', 'google/gemini-2.5-pro'];
-export async function getMyModels() { return myModelIds.map(getModel); }
-export async function addMyModel(id) { if (!myModelIds.includes(id)) myModelIds.push(id); }
-export async function removeMyModel(id) { myModelIds = myModelIds.filter(x => x !== id); }
+let statusPromise = null;
 
-// ── User ────────────────────────────────────────────────────────────────────
+export async function getUser() {
+  statusPromise = request('/api/openrouter/status');
+  const [{ user }, status] = await Promise.all([request('/api/auth/me'), statusPromise]);
+  try { localStorage.setItem('st_user', JSON.stringify(user)); } catch {}
+  return { ...user, openrouterConnected: status.connected, creditTokens: status.creditTokens ?? 0, creditKnown: typeof status.creditTokens === 'number' };
+}
 
-const user = { name: 'Edo', email: 'edo@example.com', openrouterConnected: true, creditTokens: 750000 };
-export async function getUser() { return { ...user }; }
-
-// "Connect OpenRouter": the real version sends the user to openrouter.ai and back (see connect.html).
-export async function connectOpenRouter() { await wait(600); user.openrouterConnected = true; user.creditTokens = 750000; }
-export async function disconnectOpenRouter() { user.openrouterConnected = false; user.creditTokens = 0; }
-
-// ── Account ─────────────────────────────────────────────────────────────────
-// Fake: the password for the fake account is "correct horse battery".
-const FAKE_PASSWORD = 'correct horse battery';
-const checkPassword = pw => { if (pw !== FAKE_PASSWORD) throw new Error('Wrong password.'); };
-
-export async function updateName(name) { await wait(300); user.name = name; }
-export async function updateEmail(email, password) { await wait(300); checkPassword(password); user.email = email; }
-export async function updatePassword(current, next) { await wait(300); checkPassword(current); if (next.length < 12) throw new Error('Password must be at least 12 characters.'); }
-// Deletes everything: chats, GPTs, models, the OpenRouter connection and the account.
-export async function deleteAccount() { await wait(500); }
+// "Connect OpenRouter": go to OpenRouter to approve. It sends the user back to connect.html with a one-time code.
+export async function connectOpenRouter() {
+  const b64url = bytes => btoa(String.fromCharCode(...bytes)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  const verifier = b64url(crypto.getRandomValues(new Uint8Array(32)));
+  const hash = new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(verifier)));
+  sessionStorage.setItem('st_or_verifier', verifier);
+  const callback = encodeURIComponent(location.origin + '/connect.html');
+  location.href = `https://openrouter.ai/auth?callback_url=${callback}&code_challenge=${b64url(hash)}&code_challenge_method=S256`;
+  return new Promise(() => {});  // the page is leaving
+}
+export async function disconnectOpenRouter() { await request('/api/openrouter', { method: 'DELETE' }); }
 
 // The model the user sends the most messages with (Claude Sonnet 4.5 for new users).
 export async function getMostUsedModel() {
-  const counts = {};
-  for (const c of chats) for (const m of c.messages) if (m.modelId) counts[m.modelId] = (counts[m.modelId] || 0) + 1;
-  const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
-  return getModel(top ? top[0] : BASE.id);
+  const status = await (statusPromise || request('/api/openrouter/status'));
+  return getModel(status.mostUsedModel);
 }
 
 // What a typical message (500 tokens in, 500 out) costs with a model, in SingleTokens.
@@ -74,80 +91,61 @@ export const typicalMessageCost = m => Math.ceil((500 * m.promptUsd + 500 * m.co
 
 const DEFAULT_SETTINGS = { temperature: 0.7, max_tokens: null, top_p: null, top_k: null, frequency_penalty: null, presence_penalty: null, stop: [] };
 
-let GPTS = [
-  { id: 'gpt-study', name: 'Study Buddy', icon: '📚', modelId: 'openai/gpt-5',
-    description: 'Quizzes me on French verbs and explains mistakes in English, short and friendly.',
-    instructions: 'You are a patient French tutor. Ask one question at a time about French verbs. When I make a mistake, explain it in English in one or two sentences, then ask the next question.',
-    memory: '{\n  "name": "Edo",\n  "level": "A2",\n  "languages": ["Italian", "German", "English"]\n}',
-    settings: { ...DEFAULT_SETTINGS, temperature: 0.8 } },
-  { id: 'gpt-code', name: 'Code Helper', icon: '', modelId: 'anthropic/claude-sonnet-4.5',
-    description: 'Reviews JavaScript backend code, points out bugs first and suggests the smallest fix.',
-    instructions: 'You review JavaScript backend code (Node, Express). List bugs first, most serious on top. Suggest the smallest fix. Never rewrite whole files unless asked.',
-    memory: '',
-    settings: { ...DEFAULT_SETTINGS, temperature: 0.2, max_tokens: 2000, stop: ['END'] } },
-];
-export const getGpt = id => GPTS.find(g => g.id === id);
-export async function getGpts() { return GPTS; }
-export const newGptDraft = () => ({ id: null, name: '', icon: '', modelId: BASE.id, description: '', instructions: '', memory: '', settings: structuredClone(DEFAULT_SETTINGS) });
-export async function saveGpt(gpt) {
-  if (!gpt.id) { gpt = { ...gpt, id: 'gpt-' + Date.now() }; GPTS.unshift(gpt); }
-  else GPTS = GPTS.map(g => (g.id === gpt.id ? gpt : g));
+export const getGpt = id => gpts.find(g => g.id === id);
+export async function getGpts() {
+  gpts = (await request('/api/gpts')).gpts.map(g => ({ ...g, settings: { ...DEFAULT_SETTINGS, ...g.settings } }));
+  return gpts;
+}
+export const newGptDraft = () => ({ id: null, name: '', icon: '', modelId: 'anthropic/claude-sonnet-4.5', description: '', instructions: '', memory: '', settings: structuredClone(DEFAULT_SETTINGS) });
+
+export async function saveGpt(g) {
+  const { gpt } = g.id
+    ? await request('/api/gpts/' + g.id, { method: 'PUT', body: g })
+    : await request('/api/gpts', { method: 'POST', body: g });
+  await getGpts();
   return gpt;
 }
 // Chats with a deleted GPT stay, and continue with the model it used.
 export async function deleteGpt(id) {
-  const gpt = getGpt(id);
-  GPTS = GPTS.filter(g => g.id !== id);
-  for (const c of chats) if (c.target.kind === 'gpt' && c.target.id === id) c.target = { kind: 'model', id: gpt.modelId };
+  await request('/api/gpts/' + id, { method: 'DELETE' });
+  chatCache.clear();
+  await Promise.all([getGpts(), getChats()]);
 }
 
 // ── Chats ───────────────────────────────────────────────────────────────────
 // A chat talks to a "target": { kind: 'model', id } or { kind: 'gpt', id }.
 
-const ago = min => Date.now() - min * 60000;
-let chats = [
-  {
-    id: 'c1', title: 'Read a JSON file in Node', target: { kind: 'gpt', id: 'gpt-code' }, updatedAt: ago(3),
-    messages: [
-      { role: 'user', content: 'Can you show me how to read a JSON file in Node?' },
-      { role: 'assistant', content: 'Sure. Use `fs/promises` and **JSON.parse**:\n\n```js\nimport { readFile } from \'fs/promises\';\n\nconst data = JSON.parse(await readFile(\'config.json\', \'utf8\'));\nconsole.log(data.port);\n```\n\n| Method | Blocks the server? |\n|---|---|\n| `readFile` | No |\n| `readFileSync` | Yes |\n\nUse `readFile` inside request handlers so other users don\'t wait.', modelId: 'anthropic/claude-sonnet-4.5', gptId: 'gpt-code', cost: 1214 },
-      { role: 'user', content: 'And if the file is missing?' },
-      { role: 'assistant', content: 'Wrap it in `try/catch` and check `err.code === \'ENOENT\'` — that means the file doesn\'t exist.', modelId: 'anthropic/claude-sonnet-4.5', gptId: 'gpt-code', cost: 655 },
-    ],
-  },
-  { id: 'c2', title: 'Product roadmap discussion', target: { kind: 'model', id: 'anthropic/claude-sonnet-4.5' }, updatedAt: ago(90), messages: [
-    { role: 'user', content: 'Give me 3 ideas for v2.' },
-    { role: 'assistant', content: '1. **Saved presets** for custom requests\n2. **Shared GPTs** between friends\n3. A **usage dashboard** per model', modelId: 'anthropic/claude-sonnet-4.5', cost: 512 },
-  ] },
-  { id: 'c3', title: 'French verbs quiz', target: { kind: 'gpt', id: 'gpt-study' }, updatedAt: ago(60 * 26), messages: [
-    { role: 'user', content: 'Quiz me on "être" in the passé composé.' },
-    { role: 'assistant', content: 'Let\'s go! How do you say **"we went"** using *aller*?', modelId: 'openai/gpt-5', gptId: 'gpt-study', cost: 96 },
-  ] },
-  { id: 'c4', title: 'Minecraft PvP server plugin ideas', target: { kind: 'model', id: 'meta-llama/llama-3.3-70b-instruct' }, updatedAt: ago(60 * 50), messages: [
-    { role: 'user', content: 'Ideas for a PvP plugin?' },
-    { role: 'assistant', content: 'Kill streak rewards, a bounty board, and a 1v1 queue with ELO.', modelId: 'meta-llama/llama-3.3-70b-instruct', cost: 3 },
-  ] },
-  { id: 'c5', title: 'Explain database indexes', target: { kind: 'model', id: 'anthropic/claude-sonnet-4.5' }, updatedAt: ago(60 * 80), messages: [] },
-];
-
 export async function getChats() {
-  return [...chats].sort((a, b) => b.updatedAt - a.updatedAt).map(({ messages, ...c }) => c);
+  chatList = (await request('/api/chats')).chats;
+  return chatList;
 }
-export async function getChat(id) { return chats.find(c => c.id === id) || null; }
+
+// The chat object is kept, so the chat screen and sendMessage share the same message list.
+export async function getChat(id) {
+  try {
+    const { chat } = await request('/api/chats/' + encodeURIComponent(id));
+    chatCache.set(id, chat);
+    return chat;
+  } catch (err) {
+    if (err.status === 404) return null;
+    throw err;
+  }
+}
 
 export async function createChat(target, title) {
-  const chat = { id: 'c' + Date.now(), title, target, updatedAt: Date.now(), messages: [] };
-  chats.push(chat);
+  const { chat } = await request('/api/chats', { method: 'POST', body: { target, title } });
+  chatCache.set(chat.id, chat);
   return chat;
 }
-export async function renameChat(id, title) { const c = chats.find(c => c.id === id); if (c) c.title = title; }
-export async function deleteChat(id) { chats = chats.filter(c => c.id !== id); }
-export async function setChatTarget(id, target) { const c = chats.find(c => c.id === id); if (c) c.target = target; }
+export async function renameChat(id, title) { await request('/api/chats/' + id, { method: 'PATCH', body: { title } }); }
+export async function deleteChat(id) { await request('/api/chats/' + id, { method: 'DELETE' }); chatCache.delete(id); }
+export async function setChatTarget(id, target) { await request('/api/chats/' + id, { method: 'PATCH', body: { target } }); }
 
 // The 3 most recently used models or GPTs, newest first.
 export async function getRecentTargets() {
   const seen = new Set(), out = [];
-  for (const c of [...chats].sort((a, b) => b.updatedAt - a.updatedAt)) {
+  for (const c of chatList) {
+    if (c.target.kind === 'gpt' && !getGpt(c.target.id)) continue;
     const key = c.target.kind + ':' + c.target.id;
     if (!seen.has(key)) { seen.add(key); out.push(c.target); }
     if (out.length === 3) break;
@@ -172,51 +170,33 @@ export function estimate(modelId, history, draft, systemPrompt = '') {
 
 // ── Sending ─────────────────────────────────────────────────────────────────
 
-const FAKE_REPLIES = [
-  'Good question! Here\'s the short version:\n\n- **Indexes** make lookups fast, like the index at the back of a book.\n- They cost a bit of disk space and slow down writes slightly.\n\n```sql\nCREATE INDEX idx_users_email ON users (email);\n```',
-  'This is a **fake reply** — the screen is running on fake data. Once it\'s approved, real answers come from OpenRouter.',
-];
-
+// The user's message appears right away; the answer is added when the server replies.
+// If sending fails, the message is taken back out and the error is thrown.
 export async function sendMessage(chatId, content) {
-  const chat = chats.find(c => c.id === chatId);
-  const modelId = chat.target.kind === 'gpt' ? getGpt(chat.target.id).modelId : chat.target.id;
-  const est = estimate(modelId, chat.messages, content);
-  chat.messages.push({ role: 'user', content });
-  await wait(1400);
-  const reply = {
-    role: 'assistant',
-    content: FAKE_REPLIES[chat.messages.length % FAKE_REPLIES.length],
-    modelId,
-    gptId: chat.target.kind === 'gpt' ? chat.target.id : undefined,
-    cost: est.input + est.output,
-  };
-  chat.messages.push(reply);
-  chat.updatedAt = Date.now();
-  user.creditTokens = Math.max(0, user.creditTokens - reply.cost);
-  return { reply, creditTokens: user.creditTokens };
+  const chat = chatCache.get(chatId);
+  const mine = { role: 'user', content };
+  chat?.messages.push(mine);
+  try {
+    const { reply, creditTokens } = await request(`/api/chats/${chatId}/messages`, { method: 'POST', body: { content } });
+    chat?.messages.push(reply);
+    const item = chatList.find(c => c.id === chatId);
+    if (item) item.updatedAt = Date.now();
+    return { reply, creditTokens };
+  } catch (err) {
+    if (chat) chat.messages.splice(chat.messages.indexOf(mine), 1);
+    throw err;
+  }
 }
 
-// ── Custom request ({ }) ────────────────────────────────────────────────────
-
-// Sends the exact request body the user built. Returns the provider's raw reply plus timing.
+// Sends the exact request body the user built. Returns the provider's raw reply plus status, cost and time.
 export async function sendCustom(body) {
-  const started = performance.now();
-  const m = getModel(body.model);
-  await wait(1200 + Math.random() * 1200);
-  const promptTokens = body.messages.reduce((n, msg) => n + roughTokens(msg.content), 0) + 4 * body.messages.length;
-  const content = 'Here are **3 features** for v2:\n\n1. Saved presets for custom requests\n2. Shared GPTs\n3. A usage dashboard\n\n_(Fake reply: this screen runs on fake data.)_';
-  const completionTokens = roughTokens(content);
-  const cost = promptTokens * m.promptUsd + completionTokens * m.completionUsd;
-  const raw = {
-    id: 'gen-' + Math.random().toString(36).slice(2, 14),
-    provider: m.provider,
-    model: body.model,
-    object: 'chat.completion',
-    created: Math.floor(Date.now() / 1000),
-    choices: [{ index: 0, finish_reason: 'stop', message: { role: 'assistant', content } }],
-    usage: { prompt_tokens: promptTokens, completion_tokens: completionTokens, total_tokens: promptTokens + completionTokens, cost: Number(cost.toFixed(8)) },
-  };
-  const tokens = Math.ceil(cost * TOKENS_PER_USD);
-  user.creditTokens = Math.max(0, user.creditTokens - tokens);
-  return { status: 200, statusText: 'OK', raw, cost: tokens, ms: performance.now() - started, creditTokens: user.creditTokens };
+  return request('/api/custom', { method: 'POST', body });
 }
+
+// ── Account ─────────────────────────────────────────────────────────────────
+
+export async function updateName(name) { await request('/api/auth/me', { method: 'PATCH', body: { name } }); }
+export async function updateEmail(email, password) { await request('/api/auth/email', { method: 'PATCH', body: { email, password } }); }
+export async function updatePassword(current, next) { await request('/api/auth/password', { method: 'PATCH', body: { current, next } }); }
+// Deletes everything: chats, GPTs, models, the OpenRouter connection and the account.
+export async function deleteAccount() { await request('/api/auth/me', { method: 'DELETE' }); }

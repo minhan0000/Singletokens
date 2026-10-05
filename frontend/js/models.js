@@ -29,7 +29,7 @@ export async function renderModels(main, { user, openDrawer }) {
 }
 
 function balanceCard(user) {
-  const value = user.openrouterConnected ? fmtShort(user.creditTokens) : '—';
+  const value = user.openrouterConnected && user.creditKnown !== false ? fmtShort(user.creditTokens) : '—';
   return el(`<div class="balance-card">
     <div class="card-head"><span class="balance-icon" aria-hidden="true">ST</span><div><div class="card-name">SingleTokens Balance</div><div class="card-provider">Universal tokens for all models</div></div></div>
     <div class="cost-box"><div class="cost-label">Available SingleTokens</div><div class="cost-value">${value}</div></div></div>`);
@@ -53,7 +53,7 @@ function confirmRemove(m, repaint) {
     body: `<p style="margin:0;color:var(--text)">Remove <b>${esc(m.name)}</b> from your models? Your chats with it stay, and you can add it back any time.</p>`,
     actions: [
       { label: 'Cancel', kind: 'ghost', onClick: c => c() },
-      { label: 'Remove', kind: 'danger', onClick: async c => { await api.removeMyModel(m.id); c(); toast(`${m.name} removed`); repaint(); } },
+      { label: 'Remove', kind: 'danger', onClick: async c => { try { await api.removeMyModel(m.id); } catch (err) { return toast(err.message, { error: true }); } c(); toast(`${m.name} removed`); repaint(); } },
     ],
   });
 }
@@ -103,7 +103,7 @@ async function openCatalog(onChange) {
       ${has ? `<button class="btn btn-added" disabled aria-label="${esc(m.name)} added"><i data-lucide="check"></i>Added</button>`
             : `<button class="btn btn-primary" aria-label="Add ${esc(m.name)}">Add</button>`}</div>`);
     if (!has) $('.btn', r).addEventListener('click', async () => {
-      await api.addMyModel(m.id);
+      try { await api.addMyModel(m.id); } catch (err) { return toast(err.message, { error: true }); }
       added.add(m.id);
       onChange();
       const fresh = row(m);

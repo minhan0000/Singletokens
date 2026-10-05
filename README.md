@@ -19,10 +19,14 @@ frontend/
   index.html          Landing page
   login.html          Log in / sign up
   connect.html        Where OpenRouter sends users back after connecting
-  app.html            The app (desktop)
-  app-mobile.html     The app (phone)
-  app-script.js       App logic
-  api.js              Talks to the backend
+  app.html            The app (one page for phone and desktop)
+  ui-kit.html         Every UI component in both themes, for design checks
+  css/theme.css       Colors, fonts, sizes (dark + white)
+  css/app.css         Component and layout styles
+  js/app.js           Starts the app, switches screens
+  js/api.js           Talks to the backend
+  js/ui.js            Shared helpers (Markdown, menus, modals, toasts)
+  js/sidebar.js, chat.js, models.js, gpts.js, custom.js, openrouter.js, settings.js   One file per screen
 ```
 
 ## Setup

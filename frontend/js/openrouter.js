@@ -25,7 +25,7 @@ export async function renderOpenRouter(main, { openDrawer, onUserChanged }) {
   grid.appendChild(user.openrouterConnected ? creditCard(user) : connectCard());
   grid.appendChild(howCard());
 
-  $('.bottom-bar', main).innerHTML = user.openrouterConnected
+  $('.bottom-bar', main).innerHTML = user.openrouterConnected && user.creditKnown !== false
     ? `With <span class="num-pill">${fmtInt(user.creditTokens)}</span> SingleTokens you can send about <span class="num-pill">${fmtInt(Math.floor(user.creditTokens / per))}</span> messages with <span class="num-pill">${esc(model.name)}</span>.`
     : `<span class="num-pill">100,000</span> SingleTokens = <span class="num-pill">$1</span> of OpenRouter credit. A typical message with <span class="num-pill">${esc(model.name)}</span> costs about <span class="num-pill">${fmtInt(per)}</span>.`;
 
@@ -35,8 +35,9 @@ export async function renderOpenRouter(main, { openDrawer, onUserChanged }) {
     const card = el(`<div class="p-card or-card">
       <i data-lucide="coins" class="watermark" style="left:-56px;bottom:-56px"></i>
       <div class="or-status"><span class="status-dot is-on"></span>Connected to OpenRouter</div>
-      <div class="p-amount">${fmtInt(u.creditTokens)}</div>
-      <div class="p-amount-label">SingleTokens <span class="muted">· ~$${(u.creditTokens / 100000).toFixed(2)} of credit</span></div>
+      ${u.creditKnown === false
+        ? `<div class="p-amount" aria-label="Unknown">—</div><div class="p-amount-label">OpenRouter didn't share your credit. Check it on their site.</div>`
+        : `<div class="p-amount">${fmtInt(u.creditTokens)}</div><div class="p-amount-label">SingleTokens <span class="muted">· ~$${(u.creditTokens / 100000).toFixed(2)} of credit</span></div>`}
       <div class="or-actions">
         <a class="checkout-btn" href="${TOP_UP_URL}" target="_blank" rel="noopener"><i data-lucide="external-link"></i>Top up on OpenRouter</a>
         <button class="btn btn-ghost" data-disconnect>Disconnect</button>
@@ -56,10 +57,7 @@ export async function renderOpenRouter(main, { openDrawer, onUserChanged }) {
     btn.addEventListener('click', async () => {
       btn.disabled = true;
       btn.lastChild.textContent = 'Connecting…';
-      await api.connectOpenRouter();
-      toast('OpenRouter connected');
-      await onUserChanged();
-      renderOpenRouter(main, { openDrawer, onUserChanged });
+      await api.connectOpenRouter();  // leaves for openrouter.ai and comes back via connect.html
     });
     return card;
   }
@@ -72,7 +70,7 @@ export async function renderOpenRouter(main, { openDrawer, onUserChanged }) {
       actions: [
         { label: 'Cancel', kind: 'ghost', onClick: c => c() },
         { label: 'Disconnect', kind: 'danger', onClick: async c => {
-          await api.disconnectOpenRouter();
+          try { await api.disconnectOpenRouter(); } catch (err) { return toast(err.message, { error: true }); }
           c();
           toast('OpenRouter disconnected');
           await onUserChanged();

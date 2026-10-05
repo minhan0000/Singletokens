@@ -45,7 +45,7 @@
     const data = await r.json();
     if (!r.ok) return fail(data.error || 'Something went wrong. Try again.');
     sessionStorage.removeItem('st_or_verifier');
-    location.replace('/app.html');
+    location.replace('/app.html#/openrouter');
   } catch {
     fail('Server unreachable. Try again later.');
   }

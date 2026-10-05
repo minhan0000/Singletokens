@@ -53,7 +53,7 @@ export function renderSidebar(root, { user, chats, route, chatId, go, onChatsCha
   const footer = el(`<div class="sidebar-footer">
     <button class="account-btn" aria-haspopup="menu" aria-label="Account menu">
       <span class="avatar">${esc(user.name.charAt(0).toUpperCase())}</span>
-      <span class="account-text"><div class="account-name">${esc(user.name)}</div><div class="account-sub">${user.openrouterConnected ? fmtShort(user.creditTokens) + ' ST' : 'Not connected'}</div></span>
+      <span class="account-text"><div class="account-name">${esc(user.name)}</div><div class="account-sub">${!user.openrouterConnected ? 'Not connected' : user.creditKnown === false ? 'Connected' : fmtShort(user.creditTokens) + ' ST'}</div></span>
       <i data-lucide="chevron-up" class="muted"></i>
     </button></div>`);
   const acct = $('.account-btn', footer);
