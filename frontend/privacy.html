@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Datenschutz / Privacy · SingleTokens</title>
+<link rel="icon" href="favicon.png">
+<link rel="stylesheet" href="css/theme.css">
+<link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/landing.css">
+<script>try { document.documentElement.dataset.theme = localStorage.getItem('st_theme') || 'dark'; } catch {}</script>
+</head>
+<body class="lp">
+<header class="lp-nav"><div class="lp-wrap">
+  <a class="lp-logo" href="/">SingleTokens</a>
+  <div class="lp-actions"><a class="btn btn-ghost" href="/">← Home</a></div>
+</div></header>
+
+<main class="legal">
+  <h1>Datenschutz / Privacy</h1>
+  <p class="stand">Stand / Last updated: Oktober 2026</p>
+  <div class="lang-switch"><a class="btn btn-secondary" href="#de">Deutsch</a><a class="btn btn-secondary" href="#en">English</a></div>
+
+  <!-- Felder in <span class="ph"> vor der Veröffentlichung ausfüllen bzw. prüfen. -->
+  <section class="lang-block" id="de" lang="de">
+    <h2>1. Verantwortlicher</h2>
+    <address>
+      <span class="ph">[VOR- UND NACHNAME]</span><br>
+      <span class="ph">[STRASSE UND HAUSNUMMER]</span>, <span class="ph">[PLZ UND ORT]</span>, Deutschland<br>
+      E-Mail: <span class="ph">[E-MAIL-ADRESSE]</span>
+    </address>
+
+    <h2>2. Kurz gesagt</h2>
+    <ul>
+      <li>Keine Werbung, kein Tracking, keine Analyse-Tools, keine Cookies.</li>
+      <li>Schriftarten und Programmbibliotheken liegen auf unserem eigenen Server. Beim Besuch werden keine Daten an Google oder andere Content-Delivery-Netzwerke übertragen.</li>
+      <li>Deine Nachrichten werden an OpenRouter und den Anbieter des gewählten KI-Modells gesendet, damit du eine Antwort bekommst.</li>
+      <li>Du kannst dein Konto und alle Daten jederzeit selbst löschen.</li>
+    </ul>
+
+    <h2>3. Hosting und Server-Logs</h2>
+    <p>Die Website und der Server laufen bei Render (Render Services, Inc., USA), Region <span class="ph">[REGION, z. B. Frankfurt]</span>. Beim Aufruf verarbeitet der Hoster technisch notwendige Daten wie deine IP-Adresse, Datum und Uhrzeit sowie die aufgerufene Adresse, um die Seite auszuliefern und vor Angriffen zu schützen. Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse am sicheren Betrieb).</p>
+    <p>Zum Schutz vor Missbrauch (z. B. zu vielen Login-Versuchen) hält unser Server deine IP-Adresse bis zu 15 Minuten im Arbeitsspeicher. Sie wird nicht in der Datenbank gespeichert.</p>
+
+    <h2>4. Dein Konto</h2>
+    <p>Wenn du dich registrierst, speichern wir in unserer Datenbank bei Neon (USA), Region <span class="ph">[REGION]</span>:</p>
+    <ul>
+      <li>Name und E-Mail-Adresse</li>
+      <li>dein Passwort, nur als nicht umkehrbarer Hash (bcrypt)</li>
+      <li>deine Chats inklusive angehängter Bilder und Textdateien</li>
+      <li>deine GPTs (Anweisungen, Memory, Einstellungen) und deine Modell-Liste</li>
+      <li>den Schlüssel zu deinem OpenRouter-Konto, verschlüsselt (AES-256)</li>
+    </ul>
+    <p>Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO (Vertrag, damit wir dir den Dienst anbieten können). Die Daten bleiben gespeichert, bis du dein Konto löschst. Unter Einstellungen → Konto → Konto löschen werden sie sofort aus der Datenbank entfernt. Sicherungskopien des Datenbankanbieters werden nach <span class="ph">[ZEITRAUM PRÜFEN]</span> überschrieben.</p>
+
+    <h2>5. Nachrichten an KI-Modelle (OpenRouter)</h2>
+    <p>Wenn du eine Nachricht sendest, übermitteln wir sie zusammen mit dem bisherigen Chat-Verlauf, Anhängen, den Anweisungen und dem Memory des gewählten GPTs sowie den Einstellungen an OpenRouter (OpenRouter, Inc., USA). OpenRouter leitet die Anfrage an den Anbieter des gewählten Modells weiter (z. B. Anthropic, OpenAI, Google, Meta). Dafür nutzen wir dein eigenes OpenRouter-Konto, das du selbst verbunden hast. Für die Verarbeitung dort gelten die Datenschutzbestimmungen von OpenRouter (<a href="https://openrouter.ai/privacy" target="_blank" rel="noopener">openrouter.ai/privacy</a>) und des jeweiligen Modell-Anbieters. Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO.</p>
+    <p>Bitte sende keine sensiblen Daten (z. B. Gesundheitsdaten oder Passwörter) an KI-Modelle.</p>
+
+    <h2>6. Übermittlung in die USA</h2>
+    <p>Render, Neon und OpenRouter sitzen in den USA. Die Übermittlung erfolgt auf Grundlage von <span class="ph">[PRÜFEN: EU-US Data Privacy Framework und/oder EU-Standardvertragsklauseln je Anbieter]</span>.</p>
+
+    <h2>7. Speicher im Browser</h2>
+    <p>Wir setzen keine Cookies. Im lokalen Speicher deines Browsers liegen nur: dein Login (st_token), dein Name und deine E-Mail für die Anzeige (st_user) und das gewählte Design (st_theme). Während du OpenRouter verbindest, liegt dort kurz ein Einmal-Code (st_or_verifier). Das ist für den Dienst technisch notwendig (§ 25 Abs. 2 Nr. 2 TDDDG). Beim Abmelden werden Login und Name entfernt.</p>
+
+    <h2>8. Deine Rechte</h2>
+    <p>Du hast das Recht auf Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16), Löschung (Art. 17), Einschränkung der Verarbeitung (Art. 18), Datenübertragbarkeit (Art. 20) und Widerspruch (Art. 21). Schreib dafür an die oben genannte E-Mail-Adresse. Außerdem kannst du dich bei einer Datenschutz-Aufsichtsbehörde beschweren, zum Beispiel beim Landesbeauftragten für den Datenschutz und die Informationsfreiheit Baden-Württemberg.</p>
+  </section>
+
+  <section class="lang-block" id="en" lang="en">
+    <h2>1. Who is responsible</h2>
+    <address>
+      <span class="ph">[FULL NAME]</span><br>
+      <span class="ph">[STREET AND NUMBER]</span>, <span class="ph">[POSTCODE AND CITY]</span>, Germany<br>
+      Email: <span class="ph">[EMAIL ADDRESS]</span>
+    </address>
+
+    <h2>2. In short</h2>
+    <ul>
+      <li>No ads, no tracking, no analytics, no cookies.</li>
+      <li>Fonts and code libraries are served from our own server. Visiting the site sends no data to Google or other content delivery networks.</li>
+      <li>Your messages are sent to OpenRouter and the provider of the AI model you pick, so you can get an answer.</li>
+      <li>You can delete your account and all its data yourself at any time.</li>
+    </ul>
+
+    <h2>3. Hosting and server logs</h2>
+    <p>The website and server run on Render (Render Services, Inc., USA), region <span class="ph">[REGION, e.g. Frankfurt]</span>. When you visit, the host processes technically necessary data such as your IP address, date and time, and the requested address, to deliver the site and protect it from attacks. Legal basis: Art. 6(1)(f) GDPR (legitimate interest in secure operation).</p>
+    <p>To prevent abuse (for example too many login attempts), our server keeps your IP address in memory for up to 15 minutes. It is not stored in the database.</p>
+
+    <h2>4. Your account</h2>
+    <p>When you sign up, we store in our database at Neon (USA), region <span class="ph">[REGION]</span>:</p>
+    <ul>
+      <li>your name and email address</li>
+      <li>your password, only as a one-way hash (bcrypt)</li>
+      <li>your chats, including attached images and text files</li>
+      <li>your GPTs (instructions, memory, settings) and your model list</li>
+      <li>the key to your OpenRouter account, encrypted (AES-256)</li>
+    </ul>
+    <p>Legal basis: Art. 6(1)(b) GDPR (contract, so we can provide the service). The data is kept until you delete your account. Settings → Account → Delete account removes it from the database immediately. The database provider's backups are overwritten after <span class="ph">[CHECK PERIOD]</span>.</p>
+
+    <h2>5. Messages to AI models (OpenRouter)</h2>
+    <p>When you send a message, we send it together with the chat history, attachments, the chosen GPT's instructions and memory, and your settings to OpenRouter (OpenRouter, Inc., USA). OpenRouter forwards the request to the provider of the chosen model (for example Anthropic, OpenAI, Google, Meta). This uses your own OpenRouter account, which you connected yourself. Processing there is covered by the privacy policies of OpenRouter (<a href="https://openrouter.ai/privacy" target="_blank" rel="noopener">openrouter.ai/privacy</a>) and of the model's provider. Legal basis: Art. 6(1)(b) GDPR.</p>
+    <p>Please don't send sensitive data (for example health information or passwords) to AI models.</p>
+
+    <h2>6. Transfers to the USA</h2>
+    <p>Render, Neon and OpenRouter are based in the USA. Transfers are based on <span class="ph">[CHECK: EU-US Data Privacy Framework and/or EU Standard Contractual Clauses for each provider]</span>.</p>
+
+    <h2>7. Storage in your browser</h2>
+    <p>We don't use cookies. Your browser's local storage only holds: your login (st_token), your name and email for display (st_user) and your chosen theme (st_theme). While you connect OpenRouter, a one-time code is stored briefly (st_or_verifier). This is technically necessary for the service (§ 25(2) no. 2 TDDDG). Logging out removes your login and name.</p>
+
+    <h2>8. Your rights</h2>
+    <p>You have the right to access (Art. 15 GDPR), correction (Art. 16), deletion (Art. 17), restriction of processing (Art. 18), data portability (Art. 20) and to object (Art. 21). Write to the email address above. You can also complain to a data protection authority, for example the State Commissioner for Data Protection and Freedom of Information of Baden-Württemberg.</p>
+  </section>
+</main>
+
+<footer class="lp-foot"><div class="lp-wrap">
+  <span>© 2026 SingleTokens</span>
+  <nav aria-label="Legal"><a href="/impressum.html">Impressum</a><a href="/privacy.html">Datenschutz / Privacy</a><a href="/login.html">Log in</a></nav>
+</div></footer>
+</body>
+</html>

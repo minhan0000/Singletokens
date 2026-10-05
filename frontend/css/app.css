@@ -638,3 +638,8 @@ button.role-tag { padding: 0; border: 0; background: none; cursor: pointer; }
 .lightbox img { max-width: 92vw; max-height: 88vh; border-radius: var(--r-8); }
 .lightbox-close { position: fixed; top: var(--sp-16); right: var(--sp-16); color: var(--white); }
 @media (max-width: 767px) { .msg-user-wrap { max-width: 90%; } .msg-image img { max-width: 180px; max-height: 180px; } }
+.settings-nav { display: flex; flex-direction: column; }
+.settings-legal { margin-top: auto; padding: var(--sp-8); font-size: var(--fs-12); color: var(--text-muted); }
+.settings-legal a { color: var(--text-muted); text-decoration: none; }
+.settings-legal a:hover { color: var(--text); text-decoration: underline; }
+@media (max-width: 767px) { .settings-legal { display: none; } }

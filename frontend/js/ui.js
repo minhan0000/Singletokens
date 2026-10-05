@@ -1,7 +1,7 @@
 // Small shared helpers: building elements, icons, numbers, Markdown, menus, toasts.
 
-import { Marked } from 'https://cdn.jsdelivr.net/npm/marked@18.0.14/lib/marked.esm.js';
-import DOMPurify from 'https://cdn.jsdelivr.net/npm/dompurify@3.4.16/dist/purify.es.mjs';
+import { Marked } from '../vendor/marked-18.0.14.esm.js';
+import DOMPurify from '../vendor/dompurify-3.4.16.es.mjs';
 
 // ── Elements ────────────────────────────────────────────────────────────────
 

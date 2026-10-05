@@ -21,6 +21,7 @@ export async function openSettings({ section = 'appearance', onUserChanged } = {
         <div class="section-label">User settings</div>
         <button class="nav-item" data-section="appearance"><i data-lucide="palette"></i><span class="label">Appearance</span></button>
         <button class="nav-item" data-section="account"><i data-lucide="user"></i><span class="label">Account</span></button>
+        <div class="settings-legal"><a href="/impressum.html" target="_blank" rel="noopener">Impressum</a> · <a href="/privacy.html" target="_blank" rel="noopener">Privacy</a></div>
       </nav>
       <div class="settings-content">
         <button class="icon-btn modal-close" aria-label="Close settings"><i data-lucide="x"></i></button>
