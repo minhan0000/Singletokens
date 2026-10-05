@@ -4,6 +4,7 @@ import { $, el, toast, closePopovers } from './ui.js';
 import { renderSidebar } from './sidebar.js';
 import { renderChat } from './chat.js';
 import { renderModels } from './models.js';
+import { renderGpts, renderGptEditor } from './gpts.js';
 import * as api from './api.js';
 
 // Theme: saved choice, dark by default.
@@ -48,13 +49,14 @@ async function render() {
   closePopovers();
   closeDrawer();
   const { route, id } = parseRoute();
-  state.route = route;
+  state.route = route === 'gpt' ? 'gpts' : route;  // the editor highlights "Your GPTs"
   state.chatId = route === 'chat' ? id : null;
   paintSidebar();
 
   if (route === 'chat' || route === 'new') {
     await renderChat(main, {
       chatId: state.chatId,
+      initialTarget: route === 'new' && id ? { kind: 'gpt', id } : null,
       user: state.user,
       go,
       openDrawer,
@@ -63,6 +65,10 @@ async function render() {
     });
   } else if (route === 'models') {
     await renderModels(main, { user: state.user, openDrawer });
+  } else if (route === 'gpts') {
+    await renderGpts(main, { go, openDrawer, onChatsChanged: refreshChats });
+  } else if (route === 'gpt') {
+    await renderGptEditor(main, { id, go, openDrawer, onChatsChanged: refreshChats });
   } else {
     // Screens built in later steps.
     main.innerHTML = `<div class="topbar"><button class="icon-btn only-phone" data-drawer aria-label="Open menu"><i data-lucide="menu"></i></button></div>

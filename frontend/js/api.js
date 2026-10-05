@@ -18,6 +18,14 @@ const MODELS = [
   { id: 'mistralai/mistral-large', name: 'Mistral Large', provider: 'Mistral', p: 'mistral', promptUsd: 2e-6, completionUsd: 6e-6, context: 128000, images: false, files: true },
 ];
 
+// Settings each model accepts. Temperature and max tokens work everywhere.
+const ALL_PARAMS = ['top_p', 'top_k', 'frequency_penalty', 'presence_penalty', 'stop'];
+const PARAMS_BY_PROVIDER = {
+  anthropic: ['top_p', 'top_k', 'stop'],
+  openai: ['top_p', 'frequency_penalty', 'presence_penalty', 'stop'],
+};
+for (const m of MODELS) m.params = PARAMS_BY_PROVIDER[m.p] || ALL_PARAMS;
+
 // Multiplier = this model's price ÷ Claude Sonnet 4.5's price (input + output per token).
 const BASE = MODELS[0];
 for (const m of MODELS) m.mult = (m.promptUsd + m.completionUsd) / (BASE.promptUsd + BASE.completionUsd);
@@ -38,12 +46,34 @@ export async function getUser() { return { ...user }; }
 
 // ── GPTs ────────────────────────────────────────────────────────────────────
 
-const GPTS = [
-  { id: 'gpt-study', name: 'Study Buddy', icon: '📚', modelId: 'openai/gpt-5', description: 'Quizzes me on French verbs and explains mistakes in English, short and friendly.' },
-  { id: 'gpt-code', name: 'Code Helper', icon: 'C', modelId: 'anthropic/claude-sonnet-4.5', description: 'Reviews JavaScript backend code, points out bugs first and suggests the smallest fix.' },
+const DEFAULT_SETTINGS = { temperature: 0.7, max_tokens: null, top_p: null, top_k: null, frequency_penalty: null, presence_penalty: null, stop: [] };
+
+let GPTS = [
+  { id: 'gpt-study', name: 'Study Buddy', icon: '📚', modelId: 'openai/gpt-5',
+    description: 'Quizzes me on French verbs and explains mistakes in English, short and friendly.',
+    instructions: 'You are a patient French tutor. Ask one question at a time about French verbs. When I make a mistake, explain it in English in one or two sentences, then ask the next question.',
+    memory: '{\n  "name": "Edo",\n  "level": "A2",\n  "languages": ["Italian", "German", "English"]\n}',
+    settings: { ...DEFAULT_SETTINGS, temperature: 0.8 } },
+  { id: 'gpt-code', name: 'Code Helper', icon: '', modelId: 'anthropic/claude-sonnet-4.5',
+    description: 'Reviews JavaScript backend code, points out bugs first and suggests the smallest fix.',
+    instructions: 'You review JavaScript backend code (Node, Express). List bugs first, most serious on top. Suggest the smallest fix. Never rewrite whole files unless asked.',
+    memory: '',
+    settings: { ...DEFAULT_SETTINGS, temperature: 0.2, max_tokens: 2000, stop: ['END'] } },
 ];
 export const getGpt = id => GPTS.find(g => g.id === id);
 export async function getGpts() { return GPTS; }
+export const newGptDraft = () => ({ id: null, name: '', icon: '', modelId: BASE.id, description: '', instructions: '', memory: '', settings: structuredClone(DEFAULT_SETTINGS) });
+export async function saveGpt(gpt) {
+  if (!gpt.id) { gpt = { ...gpt, id: 'gpt-' + Date.now() }; GPTS.unshift(gpt); }
+  else GPTS = GPTS.map(g => (g.id === gpt.id ? gpt : g));
+  return gpt;
+}
+// Chats with a deleted GPT stay, and continue with the model it used.
+export async function deleteGpt(id) {
+  const gpt = getGpt(id);
+  GPTS = GPTS.filter(g => g.id !== id);
+  for (const c of chats) if (c.target.kind === 'gpt' && c.target.id === id) c.target = { kind: 'model', id: gpt.modelId };
+}
 
 // ── Chats ───────────────────────────────────────────────────────────────────
 // A chat talks to a "target": { kind: 'model', id } or { kind: 'gpt', id }.
