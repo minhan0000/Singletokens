@@ -3,7 +3,9 @@ process.on('uncaughtException', (err) => { console.error('CRASH:', err.message);
 process.on('unhandledRejection', (err) => { console.error('UNHANDLED:', err); process.exit(1); });
 
 require('dotenv').config();
-if (!process.env.JWT_SECRET) { console.error('JWT_SECRET is not set'); process.exit(1); }
+for (const name of ['JWT_SECRET', 'ENCRYPTION_KEY'])
+  if (!process.env[name]) { console.error(`${name} is not set`); process.exit(1); }
+if (!/^[0-9a-f]{64}$/i.test(process.env.ENCRYPTION_KEY)) { console.error('ENCRYPTION_KEY must be 64 hex characters'); process.exit(1); }
 
 const path    = require('path');
 const express = require('express');
@@ -81,7 +83,7 @@ app.delete('/api/auth/me', auth, async (req, res) => {
 });
 
 function safeUser(u) {
-  return { id: u.id, email: u.email, name: u.name, balance: u.balance, created_at: u.created_at };
+  return { id: u.id, email: u.email, name: u.name, openrouterConnected: !!u.openrouter_key, created_at: u.created_at };
 }
 
 // ── CHATS ─────────────────────────────────────────────────────────────────────
@@ -115,13 +117,36 @@ app.delete('/api/chats',    auth, async (req, res) => {
   res.json({ success: true });
 });
 
-// ── BALANCE ───────────────────────────────────────────────────────────────────
+// ── OPENROUTER CONNECTION ─────────────────────────────────────────────────────
 
-app.get('/api/balance',  auth, async (req, res) => {
-  const user = await db.users.get(req.user.id);
-  res.json({ balance: user?.balance || 0 });
+app.post('/api/openrouter/connect', auth, authLimit, async (req, res) => {
+  const { code, codeVerifier } = req.body;
+  if (!code || !codeVerifier) return res.status(400).json({ error: 'Missing fields' });
+  try {
+    const key = await openrouter.exchangeCode(code, codeVerifier);
+    await db.users.setOpenRouterKey(openrouter.encrypt(key), req.user.id);
+    res.json({ connected: true });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
 });
-app.get('/api/transactions', auth, async (req, res) => res.json({ transactions: [] }));
+
+app.delete('/api/openrouter', auth, async (req, res) => {
+  await db.users.setOpenRouterKey(null, req.user.id);
+  res.json({ connected: false });
+});
+
+// Connection state and remaining OpenRouter credit, in dollars and SingleTokens.
+app.get('/api/openrouter/status', auth, async (req, res) => {
+  const user = await db.users.get(req.user.id);
+  if (!user?.openrouter_key) return res.json({ connected: false });
+  const usd = await openrouter.remainingCredit(openrouter.decrypt(user.openrouter_key));
+  res.json({
+    connected: true,
+    creditUsd: usd,
+    creditTokens: usd === null ? null : Math.floor(usd * openrouter.TOKENS_PER_USD),
+  });
+});
 
 // ── GPTS ──────────────────────────────────────────────────────────────────────
 
@@ -147,6 +172,8 @@ app.delete('/api/gpts/:id', auth, async (req, res) => {
   res.json({ success: true });
 });
 
+app.get('/api/transactions', auth, async (req, res) => res.json({ transactions: [] }));
+
 // ── PAYMENTS ──────────────────────────────────────────────────────────────────
 
 app.post('/api/payment/stripe/create-intent', (_, res) => res.status(503).json({ error: 'Coming soon' }));
@@ -160,14 +187,14 @@ app.post('/api/chat', auth, chatLimit, async (req, res) => {
   try {
     const { message, model, history = [], systemPrompt } = req.body;
     if (!message) return res.status(400).json({ error: 'Message missing' });
-    if (!process.env.OPENROUTER_API_KEY) return res.status(500).json({ error: 'OPENROUTER_API_KEY is not set' });
 
     const modelId = openrouter.MODELS[model];
     if (!modelId) return res.status(400).json({ error: `Unknown model: ${model}` });
 
     const user = await db.users.get(req.user.id);
     if (!user) return res.status(404).json({ error: 'Not found' });
-    if (user.balance <= 0) return res.status(402).json({ error: 'Buy tokens to send messages', balance: 0 });
+    if (!user.openrouter_key)
+      return res.status(409).json({ error: 'Connect your OpenRouter account to send messages.', needsConnect: true });
 
     const messages = [];
     if (systemPrompt) messages.push({ role: 'system', content: systemPrompt });
@@ -178,28 +205,33 @@ app.post('/api/chat', auth, chatLimit, async (req, res) => {
     if (messages[messages.length - 1]?.content !== message)
       messages.push({ role: 'user', content: message });
 
-    // Limit the reply to what the balance can pay for.
-    const info = await openrouter.getModelInfo(modelId);
-    const maxTokens = openrouter.affordableOutput(info, user.balance, messages);
-    if (maxTokens === 0)
-      return res.status(402).json({ error: 'Not enough tokens for this message. Buy tokens to continue.', balance: user.balance });
+    let data;
+    try {
+      data = await openrouter.complete({ apiKey: openrouter.decrypt(user.openrouter_key), modelId, messages });
+    } catch (err) {
+      if (err.status === 401) {
+        // The key was deleted on OpenRouter's side.
+        await db.users.setOpenRouterKey(null, req.user.id);
+        return res.status(409).json({ error: 'Your OpenRouter connection expired. Connect again.', needsConnect: true });
+      }
+      if (err.status === 402)
+        return res.status(402).json({ error: 'Your OpenRouter credit is empty. Top up on OpenRouter to continue.' });
+      throw err;
+    }
 
-    const data = await openrouter.complete({ modelId, messages, maxTokens });
-
-    // Charge from the real usage the provider reports.
+    // Cost as OpenRouter reports it, with a fallback from token counts × list prices.
     const usage = data.usage || {};
-    const costUsd = typeof usage.cost === 'number'
-      ? usage.cost
-      : (usage.prompt_tokens || 0) * info.promptUsd + (usage.completion_tokens || 0) * info.completionUsd;
-    const cost = openrouter.usdToSingleTokens(costUsd);
-    const balance = await db.users.charge(cost, req.user.id);
+    let costUsd = usage.cost;
+    if (typeof costUsd !== 'number') {
+      const info = await openrouter.getModelInfo(modelId);
+      costUsd = (usage.prompt_tokens || 0) * info.promptUsd + (usage.completion_tokens || 0) * info.completionUsd;
+    }
 
     res.json({
       reply: data.choices?.[0]?.message?.content || 'No reply.',
       model: modelId,
-      cost,
-      balance,
-      truncated: data.choices?.[0]?.finish_reason === 'length',
+      costUsd,
+      cost: openrouter.usdToSingleTokens(costUsd),
     });
   } catch (err) {
     console.error('Chat error:', err);

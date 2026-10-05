@@ -66,6 +66,8 @@ async function init() {
       created_at TIMESTAMPTZ DEFAULT NOW(),
       updated_at TIMESTAMPTZ DEFAULT NOW()
     );
+
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS openrouter_key TEXT;
   `);
   console.log('✓ Database ready');
 }
@@ -97,8 +99,8 @@ module.exports = {
     create:        (id, email, hash, name)=> run('INSERT INTO users (id,email,password_hash,name) VALUES ($1,$2,$3,$4)', [id, email, hash, name]),
     updateBalance: (amount, id)           => run('UPDATE users SET balance = balance + $1, updated_at = NOW() WHERE id = $2', [amount, id]),
     update:        (name, id)             => run('UPDATE users SET name = $1, updated_at = NOW() WHERE id = $2', [name, id]),
-    // Subtracts a charge in one step and never goes below 0. Returns the new balance.
-    charge:        async (amount, id)     => (await get('UPDATE users SET balance = GREATEST(balance - $1, 0), updated_at = NOW() WHERE id = $2 RETURNING balance', [amount, id]))?.balance ?? 0,
+    // The user's OpenRouter key, stored encrypted. null disconnects.
+    setOpenRouterKey: (encrypted, id)     => run('UPDATE users SET openrouter_key = $1, updated_at = NOW() WHERE id = $2', [encrypted, id]),
     // Removes the user and everything they own. All or nothing.
     deleteEverything: async (id) => {
       const client = await pool.connect();

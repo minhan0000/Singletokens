@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connecting OpenRouter · SingleTokens</title>
+<link rel="icon" href="favicon.png">
+<style>
+  body { margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+         background: #313338; color: #dbdee1; font-family: system-ui, -apple-system, sans-serif; }
+  .card { background: #1e1f22; border-radius: 12px; padding: 32px; max-width: 360px; width: calc(100% - 32px); text-align: center; }
+  h1 { font-size: 18px; margin: 0 0 8px; }
+  p { color: #949ba4; font-size: 14px; margin: 0 0 16px; line-height: 1.5; }
+  a { display: inline-block; padding: 10px 18px; border-radius: 8px; background: #5865f2; color: #fff; text-decoration: none; font-weight: 600; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1 id="title">Connecting OpenRouter…</h1>
+  <p id="text">One moment.</p>
+  <a id="back" class="hidden" href="/app.html">Back to SingleTokens</a>
+</div>
+<script>
+(async () => {
+  const code = new URLSearchParams(location.search).get('code');
+  const codeVerifier = sessionStorage.getItem('st_or_verifier');
+  const token = localStorage.getItem('st_token');
+
+  function fail(msg) {
+    document.getElementById('title').textContent = 'Could not connect';
+    document.getElementById('text').textContent = msg;
+    document.getElementById('back').classList.remove('hidden');
+  }
+
+  if (!token) return location.replace('/login.html');
+  if (!code || !codeVerifier) return fail('The connection was cancelled or started in another tab. Try again from the chat.');
+
+  try {
+    const r = await fetch('/api/openrouter/connect', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ code, codeVerifier }),
+    });
+    const data = await r.json();
+    if (!r.ok) return fail(data.error || 'Something went wrong. Try again.');
+    sessionStorage.removeItem('st_or_verifier');
+    location.replace('/app.html');
+  } catch {
+    fail('Server unreachable. Try again later.');
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,10 +1,11 @@
 # SingleTokens
 
-Pay for AI per use, with no subscription. Users buy SingleTokens and spend them on any model.
+Pay for AI per use, with no subscription, on any model.
 
-- 100,000 SingleTokens = €1 (a 35% markup is included).
-- Every message is charged on the server from the real token usage the provider reports.
-- Models run through [OpenRouter](https://openrouter.ai).
+- Models run through [OpenRouter](https://openrouter.ai). Each user connects their own OpenRouter
+  account ("Connect OpenRouter") and pays OpenRouter directly. SingleTokens never handles money.
+- SingleTokens is the display unit for cost: 100,000 SingleTokens = $1 of OpenRouter credit, no markup.
+- Users' OpenRouter keys are stored encrypted in the database.
 
 ## Project layout
 
@@ -13,10 +14,11 @@ backend/
   server.js           Express server and all API routes
   db.js               Postgres (Neon) tables and queries
   auth.middleware.js  Checks the login token on protected routes
-  openrouter.js       Model calls, prices, and the SingleTokens conversion
+  openrouter.js       Model calls, prices, the "Connect OpenRouter" exchange, key encryption
 frontend/
   index.html          Landing page
   login.html          Log in / sign up
+  connect.html        Where OpenRouter sends users back after connecting
   app.html            The app (desktop)
   app-mobile.html     The app (phone)
   app-script.js       App logic
@@ -41,8 +43,18 @@ Open http://localhost:3001. The database tables are created automatically on fir
 |---|---|---|
 | `DATABASE_URL` | yes | Postgres connection string from Neon. |
 | `JWT_SECRET` | yes | Long random string used to sign login tokens. The server won't start without it. |
-| `OPENROUTER_API_KEY` | yes | Key from https://openrouter.ai/keys. Used for every AI reply. |
+| `ENCRYPTION_KEY` | yes | 64 hex characters used to encrypt users' OpenRouter keys. Changing it later forces every user to reconnect. |
 | `PORT` | no | Port the server listens on. Default `3001`. |
+
+## Connecting OpenRouter
+
+When a user first sends a message, the app shows "Connect OpenRouter". They approve on openrouter.ai
+and are sent back to `/connect.html`, which hands a one-time code to the server. The server trades it
+for the user's own OpenRouter key and stores it encrypted. OpenRouter only sends users back to
+`https://` addresses or `localhost`, so test locally on `http://localhost:<PORT>`.
+
+Deleting a SingleTokens account erases the stored key. The key itself still exists in the user's
+OpenRouter account until they delete it at https://openrouter.ai/settings/keys.
 
 ## Security notes
 

@@ -37,20 +37,45 @@ async function apiGetUser() {
     if (r.status === 401) { apiLogout(); return null; }
     if (!r.ok) return null;
     const d = await r.json();
+    // The app shows the user right after this returns; the credit lands a moment later.
+    if (d.user?.openrouterConnected) _refreshCredit();
     return d.user || null;
   } catch { return null; }
 }
 
 /* ══ BALANCE ════════════════════════════════════════════════════════════════ */
 
-async function apiFetchBalance() {
-  if (!_getToken()) return 0;
+/* ══ OPENROUTER ═════════════════════════════════════════════════════════════ */
+
+// Users pay OpenRouter directly. "Connect" sends them to OpenRouter to approve,
+// and OpenRouter sends them back to connect.html with a one-time code.
+async function apiConnectOpenRouter() {
+  const bytes = crypto.getRandomValues(new Uint8Array(32));
+  const verifier = _base64url(bytes);
+  const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(verifier));
+  sessionStorage.setItem('st_or_verifier', verifier);
+  const callback = encodeURIComponent(`${location.origin}/connect.html`);
+  location.href = `https://openrouter.ai/auth?callback_url=${callback}&code_challenge=${_base64url(new Uint8Array(hash))}&code_challenge_method=S256`;
+}
+
+function _base64url(bytes) {
+  return btoa(String.fromCharCode(...bytes)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+// { connected, creditUsd, creditTokens }
+async function apiFetchOpenRouterStatus() {
+  if (!_getToken()) return { connected: false };
   try {
-    const r = await fetch(`${API_BASE}/api/balance`, { headers: _authHeaders() });
-    if (!r.ok) return 0;
-    const d = await r.json();
-    return d.balance || 0;
-  } catch { return 0; }
+    const r = await fetch(`${API_BASE}/api/openrouter/status`, { headers: _authHeaders() });
+    if (!r.ok) return { connected: false };
+    return await r.json();
+  } catch { return { connected: false }; }
+}
+
+// Shows the remaining OpenRouter credit in the token counter.
+async function _refreshCredit() {
+  const s = await apiFetchOpenRouterStatus();
+  if (s.connected && typeof s.creditTokens === 'number') _setBalance(s.creditTokens);
 }
 
 /* ══ CHATS ══════════════════════════════════════════════════════════════════ */
@@ -184,6 +209,14 @@ function _updateBalance(used) {
   if (typeof updateBal    === 'function') { updateBal(used); }
 }
 
+function _addConnectButton(msgEl) {
+  const btn = document.createElement('button');
+  btn.textContent = 'Connect OpenRouter';
+  btn.style.cssText = 'margin-top:8px;padding:8px 14px;border:none;border-radius:8px;background:#5865f2;color:#fff;font-weight:600;cursor:pointer';
+  btn.onclick = apiConnectOpenRouter;
+  (msgEl.querySelector('.msg-bubble') || msgEl).appendChild(btn);
+}
+
 // The server decides the balance; the page only shows it.
 function _setBalance(value) {
   if (typeof balance !== 'undefined') balance = value;
@@ -228,17 +261,18 @@ async function _doSend() {
     typingEl.remove();
 
     if (res.status === 401) { apiLogout(); return; }
-    if (typeof data.balance === 'number') _setBalance(data.balance);
 
     if (!res.ok || data.error) {
       _apiConvHistory.pop();
-      _addMsg('⚠ ' + (data.error || 'Server error'), 'ai', modelName);
+      const el = _addMsg('⚠ ' + (data.error || 'Server error'), 'ai', modelName);
+      if (data.needsConnect) _addConnectButton(el);
       return;
     }
 
     const reply = data.reply || 'No reply.';
     _apiConvHistory.push({ role: 'assistant', content: reply });
     _addMsg(reply, 'ai', modelName);
+    _refreshCredit();
 
     if (typeof onMessageComplete === 'function') onMessageComplete();
 
