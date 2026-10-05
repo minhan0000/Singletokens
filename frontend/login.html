@@ -1,249 +1,123 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>SingleTokens – Anmelden</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgc2hhcGUtcmVuZGVyaW5nPSJnZW9tZXRyaWNQcmVjaXNpb24iPgogIDxkZWZzPgogICAgPGNsaXBQYXRoIGlkPSJjaXJjbGUtY2xpcCI+CiAgICAgIDxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjUwIi8+CiAgICA8L2NsaXBQYXRoPgogIDwvZGVmcz4KICA8cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0ibm9uZSIvPgogIDxnIGNsaXAtcGF0aD0idXJsKCNjaXJjbGUtY2xpcCkiPgogICAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNTAiIGZpbGw9IiMwMENGRkYiLz4KICAgIDxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjQyIiBmaWxsPSIjMDAwMDAwIi8+CiAgICA8Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIzOCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIxLjIiLz4KICAgIDx0ZXh0IHg9IjUwIiB5PSI2MiIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzQiIGZvbnQtd2VpZ2h0PSI5MDAiIGZvbnQtc3R5bGU9Iml0YWxpYyIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlNUPC90ZXh0PgogIDwvZz4KPC9zdmc+">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#F4F1E8;
-  --black:#111111;
-  --white:#FFFFFF;
-  --cyan:#00CFFF;
-  --yellow:#FFD93D;
-  --pink:#FF5D8F;
-  --green:#3FE07C;
-  --purple:#B388FF;
-  --red:#FF3B30;
-}
-html,body{height:100%;background:
-  radial-gradient(rgba(17,17,17,.22) 1.2px, transparent 1.2px);
-  background-size:26px 26px;background-color:var(--bg);font-family:'Archivo',sans-serif;color:var(--black)}
-body{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px;position:relative;overflow:hidden}
-
-/* Card */
-.card{position:relative;z-index:1;width:100%;max-width:480px;background:var(--white);border:3px solid var(--black);box-shadow:12px 12px 0 var(--black);padding:42px 36px}
-
-/* Logo */
-.logo{display:flex;align-items:center;gap:12px;margin-bottom:32px}
-.logo-icon{width:40px;height:40px;border:3px solid var(--black);background:#000;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;font-style:italic;color:#fff;letter-spacing:-.02em;transform:rotate(-2deg)}
-.logo-text{font-family:'Archivo Black',sans-serif;font-size:20px;font-weight:400;letter-spacing:-.02em}
-.logo-text span{background:var(--cyan);padding:2px 6px;border:2px solid var(--black);display:inline-block;transform:rotate(-2deg)}
-
-/* Tabs */
-.tabs{display:flex;gap:12px;margin-bottom:28px}
-.tab{flex:1;padding:11px;border:3px solid var(--black);background:var(--white);color:var(--black);font-family:'Archivo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;box-shadow:4px 4px 0 var(--black);transition:transform .1s,box-shadow .1s}
-.tab:hover{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--black)}
-.tab.active{background:var(--cyan);box-shadow:6px 6px 0 var(--black)}
-
-/* Form */
-.form-group{margin-bottom:18px}
-label{display:block;font-family:'Archivo Black',sans-serif;font-size:12px;font-weight:400;color:var(--black);margin-bottom:8px;letter-spacing:.02em;text-transform:uppercase}
-input{width:100%;padding:12px 14px;background:var(--white);border:2px solid var(--black);color:var(--black);font-size:14px;font-family:'Archivo',sans-serif;outline:none;transition:border-color .15s}
-input:focus{border-color:var(--cyan);box-shadow:inset 0 0 0 2px rgba(0,207,255,.2)}
-input::placeholder{color:#999}
-
-/* Submit button */
-.btn-submit{width:100%;padding:14px;background:var(--yellow);border:3px solid var(--black);box-shadow:6px 6px 0 var(--black);color:var(--black);font-family:'Archivo',sans-serif;font-size:15px;font-weight:800;cursor:pointer;margin-top:6px;transition:transform .1s,box-shadow .1s;text-transform:uppercase}
-.btn-submit:hover:not(:disabled){transform:translate(3px,3px);box-shadow:3px 3px 0 var(--black)}
-.btn-submit:active:not(:disabled){transform:translate(6px,6px);box-shadow:0 0 0 var(--black)}
-.btn-submit:disabled{opacity:.6;cursor:not-allowed}
-
-/* Error */
-.error-box{background:rgba(255,59,48,.15);border:3px solid var(--red);padding:12px 14px;font-size:13px;color:var(--red);margin-bottom:14px;display:none;font-weight:600;font-family:'Archivo Black',sans-serif;box-shadow:4px 4px 0 rgba(255,59,48,.3)}
-.error-box.show{display:block}
-
-/* Success */
-.success-box{background:rgba(63,224,124,.15);border:3px solid var(--green);padding:12px 14px;font-size:13px;color:var(--black);margin-bottom:14px;display:none;font-weight:600;font-family:'Archivo Black',sans-serif;box-shadow:4px 4px 0 rgba(63,224,124,.3)}
-.success-box.show{display:block}
-
-/* Footer */
-.card-footer{text-align:center;margin-top:24px;font-size:13px;color:var(--black);font-weight:600}
-.card-footer a{color:var(--cyan);text-decoration:none;font-weight:800}
-.card-footer a:hover{text-decoration:underline}
-
-/* Bonus badge */
-.bonus-badge{display:flex;align-items:center;gap:10px;background:var(--yellow);border:3px solid var(--black);padding:12px 14px;margin-bottom:20px;font-size:13px;color:var(--black);line-height:1.4;font-weight:600;box-shadow:4px 4px 0 var(--black)}
-.bonus-badge strong{font-family:'Archivo Black',sans-serif}
-.bonus-icon{font-size:20px;flex-shrink:0}
-
-.fade-in{animation:fadeIn .3s ease both}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-
-@keyframes spin{to{transform:rotate(360deg)}}
-.spinner{width:14px;height:14px;border:2px solid rgba(0,0,0,.3);border-top-color:#000;border-radius:50%;animation:spin .6s linear infinite;display:inline-block;vertical-align:middle;margin-right:6px}
-</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Log in · SingleTokens</title>
+<link rel="icon" href="favicon.png">
+<link rel="stylesheet" href="css/theme.css">
+<link rel="stylesheet" href="css/app.css">
+<script>try { document.documentElement.dataset.theme = localStorage.getItem('st_theme') || 'dark'; } catch {}</script>
 </head>
 <body>
-<div class="orb orb1"></div>
-<div class="orb orb2"></div>
+<main class="login-page">
+  <div class="login-card">
+    <div class="sidebar-logo">SingleTokens</div>
+    <div class="tabs" role="tablist">
+      <button class="tab is-active" role="tab" id="tab-login" aria-selected="true" aria-controls="form">Log in</button>
+      <button class="tab" role="tab" id="tab-signup" aria-selected="false" aria-controls="form">Sign up</button>
+    </div>
 
-<div class="card fade-in">
-  <div class="logo">
-    <div class="logo-icon">ST</div>
-    <div class="logo-text">Single<span>Tokens</span></div>
+    <form id="form" novalidate>
+      <div class="form-error" role="alert" hidden></div>
+      <div class="field" data-only="signup" hidden>
+        <label class="field-label" for="name">Name</label>
+        <input class="input" id="name" autocomplete="name" maxlength="60">
+        <div class="field-error" hidden></div>
+      </div>
+      <div class="field">
+        <label class="field-label" for="email">Email</label>
+        <input class="input" id="email" type="email" autocomplete="email">
+        <div class="field-error" hidden></div>
+      </div>
+      <div class="field">
+        <label class="field-label" for="password">Password</label>
+        <input class="input" id="password" type="password" autocomplete="current-password">
+        <div class="field-note" data-only="signup" hidden>At least 12 characters.</div>
+        <div class="field-error" hidden></div>
+      </div>
+      <button class="btn btn-primary btn-lg btn-block" id="submit" type="submit" style="margin-top:var(--sp-24)">Log in</button>
+    </form>
+    <p class="login-foot"><a href="/">← Back to the homepage</a> · <a href="/impressum.html">Impressum</a> · <a href="/privacy.html">Privacy</a></p>
   </div>
+</main>
 
-  <div class="tabs">
-    <button class="tab active" id="tab-login" onclick="switchTab('login')">Anmelden</button>
-    <button class="tab" id="tab-register" onclick="switchTab('register')">Registrieren</button>
-  </div>
+<script type="module">
+const MIN_PASSWORD = 12;
+const $ = s => document.querySelector(s);
+let mode = location.hash === '#signup' ? 'signup' : 'login';
 
-  <div id="error-box" class="error-box"></div>
-  <div id="success-box" class="success-box"></div>
-
-  <!-- LOGIN FORM -->
-  <div id="form-login">
-    <div class="form-group">
-      <label>E-Mail</label>
-      <input type="email" id="login-email" placeholder="deine@email.com" autocomplete="email">
-    </div>
-    <div class="form-group">
-      <label>Passwort</label>
-      <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
-    </div>
-    <button class="btn-submit" id="btn-login" onclick="doLogin()">Anmelden →</button>
-  </div>
-
-  <!-- REGISTER FORM -->
-  <div id="form-register" style="display:none">
-    <div class="bonus-badge">
-      <span class="bonus-icon">🎁</span>
-      <span>Du bekommst <strong>500K Tokens gratis</strong> beim Registrieren – kein Abo, kein Risiko.</span>
-    </div>
-    <div class="form-group">
-      <label>Name</label>
-      <input type="text" id="reg-name" placeholder="Dein Name" autocomplete="name">
-    </div>
-    <div class="form-group">
-      <label>E-Mail</label>
-      <input type="email" id="reg-email" placeholder="deine@email.com" autocomplete="email">
-    </div>
-    <div class="form-group">
-      <label>Passwort <span style="color:var(--muted);font-weight:400">(min. 6 Zeichen)</span></label>
-      <input type="password" id="reg-password" placeholder="••••••••" autocomplete="new-password">
-    </div>
-    <button class="btn-submit" id="btn-register" onclick="doRegister()">Konto erstellen →</button>
-  </div>
-
-  <div class="card-footer">
-    <a href="index.html">← Zurück zur Startseite</a>
-  </div>
-</div>
-
-<script>
-const API = '';
-
-/* ── Tab switch ── */
-function switchTab(tab) {
-  document.getElementById('tab-login').classList.toggle('active', tab === 'login');
-  document.getElementById('tab-register').classList.toggle('active', tab === 'register');
-  document.getElementById('form-login').style.display = tab === 'login' ? '' : 'none';
-  document.getElementById('form-register').style.display = tab === 'register' ? '' : 'none';
-  hideMsg();
-}
-
-/* ── Messages ── */
-function showError(msg) {
-  const el = document.getElementById('error-box');
-  el.textContent = msg; el.classList.add('show');
-  document.getElementById('success-box').classList.remove('show');
-}
-function showSuccess(msg) {
-  const el = document.getElementById('success-box');
-  el.textContent = msg; el.classList.add('show');
-  document.getElementById('error-box').classList.remove('show');
-}
-function hideMsg() {
-  document.getElementById('error-box').classList.remove('show');
-  document.getElementById('success-box').classList.remove('show');
-}
-
-/* ── Loading state ── */
-function setLoading(btnId, loading, defaultText) {
-  const btn = document.getElementById(btnId);
-  btn.disabled = loading;
-  btn.innerHTML = loading
-    ? `<span class="spinner"></span> Bitte warten...`
-    : defaultText;
-}
-
-/* ── Redirect after login ── */
-function redirectToApp() {
-  if (/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) || window.innerWidth <= 768) {
-    window.location.href = '/app-mobile.html';
-  } else {
-    window.location.href = '/app.html';
-  }
-}
-
-/* ── Login ── */
-async function doLogin() {
-  const email = document.getElementById('login-email').value.trim();
-  const password = document.getElementById('login-password').value;
-  if (!email || !password) { showError('Bitte E-Mail und Passwort eingeben.'); return; }
-  setLoading('btn-login', true, 'Anmelden →');
+// Already logged in? Go straight to the app.
+(async () => {
+  const token = localStorage.getItem('st_token');
+  if (!token) return;
   try {
-    const r = await fetch(API + '/api/auth/login', {
+    const r = await fetch('/api/auth/me', { headers: { Authorization: 'Bearer ' + token } });
+    if (r.ok) location.replace('/app.html');
+  } catch {}
+})();
+
+function setMode(m) {
+  mode = m;
+  for (const [id, on] of [['#tab-login', m === 'login'], ['#tab-signup', m === 'signup']]) {
+    $(id).classList.toggle('is-active', on);
+    $(id).setAttribute('aria-selected', on);
+  }
+  document.querySelectorAll('[data-only="signup"]').forEach(e => { e.hidden = m !== 'signup'; });
+  $('#password').autocomplete = m === 'signup' ? 'new-password' : 'current-password';
+  $('#submit').textContent = m === 'signup' ? 'Create account' : 'Log in';
+  document.title = (m === 'signup' ? 'Sign up' : 'Log in') + ' · SingleTokens';
+  history.replaceState(null, '', m === 'signup' ? '#signup' : location.pathname);
+  clearErrors();
+  (m === 'signup' ? $('#name') : $('#email')).focus();
+}
+$('#tab-login').addEventListener('click', () => setMode('login'));
+$('#tab-signup').addEventListener('click', () => setMode('signup'));
+
+function fieldError(input, msg) {
+  const box = input.closest('.field').querySelector('.field-error');
+  input.classList.toggle('is-error', !!msg);
+  input.setAttribute('aria-invalid', !!msg);
+  box.textContent = msg || '';
+  box.hidden = !msg;
+}
+function formError(msg) { $('.form-error').textContent = msg || ''; $('.form-error').hidden = !msg; }
+function clearErrors() { formError(''); ['#name', '#email', '#password'].forEach(s => fieldError($(s), '')); }
+['#name', '#email', '#password'].forEach(s => $(s).addEventListener('input', () => fieldError($(s), '')));
+
+$('#form').addEventListener('submit', async e => {
+  e.preventDefault();
+  clearErrors();
+  const name = $('#name').value.trim(), email = $('#email').value.trim(), password = $('#password').value;
+  const bad = [];
+  if (mode === 'signup' && !name) bad.push(['#name', 'Enter your name.']);
+  if (!/^\S+@\S+\.\S+$/.test(email)) bad.push(['#email', 'Enter a valid email address.']);
+  if (!password) bad.push(['#password', 'Enter your password.']);
+  else if (mode === 'signup' && password.length < MIN_PASSWORD) bad.push(['#password', `Password must be at least ${MIN_PASSWORD} characters.`]);
+  if (bad.length) { bad.forEach(([s, m]) => fieldError($(s), m)); $(bad[0][0]).focus(); return; }
+
+  const btn = $('#submit'), label = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = mode === 'signup' ? 'Creating account…' : 'Logging in…';
+  try {
+    const r = await fetch(mode === 'signup' ? '/api/auth/register' : '/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify(mode === 'signup' ? { name, email, password } : { email, password }),
     });
-    const data = await r.json();
-    if (!r.ok) { showError(data.error || 'Anmeldung fehlgeschlagen.'); return; }
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(data.error || 'Something went wrong. Try again.');
     localStorage.setItem('st_token', data.token);
     localStorage.setItem('st_user', JSON.stringify(data.user));
-    showSuccess('Angemeldet! Weiterleitung...');
-    setTimeout(redirectToApp, 600);
-  } catch (e) {
-    showError('Server nicht erreichbar. Bitte später nochmal versuchen.');
-  } finally {
-    setLoading('btn-login', false, 'Anmelden →');
+    location.replace('/app.html');
+  } catch (err) {
+    formError(err.message === 'Failed to fetch' ? 'Server unreachable. Try again in a moment.' : err.message);
+    btn.disabled = false;
+    btn.textContent = label;
   }
-}
-
-/* ── Register ── */
-async function doRegister() {
-  const name = document.getElementById('reg-name').value.trim();
-  const email = document.getElementById('reg-email').value.trim();
-  const password = document.getElementById('reg-password').value;
-  if (!name) { showError('Bitte einen Namen eingeben.'); return; }
-  if (!email) { showError('Bitte eine E-Mail eingeben.'); return; }
-  if (password.length < 6) { showError('Passwort muss mindestens 6 Zeichen haben.'); return; }
-  setLoading('btn-register', true, 'Konto erstellen →');
-  try {
-    const r = await fetch(API + '/api/auth/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password, name })
-    });
-    const data = await r.json();
-    if (!r.ok) { showError(data.error || 'Registrierung fehlgeschlagen.'); return; }
-    localStorage.setItem('st_token', data.token);
-    localStorage.setItem('st_user', JSON.stringify(data.user));
-    showSuccess('Konto erstellt! 500K Tokens wurden gutgeschrieben. Weiterleitung...');
-    setTimeout(redirectToApp, 900);
-  } catch (e) {
-    showError('Server nicht erreichbar. Bitte später nochmal versuchen.');
-  } finally {
-    setLoading('btn-register', false, 'Konto erstellen →');
-  }
-}
-
-/* ── Enter key ── */
-document.addEventListener('keydown', e => {
-  if (e.key !== 'Enter') return;
-  const loginVisible = document.getElementById('form-login').style.display !== 'none';
-  if (loginVisible) doLogin(); else doRegister();
 });
 
-/* ── Already logged in? ── */
-if (localStorage.getItem('st_token')) redirectToApp();
+setMode(mode);
 </script>
 </body>
 </html>

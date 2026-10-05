@@ -1,0 +1,104 @@
+/* Landing page + legal pages. Uses only tokens from theme.css (with app.css for buttons, cards, inputs). */
+
+html { scroll-behavior: smooth; }
+.lp { min-height: 100vh; background: var(--bg-main); }
+.lp-wrap { max-width: 1120px; margin: 0 auto; padding: 0 var(--sp-32); }
+
+/* Top bar */
+.lp-nav { position: sticky; top: 0; z-index: 10; background: var(--bg-main); border-bottom: 1px solid var(--border); }
+.lp-nav .lp-wrap { display: flex; align-items: center; gap: var(--sp-24); height: 64px; }
+.lp-logo { font-size: 18px; font-weight: 700; color: var(--text-strong); text-decoration: none; }
+.lp-links { display: flex; gap: var(--sp-20); margin-right: auto; }
+.lp-links a { font-size: var(--fs-14); font-weight: 500; color: var(--text-muted); text-decoration: none; }
+.lp-links a:hover { color: var(--text-strong); }
+.lp-actions { display: flex; gap: var(--sp-8); margin-left: auto; }
+.lp-actions a { text-decoration: none; }
+
+/* Sections */
+.lp-section { padding: var(--sp-48) 0; }
+.lp-section + .lp-section { border-top: 1px solid var(--border); }
+.lp-title { margin: 0 0 var(--sp-8); font-size: var(--fs-32); font-weight: 700; color: var(--text-strong); letter-spacing: -.01em; }
+.lp-sub { margin: 0 0 var(--sp-32); max-width: 640px; font-size: var(--fs-15); line-height: 1.6; color: var(--text-muted); }
+
+/* Hero */
+.lp-hero { padding: var(--sp-48) 0 0; text-align: center; }
+.lp-hero h1 { max-width: 900px; margin: var(--sp-24) auto var(--sp-20); font-size: var(--fs-72); font-weight: 800; line-height: 1.05; letter-spacing: -.03em; color: var(--text-strong); }
+.lp-hero h1 span { color: var(--accent); }
+.lp-hero p { max-width: 640px; margin: 0 auto; font-size: var(--fs-18); line-height: 1.6; color: var(--text-muted); }
+.lp-hero p b { color: var(--text-strong); font-weight: 600; }
+.lp-cta { display: flex; justify-content: center; flex-wrap: wrap; gap: var(--sp-12); margin-top: var(--sp-32); }
+.lp-cta a { text-decoration: none; }
+.lp-note { margin-top: var(--sp-12); font-size: var(--fs-13); color: var(--text-muted); }
+.lp-shot { margin: var(--sp-48) auto 0; max-width: 1040px; border: 1px solid var(--border); border-bottom: 0; border-radius: var(--r-12) var(--r-12) 0 0; overflow: hidden; box-shadow: var(--shadow-pop); }
+.lp-shot img { display: block; width: 100%; height: auto; }
+
+/* Feature cards */
+.lp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-24); }
+.lp-card { padding: var(--sp-24); background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r-16); }
+.lp-card h3 { margin: var(--sp-16) 0 var(--sp-8); font-size: var(--fs-18); font-weight: 600; color: var(--text-strong); }
+.lp-card p { margin: 0; font-size: var(--fs-14); line-height: 1.6; color: var(--text-muted); }
+.lp-icon { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: var(--r-12); background: var(--accent); color: var(--white); }
+.lp-icon .lucide { width: 20px; height: 20px; }
+
+/* Steps */
+.lp-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-24); margin: 0; padding: 0; list-style: none; }
+.lp-steps li { display: flex; gap: var(--sp-16); }
+.lp-steps .step-num { width: 32px; height: 32px; font-size: var(--fs-14); }
+.lp-steps h3 { margin: var(--sp-4) 0 var(--sp-8); font-size: var(--fs-18); font-weight: 600; color: var(--text-strong); }
+.lp-steps p { margin: 0; font-size: var(--fs-14); line-height: 1.6; color: var(--text-muted); }
+
+/* Prices */
+.lp-prices { overflow: hidden; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r-12); }
+.lp-prices table { width: 100%; border-collapse: collapse; font-size: var(--fs-14); }
+.lp-prices th { padding: var(--sp-12) var(--sp-20); text-align: left; font-size: var(--fs-11); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); border-bottom: 1px solid var(--border); }
+.lp-prices td { padding: var(--sp-12) var(--sp-20); border-bottom: 1px solid var(--border); color: var(--text); }
+.lp-prices tr:last-child td { border-bottom: 0; }
+.lp-prices .num { text-align: right; font-variant-numeric: tabular-nums; }
+.lp-prices .model { display: flex; align-items: center; gap: var(--sp-12); }
+.lp-prices .model b { display: block; font-weight: 600; color: var(--text-strong); }
+.lp-prices .model small { font-size: var(--fs-12); color: var(--text-muted); }
+.lp-prices .msg { padding: var(--sp-20); text-align: center; color: var(--text-muted); }
+.lp-fine { margin-top: var(--sp-12); font-size: var(--fs-13); color: var(--text-muted); }
+
+/* FAQ */
+.lp-faq { max-width: 760px; }
+.lp-faq details { border-bottom: 1px solid var(--border); }
+.lp-faq summary { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-16); padding: var(--sp-20) 0; cursor: pointer; list-style: none; font-size: var(--fs-15); font-weight: 600; color: var(--text-strong); }
+.lp-faq summary::-webkit-details-marker { display: none; }
+.lp-faq summary .lucide { color: var(--text-muted); transition: transform var(--ease); }
+.lp-faq details[open] summary .lucide { transform: rotate(45deg); }
+.lp-faq details p { margin: 0 0 var(--sp-20); font-size: var(--fs-15); line-height: 1.7; color: var(--text-muted); }
+
+/* Footer */
+.lp-foot { padding: var(--sp-32) 0; border-top: 1px solid var(--border); background: var(--bg-sidebar); }
+.lp-foot .lp-wrap { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-24); font-size: var(--fs-13); color: var(--text-muted); }
+.lp-foot nav { display: flex; flex-wrap: wrap; gap: var(--sp-20); margin-left: auto; }
+.lp-foot a { color: var(--text-muted); text-decoration: none; }
+.lp-foot a:hover { color: var(--text-strong); text-decoration: underline; }
+
+/* Legal pages */
+.legal { max-width: 760px; margin: 0 auto; padding: var(--sp-48) var(--sp-32); }
+.legal h1 { margin: 0 0 var(--sp-8); font-size: var(--fs-32); font-weight: 700; color: var(--text-strong); }
+.legal .lang-switch { display: flex; gap: var(--sp-8); margin: var(--sp-16) 0 var(--sp-32); }
+.legal .lang-switch a { text-decoration: none; }
+.legal h2 { margin: var(--sp-32) 0 var(--sp-12); font-size: var(--fs-18); font-weight: 600; color: var(--text-strong); }
+.legal h3 { margin: var(--sp-20) 0 var(--sp-8); font-size: var(--fs-15); font-weight: 600; color: var(--text-strong); }
+.legal p, .legal li { font-size: var(--fs-15); line-height: 1.7; color: var(--text); }
+.legal ul { padding-left: var(--sp-24); }
+.legal address { font-style: normal; font-size: var(--fs-15); line-height: 1.7; color: var(--text); }
+.legal .lang-block + .lang-block { margin-top: var(--sp-48); padding-top: var(--sp-48); border-top: 1px solid var(--border); }
+.legal .stand { font-size: var(--fs-13); color: var(--text-muted); }
+/* Details still to fill in before going public */
+.ph { padding: 1px 6px; border-radius: var(--r-6); background: rgba(240, 178, 50, .18); color: var(--orange-text); font-weight: 600; }
+
+@media (max-width: 1024px) { .lp-grid, .lp-steps { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 767px) {
+  .lp-wrap, .legal { padding-left: var(--sp-16); padding-right: var(--sp-16); }
+  .lp-links { display: none; }
+  .lp-hero h1 { font-size: var(--fs-32); }
+  .lp-hero p { font-size: var(--fs-15); }
+  .lp-grid, .lp-steps { grid-template-columns: 1fr; }
+  .lp-prices th:nth-child(2), .lp-prices td:nth-child(2) { display: none; }
+  .lp-prices th, .lp-prices td { padding: var(--sp-12); }
+  .lp-foot nav { margin-left: 0; }
+}

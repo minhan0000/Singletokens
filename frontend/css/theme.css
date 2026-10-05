@@ -1,0 +1,124 @@
+/* SingleTokens design tokens. Every color, size and radius in the app comes from here.
+   Dark is the default; [data-theme="white"] switches any element (usually <html>) and its children. */
+
+/* Fonts are stored in /fonts (no requests to Google, so no visitor data leaves this site). */
+@font-face { font-family: 'Inter'; font-style: normal; font-weight: 100 900; font-display: swap; src: url('../fonts/inter-latin-ext-wght-normal.woff2') format('woff2'); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+@font-face { font-family: 'Inter'; font-style: normal; font-weight: 100 900; font-display: swap; src: url('../fonts/inter-latin-wght-normal.woff2') format('woff2'); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: 'JetBrains Mono'; font-style: normal; font-weight: 100 800; font-display: swap; src: url('../fonts/jetbrains-mono-latin-ext-wght-normal.woff2') format('woff2'); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+@font-face { font-family: 'JetBrains Mono'; font-style: normal; font-weight: 100 800; font-display: swap; src: url('../fonts/jetbrains-mono-latin-wght-normal.woff2') format('woff2'); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+
+:root {
+  /* Fonts */
+  --font: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  /* Type scale */
+  --fs-11: 11px;  /* section labels */
+  --fs-12: 12px;  /* meta */
+  --fs-13: 13px;
+  --fs-14: 14px;  /* UI default */
+  --fs-15: 15px;  /* chat messages */
+  --fs-18: 18px;
+  --fs-24: 24px;
+  --fs-32: 32px;  /* page titles */
+  --fs-72: 72px;  /* purchase number */
+
+  /* Spacing scale */
+  --sp-4: 4px;
+  --sp-8: 8px;
+  --sp-12: 12px;
+  --sp-16: 16px;
+  --sp-20: 20px;
+  --sp-24: 24px;
+  --sp-32: 32px;
+  --sp-48: 48px;
+
+  /* Radius */
+  --r-6: 6px;     /* small */
+  --r-8: 8px;     /* buttons, inputs, list items */
+  --r-12: 12px;   /* cards, modals */
+  --r-16: 16px;   /* big cards, message bubbles */
+  --r-pill: 999px;
+
+  /* Motion */
+  --ease: 150ms ease;
+
+  /* Same in both themes */
+  --accent: #5865f2;
+  --accent-hover: #4752c4;
+  --accent-ring: rgba(88, 101, 242, .3);
+  --orange: #f0b232;   /* multipliers */
+  --green: #23a55a;    /* prices only */
+  --danger: #da373c;
+  --white: #ffffff;
+  --black: #000000;
+
+  /* Gradients (the only three allowed) */
+  --grad-user: linear-gradient(135deg, #5865f2, #7b5cf0);
+  --grad-balance: linear-gradient(135deg, #6b7be8, #5865f2);
+
+  /* Provider colors; icons use a gradient from the color to 15% darker */
+  --p-anthropic: #d97757;
+  --p-openai: #10a37f;
+  --p-google: #4285f4;
+  --p-meta: #0866ff;
+  --p-mistral: #fa520f;
+  --p-deepseek: #4d6bfe;
+  --p-other: var(--accent);
+
+  /* Custom request page (terminal look, same in both themes) */
+  --term-bg: #111214;
+  --syn-key: #949cf7;
+  --syn-string: #23a55a;
+  --syn-number: #f0b232;
+  --syn-literal: #f23f43;
+
+  /* Fixed surfaces */
+  --tooltip-bg: rgba(0, 0, 0, .9);
+  --backdrop: rgba(0, 0, 0, .6);
+  --shadow-pop: 0 8px 24px rgba(0, 0, 0, .4);
+  --balance-inner: #1e1f22;  /* the dark box inside the balance card, both themes */
+}
+
+/* Dark (default). The custom request page (.term) is always dark. */
+:root,
+[data-theme="dark"],
+.term {
+  --bg-sidebar: #2b2d31;
+  --bg-main: #313338;
+  --bg-input: #1e1f22;
+  --bg-card: #1e1f22;
+  --bg-hover: #35373c;
+  --bg-active: #404249;
+  --border: #3f4147;
+  --text: #dbdee1;
+  --text-strong: #ffffff;
+  --text-muted: #949ba4;
+
+  /* Text-only variants, tuned for 4.5:1 contrast */
+  --orange-text: #f0b232;
+  --green-text: #23a55a;
+  --danger-text: #f87a7e;
+
+  color-scheme: dark;
+}
+
+/* White */
+[data-theme="white"] {
+  --bg-sidebar: #f2f3f5;
+  --bg-main: #ffffff;
+  --bg-input: #e3e5e8;
+  --bg-card: #e3e5e8;
+  --bg-hover: #e8e9ec;
+  --bg-active: #d7d9dc;
+  --border: #d4d7dc;
+  --text: #313338;
+  --text-strong: #060607;
+  --text-muted: #5c5e66;
+
+  --orange-text: #8a5c00;
+  --green-text: #17723e;
+  --danger-text: #da373c;
+
+  color-scheme: light;
+}
