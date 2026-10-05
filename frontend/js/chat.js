@@ -21,6 +21,7 @@ export async function renderChat(main, ctx) {
   let target = chat ? chat.target : (ctx.initialTarget || recents[0] || DEFAULT_TARGET);
   let sending = false;
   let pending = [];  // attachments waiting to be sent with the next message
+  let shown = chat ? chat.messages.length : 0;  // messages already on screen; only newer ones animate in
 
   main.innerHTML = `
     <div class="topbar">
@@ -85,7 +86,12 @@ export async function renderChat(main, ctx) {
     list.innerHTML = '';
     if (!chat || !chat.messages.length) return paintEmpty();
     const lastAi = chat.messages.map(m => m.role).lastIndexOf('assistant');
-    chat.messages.forEach((m, i) => list.appendChild(m.role === 'user' ? userBubble(m) : aiBubble(m, i === lastAi)));
+    chat.messages.forEach((m, i) => {
+      const node = m.role === 'user' ? userBubble(m) : aiBubble(m, i === lastAi);
+      if (i >= shown) node.classList.add('anim-rise');
+      list.appendChild(node);
+    });
+    shown = chat.messages.length;
     icons(list);
     scroller.scrollTop = scroller.scrollHeight;
   }
@@ -244,7 +250,7 @@ export async function renderChat(main, ctx) {
     paintHint();
     const p = api.sendMessage(chat.id, text, files, opts);
     paint();
-    const typing = el(`<div class="msg-ai-wrap"><div class="typing" aria-label="Typing"><span></span><span></span><span></span></div></div>`);
+    const typing = el(`<div class="msg-ai-wrap anim-rise"><div class="typing" aria-label="Typing"><span></span><span></span><span></span></div></div>`);
     list.appendChild(typing);
     scroller.scrollTop = scroller.scrollHeight;
     onChatsChanged(chat.id);

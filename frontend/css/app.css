@@ -643,3 +643,41 @@ button.role-tag { padding: 0; border: 0; background: none; cursor: pointer; }
 .settings-legal a { color: var(--text-muted); text-decoration: none; }
 .settings-legal a:hover { color: var(--text); text-decoration: underline; }
 @media (max-width: 767px) { .settings-legal { display: none; } }
+
+/* ── Motion ───────────────────────────────────────────────────────────────── */
+/* Subtle, Apple-like: 120–150 ms, opacity and transform only. */
+@keyframes st-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes st-pop  { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: none; } }
+@keyframes st-fade { from { opacity: 0; } to { opacity: 1; } }
+
+/* New messages float up; switching screens fades the content in */
+.anim-rise { animation: st-rise var(--dur) var(--ease-out) both; }
+.anim-fade { animation: st-fade var(--dur) var(--ease-out) both; }
+
+/* Menus, picker, dialogs, toasts */
+.menu[data-popover], .picker[data-popover] { animation: st-pop var(--dur-fast) var(--ease-out) both; transform-origin: top left; }
+.modal-backdrop { animation: st-fade var(--dur) var(--ease-out) both; }
+.modal-backdrop > .modal, .lightbox img { animation: st-pop var(--dur) var(--ease-out) both; }
+.toast { animation: st-rise var(--dur) var(--ease-out) both; }
+.term { animation: st-fade var(--dur) var(--ease-out) both; }
+
+/* Cards lift a little on hover */
+.model-card, .add-card, .add-btn, .lp-card { transition: border-color var(--dur) var(--ease-out), transform var(--dur) var(--ease-out); }
+.model-card:hover, .add-card:hover, .add-btn:hover, .lp-card:hover { transform: translateY(-2px); }
+
+/* Buttons give way slightly while pressed */
+.btn, .icon-btn, .send-btn, .pill, .chip, .amount-pill, .checkout-btn, .new-chat, .model-btn, .pay-tile, .theme-tile {
+  transition-property: background-color, color, border-color, opacity, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease-out);
+}
+.btn:active:not(:disabled), .icon-btn:active:not(:disabled), .send-btn:active:not(:disabled), .pill:active, .chip:active,
+.amount-pill:active:not(:disabled), .checkout-btn:active, .new-chat:active, .model-btn:active, .pay-tile:active, .theme-tile:active {
+  transform: scale(.97);
+}
+
+/* Anyone who asked their system for less motion gets none */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  .model-card:hover, .add-card:hover, .add-btn:hover, .lp-card:hover { transform: none; }
+}

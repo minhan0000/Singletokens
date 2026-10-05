@@ -77,7 +77,7 @@ async function render() {
   } else if (route === 'gpt') {
     await renderGptEditor(main, { id, go, openDrawer, onChatsChanged: refreshChats });
   } else {
-    // Screens built in later steps.
+    // Unknown address: show a short note.
     main.innerHTML = `<div class="topbar"><button class="icon-btn only-phone" data-drawer aria-label="Open menu"><i data-lucide="menu"></i></button></div>
       <div class="empty-chat"><p class="muted">This screen is built in a later step.</p></div>`;
     $('[data-drawer]', main).addEventListener('click', openDrawer);
@@ -89,10 +89,18 @@ async function render() {
 $('.drawer-backdrop').addEventListener('click', closeDrawer);
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && app.classList.contains('drawer-open')) closeDrawer(); });
 
-window.addEventListener('hashchange', render);
+// Switching screens fades the new content in.
+async function renderWithFade() {
+  await render();
+  main.classList.remove('anim-fade');
+  void main.offsetWidth;  // restart the animation
+  main.classList.add('anim-fade');
+}
+
+window.addEventListener('hashchange', renderWithFade);
 
 (async () => {
   await api.init();
   [state.user, state.chats] = await Promise.all([api.getUser(), api.getChats()]);
-  await render();
+  await renderWithFade();
 })();

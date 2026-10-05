@@ -128,6 +128,15 @@ const $$ = s => [...document.querySelectorAll(s)];
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 window.addEventListener('load', () => window.lucide?.createIcons());
 
+// Sections fade in as they scroll into view (skipped when the system asks for less motion).
+if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  document.documentElement.classList.add('js-reveal');
+  const io = new IntersectionObserver(entries => entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); }
+  }), { threshold: 0.12 });
+  $$('.lp-section .lp-wrap').forEach(s => io.observe(s));
+}
+
 // Logged in? Show "Open app" instead of Log in / Sign up.
 (async () => {
   const token = localStorage.getItem('st_token');
