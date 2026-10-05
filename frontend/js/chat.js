@@ -3,6 +3,7 @@
 import { el, esc, icons, $, $$, fmtInt, fmtUsd, fmtMult, renderMarkdown, toast, copyText, openPopover } from './ui.js';
 import { describeTarget } from './sidebar.js';
 import * as api from './api.js';
+import { openCustom } from './custom.js';
 
 const DEFAULT_TARGET = { kind: 'model', id: 'anthropic/claude-sonnet-4.5' };
 
@@ -134,7 +135,7 @@ export async function renderChat(main, ctx) {
   });
   sendBtn.addEventListener('click', send);
   attach.addEventListener('click', () => toast('Attachments get connected with the backend.'));
-  $('[data-custom]', main).addEventListener('click', () => toast('The custom request page comes in step 5.'));
+  $('[data-custom]', main).addEventListener('click', () => openCustom({ chat, target, draft: input.value, onCreditChanged }));
 
   async function send() {
     if (!canSend()) return;

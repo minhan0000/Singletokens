@@ -159,3 +159,15 @@ export function modal({ title, body, actions = [], width }) {
   (box.querySelector('input, textarea, button.btn-primary') || box).focus();
   return { close, root: back };
 }
+
+// ── JSON with syntax colors ─────────────────────────────────────────────────
+
+// Returns HTML: keys, strings, numbers and true/false/null wrapped in colored spans.
+export function highlightJson(value) {
+  const text = typeof value === 'string' ? value : JSON.stringify(value, null, 2);
+  return esc(text).replace(/(&quot;(?:\\u[a-fA-F0-9]{4}|\\[^u]|(?!&quot;).)*?&quot;)(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?/g, (m, str, colon, lit) => {
+    if (str) return colon ? `<span class="j-key">${str}</span>:` : `<span class="j-str">${str}</span>`;
+    if (lit) return `<span class="j-lit">${m}</span>`;
+    return `<span class="j-num">${m}</span>`;
+  });
+}

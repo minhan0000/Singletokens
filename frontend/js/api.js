@@ -169,3 +169,28 @@ export async function sendMessage(chatId, content) {
   user.creditTokens = Math.max(0, user.creditTokens - reply.cost);
   return { reply, creditTokens: user.creditTokens };
 }
+
+// ── Custom request ({ }) ────────────────────────────────────────────────────
+
+// Sends the exact request body the user built. Returns the provider's raw reply plus timing.
+export async function sendCustom(body) {
+  const started = performance.now();
+  const m = getModel(body.model);
+  await wait(1200 + Math.random() * 1200);
+  const promptTokens = body.messages.reduce((n, msg) => n + roughTokens(msg.content), 0) + 4 * body.messages.length;
+  const content = 'Here are **3 features** for v2:\n\n1. Saved presets for custom requests\n2. Shared GPTs\n3. A usage dashboard\n\n_(Fake reply: this screen runs on fake data.)_';
+  const completionTokens = roughTokens(content);
+  const cost = promptTokens * m.promptUsd + completionTokens * m.completionUsd;
+  const raw = {
+    id: 'gen-' + Math.random().toString(36).slice(2, 14),
+    provider: m.provider,
+    model: body.model,
+    object: 'chat.completion',
+    created: Math.floor(Date.now() / 1000),
+    choices: [{ index: 0, finish_reason: 'stop', message: { role: 'assistant', content } }],
+    usage: { prompt_tokens: promptTokens, completion_tokens: completionTokens, total_tokens: promptTokens + completionTokens, cost: Number(cost.toFixed(8)) },
+  };
+  const tokens = Math.ceil(cost * TOKENS_PER_USD);
+  user.creditTokens = Math.max(0, user.creditTokens - tokens);
+  return { status: 200, statusText: 'OK', raw, cost: tokens, ms: performance.now() - started, creditTokens: user.creditTokens };
+}
