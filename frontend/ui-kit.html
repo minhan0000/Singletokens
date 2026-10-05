@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UI Kit · SingleTokens</title>
+<link rel="icon" href="favicon.png">
+<link rel="stylesheet" href="css/theme.css">
+<link rel="stylesheet" href="css/app.css">
+<script src="https://unpkg.com/lucide@1.52.0/dist/umd/lucide.min.js"></script>
+<style>
+  /* Kit scaffolding only — not part of the app */
+  body { background: var(--bg-sidebar); }
+  .kit { display: grid; grid-template-columns: 1fr 1fr; min-height: 100vh; }
+  .kit-col { padding: var(--sp-32); background: var(--bg-main); color: var(--text); min-width: 0; }
+  .kit-col + .kit-col { border-left: 1px solid var(--border); }
+  .kit-theme { margin: 0 0 var(--sp-32); font-size: var(--fs-32); font-weight: 700; color: var(--text-strong); }
+  .kit-sec { margin-bottom: var(--sp-48); }
+  .kit-sec > h2 { margin: 0 0 var(--sp-16); padding-bottom: var(--sp-8); border-bottom: 1px solid var(--border); font-size: var(--fs-18); font-weight: 600; color: var(--text-strong); }
+  .kit-sub { margin: var(--sp-20) 0 var(--sp-8); }
+  .kit-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-12); }
+  .kit-row.top { align-items: flex-start; }
+  .kit-stack { display: flex; flex-direction: column; gap: var(--sp-12); }
+  .kit-swatch { width: 132px; }
+  .kit-swatch .chip-color { height: 48px; border-radius: var(--r-8); border: 1px solid var(--border); }
+  .kit-swatch .n { margin-top: var(--sp-4); font-size: var(--fs-12); font-weight: 600; color: var(--text-strong); }
+  .kit-swatch .v { font-family: var(--mono); font-size: var(--fs-11); color: var(--text-muted); }
+  .kit-space { display: flex; align-items: flex-end; gap: var(--sp-12); }
+  .kit-space div { background: var(--accent); }
+  .kit-radius { width: 56px; height: 56px; background: var(--bg-card); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: var(--fs-12); color: var(--text-muted); }
+  .kit-stage { padding: var(--sp-32); border-radius: var(--r-12); background: var(--backdrop); }
+  .kit-stage .modal, .kit-stage .settings { margin: 0 auto; }
+  .kit-shell { height: 640px; border: 1px solid var(--border); border-radius: var(--r-12); overflow: hidden; }
+  .kit-shell .app { height: 100%; }
+  .kit-term { position: relative; inset: auto; z-index: auto; height: 560px; border: 1px solid var(--border); border-radius: var(--r-12); overflow: hidden; }
+  .kit-split { display: grid; grid-template-rows: 1fr 1fr; min-height: 0; }
+  .kit-split > .term-pane { border-right: 0; }
+  .kit-split > .term-pane + .term-pane { border-top: 1px solid var(--border); }
+  .kit-login .login-page { min-height: 0; padding: var(--sp-32); border-radius: var(--r-12); }
+  .kit-note { font-size: var(--fs-12); color: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<div class="kit" id="kit"></div>
+
+<template id="kit-content">
+
+  <!-- ── Tokens ───────────────────────────────────────────── -->
+  <section class="kit-sec">
+    <h2>Colors</h2>
+    <div class="kit-row top" data-swatches="--bg-sidebar --bg-main --bg-input --bg-card --bg-hover --bg-active --border --text --text-strong --text-muted --accent --accent-hover --orange-text --green-text --danger --danger-text"></div>
+    <div class="section-label kit-sub">Provider icons</div>
+    <div class="kit-row">
+      <span class="prov-sq s32 p-anthropic">A</span>
+      <span class="prov-sq s32 p-openai">O</span>
+      <span class="prov-sq s32 p-google">G</span>
+      <span class="prov-sq s32 p-meta">M</span>
+      <span class="prov-sq s32 p-mistral">M</span>
+      <span class="prov-sq s32 p-deepseek">D</span>
+      <span class="prov-sq s32">Q</span>
+    </div>
+  </section>
+
+  <section class="kit-sec">
+    <h2>Type</h2>
+    <div class="kit-stack">
+      <div style="font-size:var(--fs-72);font-weight:800;color:var(--text-strong);line-height:1">72</div>
+      <div style="font-size:var(--fs-32);font-weight:700;color:var(--text-strong)">32 Page title</div>
+      <div style="font-size:var(--fs-24);font-weight:600;color:var(--text-strong)">24 What do you want to ask?</div>
+      <div style="font-size:var(--fs-18);font-weight:600;color:var(--text-strong)">18 Modal title</div>
+      <div style="font-size:var(--fs-15)">15 Chat message text, line-height 1.6</div>
+      <div style="font-size:var(--fs-14)">14 UI default</div>
+      <div style="font-size:var(--fs-13)">13 Secondary text</div>
+      <div style="font-size:var(--fs-12)" class="muted">12 Meta text</div>
+      <div class="section-label">11 Section label</div>
+      <div style="font-family:var(--mono);font-size:var(--fs-13)">JetBrains Mono 13 — { "model": "claude-sonnet-4.5" }</div>
+    </div>
+  </section>
+
+  <section class="kit-sec">
+    <h2>Spacing &amp; radius</h2>
+    <div class="kit-space">
+      <div style="width:4px;height:4px"></div><div style="width:8px;height:8px"></div><div style="width:12px;height:12px"></div><div style="width:16px;height:16px"></div><div style="width:20px;height:20px"></div><div style="width:24px;height:24px"></div><div style="width:32px;height:32px"></div><div style="width:48px;height:48px"></div>
+    </div>
+    <div class="kit-row" style="margin-top:var(--sp-16)">
+      <div class="kit-radius" style="border-radius:var(--r-6)">6</div>
+      <div class="kit-radius" style="border-radius:var(--r-8)">8</div>
+      <div class="kit-radius" style="border-radius:var(--r-12)">12</div>
+      <div class="kit-radius" style="border-radius:var(--r-16)">16</div>
+      <div class="kit-radius" style="border-radius:var(--r-pill)">999</div>
+    </div>
+  </section>
+
+  <!-- ── Controls ─────────────────────────────────────────── -->
+  <section class="kit-sec">
+    <h2>Buttons</h2>
+    <div class="kit-row">
+      <button class="btn btn-primary"><i data-lucide="plus"></i>Primary</button>
+      <button class="btn btn-secondary">Secondary</button>
+      <button class="btn btn-ghost">Ghost</button>
+      <button class="btn btn-danger"><i data-lucide="trash-2"></i>Danger</button>
+      <button class="btn btn-primary" disabled>Disabled</button>
+    </div>
+    <div class="kit-row" style="margin-top:var(--sp-12)">
+      <button class="btn btn-primary btn-lg">Large primary</button>
+      <button class="icon-btn" aria-label="Copy"><i data-lucide="copy"></i></button>
+      <button class="icon-btn round" aria-label="Close"><i data-lucide="x"></i></button>
+      <button class="icon-btn" aria-label="Settings" disabled><i data-lucide="settings"></i></button>
+      <button class="send-btn" aria-label="Send"><i data-lucide="arrow-up"></i></button>
+      <button class="send-btn" aria-label="Send" disabled><i data-lucide="arrow-up"></i></button>
+    </div>
+  </section>
+
+  <section class="kit-sec">
+    <h2>Inputs</h2>
+    <div class="kit-stack" style="max-width:360px">
+      <div><label class="field-label">Normal</label><input class="input" placeholder="Search models"></div>
+      <div><label class="field-label">Focused</label><input class="input is-focus" value="Claude Sonnet"></div>
+      <div><label class="field-label">Error</label><input class="input is-error" value="short"><div class="field-error">Password must be at least 12 characters.</div></div>
+      <div><label class="field-label">Temperature</label>
+        <div class="slider-row"><input type="range" class="slider" min="0" max="2" step="0.1" value="0.7" aria-label="Temperature"><input class="input" value="0.7" aria-label="Temperature value"></div>
+      </div>
+      <div><label class="field-label">Stop sequences</label>
+        <div class="tag-input"><span class="tag">\n\n<button aria-label="Remove"><i data-lucide="x"></i></button></span><span class="tag">END<button aria-label="Remove"><i data-lucide="x"></i></button></span><input placeholder="Add…" aria-label="Add stop sequence"></div>
+      </div>
+      <div><label class="field-label">Memory (JSON)</label>
+        <div class="code-editor is-error"><div class="code-gutter">1<br>2<br>3</div><textarea spellcheck="false" aria-label="Memory">{
+  "name": "Edo",
+  "city": "Stuttgart"
+</textarea></div>
+        <div class="field-error">Invalid JSON on line 3: expected "}"</div>
+        <div class="field-note">Adds ~1,840 SingleTokens to every message</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="kit-sec">
+    <h2>Labels, pills, tooltip, toasts</h2>
+    <div class="kit-row">
+      <span class="section-label">Explore</span>
+      <span class="num-pill">1,000,000</span>
+      <span class="model-pill"><span class="prov-dot p-anthropic"></span>Claude Sonnet 4.5</span>
+      <button class="pill"><span class="prov-dot p-openai"></span>GPT-5</button>
+      <span class="chip">All</span><span class="chip is-active">Anthropic</span>
+      <span class="tooltip">Minimum €5</span>
+    </div>
+    <div class="kit-row" style="margin-top:var(--sp-16)">
+      <div class="toast"><i data-lucide="circle-check"></i>Chat renamed</div>
+      <div class="toast is-error">Server unreachable. Try again.</div>
+    </div>
+  </section>
+
+  <section class="kit-sec">
+    <h2>Menus</h2>
+    <div class="kit-row top">
+      <div class="menu">
+        <button class="menu-item"><i data-lucide="settings"></i>Settings</button>
+        <button class="menu-item"><i data-lucide="log-out"></i>Log out</button>
+      </div>
+      <div class="menu">
+        <button class="menu-item"><i data-lucide="pencil"></i>Rename</button>
+        <button class="menu-item is-danger"><i data-lucide="trash-2"></i>Delete</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="kit-sec">
+    <h2>Modal</h2>
+    <div class="kit-stage">
+      <div class="modal" role="dialog" aria-label="Rename chat">
+        <h3 class="modal-title">Rename chat</h3>
+        <button class="icon-btn modal-close" aria-label="Close"><i data-lucide="x"></i></button>
+        <input class="input is-focus" value="Product roadmap discussion" aria-label="Chat name">
+        <div class="modal-actions"><button class="btn btn-ghost">Cancel</button><button class="btn btn-primary">Save</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Shell + chat ─────────────────────────────────────── -->
+  <section class="kit-sec">
+    <h2>App shell: sidebar + chat</h2>
+    <div class="kit-shell">
+      <div class="app">
+        <aside class="sidebar">
+          <div class="sidebar-logo">SingleTokens</div>
+          <button class="new-chat"><i data-lucide="plus"></i>New chat</button>
+          <hr class="divider">
+          <div class="sidebar-scroll">
+            <div class="section-label">Explore</div>
+            <a class="nav-item" href="#"><i data-lucide="layout-grid"></i><span class="label">Your models</span></a>
+            <a class="nav-item" href="#"><i data-lucide="bot"></i><span class="label">Your GPTs</span></a>
+            <hr class="divider">
+            <a class="nav-item" href="#"><i data-lucide="coins"></i><span class="label">Purchase tokens</span></a>
+            <hr class="divider">
+            <div class="section-label">Recent</div>
+            <div class="section-label"><span class="prov-dot p-anthropic"></span>Claude Sonnet 4.5</div>
+            <a class="nav-item is-active" href="#"><span class="label">Product roadmap discussion</span><button class="icon-btn item-menu" aria-label="Chat options"><i data-lucide="ellipsis"></i></button></a>
+            <a class="nav-item" href="#"><span class="label">Code review feedback for the payment module</span><button class="icon-btn item-menu" aria-label="Chat options"><i data-lucide="ellipsis"></i></button></a>
+            <div class="section-label"><span class="prov-dot p-openai"></span>Study Buddy</div>
+            <a class="nav-item" href="#"><span class="label">French verbs quiz</span><button class="icon-btn item-menu" aria-label="Chat options"><i data-lucide="ellipsis"></i></button></a>
+          </div>
+          <div class="sidebar-footer">
+            <button class="account-btn" aria-label="Account menu">
+              <span class="avatar">E</span>
+              <span class="account-text"><div class="account-name">Edo</div><div class="account-sub">250K ST</div></span>
+              <i data-lucide="chevron-up" class="muted"></i>
+            </button>
+          </div>
+        </aside>
+        <main class="main">
+          <div class="topbar">
+            <button class="icon-btn only-phone" aria-label="Open menu"><i data-lucide="menu"></i></button>
+            <button class="model-btn"><span class="prov-sq p-anthropic">A</span>Claude Sonnet 4.5<i data-lucide="chevron-down" class="chev"></i></button>
+          </div>
+          <div class="chat-scroll">
+            <div class="messages">
+              <div class="msg-user">Can you show me how to read a JSON file in Node?</div>
+              <div class="msg-ai-wrap">
+                <div class="msg-ai md">
+                  <p>Sure. Use <code>fs/promises</code> and <strong>JSON.parse</strong>:</p>
+                  <div class="code-block">
+                    <div class="code-head">js<button class="icon-btn sm" aria-label="Copy code"><i data-lucide="copy"></i></button></div>
+                    <pre><code>import { readFile } from 'fs/promises';
+const data = JSON.parse(await readFile('config.json', 'utf8'));</code></pre>
+                  </div>
+                  <table><thead><tr><th>Method</th><th>Blocking</th></tr></thead><tbody><tr><td><code>readFile</code></td><td>No</td></tr><tr><td><code>readFileSync</code></td><td>Yes</td></tr></tbody></table>
+                </div>
+                <div class="msg-meta"><span>Generated by <b>Code Helper</b> using <b>Claude Sonnet 4.5</b> · It cost you <b>1,214 SingleTokens</b> (~$0.01)</span>
+                  <span class="msg-actions"><button class="icon-btn sm" aria-label="Copy"><i data-lucide="copy"></i></button><button class="icon-btn sm" aria-label="Retry"><i data-lucide="rotate-ccw"></i></button></span>
+                </div>
+              </div>
+              <div class="msg-user">Thanks!</div>
+              <div class="msg-ai-wrap"><div class="typing" aria-label="Typing"><span></span><span></span><span></span></div></div>
+            </div>
+          </div>
+          <div class="composer-wrap">
+            <div class="composer">
+              <button class="icon-btn round" aria-label="Attach file"><i data-lucide="paperclip"></i></button>
+              <textarea rows="1" placeholder="Message SingleTokens" aria-label="Message"></textarea>
+              <button class="icon-btn round" aria-label="Custom request"><i data-lucide="braces"></i></button>
+              <button class="send-btn" aria-label="Send" disabled><i data-lucide="arrow-up"></i></button>
+            </div>
+            <div class="composer-hint">This message is 1,520 SingleTokens long. Estimated output: ~4,500 SingleTokens</div>
+          </div>
+        </main>
+      </div>
+    </div>
+    <div class="kit-note" style="margin-top:var(--sp-8)">Hover a chat in RECENT for its ⋯ menu. Hover an AI message for copy/retry.</div>
+  </section>
+
+  <section class="kit-sec">
+    <h2>Empty chat + composer focused</h2>
+    <div style="height:260px;border:1px solid var(--border);border-radius:var(--r-12);display:flex;flex-direction:column">
+      <div class="empty-chat">
+        <h1>What do you want to ask?</h1>
+        <div class="pills">
+          <button class="pill"><span class="prov-dot p-anthropic"></span>Claude Sonnet 4.5</button>
+          <button class="pill"><span class="prov-dot p-openai"></span>Study Buddy</button>
+          <button class="pill"><span class="prov-dot p-meta"></span>Llama 3.3 70B</button>
+        </div>
+      </div>
+      <div class="composer-wrap">
+        <div class="composer is-focus">
+          <button class="icon-btn round" aria-label="Attach file"><i data-lucide="paperclip"></i></button>
+          <textarea rows="1" aria-label="Message">What's the capital of Australia?</textarea>
+          <button class="icon-btn round" aria-label="Custom request"><i data-lucide="braces"></i></button>
+          <button class="send-btn" aria-label="Send"><i data-lucide="arrow-up"></i></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="kit-sec">
+    <h2>Model picker</h2>
+    <div class="picker" role="listbox" aria-label="Pick a model">
+      <input class="input" placeholder="Search models and GPTs" aria-label="Search">
+      <div class="picker-list">
+        <div class="section-label">Recent</div>
+        <button class="picker-row is-selected"><span class="prov-sq s24 p-anthropic">A</span><span class="name">Claude Sonnet 4.5</span><span class="mult">1.00x</span></button>
+        <button class="picker-row"><span class="prov-sq s24 p-openai">O</span><span class="name">GPT-5</span><span class="mult">0.62x</span></button>
+        <button class="picker-row"><span class="prov-sq s24 p-meta">M</span><span class="name">Llama 3.3 70B</span><span class="mult">0.04x</span></button>
+        <div class="section-label">Your GPTs</div>
+        <button class="picker-row"><span class="prov-sq s24">S</span><span class="name">Study Buddy</span><span class="mult">0.62x</span></button>
+        <div class="section-label">All models</div>
+        <button class="picker-row"><span class="prov-sq s24 p-google">G</span><span class="name">Gemini 2.5 Pro</span><span class="mult">0.71x</span></button>
+        <button class="picker-row"><span class="prov-sq s24 p-deepseek">D</span><span class="name">DeepSeek V3</span><span class="mult">0.07x</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Cards ────────────────────────────────────────────── -->
+  <section class="kit-sec">
+    <h2>Your Models cards</h2>
+    <div class="card-grid">
+      <div class="balance-card">
+        <div class="card-head"><span class="balance-icon">ST</span><div><div class="card-name">SingleTokens Balance</div><div class="card-provider">Universal tokens for all models</div></div></div>
+        <div class="cost-box"><div class="cost-label">Available SingleTokens</div><div class="cost-value">250K</div></div>
+      </div>
+      <div class="model-card">
+        <button class="icon-btn sm card-menu" aria-label="Model options"><i data-lucide="ellipsis"></i></button>
+        <div class="card-head"><span class="prov-sq s48 p-anthropic">A</span><div><div class="card-name">Claude Sonnet 4.5</div><div class="card-provider">Anthropic</div></div></div>
+        <div class="cost-box"><div class="cost-label">Token cost</div><div class="cost-value">1.00x</div></div>
+      </div>
+      <div class="model-card">
+        <button class="icon-btn sm card-menu" aria-label="Model options"><i data-lucide="ellipsis"></i></button>
+        <div class="card-head"><span class="prov-sq s48 p-openai">O</span><div><div class="card-name">GPT-5</div><div class="card-provider">OpenAI</div></div></div>
+        <div class="cost-box"><div class="cost-label">Token cost</div><div class="cost-value">0.62x</div></div>
+      </div>
+    </div>
+    <button class="add-btn"><i data-lucide="plus"></i>Add Model</button>
+  </section>
+
+  <section class="kit-sec">
+    <h2>Catalog modal</h2>
+    <div class="kit-stage">
+      <div class="modal" style="max-width:640px" role="dialog" aria-label="Add a model">
+        <h3 class="modal-title">Add a model</h3>
+        <button class="icon-btn modal-close" aria-label="Close"><i data-lucide="x"></i></button>
+        <input class="input" placeholder="Search 300+ models" aria-label="Search">
+        <div class="chips"><button class="chip is-active">All</button><button class="chip"><span class="prov-dot p-anthropic"></span>Anthropic</button><button class="chip"><span class="prov-dot p-openai"></span>OpenAI</button><button class="chip"><span class="prov-dot p-google"></span>Google</button><button class="chip"><span class="prov-dot p-meta"></span>Meta</button></div>
+        <div class="catalog-row"><span class="prov-sq s32 p-anthropic">A</span><div class="info"><div class="name">Claude Sonnet 4.5</div><div class="sub">Anthropic · 1M context</div></div><span class="mult">1.00x</span><button class="btn btn-added"><i data-lucide="check"></i>Added</button></div>
+        <div class="catalog-row"><span class="prov-sq s32 p-anthropic">A</span><div class="info"><div class="name">Claude Haiku 4.5</div><div class="sub">Anthropic · 200K context</div></div><span class="mult">0.33x</span><button class="btn btn-primary">Add</button></div>
+        <div class="catalog-row"><span class="prov-sq s32 p-mistral">M</span><div class="info"><div class="name">Mistral Large</div><div class="sub">Mistral · 128K context</div></div><span class="mult">0.44x</span><button class="btn btn-primary">Add</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="kit-sec">
+    <h2>Your GPTs cards</h2>
+    <div class="card-grid">
+      <button class="add-card"><i data-lucide="plus"></i>New GPT</button>
+      <div class="model-card gpt-card">
+        <button class="icon-btn sm card-menu" aria-label="GPT options"><i data-lucide="ellipsis"></i></button>
+        <div class="card-head"><span class="gpt-icon">📚</span><div class="card-name">Study Buddy</div></div>
+        <span class="model-pill"><span class="prov-dot p-openai"></span>GPT-5</span>
+        <p class="gpt-desc">Quizzes me on French verbs and explains mistakes in English, short and friendly.</p>
+      </div>
+      <div class="model-card gpt-card">
+        <button class="icon-btn sm card-menu" aria-label="GPT options"><i data-lucide="ellipsis"></i></button>
+        <div class="card-head"><span class="gpt-icon">C</span><div class="card-name">Code Helper</div></div>
+        <span class="model-pill"><span class="prov-dot p-anthropic"></span>Claude Sonnet 4.5</span>
+        <p class="gpt-desc">Reviews JavaScript backend code, points out bugs first and suggests the smallest fix. Never rewrites whole files unless asked.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Custom request ───────────────────────────────────── -->
+  <section class="kit-sec">
+    <h2>Custom request <span class="kit-note">({ })</span></h2>
+    <div class="term kit-term">
+      <div class="term-bar">
+        <div class="term-path">~/chats/Product roadmap discussion › <b>custom_request</b></div>
+        <button class="btn btn-primary">Send ⌘↵</button>
+        <button class="icon-btn" aria-label="Close"><i data-lucide="x"></i></button>
+      </div>
+      <div class="term-body">
+        <div class="term-pane">
+          <div class="pane-head">// params</div>
+          <div class="param-row"><span class="key">model</span><input value="anthropic/claude-sonnet-4.5" aria-label="model"></div>
+          <div class="param-row"><span class="key">temperature</span><input value="0.7" aria-label="temperature"></div>
+          <div class="param-row"><span class="key">max_tokens</span><input value="1024" aria-label="max_tokens"></div>
+          <div class="pane-head">// messages</div>
+          <div class="term-msg"><span class="role-tag role-system">[system]</span><div class="term-msg-actions"><button class="term-btn" aria-label="Move up">↑</button><button class="term-btn" aria-label="Move down">↓</button><button class="term-btn" aria-label="Delete">✕</button></div><textarea rows="1" aria-label="system message">You are a product manager.</textarea></div>
+          <div class="term-msg"><span class="role-tag role-user">[user]</span><div class="term-msg-actions"><button class="term-btn" aria-label="Move up">↑</button><button class="term-btn" aria-label="Move down">↓</button><button class="term-btn" aria-label="Delete">✕</button></div><textarea rows="1" aria-label="user message">List 3 features for v2.</textarea></div>
+          <div class="term-msg"><span class="role-tag role-assistant">[assistant]</span><div class="term-msg-actions"><button class="term-btn" aria-label="Move up">↑</button><button class="term-btn" aria-label="Move down">↓</button><button class="term-btn" aria-label="Delete">✕</button></div><textarea rows="2" aria-label="assistant message">1. Saved presets
+2. Shared GPTs</textarea></div>
+          <div class="term-add"><button class="term-btn">+ add message</button><select class="term-btn" aria-label="Role"><option>user</option><option>assistant</option><option>system</option></select></div>
+        </div>
+        <div class="term-pane kit-split">
+          <div class="term-pane">
+            <div class="pane-head">// request</div>
+            <div class="json-view" data-json></div>
+          </div>
+          <div class="term-pane">
+            <div class="pane-head">// response</div>
+            <div class="resp-tabs"><button class="resp-tab is-active">rendered</button><button class="resp-tab">raw</button></div>
+            <div class="resp-stats"><span><span class="ok">200 OK</span> · 71,314 ST · $0.71 · 2.4s</span><button class="term-btn">Copy as curl</button></div>
+            <div style="padding:0 var(--sp-16)">3. Usage dashboard<span class="cursor">▍</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Purchase ─────────────────────────────────────────── -->
+  <section class="kit-sec">
+    <h2>Purchase pieces</h2>
+    <div class="purchase-grid">
+      <div class="p-card">
+        <i data-lucide="coins" class="watermark" style="left:-24px;bottom:-24px"></i>
+        <div class="p-amount">1,000,000</div>
+        <div class="p-amount-label">SingleTokens</div>
+        <div class="p-stepper">
+          <div class="p-col"><button class="amount-pill" disabled data-tooltip="Minimum €5">−100K</button><button class="amount-pill" disabled data-tooltip="Minimum €5">−500K</button><button class="amount-pill">−1M</button></div>
+          <div class="coins" data-coins="12,10,9"></div>
+          <div class="p-col"><button class="amount-pill plus">+100K</button><button class="amount-pill plus">+500K</button><button class="amount-pill plus">+1M</button></div>
+        </div>
+      </div>
+      <div class="p-card">
+        <i data-lucide="shopping-cart" class="watermark" style="right:-24px;bottom:-24px"></i>
+        <div class="summary">
+          <div class="summary-tokens"><i data-lucide="coins"></i><div><div class="summary-big">1,000,000</div><div class="summary-small">SingleTokens</div></div></div>
+          <div><div class="summary-price">€10.00</div><div class="summary-small" style="text-align:right">Total price</div></div>
+        </div>
+        <button class="white-pill">Custom amount</button>
+        <div class="pay-tiles">
+          <button class="pay-tile is-selected"><span class="check-badge"><i data-lucide="check"></i></span><i data-lucide="credit-card"></i>Card</button>
+          <button class="pay-tile"><span class="check-badge"><i data-lucide="check"></i></span><i data-lucide="wallet"></i>PayPal</button>
+        </div>
+        <button class="checkout-btn"><i data-lucide="shopping-cart"></i>Checkout</button>
+      </div>
+    </div>
+    <div class="bottom-bar">With <span class="num-pill">1,000,000</span> SingleTokens you can send about <span class="num-pill">820</span> messages with <span class="num-pill">Claude Sonnet 4.5</span>.</div>
+    <div class="section-label kit-sub">Coin stacks: under €10 · under €50 · €50+</div>
+    <div class="kit-row" style="gap:var(--sp-48)"><div class="coins" data-coins="5"></div><div class="coins" data-coins="8,6"></div><div class="coins" data-coins="12,10,9"></div></div>
+  </section>
+
+  <!-- ── Settings + login ─────────────────────────────────── -->
+  <section class="kit-sec">
+    <h2>Settings modal</h2>
+    <div class="kit-stage">
+      <div class="modal settings" role="dialog" aria-label="Settings">
+        <nav class="settings-nav">
+          <div class="section-label">User settings</div>
+          <a class="nav-item" href="#"><span class="label">Appearance</span></a>
+          <a class="nav-item is-active" href="#"><span class="label">Account</span></a>
+        </nav>
+        <div class="settings-content">
+          <button class="icon-btn modal-close" aria-label="Close"><i data-lucide="x"></i></button>
+          <h2>Appearance</h2>
+          <div class="theme-tiles">
+            <button class="theme-tile is-selected"><div class="theme-preview tp-dark"><div class="tp-side"></div><div class="tp-main"><div class="tp-bubble me"></div><div class="tp-bubble ai"></div><div class="tp-input"></div></div></div>Dark</button>
+            <button class="theme-tile"><div class="theme-preview tp-white"><div class="tp-side"></div><div class="tp-main"><div class="tp-bubble me"></div><div class="tp-bubble ai"></div><div class="tp-input"></div></div></div>White</button>
+          </div>
+          <h2 style="margin-top:var(--sp-32)">Account</h2>
+          <div class="acct-row"><div class="info"><div class="label">Name</div><div class="value">Edo</div></div><button class="btn btn-secondary">Edit</button></div>
+          <div class="acct-row"><div class="info"><div class="label">Email</div><div class="value">edo@example.com</div></div><button class="btn btn-secondary">Edit</button></div>
+          <div class="acct-row"><div class="info"><div class="label">Password</div><div class="value">••••••••••••</div></div><button class="btn btn-secondary">Edit</button></div>
+          <div class="danger-zone"><div class="info"><div class="title">Delete account</div><div class="sub">Deletes your chats, GPTs and connection. This can't be undone.</div></div><button class="btn btn-danger">Delete account</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="kit-sec kit-login">
+    <h2>Login</h2>
+    <div class="login-page">
+      <div class="login-card">
+        <div class="sidebar-logo">SingleTokens</div>
+        <div class="tabs" role="tablist"><button class="tab is-active" role="tab">Log in</button><button class="tab" role="tab">Sign up</button></div>
+        <div class="form-error">Wrong email or password.</div>
+        <div class="field"><label class="field-label">Email</label><input class="input" value="edo@example.com"></div>
+        <div class="field"><label class="field-label">Password</label><input class="input is-error" type="password" value="password"></div>
+        <button class="btn btn-primary btn-lg btn-block" style="margin-top:var(--sp-24)">Log in</button>
+      </div>
+    </div>
+  </section>
+</template>
+
+<script>
+// Two columns, same content: dark and white.
+const kit = document.getElementById('kit');
+const tpl = document.getElementById('kit-content');
+for (const [theme, label] of [['dark', 'Dark'], ['white', 'White']]) {
+  const col = document.createElement('div');
+  col.className = 'kit-col';
+  col.dataset.theme = theme;
+  col.innerHTML = `<h1 class="kit-theme">${label}</h1>`;
+  col.appendChild(tpl.content.cloneNode(true));
+  kit.appendChild(col);
+}
+
+// Color swatches read their real values from the theme.
+document.querySelectorAll('[data-swatches]').forEach(row => {
+  const style = getComputedStyle(row);
+  row.innerHTML = row.dataset.swatches.split(' ').map(v =>
+    `<div class="kit-swatch"><div class="chip-color" style="background:var(${v})"></div><div class="n">${v}</div><div class="v">${style.getPropertyValue(v).trim()}</div></div>`
+  ).join('');
+});
+
+// Coin stacks: one SVG per stack, height grows with the coin count.
+function coinStack(count) {
+  const w = 60, rx = 26, ry = 9, t = 8;
+  const h = count * t + ry * 2 + 2;
+  let s = '';
+  for (let i = 0; i < count; i++) {
+    const y = h - ry - 1 - (i + 1) * t;
+    s += `<path d="M${w/2-rx},${y} v${t} a${rx},${ry} 0 0 0 ${rx*2},0 v${-t}" fill="#4752c4" stroke="#3a43a8" stroke-width="1"/>`;
+    s += `<ellipse cx="${w/2}" cy="${y}" rx="${rx}" ry="${ry}" fill="#5865f2" stroke="#4752c4" stroke-width="1"/>`;
+  }
+  const top = h - ry - 1 - count * t;
+  s += `<ellipse cx="${w/2}" cy="${top}" rx="${rx-6}" ry="${ry-3}" fill="none" stroke="#4752c4" stroke-width="1.5"/>`;
+  s += `<text x="${w/2}" y="${top+3.5}" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="800" fill="#4752c4">ST</text>`;
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true">${s}</svg>`;
+}
+document.querySelectorAll('[data-coins]').forEach(el => {
+  el.innerHTML = el.dataset.coins.split(',').map(n => coinStack(Number(n))).join('');
+});
+
+// JSON preview with line numbers and syntax colors.
+function highlightJson(obj) {
+  const esc = JSON.stringify(obj, null, 2).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return esc.replace(/("(\\u[a-fA-F0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)/g, m => {
+    if (m.startsWith('"')) return m.endsWith(':') ? `<span class="j-key">${m.slice(0, -1)}</span>:` : `<span class="j-str">${m}</span>`;
+    if (/true|false|null/.test(m)) return `<span class="j-lit">${m}</span>`;
+    return `<span class="j-num">${m}</span>`;
+  });
+}
+const sample = {
+  model: 'anthropic/claude-sonnet-4.5',
+  temperature: 0.7,
+  max_tokens: 1024,
+  stream: false,
+  stop: null,
+  messages: [
+    { role: 'system', content: 'You are a product manager.' },
+    { role: 'user', content: 'List 3 features for v2.' },
+  ],
+};
+document.querySelectorAll('[data-json]').forEach(el => {
+  const html = highlightJson(sample);
+  const lines = html.split('\n').length;
+  el.innerHTML = `<div class="json-gutter">${Array.from({ length: lines }, (_, i) => i + 1).join('<br>')}</div><pre class="json-code">${html}</pre>`;
+});
+
+lucide.createIcons();
+</script>
+</body>
+</html>
