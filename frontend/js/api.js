@@ -1,6 +1,8 @@
 // Data layer: every screen gets its data through these functions, which talk to the backend.
 // Models and GPTs are also kept in memory, so screens can look them up instantly (getModel, getGpt).
 
+import { attachmentTokens } from './attachments.js';
+
 const TOKENS_PER_USD = 100000;
 
 // ── Requests ────────────────────────────────────────────────────────────────
@@ -158,10 +160,12 @@ export async function getRecentTargets() {
 // Rough token count: ~4 characters per token.
 export const roughTokens = text => Math.ceil(String(text).length / 4);
 
-// What the next message costs to SEND (the whole history is re-sent) and a rough reply cost.
-export function estimate(modelId, history, draft, systemPrompt = '') {
+// What the next message costs to SEND (the whole history is re-sent, attachments included) and a rough reply cost.
+export function estimate(modelId, history, draft, systemPrompt = '', draftAttachments = []) {
   const m = getModel(modelId);
-  const inTokens = roughTokens(systemPrompt) + history.reduce((n, msg) => n + roughTokens(msg.content), 0) + roughTokens(draft);
+  const inTokens = roughTokens(systemPrompt)
+    + history.reduce((n, msg) => n + roughTokens(msg.content) + attachmentTokens(msg.attachments), 0)
+    + roughTokens(draft) + attachmentTokens(draftAttachments);
   return {
     input: Math.ceil(inTokens * m.promptUsd * TOKENS_PER_USD),
     output: Math.ceil(400 * m.completionUsd * TOKENS_PER_USD),
@@ -172,12 +176,15 @@ export function estimate(modelId, history, draft, systemPrompt = '') {
 
 // The user's message appears right away; the answer is added when the server replies.
 // If sending fails, the message is taken back out and the error is thrown.
-export async function sendMessage(chatId, content) {
+// retry: the server first drops the last question + answer, which this message replaces.
+export async function sendMessage(chatId, content, attachments = [], { retry = false } = {}) {
   const chat = chatCache.get(chatId);
-  const mine = { role: 'user', content };
+  const mine = { role: 'user', content, ...(attachments.length ? { attachments } : {}) };
   chat?.messages.push(mine);
   try {
-    const { reply, creditTokens } = await request(`/api/chats/${chatId}/messages`, { method: 'POST', body: { content } });
+    // On retry the server reuses the saved question, so the files aren't uploaded again.
+    const body = retry ? { retry } : { content, attachments: attachments.map(({ kind, name, dataUrl, width, height, text }) => ({ kind, name, dataUrl, width, height, text })) };
+    const { reply, creditTokens } = await request(`/api/chats/${chatId}/messages`, { method: 'POST', body });
     chat?.messages.push(reply);
     const item = chatList.find(c => c.id === chatId);
     if (item) item.updatedAt = Date.now();
@@ -186,6 +193,16 @@ export async function sendMessage(chatId, content) {
     if (chat) chat.messages.splice(chat.messages.indexOf(mine), 1);
     throw err;
   }
+}
+
+// A message as plain text: text files added as code blocks, images as a short note.
+export function messageText(msg) {
+  let text = msg.content || '';
+  for (const a of msg.attachments || []) {
+    if (a.kind === 'text') { const fence = a.text.includes('```') ? '````' : '```'; text += `\n\n${fence}${a.name}\n${a.text}\n${fence}`; }
+    else text += `\n\n[image: ${a.name}]`;
+  }
+  return text.trim();
 }
 
 // Sends the exact request body the user built. Returns the provider's raw reply plus status, cost and time.

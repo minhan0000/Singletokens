@@ -29,7 +29,8 @@ export async function openCustom({ chat, target, draft, onCreditChanged }) {
 
   const messages = [];
   if (gpt) messages.push({ role: 'system', content: gpt.instructions + (gpt.memory ? '\n\nMemory (JSON):\n' + gpt.memory : '') });
-  for (const m of chat?.messages || []) messages.push({ role: m.role, content: m.content });
+  // Attachments come along as text: text files as code blocks, images as a short note.
+  for (const m of chat?.messages || []) messages.push({ role: m.role, content: api.messageText(m) });
   if (draft?.trim()) messages.push({ role: 'user', content: draft.trim() });
   if (!messages.length) messages.push({ role: 'user', content: '' });
 

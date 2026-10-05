@@ -27,7 +27,10 @@ const app = express();
 // Hosting platforms sit one proxy in front of us; this lets the rate limit see real visitor addresses.
 app.set('trust proxy', 1);
 
-app.use(express.json({ limit: '1mb' }));
+// Messages can carry up to 4 shrunk images; everything else stays small.
+const MESSAGE_ROUTE = /^\/api\/chats\/[^/]+\/messages$/;
+const jsonSmall = express.json({ limit: '1mb' }), jsonLarge = express.json({ limit: '12mb' });
+app.use((req, res, next) => (MESSAGE_ROUTE.test(req.path) ? jsonLarge : jsonSmall)(req, res, next));
 app.use(express.static(path.join(__dirname, '../frontend')));
 
 const authLimit = rateLimit({
@@ -233,6 +236,47 @@ app.delete('/api/chats/:id', auth, wrap(async (req, res) => {
   res.json({ success: true });
 }));
 
+// ── Attachments ──
+const MAX_FILES = 4;
+const MAX_TEXT_BYTES = 100 * 1024;
+const MAX_IMAGE_CHARS = 3 * 1024 * 1024;  // a shrunk image is ~300 KB; this is a generous ceiling
+const IMAGE_URL = /^data:image\/(png|jpeg|webp|gif);base64,[A-Za-z0-9+/=]+$/;
+
+// Checks attachments from the browser. Returns { list } or { error }.
+function cleanAttachments(input, model) {
+  if (input === undefined) return { list: [] };
+  if (!Array.isArray(input) || input.length > MAX_FILES) return { error: `Up to ${MAX_FILES} files per message.` };
+  const list = [];
+  for (const a of input) {
+    const name = String(a?.name || 'file').slice(0, 120);
+    if (a?.kind === 'image') {
+      if (!model.images) return { error: `${model.name} can't read images.` };
+      if (typeof a.dataUrl !== 'string' || a.dataUrl.length > MAX_IMAGE_CHARS || !IMAGE_URL.test(a.dataUrl)) return { error: `${name} isn't a valid image.` };
+      list.push({ kind: 'image', name, dataUrl: a.dataUrl, width: Number(a.width) || null, height: Number(a.height) || null });
+    } else if (a?.kind === 'text') {
+      if (typeof a.text !== 'string' || Buffer.byteLength(a.text) > MAX_TEXT_BYTES) return { error: `${name} is too big. Text files can be up to 100 KB.` };
+      list.push({ kind: 'text', name, text: a.text });
+    } else return { error: 'Only images and text files can be attached.' };
+  }
+  return { list };
+}
+
+// One message in the format models expect: text files go into the text as code blocks,
+// images become image parts — or a short note if this model can't see images.
+function toProviderContent(msg, model) {
+  let text = msg.content || '';
+  const images = [];
+  for (const a of msg.attachments || []) {
+    if (a.kind === 'text') {
+      const fence = a.text.includes('```') ? '````' : '```';
+      text += `\n\n${fence}${a.name}\n${a.text}\n${fence}`;
+    } else if (model.images) images.push({ type: 'image_url', image_url: { url: a.dataUrl } });
+    else text += `\n\n[image: ${a.name}]`;
+  }
+  text = text.trim();
+  return images.length ? [{ type: 'text', text: text || '(see image)' }, ...images] : text;
+}
+
 // The user's OpenRouter key, or a ready-made error response.
 async function userKey(userId, res) {
   const user = await db.users.get(userId);
@@ -271,11 +315,8 @@ const creditTokens = async apiKey => {
 // sends it with the user's own key, and saves both messages with the real cost.
 app.post('/api/chats/:id/messages', auth, chatLimit, wrap(async (req, res) => {
   const content = String(req.body.content || '').trim();
-  if (!content) return res.status(400).json({ error: 'Message missing' });
   const chat = await db.chats.get(req.params.id, req.user.id);
   if (!chat) return res.status(404).json({ error: 'Not found' });
-  const apiKey = await userKey(req.user.id, res);
-  if (!apiKey) return;
 
   let modelId = chat.target.id, gpt = null, settings = {};
   if (chat.target.kind === 'gpt') {
@@ -284,11 +325,29 @@ app.post('/api/chats/:id/messages', auth, chatLimit, wrap(async (req, res) => {
     modelId = gpt.modelId;
     settings = gpt.settings;
   }
+  const model = (await openrouter.getModel(modelId)) || { id: modelId, name: modelId, images: false };
+
+  // Retry: the saved last question is asked again and its old answer is replaced.
+  // Its files come from the database, so a model switch in between can't break it.
+  let history = chat.messages, mine;
+  if (req.body.retry) {
+    const lastUser = history.map(m => m.role).lastIndexOf('user');
+    if (lastUser < 0) return res.status(400).json({ error: 'Nothing to retry' });
+    mine = { ...history[lastUser], at: Date.now() };
+    history = history.slice(0, lastUser);
+  } else {
+    const { list: attachments, error } = cleanAttachments(req.body.attachments, model);
+    if (error) return res.status(400).json({ error });
+    if (!content && !attachments.length) return res.status(400).json({ error: 'Message missing' });
+    mine = { role: 'user', content, ...(attachments.length ? { attachments } : {}), at: Date.now() };
+  }
+
+  const apiKey = await userKey(req.user.id, res);
+  if (!apiKey) return;
 
   const messages = [];
   if (gpt) messages.push({ role: 'system', content: gpt.instructions + (gpt.memory ? '\n\nMemory (JSON):\n' + gpt.memory : '') });
-  for (const m of chat.messages) messages.push({ role: m.role, content: m.content });
-  messages.push({ role: 'user', content });
+  for (const m of [...history, mine]) messages.push({ role: m.role, content: toProviderContent(m, model) });
 
   let json;
   try {
@@ -307,7 +366,7 @@ app.post('/api/chats/:id/messages', auth, chatLimit, wrap(async (req, res) => {
     cost,
     at: Date.now(),
   };
-  await db.chats.setMessages(chat.id, req.user.id, [...chat.messages, { role: 'user', content, at: Date.now() }, reply]);
+  await db.chats.setMessages(chat.id, req.user.id, [...history, mine, reply]);
   res.json({ reply, creditTokens: await creditTokens(apiKey) });
 }));
 

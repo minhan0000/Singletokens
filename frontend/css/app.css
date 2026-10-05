@@ -1,6 +1,8 @@
 /* SingleTokens components and layout. Uses only tokens from theme.css. */
 
 *, *::before, *::after { box-sizing: border-box; }
+/* "hidden" always wins, even over display: flex/grid below */
+[hidden] { display: none !important; }
 html, body { margin: 0; height: 100%; }
 body {
   font-family: var(--font);
@@ -612,3 +614,27 @@ button.role-tag { padding: 0; border: 0; background: none; cursor: pointer; }
   .danger-zone { flex-direction: column; align-items: flex-start; }
   .theme-tiles { flex-wrap: wrap; }
 }
+
+/* ── Attachments ──────────────────────────────────────────────────────────── */
+.main { position: relative; }
+.attach-row { display: flex; flex-wrap: wrap; gap: var(--sp-8); margin-bottom: var(--sp-8); }
+.attach-thumb { position: relative; width: 64px; height: 64px; border-radius: var(--r-8); overflow: hidden; border: 1px solid var(--border); background: var(--bg-input); }
+.attach-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.attach-remove { position: absolute; top: var(--sp-4); right: var(--sp-4); display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; padding: 0; border: 0; border-radius: var(--r-pill); background: var(--tooltip-bg); color: var(--white); }
+.attach-remove .lucide { width: 12px; height: 12px; stroke-width: 3; }
+.attach-remove.inline { position: static; background: var(--bg-active); color: var(--text-strong); }
+.file-chip { display: inline-flex; align-items: center; gap: var(--sp-8); height: 40px; max-width: 260px; padding: 0 var(--sp-8) 0 var(--sp-12); border: 1px solid var(--border); border-radius: var(--r-8); background: var(--bg-input); font-size: var(--fs-13); color: var(--text-strong); }
+.file-chip .name { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.file-chip .size { flex-shrink: 0; font-size: var(--fs-12); color: var(--text-muted); }
+.msg-user-wrap { align-self: flex-end; display: flex; flex-direction: column; align-items: flex-end; gap: var(--sp-8); max-width: 75%; }
+.msg-user-wrap .msg-user { max-width: 100%; }
+.msg-files { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--sp-8); }
+.msg-image { padding: 0; border: 1px solid var(--border); border-radius: var(--r-12); overflow: hidden; background: var(--bg-input); cursor: zoom-in; }
+.msg-image img { display: block; max-width: 240px; max-height: 240px; object-fit: cover; }
+.drop-overlay { position: absolute; inset: var(--sp-8); z-index: 20; display: flex; align-items: center; justify-content: center; border: 2px dashed var(--accent); border-radius: var(--r-16); background: rgba(88, 101, 242, .12); pointer-events: none; }
+.drop-overlay div { display: flex; align-items: center; gap: var(--sp-8); font-size: var(--fs-18); font-weight: 600; color: var(--text-strong); }
+.drop-overlay .lucide { width: 20px; height: 20px; }
+.lightbox { flex-direction: column; cursor: zoom-out; }
+.lightbox img { max-width: 92vw; max-height: 88vh; border-radius: var(--r-8); }
+.lightbox-close { position: fixed; top: var(--sp-16); right: var(--sp-16); color: var(--white); }
+@media (max-width: 767px) { .msg-user-wrap { max-width: 90%; } .msg-image img { max-width: 180px; max-height: 180px; } }
