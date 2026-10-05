@@ -301,7 +301,8 @@ async function providerError(err, userId, res) {
     return true;
   }
   if (err instanceof openrouter.OpenRouterError) {
-    res.status(502).json({ error: err.message });
+    // 424, not 502: hosting proxies (like Render's) replace 502 replies with their own page and the message gets lost.
+    res.status(424).json({ error: 'OpenRouter: ' + err.message });
     return true;
   }
   return false;
